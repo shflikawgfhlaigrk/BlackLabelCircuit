@@ -1,0 +1,26 @@
+{
+  "name": "circuit",
+  "version": "1.0.0",
+  "description": "Circuit — grade your codebase like a senior engineer, see the wiring in 3D",
+  "main": "server.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node --test test/analyze.test.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "3d-force-graph": "^1.80.0",
+    "three": "^0.185.1",
+    "three-spritetext": "^1.10.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  }
+}

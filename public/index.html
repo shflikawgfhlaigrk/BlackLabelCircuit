@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Circuit</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏚</text></svg>" />
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<header id="topbar">
+  <div class="brand">⏚ <span>CIRCUIT</span></div>
+  <div class="repo">
+    <span id="repoName">—</span>
+    <span id="repoPath" class="muted mono"></span>
+  </div>
+  <div class="topstats">
+    <span class="stat"><b id="statFiles">–</b> files</span>
+    <span class="stat"><b id="statLoc">–</b> loc</span>
+    <span class="stat"><b id="statEdges">–</b> wires</span>
+    <button class="chip danger hidden" id="statBroken" title="Show broken wiring">– broken</button>
+    <button class="chip warn hidden" id="statCycles" title="Files caught in import cycles">– cycles</button>
+  </div>
+  <div class="spacer"></div>
+  <div id="liveDot" class="live" title="Watching for file changes">● live</div>
+  <button id="rescanBtn" class="btn">Re-scan</button>
+</header>
+
+<aside id="sidebar">
+  <div class="hero">
+    <div class="hero-grade" id="heroGrade">–</div>
+    <div class="hero-meta">
+      <div class="hero-score"><span id="heroScore">–</span><span class="muted"> / 100</span></div>
+      <div class="hero-verdict muted" id="heroVerdict">analyzing…</div>
+    </div>
+  </div>
+
+  <div class="searchwrap">
+    <input id="search" type="text" placeholder="Find a file…  ( / )" autocomplete="off" spellcheck="false" />
+    <div id="searchResults" class="search-results hidden"></div>
+  </div>
+
+  <section>
+    <h3>Grades <span class="muted small">click to filter</span></h3>
+    <div id="histogram" class="histogram"></div>
+  </section>
+
+  <section>
+    <h3>Languages</h3>
+    <div id="langChips" class="chips"></div>
+  </section>
+
+  <section>
+    <h3>Worst offenders</h3>
+    <div id="worst" class="worst"></div>
+  </section>
+
+  <section>
+    <h3>View</h3>
+    <div class="chips">
+      <button class="chip toggle on" id="tglLabels">Labels</button>
+      <button class="chip toggle on" id="tglParticles">Flow</button>
+      <button class="chip toggle" id="tgl2d">2D</button>
+      <button class="chip toggle" id="tglBroken">Broken only</button>
+    </div>
+  </section>
+</aside>
+
+<main id="graph"></main>
+
+<aside id="panel" class="hidden">
+  <div class="panel-head">
+    <div>
+      <div class="panel-title mono" id="panelName">—</div>
+      <div class="panel-dir mono muted" id="panelDir"></div>
+    </div>
+    <button class="btn ghost" id="panelClose" title="Close (Esc)">✕</button>
+  </div>
+
+  <div class="report-top">
+    <div class="report-grade" id="panelGrade">–</div>
+    <div class="report-dims" id="panelDims"></div>
+  </div>
+
+  <div class="meta-row" id="panelMeta"></div>
+
+  <div class="panel-section">
+    <h4>Review <span class="muted small" id="findingCount"></span></h4>
+    <div id="panelFindings" class="findings"></div>
+  </div>
+
+  <div class="panel-section">
+    <h4>Wiring</h4>
+    <div class="wiring">
+      <div>
+        <div class="wiring-label">→ wires out <span id="outCount" class="muted"></span></div>
+        <div id="wiresOut" class="wire-list"></div>
+      </div>
+      <div>
+        <div class="wiring-label">← wired in from <span id="inCount" class="muted"></span></div>
+        <div id="wiresIn" class="wire-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-section" id="externalsSection">
+    <h4>External packages</h4>
+    <div id="panelExternals" class="chips small"></div>
+  </div>
+
+  <button class="btn wide" id="viewSourceBtn">View source with findings</button>
+</aside>
+
+<div id="legend">
+  <span class="legend-label">A</span>
+  <div class="legend-bar"></div>
+  <span class="legend-label">F</span>
+  <span class="legend-broken">● broken wire</span>
+</div>
+
+<div id="codeModal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="mono" id="codeTitle"></span>
+      <button class="btn ghost" id="codeClose">✕</button>
+    </div>
+    <pre id="codeBody" class="mono"></pre>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>
