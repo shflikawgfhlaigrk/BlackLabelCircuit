@@ -74,10 +74,15 @@ function tuneBloom(nodeCount) {
   bloom.strength = nodeCount > 800 ? 0.45 : nodeCount > 300 ? 0.65 : 0.9;
 }
 
-// Frame the whole graph once the layout settles after a fresh load.
+// Re-frame once the layout settles after a fresh load or a 2D/3D switch:
+// fly back to the selection if there is one, otherwise fit the whole graph.
 let needsFit = true;
 Graph.onEngineStop(() => {
-  if (needsFit) { needsFit = false; Graph.zoomToFit(800, 60); }
+  if (needsFit) {
+    needsFit = false;
+    if (state.selected) selectNode(state.selected, true);
+    else Graph.zoomToFit(800, 60);
+  }
 });
 
 // Starfield backdrop.
@@ -214,12 +219,15 @@ async function loadGraph(preservePositions = false) {
   state.topLabelIds = new Set(byDegree.slice(0, 30).map((n) => n.id));
   for (const n of data.nodes) if (n.missing) state.topLabelIds.add(n.id);
 
-  if (!state.allLangs.length || !preservePositions) {
-    state.allLangs = Object.keys(data.stats.languages).sort((a, b) => data.stats.languages[b] - data.stats.languages[a]);
+  // Language filters: newly-appearing languages are always shown; the user's
+  // explicit deselections (langs in prevKnown but not in the filter) persist.
+  const prevKnown = new Set(state.allLangs);
+  state.allLangs = Object.keys(data.stats.languages).sort((a, b) => data.stats.languages[b] - data.stats.languages[a]);
+  if (!prevKnown.size) {
     state.filters.langs = new Set(state.allLangs);
   } else {
-    state.allLangs = Object.keys(data.stats.languages).sort((a, b) => data.stats.languages[b] - data.stats.languages[a]);
-    for (const l of state.allLangs) if (!state.filters.langs.has(l) && !state._langsTouched) state.filters.langs.add(l);
+    for (const l of state.allLangs) if (!prevKnown.has(l)) state.filters.langs.add(l);
+    for (const l of [...state.filters.langs]) if (!state.allLangs.includes(l)) state.filters.langs.delete(l);
   }
 
   applyData();
@@ -269,16 +277,35 @@ function selectNode(n, fly) {
   $('panel').classList.remove('hidden');
   if (fly && n.x != null) {
     const dist = 200;
-    const len = Math.hypot(n.x, n.y, n.z) || 1;
+    const nz = n.z ?? 0; // 2D mode deletes z — never let NaN reach the camera
+    const len = Math.hypot(n.x, n.y, nz) || 1;
     const ratio = 1 + dist / len;
-    Graph.cameraPosition({ x: n.x * ratio, y: n.y * ratio, z: n.z * ratio + (state.is2d ? dist : 0) }, n, 1100);
+    Graph.cameraPosition(
+      { x: n.x * ratio, y: n.y * ratio, z: nz * ratio + (state.is2d ? dist : 0) },
+      { x: n.x, y: n.y, z: nz },
+      1100
+    );
   }
 }
 function hidePanel() { $('panel').classList.add('hidden'); }
 
 function focusNodeById(id) {
-  const n = Graph.graphData().nodes.find((x) => x.id === id) ?? state.data.nodes.find((x) => x.id === id);
-  if (n) selectNode(n, true);
+  let n = Graph.graphData().nodes.find((x) => x.id === id);
+  if (!n) {
+    // The node is filtered out — widen the filters so the focus is visible.
+    const hidden = state.data.nodes.find((x) => x.id === id);
+    if (!hidden) return;
+    state.filters.grades.add(hidden.grade[0]);
+    state.filters.langs.add(hidden.lang);
+    if (state.filters.brokenOnly) {
+      state.filters.brokenOnly = false;
+      $('tglBroken').classList.remove('on');
+    }
+    applyData();
+    renderSidebar();
+    n = Graph.graphData().nodes.find((x) => x.id === id) ?? hidden;
+  }
+  selectNode(n, true);
 }
 
 // ---------- sidebar ----------
@@ -339,7 +366,6 @@ function renderSidebar() {
     <button class="chip toggle ${state.filters.langs.has(l) ? 'on' : ''}" data-lang="${esc(l)}">${esc(l)} <span class="muted">${state.data.stats.languages[l]}</span></button>`).join('');
   for (const chip of $('langChips').querySelectorAll('.chip')) {
     chip.onclick = () => {
-      state._langsTouched = true;
       const l = chip.dataset.lang;
       if (state.filters.langs.has(l)) state.filters.langs.delete(l);
       else state.filters.langs.add(l);
@@ -489,6 +515,13 @@ searchInput.addEventListener('input', () => {
   }
 });
 searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    e.stopPropagation(); // dismiss the dropdown only — not the panel behind it
+    searchResults.classList.add('hidden');
+    searchInput.blur();
+    return;
+  }
+  if (searchResults.classList.contains('hidden')) return; // stale rows must not react
   const rows = [...searchResults.querySelectorAll('.row')];
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     e.preventDefault();
@@ -496,8 +529,6 @@ searchInput.addEventListener('keydown', (e) => {
     rows.forEach((r, i) => r.classList.toggle('active', i === searchIdx));
   } else if (e.key === 'Enter' && rows.length) {
     rows[Math.max(0, searchIdx)].click();
-  } else if (e.key === 'Escape') {
-    searchResults.classList.add('hidden'); searchInput.blur();
   }
 });
 document.addEventListener('click', (e) => {
@@ -518,6 +549,7 @@ $('tglParticles').onclick = (e) => {
 $('tgl2d').onclick = (e) => {
   state.is2d = !state.is2d;
   e.currentTarget.classList.toggle('on', state.is2d);
+  needsFit = true; // dimension switch re-heats the layout — re-frame when it settles
   Graph.numDimensions(state.is2d ? 2 : 3);
 };
 $('tglBroken').onclick = (e) => {
@@ -526,9 +558,13 @@ $('tglBroken').onclick = (e) => {
   applyData();
 };
 $('statBroken').onclick = () => $('tglBroken').click();
+let rescanRestore;
 $('rescanBtn').onclick = async () => {
   $('rescanBtn').textContent = 'Scanning…';
-  await fetch('/api/rescan', { method: 'POST' });
+  clearTimeout(rescanRestore);
+  rescanRestore = setTimeout(() => { $('rescanBtn').textContent = 'Re-scan'; }, 15000);
+  try { await fetch('/api/rescan', { method: 'POST' }); }
+  catch { $('rescanBtn').textContent = 'Re-scan'; toast('Re-scan failed — is the server up?'); }
 };
 $('panelClose').onclick = () => { state.selected = null; hidePanel(); refreshStyles(); };
 $('codeClose').onclick = () => $('codeModal').classList.add('hidden');
@@ -553,15 +589,27 @@ function toast(msg) {
 }
 
 const events = new EventSource('/api/events');
-events.addEventListener('hello', () => $('liveDot').classList.add('on'));
+let hadHello = false;
+events.addEventListener('hello', () => {
+  $('liveDot').classList.add('on');
+  // On reconnect, re-fetch — a re-grade may have been broadcast while we were away.
+  if (hadHello) loadGraph(true);
+  hadHello = true;
+});
 events.addEventListener('graph', async (e) => {
   $('liveDot').classList.add('pulse');
   await loadGraph(true);
   $('rescanBtn').textContent = 'Re-scan';
+  clearTimeout(rescanRestore);
   const { reason } = JSON.parse(e.data);
   const s = state.data.stats;
   toast(`Re-graded: ${s.grade} (${s.score}) — ${reason}`);
   setTimeout(() => $('liveDot').classList.remove('pulse'), 1200);
+});
+events.addEventListener('error', (e) => {
+  $('rescanBtn').textContent = 'Re-scan';
+  clearTimeout(rescanRestore);
+  try { toast(`Analysis failed: ${JSON.parse(e.data).message}`); } catch { /* connection-level error */ }
 });
 events.onerror = () => $('liveDot').classList.remove('on');
 

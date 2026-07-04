@@ -18,10 +18,15 @@ for (let i = 0; i < args.length; i++) {
   if (args[i] === '--port') port = Number(args[++i]);
   else if (!args[i].startsWith('-')) root = path.resolve(args[i]);
 }
+if (!Number.isInteger(port) || port < 1 || port > 65535) {
+  console.error(`Invalid --port value. Usage: circuit [repoPath] [--port 1-65535]`);
+  process.exit(1);
+}
 if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) {
   console.error(`Not a directory: ${root}`);
   process.exit(1);
 }
+const realRoot = fs.realpathSync(root);
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -31,20 +36,21 @@ const MIME = {
 };
 
 let graph = null;
-let analyzing = false;
+let lastError = null;
 const sseClients = new Set();
 
+// analyzeRepo is synchronous — requests queue behind it for the few hundred ms
+// a scan takes, which also makes re-entrancy impossible.
 function analyze(reason = 'startup') {
-  if (analyzing) return;
-  analyzing = true;
   try {
     graph = analyzeRepo(root);
+    lastError = null;
     console.log(`[circuit] analyzed ${graph.stats.files} files, ${graph.stats.edges} edges (${graph.stats.brokenEdges} broken) — grade ${graph.stats.grade} (${graph.stats.score}) in ${graph.tookMs}ms [${reason}]`);
     broadcast('graph', { generatedAt: graph.generatedAt, reason });
   } catch (e) {
+    lastError = String(e?.message ?? e);
     console.error('[circuit] analyze failed:', e);
-  } finally {
-    analyzing = false;
+    broadcast('error', { message: lastError, reason });
   }
 }
 
@@ -74,10 +80,20 @@ function send(res, status, body, type = 'application/json') {
 }
 
 const server = http.createServer((req, res) => {
+  try {
+    handle(req, res);
+  } catch (e) {
+    console.error('[circuit] request error:', e.message);
+    if (!res.headersSent) send(res, 400, { error: 'bad request' });
+    else res.end();
+  }
+});
+
+function handle(req, res) {
   const url = new URL(req.url, `http://localhost:${port}`);
 
   if (url.pathname === '/api/graph') {
-    if (!graph) return send(res, 503, { error: 'analyzing' });
+    if (!graph) return send(res, lastError ? 500 : 503, { error: lastError ?? 'analyzing' });
     return send(res, 200, graph);
   }
 
@@ -91,9 +107,13 @@ const server = http.createServer((req, res) => {
     const abs = path.resolve(root, rel);
     if (!abs.startsWith(root + path.sep) && abs !== root) return send(res, 403, { error: 'outside repo' });
     try {
-      const st = fs.statSync(abs);
+      // resolve symlinks before the containment check — a link inside the repo
+      // must not read files outside it
+      const real = fs.realpathSync(abs);
+      if (!real.startsWith(realRoot + path.sep) && real !== realRoot) return send(res, 403, { error: 'outside repo' });
+      const st = fs.statSync(real);
       if (!st.isFile() || st.size > 2_000_000) return send(res, 413, { error: 'too large' });
-      return send(res, 200, fs.readFileSync(abs, 'utf8'), 'text/plain; charset=utf-8');
+      return send(res, 200, fs.readFileSync(real, 'utf8'), 'text/plain; charset=utf-8');
     } catch {
       return send(res, 404, { error: 'not found' });
     }
@@ -118,7 +138,7 @@ const server = http.createServer((req, res) => {
     if (err) return send(res, 404, 'not found', 'text/plain');
     send(res, 200, buf, MIME[path.extname(abs).toLowerCase()] ?? 'application/octet-stream');
   });
-});
+}
 
 server.on('error', (e) => {
   if (e.code === 'EADDRINUSE' && port < 8999) {

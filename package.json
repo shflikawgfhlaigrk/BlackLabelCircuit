@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node --test test/analyze.test.js",
+    "test": "node --test test/analyze.test.js test/regressions.test.js",
     "start": "node server.js"
   },
   "keywords": [],
@@ -22,5 +22,8 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.1"
+  },
+  "bin": {
+    "circuit": "./server.js"
   }
 }
