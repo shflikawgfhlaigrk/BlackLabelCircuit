@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node --test test/analyze.test.js test/regressions.test.js",
+    "test": "node --test test/analyze.test.js test/regressions.test.js test/server.test.js test/launcher.test.js",
     "start": "node server.js"
   },
   "keywords": [],
