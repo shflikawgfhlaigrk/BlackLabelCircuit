@@ -16,6 +16,8 @@ if [[ -d "/Applications/Xcode.app/Contents/Developer" ]]; then
   export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
 fi
 
+xcrun --kill-cache >/dev/null 2>&1 || true
+SDKROOT="$(xcrun --sdk macosx --show-sdk-path)"
 SWIFTC=(xcrun swiftc)
 LIPO=(xcrun lipo)
 
@@ -62,10 +64,10 @@ node_source() {
 rm -rf "$APP" "$BUILD_DIR/launcher-arm64" "$BUILD_DIR/launcher-x86_64"
 mkdir -p "$MACOS" "$RESOURCES/app" "$RESOURCES/node" "$BUILD_DIR"
 
-"${SWIFTC[@]}" -O -parse-as-library -target arm64-apple-macos11 -framework AppKit \
+"${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target arm64-apple-macos11 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
   -o "$BUILD_DIR/launcher-arm64"
-"${SWIFTC[@]}" -O -parse-as-library -target x86_64-apple-macos11 -framework AppKit \
+"${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target x86_64-apple-macos11 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
   -o "$BUILD_DIR/launcher-x86_64"
 "${LIPO[@]}" -create "$BUILD_DIR/launcher-arm64" "$BUILD_DIR/launcher-x86_64" -output "$MACOS/Circuit"
