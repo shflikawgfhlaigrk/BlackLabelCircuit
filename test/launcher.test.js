@@ -24,8 +24,10 @@ test('macOS entry point is a native AppKit launcher with managed server lifecycl
 
 test('release build signs inside-out and ships no system-node fallback', () => {
   const build = read('build.command');
-  assert.match(build, /swiftc/, 'build must compile the native launcher');
+  assert.match(build, /DEVELOPER_DIR="\/Applications\/Xcode\.app\/Contents\/Developer"/, 'ship builds must avoid mismatched CommandLineTools SDKs');
+  assert.match(build, /xcrun swiftc/, 'build must compile through xcrun so SDK paths are configured');
   assert.match(build, /-parse-as-library/, '@main launcher builds must pass -parse-as-library under Swift 6');
+  assert.match(build, /xcrun lipo/, 'universal launcher assembly must use the selected Xcode toolchain');
   assert.match(build, /--options[ =]runtime/, 'build must use hardened runtime signing');
   assert.match(build, /Resources\/node\/node/, 'build must bundle a Node runtime inside the app');
   const nodeSign = build.indexOf('"$RESOURCES/node/node"');

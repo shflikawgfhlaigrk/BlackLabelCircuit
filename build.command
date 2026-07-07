@@ -12,6 +12,13 @@ NODE_VERSION="${CIRCUIT_NODE_VERSION:-25.9.0}"
 NODE_CACHE="$HOME/Library/Caches/CircuitBuild/node-v$NODE_VERSION-darwin-arm64/bin/node"
 INSTALL=0
 
+if [[ -z "${DEVELOPER_DIR:-}" && -d "/Applications/Xcode.app/Contents/Developer" ]]; then
+  export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
+fi
+
+SWIFTC=(xcrun swiftc)
+LIPO=(xcrun lipo)
+
 for arg in "$@"; do
   case "$arg" in
     --install) INSTALL=1 ;;
@@ -55,13 +62,13 @@ node_source() {
 rm -rf "$APP" "$BUILD_DIR/launcher-arm64" "$BUILD_DIR/launcher-x86_64"
 mkdir -p "$MACOS" "$RESOURCES/app" "$RESOURCES/node" "$BUILD_DIR"
 
-swiftc -O -parse-as-library -target arm64-apple-macos11 -framework AppKit \
+"${SWIFTC[@]}" -O -parse-as-library -target arm64-apple-macos11 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
   -o "$BUILD_DIR/launcher-arm64"
-swiftc -O -parse-as-library -target x86_64-apple-macos11 -framework AppKit \
+"${SWIFTC[@]}" -O -parse-as-library -target x86_64-apple-macos11 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
   -o "$BUILD_DIR/launcher-x86_64"
-lipo -create "$BUILD_DIR/launcher-arm64" "$BUILD_DIR/launcher-x86_64" -output "$MACOS/Circuit"
+"${LIPO[@]}" -create "$BUILD_DIR/launcher-arm64" "$BUILD_DIR/launcher-x86_64" -output "$MACOS/Circuit"
 chmod 755 "$MACOS/Circuit"
 
 cp "$ROOT/macos/Info.plist" "$CONTENTS/Info.plist"
