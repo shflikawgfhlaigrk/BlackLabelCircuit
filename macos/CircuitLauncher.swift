@@ -3,6 +3,15 @@ import Foundation
 
 @main
 final class CircuitApp: NSObject, NSApplicationDelegate {
+    private static var appDelegate: CircuitApp?
+
+    static func main() {
+        let delegate = CircuitApp()
+        appDelegate = delegate
+        NSApplication.shared.delegate = delegate
+        NSApplication.shared.run()
+    }
+
     private var server: Process?
     private var openedBrowser = false
     private var logHandle: FileHandle?

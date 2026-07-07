@@ -12,6 +12,8 @@ function read(rel) {
 
 test('macOS entry point is a native AppKit launcher with managed server lifecycle', () => {
   const src = read('macos/CircuitLauncher.swift');
+  assert.match(src, /NSApplication\.shared\.delegate\s*=/, 'native app must install its delegate before NSApplication.run');
+  assert.match(src, /NSApplication\.shared\.run\(\)/, 'native app must start the AppKit run loop explicitly');
   assert.match(src, /NSOpenPanel/, 'repo choice must use a native folder picker');
   assert.match(src, /Process\(\)/, 'server must run as a managed child process');
   assert.match(src, /terminationHandler/, 'launcher must observe child termination');
