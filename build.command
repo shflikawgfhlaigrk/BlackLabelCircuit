@@ -64,10 +64,10 @@ node_source() {
 rm -rf "$APP" "$BUILD_DIR/launcher-arm64" "$BUILD_DIR/launcher-x86_64"
 mkdir -p "$MACOS" "$RESOURCES/app" "$RESOURCES/node" "$BUILD_DIR"
 
-"${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target arm64-apple-macos11 -framework AppKit \
+"${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target arm64-apple-macosx11.0 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
   -o "$BUILD_DIR/launcher-arm64"
-"${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target x86_64-apple-macos11 -framework AppKit \
+"${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target x86_64-apple-macosx11.0 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
   -o "$BUILD_DIR/launcher-x86_64"
 "${LIPO[@]}" -create "$BUILD_DIR/launcher-arm64" "$BUILD_DIR/launcher-x86_64" -output "$MACOS/Circuit"
