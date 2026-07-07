@@ -12,7 +12,7 @@ NODE_VERSION="${CIRCUIT_NODE_VERSION:-25.9.0}"
 NODE_CACHE="$HOME/Library/Caches/CircuitBuild/node-v$NODE_VERSION-darwin-arm64/bin/node"
 INSTALL=0
 
-if [[ -z "${DEVELOPER_DIR:-}" && -d "/Applications/Xcode.app/Contents/Developer" ]]; then
+if [[ -d "/Applications/Xcode.app/Contents/Developer" ]]; then
   export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
 fi
 
