@@ -53,7 +53,13 @@ jobs:
       - name: Install dependencies (npm ci)
         run: npm ci
 
+      - name: Windows path diagnostic (root-cause evidence)
+        shell: bash
+        run: node test/windows-diag.mjs | tee windows-diag.txt
+
       - name: Run Circuit's own test suite on Windows
+        id: unittests
+        continue-on-error: true
         run: npm test
 
       - name: HEADLESS GRADE — grade Circuit's own source on Windows
@@ -103,6 +109,17 @@ jobs:
           kill $SRV_PID 2>/dev/null || true
           ls -la circuit-ui-windows.png
 
+      - name: Gate — fail the proof job if the Windows unit tests did not pass
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "unit test outcome: ${{ steps.unittests.outcome }}"
+          if [ "${{ steps.unittests.outcome }}" != "success" ]; then
+            echo "::error::Circuit unit tests failed on Windows — proof not clean"
+            exit 1
+          fi
+          echo "Windows unit tests passed; analyzer proof is clean."
+
       - name: Upload proof artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -111,6 +128,7 @@ jobs:
           if-no-files-found: warn
           path: |
             runner-evidence.txt
+            windows-diag.txt
             grade-circuit-windows.json
             grade-slugify-windows.json
             circuit-ui-windows.png
