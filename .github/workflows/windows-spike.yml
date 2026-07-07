@@ -1,0 +1,183 @@
+name: circuit-windows-spike
+
+# Windows portability spike for Circuit (Black Label expansion Wave W1).
+# Proves the Node analyzer runs on a REAL Windows runner and produces a real,
+# rubric-derived grade. STRETCH job stages an UNSIGNED Windows executable.
+# STAGED ONLY — nothing here signs, publishes, or ships.
+
+on:
+  push:
+    branches: [windows-spike-20260708]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # ----- REQUIRED: this job proves Circuit runs & grades on Windows -----
+  proof:
+    name: Analyzer proof on windows-latest
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Circuit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # analyzer reads git churn; give it real history
+
+      - name: Setup Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Record Windows runner evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "RUNNER_OS=$RUNNER_OS"
+          echo "OS=$OS"
+          node --version
+          npm --version
+          {
+            echo "RUNNER_OS=$RUNNER_OS"
+            echo "IMAGE_OS=${ImageOS:-unknown}"
+            echo "node=$(node --version)"
+            echo "npm=$(npm --version)"
+          } > runner-evidence.txt
+          # systeminfo is a Windows-only binary — its presence + output is proof
+          # this is a genuine Windows image, not a bash-on-linux fake.
+          systeminfo | grep -E "OS Name|OS Version|System Type" >> runner-evidence.txt || \
+            powershell -Command "(Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,OSArchitecture | Format-List | Out-String)" >> runner-evidence.txt
+          echo "---- runner-evidence.txt ----"
+          cat runner-evidence.txt
+
+      - name: Install dependencies (npm ci)
+        run: npm ci
+
+      - name: Run Circuit's own test suite on Windows
+        run: npm test
+
+      - name: HEADLESS GRADE — grade Circuit's own source on Windows
+        shell: bash
+        run: |
+          set -euo pipefail
+          node test/windows-spike-proof.mjs . grade-circuit-windows.json
+          echo "---- grade-circuit-windows.json ----"
+          cat grade-circuit-windows.json
+
+      - name: HEADLESS GRADE — grade a second real repo checked out in the job
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Check out a small, real public repo and grade it too — proves the
+          # analyzer works on arbitrary source on Windows, not just its own tree.
+          git clone --depth 1 https://github.com/sindresorhus/slugify.git target-repo
+          node test/windows-spike-proof.mjs target-repo grade-slugify-windows.json
+          echo "---- grade-slugify-windows.json ----"
+          cat grade-slugify-windows.json
+
+      - name: STRETCH — browser-UI screenshot via Playwright (never fails the proof)
+        id: shot
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes playwright@latest install chromium
+          # Start the Circuit server on a known port, wait for it, screenshot the UI.
+          node server.js . --port 8923 &
+          SRV_PID=$!
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8923/api/graph >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          node -e "
+            const { chromium } = require('playwright');
+            (async () => {
+              const b = await chromium.launch();
+              const p = await b.newPage({ viewport: { width: 1400, height: 900 } });
+              await p.goto('http://127.0.0.1:8923/', { waitUntil: 'networkidle', timeout: 30000 });
+              await p.waitForTimeout(6000); // let the 3D graph render
+              await p.screenshot({ path: 'circuit-ui-windows.png', fullPage: false });
+              await b.close();
+            })().catch(e => { console.error(e); process.exit(1); });
+          "
+          kill $SRV_PID 2>/dev/null || true
+          ls -la circuit-ui-windows.png
+
+      - name: Upload proof artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: circuit-windows-spike-proof
+          if-no-files-found: warn
+          path: |
+            runner-evidence.txt
+            grade-circuit-windows.json
+            grade-slugify-windows.json
+            circuit-ui-windows.png
+
+  # ----- STRETCH: stage an UNSIGNED Windows executable. Allowed to fail. -----
+  package:
+    name: Package UNSIGNED Windows exe (staged only)
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout Circuit
+        uses: actions/checkout@v4
+
+      - name: Setup Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build vendor bundle (browser UI)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node build-vendor.mjs || echo "vendor build skipped/failed (non-fatal for exe spike)"
+
+      - name: Package single-file Windows exe with pkg (UNSIGNED)
+        id: pkg
+        shell: bash
+        run: |
+          set -euo pipefail
+          START=$(date +%s)
+          # pkg bundles a Node runtime + server.js into a single .exe.
+          npx --yes pkg@5.8.1 server.js \
+            --targets node18-win-x64 \
+            --output circuit-windows-UNSIGNED-STAGED-ONLY.exe \
+            --public 2>&1 | tee pkg-build.log
+          END=$(date +%s)
+          echo "pkg_seconds=$((END-START))" | tee -a pkg-build.log
+          ls -la circuit-windows-UNSIGNED-STAGED-ONLY.exe
+          # Record real friction numbers for the shell decision.
+          {
+            echo "shell=pkg (node18-win-x64 single exe)"
+            echo "pkg_build_seconds=$((END-START))"
+            echo "exe_bytes=$(stat -c %s circuit-windows-UNSIGNED-STAGED-ONLY.exe 2>/dev/null || wc -c < circuit-windows-UNSIGNED-STAGED-ONLY.exe)"
+          } > pkg-friction.txt
+          cat pkg-friction.txt
+
+      - name: Compute sha256 of the exe
+        if: always()
+        shell: bash
+        run: |
+          if [ -f circuit-windows-UNSIGNED-STAGED-ONLY.exe ]; then
+            sha256sum circuit-windows-UNSIGNED-STAGED-ONLY.exe | tee exe-sha256.txt
+          else
+            echo "no exe produced" | tee exe-sha256.txt
+          fi
+
+      - name: Upload UNSIGNED exe + friction log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: circuit-windows-UNSIGNED-STAGED-ONLY
+          if-no-files-found: warn
+          path: |
+            circuit-windows-UNSIGNED-STAGED-ONLY.exe
+            pkg-build.log
+            pkg-friction.txt
+            exe-sha256.txt
