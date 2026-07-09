@@ -261,3 +261,11 @@ body {
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: rgba(160, 185, 225, 0.15); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(160, 185, 225, 0.3); }
+
+/* Reduced-motion: honor the OS "reduce motion" setting for UI animations.
+   The 3D force-graph itself is the product and is governed by the Flow toggle
+   (which defaults off under reduce-motion); this only calms incidental UI FX. */
+@media (prefers-reduced-motion: reduce) {
+  .toast { animation: none; }
+  * { scroll-behavior: auto; }
+}

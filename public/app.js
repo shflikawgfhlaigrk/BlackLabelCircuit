@@ -27,6 +27,10 @@ function scoreColor(score) {
 const gradeColor = (grade) => GRADE_COLORS[grade?.[0]] ?? BROKEN;
 
 // ---------- state ----------
+// Respect the OS "reduce motion" setting: users who ask for calm start with the
+// ambient flow particles off (broken-wiring + focused links still animate — that
+// motion is signal, not decoration). The Flow toggle stays for everyone.
+const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 const state = {
   data: null,
   filters: { grades: new Set(['A', 'B', 'C', 'D', 'F']), langs: new Set(), brokenOnly: false },
@@ -34,7 +38,7 @@ const state = {
   selected: null,
   hover: null,
   labelsOn: true,
-  flowOn: true,
+  flowOn: !prefersReducedMotion,
   is2d: false,
   topLabelIds: new Set(),
   adjacency: new Map(), // id → Set of neighbor ids
@@ -546,6 +550,8 @@ $('tglParticles').onclick = (e) => {
   e.currentTarget.classList.toggle('on', state.flowOn);
   Graph.linkDirectionalParticles(Graph.linkDirectionalParticles());
 };
+// Sync the Flow chip's lit state to the reduced-motion-aware default on load.
+$('tglParticles').classList.toggle('on', state.flowOn);
 $('tgl2d').onclick = (e) => {
   state.is2d = !state.is2d;
   e.currentTarget.classList.toggle('on', state.is2d);
