@@ -293,3 +293,67 @@ body {
   transition: opacity 0.15s;
 }
 .demo-cta:hover { opacity: 0.88; }
+
+/* ---------- help button ---------- */
+#helpBtn {
+  width: 26px; height: 26px; padding: 0; border-radius: 50%;
+  font-weight: 700; font-size: 13px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border-strong); color: var(--ink-2); flex-shrink: 0;
+}
+#helpBtn:hover { color: var(--ink); }
+
+/* ---------- graph state overlay (analyzing / no-code-found) ---------- */
+.graph-overlay {
+  position: fixed; inset: 52px 0 0 268px; z-index: 15;
+  display: flex; align-items: center; justify-content: center; pointer-events: none;
+}
+.graph-overlay.hidden { display: none !important; }
+.graph-overlay-card {
+  pointer-events: auto; max-width: 460px; text-align: center; padding: 30px 34px;
+  background: var(--surface); backdrop-filter: blur(14px);
+  border: 1px solid var(--border-strong); border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+}
+.go-mark { font-size: 40px; line-height: 1; margin-bottom: 14px; color: var(--accent); }
+.graph-overlay.analyzing .go-mark { animation: go-pulse 1.4s ease-in-out infinite; }
+@keyframes go-pulse { 0%,100% { opacity: 0.35; transform: scale(0.94); } 50% { opacity: 1; transform: scale(1.06); } }
+.go-title { font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.go-body { font-size: 12.5px; line-height: 1.6; color: var(--ink-2); }
+.go-body b { color: var(--ink); font-weight: 600; }
+.go-body code { font-family: var(--mono); background: rgba(255,255,255,0.07); border-radius: 4px; padding: 0 4px; font-size: 11px; }
+.go-actions { margin-top: 14px; }
+.go-actions.hidden { display: none; }
+.go-hint { font-size: 11px; color: var(--ink-3); }
+
+/* ---------- first-run welcome ---------- */
+.welcome-box {
+  width: min(560px, 92vw); max-height: 88vh; overflow-y: auto;
+  background: var(--surface-solid); border: 1px solid var(--border-strong);
+  border-radius: 16px; padding: 22px 24px 24px;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+}
+.welcome-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.welcome-lead { font-size: 13.5px; line-height: 1.5; color: var(--ink); margin-bottom: 18px; }
+.welcome-legend { list-style: none; display: flex; flex-direction: column; gap: 13px; margin-bottom: 16px; }
+.welcome-legend li { display: flex; gap: 13px; align-items: flex-start; font-size: 12.5px; line-height: 1.5; color: var(--ink-2); }
+.welcome-legend b { color: var(--ink); font-weight: 600; }
+.wl-key {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; margin-top: 1px;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+}
+.wl-wire { position: relative; }
+.wl-wire::after { content: ''; position: absolute; left: 3px; right: 3px; top: 50%; border-top: 2px dashed var(--accent); }
+.wl-broken { background: none; border: none; color: var(--broken); font-size: 17px; }
+.wl-click { background: none; border: none; color: var(--accent); font-size: 13px; }
+.welcome-foot { font-size: 11.5px; line-height: 1.7; color: var(--ink-3); margin-bottom: 18px; }
+.welcome-box kbd {
+  font-family: var(--mono); font-size: 10px; background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border-strong); border-radius: 4px; padding: 1px 5px; color: var(--ink-2);
+}
+.welcome-go { margin-top: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .graph-overlay.analyzing .go-mark { animation: none; }
+}

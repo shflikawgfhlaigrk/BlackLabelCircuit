@@ -30,6 +30,7 @@
   </div>
   <div class="spacer"></div>
   <div id="liveDot" class="live" title="Watching for file changes">● live</div>
+  <button id="helpBtn" class="btn ghost" title="How to read Circuit" aria-label="How to read Circuit">?</button>
   <button id="rescanBtn" class="btn">Re-scan</button>
 </header>
 
@@ -74,6 +75,17 @@
 </aside>
 
 <main id="graph"></main>
+
+<div id="graphOverlay" class="graph-overlay hidden">
+  <div class="graph-overlay-card">
+    <div class="go-mark">⏚</div>
+    <div class="go-title" id="goTitle">Analyzing…</div>
+    <div class="go-body" id="goBody"></div>
+    <div class="go-actions hidden" id="goActions">
+      <span class="go-hint">Quit Circuit and re-open it to grade a different folder.</span>
+    </div>
+  </div>
+</div>
 
 <aside id="panel" class="hidden">
   <div class="panel-head">
@@ -136,6 +148,24 @@
 </div>
 
 <div id="toast" class="toast hidden"></div>
+
+<div id="welcome" class="modal hidden">
+  <div class="welcome-box">
+    <div class="welcome-head">
+      <div class="brand">⏚ <span>CIRCUIT</span></div>
+      <button class="btn ghost" id="welcomeClose" title="Close">✕</button>
+    </div>
+    <p class="welcome-lead">Your codebase, graded like a senior reviewer and wired in 3D. Here's how to read it:</p>
+    <ul class="welcome-legend">
+      <li><span class="wl-key" style="background:#86efac"></span><b>Each dot is a file.</b> Bigger = more lines of code. Its color is that file's grade — <span style="color:#86efac">green&nbsp;A</span> through <span style="color:#f87171">red&nbsp;F</span>.</li>
+      <li><span class="wl-key wl-wire"></span><b>Lines are dependencies.</b> One file importing another. Particles flow in the direction the code depends.</li>
+      <li><span class="wl-key wl-broken">◈</span><b>Red crystals are broken wires.</b> Something is imported that doesn't exist — a dead or missing file.</li>
+      <li><span class="wl-key wl-click">➤</span><b>Click any file</b> for its report card: grade, six review dimensions, and every finding written like a code-review comment with line numbers.</li>
+    </ul>
+    <p class="welcome-foot">The sidebar has your overall grade, a grade breakdown you can filter, and the worst offenders. Press <kbd>/</kbd> to search files, <kbd>Esc</kbd> to close. Drag to orbit, scroll to zoom.</p>
+    <button class="btn wide welcome-go" id="welcomeGo">Explore my codebase</button>
+  </div>
+</div>
 
 <script type="module" src="/app.js"></script>
 </body>

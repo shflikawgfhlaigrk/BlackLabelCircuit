@@ -46,7 +46,10 @@ function analyze(reason = 'startup') {
   try {
     graph = analyzeRepo(root);
     lastError = null;
-    console.log(`[circuit] analyzed ${graph.stats.files} files, ${graph.stats.edges} edges (${graph.stats.brokenEdges} broken) — grade ${graph.stats.grade} (${graph.stats.score}) in ${graph.tookMs}ms [${reason}]`);
+    const g = graph.stats.empty
+      ? `no source files to grade`
+      : `grade ${graph.stats.grade} (${graph.stats.score})`;
+    console.log(`[circuit] analyzed ${graph.stats.files} files, ${graph.stats.edges} edges (${graph.stats.brokenEdges} broken) — ${g} in ${graph.tookMs}ms [${reason}]`);
     broadcast('graph', { generatedAt: graph.generatedAt, reason });
   } catch (e) {
     lastError = String(e?.message ?? e);
@@ -158,5 +161,9 @@ server.on('error', (e) => {
 server.listen(port, '127.0.0.1', () => {
   console.log(`[circuit] grading ${root}`);
   console.log(`[circuit] http://localhost:${port}`);
-  analyze();
+  // Defer the first scan to the next tick so the HTTP server can serve the UI
+  // shell (and the first /api/graph poll → "analyzing…") immediately. On a large
+  // repo the synchronous scan would otherwise block the very first paint, leaving
+  // the freshly-opened window blank with no feedback until the scan finished.
+  setImmediate(analyze);
 });

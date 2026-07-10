@@ -71,7 +71,14 @@ test('server auto-increments when the default port is occupied and grades the re
   const { url } = await waitForUrl(child);
   assert.equal(url, 'http://localhost:8924');
 
-  const graph = await getJson(`${url}/api/graph`);
+  // The first scan is deferred (setImmediate) so the UI shell paints before the
+  // analysis blocks the event loop; poll until the graph is ready (503 → 200).
+  let graph;
+  for (let i = 0; i < 40; i++) {
+    graph = await getJson(`${url}/api/graph`);
+    if (graph.status === 200) break;
+    await new Promise((r) => setTimeout(r, 100));
+  }
   assert.equal(graph.status, 200);
   assert.equal(graph.body.name, 'demo');
   assert.equal(graph.body.stats.files, 9);

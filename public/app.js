@@ -194,10 +194,34 @@ function refreshStyles() {
   Graph.linkDirectionalParticles(Graph.linkDirectionalParticles());
 }
 
+// ---------- graph state overlay (analyzing / no-code-found) ----------
+function showOverlay(mode, opts = {}) {
+  const el = $('graphOverlay');
+  el.classList.remove('hidden', 'analyzing', 'empty');
+  el.classList.add(mode);
+  const actions = $('goActions');
+  if (mode === 'analyzing') {
+    $('goTitle').textContent = opts.name ? `Analyzing ${opts.name}…` : 'Analyzing your codebase…';
+    $('goBody').innerHTML = 'Reading and grading every source file. A large repository can take a few seconds — this view updates the moment it’s ready.';
+    actions.classList.add('hidden');
+  } else if (mode === 'empty') {
+    $('goTitle').textContent = 'No source code found here';
+    $('goBody').innerHTML = `Circuit didn’t find any files it can grade in <b>${esc(opts.name ?? 'this folder')}</b>. It reads source code — JavaScript/TypeScript, Python, Swift, Go, Rust, Java, Kotlin, Ruby, C/C++ and more — so point it at the root of a code repository.`;
+    actions.classList.remove('hidden');
+  }
+}
+function hideOverlay() { $('graphOverlay').classList.add('hidden'); }
+
 // ---------- data ----------
 async function loadGraph(preservePositions = false) {
-  const res = await fetch('/api/graph');
-  if (!res.ok) { setTimeout(() => loadGraph(preservePositions), 800); return; }
+  let res;
+  try { res = await fetch('/api/graph'); }
+  catch { if (!state.data) showOverlay('analyzing'); setTimeout(() => loadGraph(preservePositions), 800); return; }
+  if (!res.ok) {
+    if (!state.data) showOverlay('analyzing'); // first scan still running — show feedback, don't leave it blank
+    setTimeout(() => loadGraph(preservePositions), 800);
+    return;
+  }
   const data = await res.json();
 
   if (!preservePositions) needsFit = true;
@@ -236,6 +260,8 @@ async function loadGraph(preservePositions = false) {
 
   applyData();
   renderSidebar();
+  if (data.stats.empty || data.stats.files === 0) showOverlay('empty', { name: data.name });
+  else hideOverlay();
   // keep the panel in sync if the selected file still exists
   if (state.selected) {
     const again = data.nodes.find((n) => n.id === state.selected.id);
@@ -328,6 +354,27 @@ function renderSidebar() {
   const { stats, name, root } = state.data;
   $('repoName').textContent = name;
   $('repoPath').textContent = root;
+
+  // No gradeable source: never render a grade (the analyzer reports null, not A+).
+  if (stats.empty || stats.files === 0) {
+    document.title = `Circuit — ${name}`;
+    $('statFiles').textContent = '0';
+    $('statLoc').textContent = '0';
+    $('statEdges').textContent = '0';
+    $('statBroken').classList.add('hidden');
+    $('statCycles').classList.add('hidden');
+    const hero = $('heroGrade');
+    hero.textContent = '–';
+    hero.style.color = 'var(--ink-3)';
+    hero.title = '';
+    $('heroScore').textContent = '–';
+    $('heroVerdict').textContent = 'No source files to grade in this folder.';
+    $('histogram').innerHTML = '';
+    $('langChips').innerHTML = '';
+    $('worst').innerHTML = '<div class="muted small" style="padding:2px 4px">—</div>';
+    return;
+  }
+
   document.title = `Circuit — ${name} (${stats.grade})`;
   $('statFiles').textContent = stats.files.toLocaleString();
   $('statLoc').textContent = stats.loc.toLocaleString();
@@ -342,6 +389,7 @@ function renderSidebar() {
   const hero = $('heroGrade');
   hero.textContent = stats.grade;
   hero.style.color = gradeColor(stats.grade);
+  hero.title = 'Overall grade — the size-weighted average of every file’s grade, minus a penalty for broken wiring.';
   $('heroScore').textContent = stats.score;
   $('heroVerdict').textContent = verdictLine(stats);
 
@@ -396,6 +444,16 @@ function renderSidebar() {
 
 // ---------- report panel ----------
 const DIM_LABELS = { complexity: 'Complexity', safety: 'Safety', structure: 'Structure', hygiene: 'Hygiene', coupling: 'Coupling', docs: 'Docs' };
+// Plain-language explanation of each dimension (with its weight in the grade),
+// surfaced as a hover tooltip so the numbers aren't a mystery.
+const DIM_HELP = {
+  complexity: 'Complexity (25% of the grade) — nesting depth and branch density: how hard the file is to hold in your head.',
+  safety: 'Safety (20%) — swallowed errors, force-unwraps and casts, bare excepts, any-types, @ts-ignore, eval, parse failures.',
+  structure: 'Structure (15%) — god files and over-long functions: whether responsibilities are split.',
+  hygiene: 'Hygiene (15%) — TODOs, stray debug prints, commented-out code, over-long lines.',
+  coupling: 'Coupling (15%) — broken imports, fan-out, and import cycles: how entangled the file is.',
+  docs: 'Docs (10%) — documented public symbols and overall comment coverage.',
+};
 const SEV_ORDER = { critical: 0, major: 1, minor: 2, info: 3 };
 
 function mdCode(msg) {
@@ -411,7 +469,7 @@ function renderPanel(n) {
 
   $('panelDims').innerHTML = Object.entries(DIM_LABELS).map(([key, label]) => {
     const v = n.dimensions[key] ?? 0;
-    return `<div class="dim-row">
+    return `<div class="dim-row" title="${esc(DIM_HELP[key] ?? '')}">
       <span class="dim-label">${label}</span>
       <div class="dim-track"><div class="dim-bar" style="width:${v}%;background:${scoreColor(v)}"></div></div>
       <span class="dim-val">${v}</span>
@@ -577,12 +635,28 @@ $('codeClose').onclick = () => $('codeModal').classList.add('hidden');
 $('codeModal').addEventListener('click', (e) => { if (e.target === $('codeModal')) $('codeModal').classList.add('hidden'); });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === '/' && document.activeElement !== searchInput) { e.preventDefault(); searchInput.focus(); }
+  if (e.key === '/' && document.activeElement !== searchInput && $('welcome').classList.contains('hidden')) { e.preventDefault(); searchInput.focus(); }
   if (e.key === 'Escape') {
-    if (!$('codeModal').classList.contains('hidden')) $('codeModal').classList.add('hidden');
+    if (!$('welcome').classList.contains('hidden')) closeWelcome();
+    else if (!$('codeModal').classList.contains('hidden')) $('codeModal').classList.add('hidden');
     else if (state.selected) { state.selected = null; hidePanel(); refreshStyles(); }
   }
 });
+
+// ---------- first-run welcome / help ----------
+const WELCOME_KEY = 'circuit.welcomed.v1';
+function openWelcome() { $('welcome').classList.remove('hidden'); }
+function closeWelcome() {
+  $('welcome').classList.add('hidden');
+  try { localStorage.setItem(WELCOME_KEY, '1'); } catch { /* private mode — just don't persist */ }
+}
+$('welcomeGo').onclick = closeWelcome;
+$('welcomeClose').onclick = closeWelcome;
+$('helpBtn').onclick = openWelcome;
+$('welcome').addEventListener('click', (e) => { if (e.target === $('welcome')) closeWelcome(); });
+let alreadyWelcomed = false;
+try { alreadyWelcomed = localStorage.getItem(WELCOME_KEY) === '1'; } catch { /* ignore */ }
+if (!alreadyWelcomed) openWelcome();
 
 // ---------- toast & live ----------
 let toastTimer;
@@ -609,7 +683,7 @@ events.addEventListener('graph', async (e) => {
   clearTimeout(rescanRestore);
   const { reason } = JSON.parse(e.data);
   const s = state.data.stats;
-  toast(`Re-graded: ${s.grade} (${s.score}) — ${reason}`);
+  toast(s.empty ? `Re-scanned — no source files found (${reason})` : `Re-graded: ${s.grade} (${s.score}) — ${reason}`);
   setTimeout(() => $('liveDot').classList.remove('pulse'), 1200);
 });
 events.addEventListener('error', (e) => {
@@ -642,5 +716,6 @@ async function loadLicense() {
 }
 
 // ---------- go ----------
+showOverlay('analyzing'); // instant feedback while the first scan runs — never a blank window
 loadLicense();
 loadGraph();

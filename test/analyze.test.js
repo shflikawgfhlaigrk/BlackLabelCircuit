@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyzeRepo, stronglyConnected } from '../lib/analyze.js';
@@ -85,6 +87,19 @@ test('repo stats aggregate correctly', () => {
   assert.equal(graph.stats.grade, letterFor(graph.stats.score));
   const buckets = Object.values(graph.stats.byGrade).reduce((a, b) => a + b, 0);
   assert.equal(buckets, 9);
+});
+
+test('a folder with no gradeable source is reported empty — never a fake A+', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-empty-'));
+  fs.writeFileSync(path.join(dir, 'README.md'), '# docs only, no source\n');
+  fs.writeFileSync(path.join(dir, 'notes.txt'), 'not code\n');
+  const g = analyzeRepo(dir);
+  assert.equal(g.stats.files, 0, 'no source files discovered');
+  assert.equal(g.stats.empty, true, 'flagged empty');
+  assert.equal(g.stats.grade, null, 'no letter grade minted for an empty repo');
+  assert.equal(g.stats.score, null, 'no score minted for an empty repo');
+  assert.equal(g.nodes.length, 0);
+  fs.rmSync(dir, { recursive: true, force: true });
 });
 
 test('letterFor boundaries', () => {
