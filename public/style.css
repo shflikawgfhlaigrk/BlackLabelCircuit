@@ -269,3 +269,27 @@ body {
   .toast { animation: none; }
   * { scroll-behavior: auto; }
 }
+
+/* ---------- demo / trial license banner (fail-closed, price-free) ---------- */
+.demo-banner {
+  position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+  z-index: 60; display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px; border-radius: 999px;
+  background: rgba(5, 7, 13, 0.92); backdrop-filter: blur(12px);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+  font-size: 12px; color: var(--ink-2);
+}
+.demo-banner.hidden { display: none; }
+.demo-tag {
+  font-weight: 700; letter-spacing: 0.14em; font-size: 10px;
+  color: var(--accent); border: 1px solid rgba(125, 211, 252, 0.4);
+  border-radius: 6px; padding: 2px 7px;
+}
+.demo-text { color: var(--ink); }
+.demo-cta {
+  color: #05070d; background: linear-gradient(90deg, var(--grade-a), var(--accent));
+  text-decoration: none; font-weight: 600; border-radius: 7px; padding: 4px 12px;
+  transition: opacity 0.15s;
+}
+.demo-cta:hover { opacity: 0.88; }

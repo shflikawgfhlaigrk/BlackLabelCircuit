@@ -619,5 +619,28 @@ events.addEventListener('error', (e) => {
 });
 events.onerror = () => $('liveDot').classList.remove('on');
 
+// ---------- licensing (honest demo/trial CTA — fail-closed, price-free) ----------
+async function loadLicense() {
+  let lic;
+  try {
+    const res = await fetch('/api/license');
+    if (!res.ok) throw new Error(res.status);
+    lic = await res.json();
+  } catch {
+    // Fail-closed on the client too: if we can't confirm a license, show demo.
+    lic = { mode: 'demo', notice: 'Demo build — Circuit needs a paid license for continued use.',
+            cta: 'Get a license', productUrl: 'https://blacklabelbots.com/circuit' };
+  }
+  const banner = $('demoBanner');
+  if (!banner) return;
+  if (lic.mode === 'licensed') { banner.classList.add('hidden'); return; }
+  $('demoNotice').textContent = lic.notice ?? 'Demo build — paid license required.';
+  const cta = $('demoCta');
+  cta.textContent = lic.cta ?? 'Get a license';
+  cta.href = lic.productUrl ?? 'https://blacklabelbots.com/circuit';
+  banner.classList.remove('hidden');
+}
+
 // ---------- go ----------
+loadLicense();
 loadGraph();

@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyzeRepo } from './lib/analyze.js';
 import { LANG_BY_EXT } from './lib/walk.js';
+import { resolveLicense } from './lib/license.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, 'public');
@@ -91,6 +92,11 @@ const server = http.createServer((req, res) => {
 
 function handle(req, res) {
   const url = new URL(req.url, `http://localhost:${port}`);
+
+  if (url.pathname === '/api/license') {
+    // Fail-closed: resolves to demo mode unless a valid license key is set.
+    return send(res, 200, resolveLicense());
+  }
 
   if (url.pathname === '/api/graph') {
     if (!graph) return send(res, lastError ? 500 : 503, { error: lastError ?? 'analyzing' });
