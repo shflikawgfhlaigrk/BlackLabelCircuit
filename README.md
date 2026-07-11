@@ -22,7 +22,7 @@ repo and re-grades live on every save (the toast tells you the new grade).
 ## What you see
 
 - **Nodes** = files. Size ∝ lines of code. Color = grade (green A → red F, validated ramp).
-- **Wires** = imports (JS/TS/Python) and type references (Swift). Particles flow in the dependency direction.
+- **Wires** = imports (JS/TS/Python/Go/Rust/Java) and type references (Swift). Particles flow in the dependency direction.
 - **Red octahedra** = phantom nodes: files that are imported but don't exist. Every red wire is a broken import.
 - **Click a node** → the report card: grade, six dimension scores, findings written
   as review comments with line numbers, everything it's wired to (both directions),
@@ -52,9 +52,11 @@ out as the place refactoring pays off first.
 
 ## Languages
 
-Deep (wiring + language-specific signals): **JavaScript/TypeScript, Python, Swift**
-(Swift wiring is type-reference based — no file imports in Swift — so it's heuristic).
-Light (metrics + universal signals): Go, Rust, Java, Kotlin, Ruby, C/C++/Obj-C, shell,
+Deep (wiring + language-specific signals): **JavaScript/TypeScript, Python, Swift,
+Go, Rust, Java** (Swift wiring is type-reference based — no file imports in Swift —
+so it's heuristic; Go resolves package paths via `go.mod`, Rust resolves `mod`/`use`
+against the module layout, Java resolves fully-qualified imports via `package` + FQN).
+Light (metrics + universal signals): Kotlin, Ruby, C/C++/Obj-C, shell,
 CSS, HTML, JSON (validity-checked), YAML, TOML.
 
 ## Design notes
