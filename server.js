@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Circuit server: analyzes a repo, serves the 3D UI, re-grades live on file changes.
 //   node server.js [repoPath] [--port 8901]
+// Headless CI mode (no HTTP server):
+//   node server.js --check [repoPath] [--min-grade B] [--sarif circuit.sarif]
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { analyzeRepo } from './lib/analyze.js';
 import { LANG_BY_EXT } from './lib/walk.js';
 import { resolveLicense } from './lib/license.js';
+import { runCheck } from './lib/report.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, 'public');
@@ -15,10 +18,19 @@ const PUBLIC = path.join(__dirname, 'public');
 const args = process.argv.slice(2);
 let root = process.cwd();
 let port = 8923;
+let checkMode = false;      // headless CI grade-gate mode (--check)
+let minGrade = null;        // --min-grade B: fail (exit 1) if repo grades below this
+let sarifPath = null;       // --sarif out.sarif: write SARIF findings for CI annotations
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--port') port = Number(args[++i]);
+  else if (args[i] === '--check') checkMode = true;
+  else if (args[i] === '--min-grade') minGrade = args[++i];
+  else if (args[i] === '--sarif') sarifPath = path.resolve(args[++i]);
   else if (!args[i].startsWith('-')) root = path.resolve(args[i]);
 }
+// --min-grade / --sarif imply the headless check — you never want a long-lived
+// HTTP server in a CI gate.
+if (minGrade != null || sarifPath != null) checkMode = true;
 if (!Number.isInteger(port) || port < 1 || port > 65535) {
   console.error(`Invalid --port value. Usage: circuit [repoPath] [--port 1-65535]`);
   process.exit(1);
@@ -27,6 +39,31 @@ if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) {
   console.error(`Not a directory: ${root}`);
   process.exit(1);
 }
+
+// ---- Headless CI mode: grade, optionally emit SARIF, exit 0/1. No HTTP server. ----
+if (checkMode) {
+  let r;
+  try {
+    r = runCheck({ root, minGrade, sarifPath });
+  } catch (e) {
+    console.error(`[circuit] ${e.message}`);
+    process.exit(2);
+  }
+  if (r.empty) {
+    console.log(`[circuit] ${root}: no gradeable source files found — no grade.`);
+  } else {
+    console.log(`[circuit] ${root}: grade ${r.grade} (${r.score})`);
+  }
+  if (r.stats.parseErrors > 0) console.log(`[circuit] ${r.stats.parseErrors} file(s) could not be parsed.`);
+  if (r.sarifPath) console.log(`[circuit] wrote ${r.sarifResults} finding(s) to ${r.sarifPath}`);
+  if (r.minGrade != null) {
+    console.log(r.pass
+      ? `[circuit] PASS — grade meets minimum ${r.minGrade}.`
+      : `[circuit] FAIL — grade is below the minimum ${r.minGrade}.`);
+  }
+  process.exit(r.exitCode);
+}
+
 const realRoot = fs.realpathSync(root);
 
 const MIME = {

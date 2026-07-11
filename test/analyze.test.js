@@ -89,6 +89,23 @@ test('repo stats aggregate correctly', () => {
   assert.equal(buckets, 9);
 });
 
+test('stats roll up parse errors and skipped files honestly (CI-17)', () => {
+  // The demo fixture ships one unparseable file (broken.json) and no binaries.
+  assert.equal(graph.stats.parseErrors, 1, 'broken.json rolls into parseErrors');
+  assert.equal(graph.stats.skipped, 0, 'nothing skipped in the clean fixture');
+
+  // A file that is binary masquerading as .js is skipped, not graded — and the
+  // roll-up counts it without inflating the file count or the grade.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-skip-'));
+  fs.writeFileSync(path.join(dir, 'ok.js'), 'export const a = 1;\n');
+  fs.writeFileSync(path.join(dir, 'blob.js'), Buffer.from([0x00, 0x01, 0x02, 0x00, 0xff]));
+  const g = analyzeRepo(dir);
+  assert.equal(g.stats.files, 1, 'only the real source file is graded');
+  assert.equal(g.stats.skipped, 1, 'the binary blob is counted as skipped');
+  assert.equal(g.stats.parseErrors, 0, 'a skipped binary is not a parse error');
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
 test('a folder with no gradeable source is reported empty — never a fake A+', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-empty-'));
   fs.writeFileSync(path.join(dir, 'README.md'), '# docs only, no source\n');

@@ -59,8 +59,16 @@ function waitForUrl(child) {
 }
 
 test('server auto-increments when the default port is occupied and grades the real fixture repo', async (t) => {
-  const blocker = await listenOn(8923);
-  t.after(() => blocker.close());
+  // Occupy 8923 so the server must auto-increment. On a dev machine a LIVE
+  // Circuit instance already holds 8923 — that provides the exact same
+  // "default port busy" condition, so tolerate EADDRINUSE and never disturb it.
+  let blocker = null;
+  try {
+    blocker = await listenOn(8923);
+    t.after(() => blocker.close());
+  } catch (e) {
+    if (e.code !== 'EADDRINUSE') throw e;
+  }
 
   const child = spawn(process.execPath, ['server.js', FIXTURE], {
     cwd: ROOT,

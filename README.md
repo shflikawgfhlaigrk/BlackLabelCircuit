@@ -19,6 +19,36 @@ node ~/Circuit/server.js /path/to/repo --port 9000
 Open the printed URL. Leave it running while you code — Circuit watches the
 repo and re-grades live on every save (the toast tells you the new grade).
 
+## CI / headless grade gate
+
+Run Circuit in a pipeline with `--check` — it grades the repo, prints the result,
+and exits without ever starting the HTTP server:
+
+```sh
+node ~/Circuit/server.js --check /path/to/repo                      # print grade, exit 0
+node ~/Circuit/server.js --check /path/to/repo --min-grade B        # exit 1 if the repo grades below B
+node ~/Circuit/server.js --check /path/to/repo --sarif circuit.sarif  # write SARIF findings for annotations
+```
+
+- `--check` runs `analyzeRepo` once and exits — no server, no file watching.
+- `--min-grade <G>` gates the build: exit `0` when the repo grade is at least `<G>`
+  (`A+` … `F`), exit `1` when it is below. An empty repo (no gradeable source) has
+  **no grade** and therefore never passes a threshold — it fails honestly rather
+  than being minted a pass.
+- `--sarif <file>` writes a [SARIF 2.1.0](https://sariftools.github.io/sarif/) log:
+  every file-level finding becomes a line-anchored result (rule `circuit/<dimension>`,
+  level error/warning/note), so GitHub code scanning / PR checks render them inline.
+  Passing `--min-grade` or `--sarif` implies `--check`.
+
+Example GitHub Actions step:
+
+```yaml
+- run: node Circuit/server.js --check . --min-grade B --sarif circuit.sarif
+- uses: github/codeql-action/upload-sarif@v3
+  if: always()
+  with: { sarif_file: circuit.sarif }
+```
+
 ## What you see
 
 - **Nodes** = files. Size ∝ lines of code. Color = grade (green A → red F, validated ramp).
@@ -66,11 +96,13 @@ CSS, HTML, JSON (validity-checked), YAML, TOML.
   (`node build-vendor.mjs` to rebuild). Fully offline.
 - Analysis is regex-heuristic by design: ~1200 files in <1s, no compilers, no
   language servers. It grades like a reviewer skimming, not a type checker.
-- Repos >4000 files are truncated (noted in the UI stats).
+- Repos >4000 files are truncated (surfaced as a `truncated` chip in the UI
+  stats); files that can't be parsed or read are counted and shown too, so a
+  grade is never silently computed over a partial view of the repo.
 - Rendering pauses when the tab is hidden — zero background CPU.
 
 ## Test
 
 ```sh
-npm test   # 14 tests over a fixture repo with known defects
+npm test   # unit + integration tests over a fixture repo with known defects
 ```

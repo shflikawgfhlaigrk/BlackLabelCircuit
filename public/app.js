@@ -363,6 +363,8 @@ function renderSidebar() {
     $('statEdges').textContent = '0';
     $('statBroken').classList.add('hidden');
     $('statCycles').classList.add('hidden');
+    $('statParse').classList.add('hidden');
+    $('statTruncated').classList.add('hidden');
     const hero = $('heroGrade');
     hero.textContent = '–';
     hero.style.color = 'var(--ink-3)';
@@ -385,6 +387,17 @@ function renderSidebar() {
   const cyc = $('statCycles');
   cyc.classList.toggle('hidden', stats.cycles === 0);
   cyc.textContent = `${stats.cycles} cycle${stats.cycles === 1 ? '' : 's'}`;
+
+  // Honesty (H3): show the reader what grading could NOT cover — files that
+  // could not be parsed, and whether the repo was truncated at the file limit —
+  // so the headline grade is never mistaken for a full-repo verdict.
+  const parse = $('statParse');
+  const unparsed = stats.parseErrors ?? 0;
+  parse.classList.toggle('hidden', unparsed === 0);
+  parse.textContent = `${unparsed} file${unparsed === 1 ? '' : 's'} could not be parsed`;
+  const trunc = $('statTruncated');
+  trunc.classList.toggle('hidden', !state.data.truncated);
+  trunc.textContent = `>4,000 files — truncated`;
 
   const hero = $('heroGrade');
   hero.textContent = stats.grade;
