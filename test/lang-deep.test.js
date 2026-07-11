@@ -8,11 +8,13 @@ import { analyzeRepo } from '../lib/analyze.js';
 import { resolveRustMod, resolveRustUse } from '../lib/lang/rust.js';
 import { resolveJavaImport } from '../lib/lang/java.js';
 import { resolveGoImport } from '../lib/lang/go.js';
+import { resolveInclude } from '../lib/lang/c.js';
 
 const FIX = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures', 'deeplang');
 const go = analyzeRepo(path.join(FIX, 'go'));
 const rust = analyzeRepo(path.join(FIX, 'rust'));
 const java = analyzeRepo(path.join(FIX, 'java'));
+const c = analyzeRepo(path.join(FIX, 'c'));
 
 const nodeOf = (g, id) => g.nodes.find((n) => n.id === id);
 const linksFrom = (g, id) => g.links.filter((l) => l.source === id);
@@ -128,6 +130,44 @@ test('java: resolveJavaImport classifies resolved / broken / external / wildcard
   assert.equal(resolveJavaImport('com.demo.util.Missing', ctx).resolved, null); // first-party, broken
   assert.equal(resolveJavaImport('java.util.List', ctx).external, true);
   assert.equal(resolveJavaImport('com.demo.util.*', ctx).resolved, 'com/demo/util/Helper.java');
+});
+
+// ---------- C / C++ ----------
+test('c: quoted #include resolves to the local header as a real edge', () => {
+  const l = linksFrom(c, 'main.c');
+  assert.ok(l.some((x) => x.target === 'util.h' && !x.broken), '#include "util.h" resolves to the header');
+  assert.ok(linksFrom(c, 'util.c').some((x) => x.target === 'util.h' && !x.broken), 'util.c wires to the header too');
+  assert.ok(linksFrom(c, 'app.cpp').some((x) => x.target === 'util.h' && !x.broken), 'a .cpp resolves the same header');
+});
+
+test('c: angle-bracket #include <stdio.h> is external, never an edge', () => {
+  const main = nodeOf(c, 'main.c');
+  assert.ok(main.externals.includes('stdio.h') && main.externals.includes('string.h'), 'system headers classified external');
+  assert.ok(!linksFrom(c, 'main.c').some((x) => x.target.includes('stdio')), 'no edge for a system header');
+});
+
+test('c: unbounded strcpy flagged, main() extracted', () => {
+  const main = nodeOf(c, 'main.c');
+  assert.ok(main.functions.some((f) => f.name === 'main'), 'main() extracted');
+  assert.ok(main.findings.some((f) => f.msg.includes('strcpy()') && f.dim === 'safety'), 'strcpy buffer-overflow vector flagged');
+});
+
+test('cpp: empty catch flagged, function extracted', () => {
+  const app = nodeOf(c, 'app.cpp');
+  assert.ok(app.functions.some((f) => f.name === 'compute'), 'compute() extracted');
+  assert.ok(app.findings.some((f) => f.msg.includes('Empty catch')), 'empty catch swallow flagged');
+});
+
+test('c: clean header/impl outgrade the unsafe main; nothing fabricated broken', () => {
+  assert.ok(nodeOf(c, 'util.c').score > nodeOf(c, 'main.c').score, 'clean impl beats the unsafe file');
+  assert.equal(c.stats.brokenEdges, 0, 'C never mints a broken wire for an unresolved include (may be an -I header)');
+});
+
+test('c: resolveInclude is file-relative, drops the unresolvable rather than faking a break', () => {
+  const files = new Set(['src/main.c', 'src/util.h', 'util.h']);
+  assert.equal(resolveInclude('src/main.c', 'util.h', files), 'src/util.h', 'file-relative wins over repo-root');
+  assert.equal(resolveInclude('src/main.c', '../util.h', files), 'util.h', '..\/ normalizes to the root header');
+  assert.equal(resolveInclude('src/main.c', 'nope.h', files), null, 'no on-disk match → null (dropped, not broken)');
 });
 
 // ---------- Cross-cutting honesty ----------
