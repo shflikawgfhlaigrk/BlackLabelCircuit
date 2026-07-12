@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { analyzeRepo, stronglyConnected } from '../lib/analyze.js';
 import { gradeFile, letterFor } from '../lib/grade.js';
 import { resolveJsImport } from '../lib/lang/javascript.js';
+import { scanSecrets } from '../lib/lang/common.js';
 
 const FIXTURE = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures', 'demo');
 const graph = analyzeRepo(FIXTURE);
@@ -163,4 +164,55 @@ test('watch: fs.watch path exclusions do not hide fixture paths', () => {
   assert.ok(WATCH_IGNORE.test('node_modules/x/y.js'));
   assert.ok(WATCH_IGNORE.test('.git/HEAD'));
   assert.ok(WATCH_IGNORE.test('.cursor/debug-xyz.log'));
+});
+
+// ---- Hardcoded-secret detection (safety) ----
+
+test('scanSecrets flags high-signal vendor key formats', () => {
+  const hits = scanSecrets([
+    'const a = 1;',
+    'const awsKey = "AKIAIOSFODNN7EXAMPLE";',
+    'slack = "xoxb-123456789012-abcdefghijkl";',
+    'const gh = "ghp_abcdefghijklmnopqrstuvwxyz0123456789";',
+  ].join('\n'));
+  const kinds = hits.map((h) => h.kind);
+  assert.ok(kinds.includes('AWS access key id'));
+  assert.ok(kinds.includes('Slack token'));
+  assert.ok(kinds.includes('GitHub token'));
+  assert.equal(hits.find((h) => h.kind === 'AWS access key id').line, 2);
+});
+
+test('scanSecrets flags a credential assigned a literal, any language', () => {
+  assert.equal(scanSecrets('password = "s3cr3t-live-value"').length, 1);
+  assert.equal(scanSecrets('let apiKey: String = "8f3ac0b1d9e7"').length, 1);
+  assert.equal(scanSecrets('client_secret: "9a8b7c6d5e4f3021"').length, 1);
+});
+
+test('scanSecrets does NOT flag env references, placeholders, or short values', () => {
+  assert.equal(scanSecrets('password = process.env.DB_PASSWORD').length, 0);
+  assert.equal(scanSecrets('password = os.environ["PW"]').length, 0);
+  assert.equal(scanSecrets('const apiKey = `${API_KEY}`').length, 0);
+  assert.equal(scanSecrets('password = "changeme"').length, 0);
+  assert.equal(scanSecrets('password: "your-password-here"').length, 0);
+  assert.equal(scanSecrets('api_key = "xxxx"').length, 0);       // placeholder
+  assert.equal(scanSecrets('secret = "1234"').length, 0);         // too short
+  assert.equal(scanSecrets('const password = "";').length, 0);    // empty
+});
+
+test('analyzeRepo grades a hardcoded secret as a critical safety finding', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-secret-'));
+  fs.writeFileSync(path.join(dir, 'config.js'),
+    'export const cfg = {\n  password: "prod-live-2f8e91ac",\n};\n');
+  try {
+    const g = analyzeRepo(dir);
+    const n = g.nodes.find((x) => x.id === 'config.js');
+    assert.ok(n, 'config.js node exists');
+    const finding = n.findings.find((f) => /Hardcoded/.test(f.msg));
+    assert.ok(finding, 'a hardcoded-credential finding is attached');
+    assert.equal(finding.dim, 'safety');
+    assert.equal(finding.severity, 'critical');
+    assert.equal(finding.line, 2);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });
