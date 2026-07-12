@@ -7,6 +7,9 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 // ---------- grade colors (validated ramp: monotonic lightness on dark) ----------
 const GRADE_COLORS = { A: '#86efac', B: '#a3e635', C: '#eab308', D: '#fb923c', F: '#f87171' };
 const BROKEN = '#ff3355';
+// Forbidden-dependency edges (CI-22): a solid red wire, distinct in hue from a
+// broken wire but unmistakably "this crossing is not allowed".
+const RULE_VIOLATION = '#ff2d78';
 const DIM_NODE = '#1c2431';
 // Stops aligned to letter boundaries: A≈green, B≈lime, C≈yellow, D≈orange, F≈red.
 const SCORE_STOPS = [
@@ -62,8 +65,8 @@ Graph
   .linkWidth(linkWidthFn)
   .linkDirectionalParticles(particlesFn)
   .linkDirectionalParticleWidth(1.8)
-  .linkDirectionalParticleSpeed((l) => (l.broken ? 0.012 : 0.006))
-  .linkDirectionalParticleColor((l) => (l.broken ? BROKEN : '#6ea8d8'))
+  .linkDirectionalParticleSpeed((l) => (l.broken || l.ruleViolation ? 0.012 : 0.006))
+  .linkDirectionalParticleColor((l) => (l.broken ? BROKEN : l.ruleViolation ? RULE_VIOLATION : '#6ea8d8'))
   .onNodeHover((n) => { state.hover = n ?? null; graphEl.style.cursor = n ? 'pointer' : ''; refreshStyles(); })
   .onNodeClick((n) => selectNode(n, true))
   .onBackgroundClick(() => { if (state.selected) { state.selected = null; hidePanel(); refreshStyles(); } });
@@ -138,17 +141,20 @@ function linkTouchesFocus(l) {
 
 function linkColorFn(l) {
   if (l.broken) return BROKEN;
+  if (l.ruleViolation) return RULE_VIOLATION;
   const hood = activeNeighborhood();
   if (hood) return linkTouchesFocus(l) ? '#9ed4ff' : 'rgba(40,52,70,0.5)';
   return 'rgba(110,135,175,0.55)';
 }
 
 function linkWidthFn(l) {
-  return linkTouchesFocus(l) ? 1.6 : 0;
+  // A forbidden crossing is always drawn solid — it must read at a glance, not
+  // only when its endpoints are focused.
+  return (l.ruleViolation || linkTouchesFocus(l)) ? 1.6 : 0;
 }
 
 function particlesFn(l) {
-  if (l.broken) return 4;
+  if (l.broken || l.ruleViolation) return 4;
   if (linkTouchesFocus(l)) return 3;
   if (state.flowOn && (state.data?.links.length ?? 0) < 1800) return 1;
   return 0;
@@ -728,7 +734,21 @@ async function loadLicense() {
   banner.classList.remove('hidden');
 }
 
+// ---------- air-gap / offline-mode posture (CI-18) ----------
+// Circuit's backend makes zero outbound network calls (provable via the CI-15
+// source scan) and binds loopback-only. Surface that as an always-on, honest chip
+// so regulated / air-gapped buyers can see at a glance that their source never
+// leaves the machine. This is a standing fact, not a runtime measurement — see
+// AIRGAP.md for the attestable no-network statement.
+function showOfflineChip() {
+  const chip = $('offlineChip');
+  if (!chip) return;
+  chip.textContent = '⏚ offline — no code leaves this machine';
+  chip.title = 'Air-gap ready: Circuit runs fully on this machine. Your source is never uploaded — the backend makes zero outbound network calls and binds to localhost only. See AIRGAP.md for the attestable no-network statement (verified by the CI-15 source scan).';
+}
+
 // ---------- go ----------
 showOverlay('analyzing'); // instant feedback while the first scan runs — never a blank window
+showOfflineChip();
 loadLicense();
 loadGraph();

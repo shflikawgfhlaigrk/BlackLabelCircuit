@@ -80,6 +80,34 @@ doesn't parse can't grade above F. Repo grade is the LOC-weighted mean minus
 a penalty per broken wire. Churn hotspots (git history × bad grade) get called
 out as the place refactoring pays off first.
 
+## Architecture rules
+
+Drop a `.circuit-rules.json` at the repo root to declare **forbidden dependencies**
+between parts of your codebase. Circuit resolves them over the real import graph it
+already builds — a violation is a genuine resolved import that crosses a boundary you
+declared off-limits, never a heuristic guess.
+
+```json
+{
+  "forbidden": [
+    { "from": "src/ui/**", "to": "src/db/**",
+      "name": "UI must not reach into the DB layer",
+      "severity": "critical", "points": 25 },
+    { "from": "src/**", "to": "test/**" }
+  ]
+}
+```
+
+- `from` / `to` are POSIX path globs (`*` within a segment, `**` across segments,
+  `**/` for any leading segments). Both are required.
+- `name` (optional) prefixes the finding; `severity` (`critical`|`major`|`minor`|`info`,
+  default `critical`) and `points` (1–100 coupling deduction, default 20) are optional.
+- Each violation becomes a **line-anchored Coupling finding** on the offending file
+  (it drags the grade through the same critical/major compounding as any other finding)
+  and a **red edge** in the 3D graph, so you can see the forbidden crossing at a glance.
+- **Zero violations → zero findings.** No rules file → the analysis is exactly as it
+  is without one. Rules are enforced in `--check` / SARIF CI mode too.
+
 ## Languages
 
 Deep (wiring + language-specific signals): **JavaScript/TypeScript, Python, Swift,
@@ -100,6 +128,24 @@ CSS, HTML, JSON (validity-checked), YAML, TOML.
   stats); files that can't be parsed or read are counted and shown too, so a
   grade is never silently computed over a partial view of the repo.
 - Rendering pauses when the tab is hidden — zero background CPU.
+
+## Air-gapped / offline use
+
+Circuit is **offline by default** and safe for regulated, air-gapped environments —
+your source code never leaves the machine:
+
+- **Zero outbound network calls.** The backend is Node stdlib only; it opens no HTTP
+  client, no socket, no DNS. This is an *attestable* claim, not a promise: the CI-15
+  source scan and `npm test` (`test/airgap.test.js`) fail the build if any
+  network-egress API appears in the backend source.
+- **Loopback-only.** The server binds `127.0.0.1` — nothing is exposed off-box.
+- **No CDN, no telemetry, no license phone-home.** The 3D stack is vendored into
+  `public/vendor/`; licensing fails *closed* to demo mode with no network required.
+- **In-app indicator.** The top bar shows an always-on `⏚ offline — no code leaves
+  this machine` chip so an auditor can confirm the posture at a glance.
+
+See **[AIRGAP.md](AIRGAP.md)** for offline install steps and the full attestable
+no-network statement.
 
 ## Test
 

@@ -195,9 +195,13 @@ server.on('error', (e) => {
     process.exit(1);
   }
 });
+// Air-gap / offline-mode posture (CI-18): bind to loopback only. Circuit makes no
+// outbound network calls (attestable via the CI-15 source scan / test/airgap.test.js)
+// — source code never leaves the machine. Safe for regulated, air-gapped installs.
 server.listen(port, '127.0.0.1', () => {
   console.log(`[circuit] grading ${root}`);
   console.log(`[circuit] http://localhost:${port}`);
+  console.log(`[circuit] offline: loopback-only, no outbound network (air-gap ready — see AIRGAP.md)`);
   // Defer the first scan to the next tick so the HTTP server can serve the UI
   // shell (and the first /api/graph poll → "analyzing…") immediately. On a large
   // repo the synchronous scan would otherwise block the very first paint, leaving
