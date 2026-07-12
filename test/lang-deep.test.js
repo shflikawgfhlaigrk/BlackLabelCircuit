@@ -9,12 +9,16 @@ import { resolveRustMod, resolveRustUse } from '../lib/lang/rust.js';
 import { resolveJavaImport } from '../lib/lang/java.js';
 import { resolveGoImport } from '../lib/lang/go.js';
 import { resolveInclude } from '../lib/lang/c.js';
+import { resolveKotlinImport } from '../lib/lang/kotlin.js';
+import { resolveRequireRelative } from '../lib/lang/ruby.js';
 
 const FIX = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures', 'deeplang');
 const go = analyzeRepo(path.join(FIX, 'go'));
 const rust = analyzeRepo(path.join(FIX, 'rust'));
 const java = analyzeRepo(path.join(FIX, 'java'));
 const c = analyzeRepo(path.join(FIX, 'c'));
+const kotlin = analyzeRepo(path.join(FIX, 'kotlin'));
+const ruby = analyzeRepo(path.join(FIX, 'ruby'));
 
 const nodeOf = (g, id) => g.nodes.find((n) => n.id === id);
 const linksFrom = (g, id) => g.links.filter((l) => l.source === id);
@@ -170,6 +174,78 @@ test('c: resolveInclude is file-relative, drops the unresolvable rather than fak
   assert.equal(resolveInclude('src/main.c', 'nope.h', files), null, 'no on-disk match → null (dropped, not broken)');
 });
 
+// ---------- Kotlin ----------
+test('kotlin: FQN import resolves to the file that declares the symbol', () => {
+  const l = linksFrom(kotlin, 'com/app/App.kt');
+  assert.ok(l.some((x) => x.target === 'com/app/util/Helper.kt' && !x.broken), 'Helper import resolves');
+});
+
+test('kotlin: import of a missing symbol in a first-party package is a broken wire; kotlin.* is external', () => {
+  const l = linksFrom(kotlin, 'com/app/App.kt');
+  assert.ok(l.some((x) => x.broken), 'the missing-symbol import is broken');
+  assert.ok(!l.some((x) => x.target.toLowerCase().includes('list')), 'kotlin.collections.List is external, no edge');
+  const phantom = kotlin.nodes.find((n) => n.missing);
+  assert.ok(phantom && phantom.grade === 'F');
+  assert.ok(phantom.findings.some((f) => f.dim === 'coupling' && f.severity === 'critical'));
+});
+
+test('kotlin: functions extracted; empty catch + `!!` flagged, main grades below the clean helper', () => {
+  const app = nodeOf(kotlin, 'com/app/App.kt');
+  assert.ok(app.functions.some((f) => f.name === 'main'), 'main() extracted');
+  assert.ok(app.functions.some((f) => f.name === 'risky'), 'risky() extracted');
+  assert.ok(app.findings.some((f) => f.msg.includes('Empty catch')), 'empty catch flagged');
+  assert.ok(app.findings.some((f) => f.msg.includes('!!')), '`!!` not-null assertion flagged');
+  const helper = nodeOf(kotlin, 'com/app/util/Helper.kt');
+  assert.equal(helper.grade, 'A+', 'documented clean helper is A+');
+  assert.ok(app.score < helper.score, 'distinct rubric grades');
+});
+
+test('kotlin: resolveKotlinImport classifies resolved / broken / external / wildcard', () => {
+  const ctx = {
+    fqn: new Map([['com.app.util.Helper', 'com/app/util/Helper.kt']]),
+    packages: new Set(['com.app', 'com.app.util']),
+    pkgFirst: new Map([['com.app.util', 'com/app/util/Helper.kt']]),
+  };
+  assert.equal(resolveKotlinImport('com.app.util.Helper', ctx).resolved, 'com/app/util/Helper.kt');
+  assert.equal(resolveKotlinImport('com.app.util.Missing', ctx).resolved, null); // first-party, broken
+  assert.equal(resolveKotlinImport('kotlin.collections.List', ctx).external, true);
+  assert.equal(resolveKotlinImport('com.app.util.*', ctx).resolved, 'com/app/util/Helper.kt');
+});
+
+// ---------- Ruby ----------
+test('ruby: require_relative resolves to the local file as a real edge', () => {
+  const l = linksFrom(ruby, 'app.rb');
+  assert.ok(l.some((x) => x.target === 'util.rb' && !x.broken), "require_relative './util' resolves");
+});
+
+test('ruby: require_relative with no backing file is a broken wire; require gem is external', () => {
+  const l = linksFrom(ruby, 'app.rb');
+  assert.ok(l.some((x) => x.broken), 'the missing require_relative is broken');
+  assert.ok(!l.some((x) => x.target.includes('json')), "require 'json' is external, no edge");
+  const app = nodeOf(ruby, 'app.rb');
+  assert.ok(app.externals.includes('json'), 'json classified external');
+  const phantom = ruby.nodes.find((n) => n.missing);
+  assert.ok(phantom && phantom.findings.some((f) => f.dim === 'coupling' && f.severity === 'critical'));
+});
+
+test('ruby: def…end methods extracted, swallowed rescue + debug puts flagged, clean file outgrades', () => {
+  const app = nodeOf(ruby, 'app.rb');
+  assert.ok(app.functions.some((f) => f.name === 'run'), 'run() extracted');
+  assert.ok(app.findings.some((f) => f.dim === 'safety' && f.msg.includes('swallows')), 'empty rescue flagged');
+  assert.ok(app.findings.some((f) => f.dim === 'hygiene' && f.msg.toLowerCase().includes('debug')), 'debug puts flagged');
+  const util = nodeOf(ruby, 'util.rb');
+  assert.ok(util.functions.some((f) => f.name === 'total'), 'util methods extracted via def…end');
+  assert.equal(util.grade, 'A+', 'clean helper is A+');
+  assert.ok(app.score < util.score, 'distinct rubric grades');
+});
+
+test('ruby: resolveRequireRelative is file-relative, appends .rb, drops the unresolvable', () => {
+  const files = new Set(['lib/app.rb', 'lib/util.rb', 'util.rb']);
+  assert.equal(resolveRequireRelative('lib/app.rb', './util', files), 'lib/util.rb', 'file-relative, .rb appended');
+  assert.equal(resolveRequireRelative('lib/app.rb', '../util', files), 'util.rb', '../ normalizes to the root file');
+  assert.equal(resolveRequireRelative('lib/app.rb', './nope', files), null, 'no on-disk match → broken (null)');
+});
+
 // ---------- Cross-cutting honesty ----------
 test('deep parsers do not fabricate grades on an empty tree', () => {
   const g = analyzeRepo(path.join(FIX, 'go', 'util')); // a dir with source still grades; empty checked elsewhere
@@ -181,4 +257,6 @@ test('each deep language reports at least one broken edge from its fixture', () 
   assert.equal(go.stats.brokenEdges, 1);
   assert.equal(rust.stats.brokenEdges, 1);
   assert.equal(java.stats.brokenEdges, 1);
+  assert.equal(kotlin.stats.brokenEdges, 1);
+  assert.equal(ruby.stats.brokenEdges, 1);
 });

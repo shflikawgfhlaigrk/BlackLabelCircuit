@@ -671,9 +671,15 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') { e.preventDefault(); stopPlay(); stepReplay(-1); return; }
     if (e.key === 'ArrowRight') { e.preventDefault(); stopPlay(); stepReplay(1); return; }
   }
+  // Tour transport: ←/→ step stops when the tour is running (and not typing).
+  if (tour.on && document.activeElement !== searchInput) {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); tourStep(-1); return; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); tourStep(1); return; }
+  }
   if (e.key === 'Escape') {
     if (!$('welcome').classList.contains('hidden')) closeWelcome();
     else if (!$('codeModal').classList.contains('hidden')) $('codeModal').classList.add('hidden');
+    else if (tour.on) exitTour();
     else if (state.replay.on) exitReplay();
     else if (state.selected) { state.selected = null; hidePanel(); refreshStyles(); }
   }
@@ -785,6 +791,92 @@ $('replayPlay').onclick = () => { if (state.replay.playing) stopPlay(); else pla
 $('replayScrub').oninput = () => { stopPlay(); showFrame(Number($('replayScrub').value)); };
 $('replayExport').onclick = exportTimeline;
 $('replayClose').onclick = exitReplay;
+
+// ---------- guided 3D tour (CI-23 "walkthrough") ----------
+// An auto-seeded fly-through: the camera flies node-to-node, opening each file's
+// REAL report card as it lands. Stops are chosen from genuine graph facts —
+// entry points (roots that import others but nothing imports them) and churn
+// hotspots (git commits/90d, already computed per node) — with dependency hubs
+// and worst offenders as honest fallbacks so a repo with no roots/history still
+// gets a tour. Every word of narration is assembled from computed metrics
+// (grade, dimensions, findings, fan-in/out, churn); nothing is canned prose that
+// asserts a fact the analyzer didn't produce.
+const tour = { on: false, stops: [], idx: 0 };
+
+function weakestDim(n) {
+  const entries = Object.entries(n.dimensions ?? {});
+  if (!entries.length) return null;
+  return entries.reduce((a, b) => (b[1] < a[1] ? b : a));
+}
+
+function buildTourStops() {
+  const nodes = state.data?.nodes?.filter((n) => !n.missing) ?? [];
+  const stops = [];
+  const seen = new Set();
+  const push = (n, reason) => { if (n && !seen.has(n.id)) { seen.add(n.id); stops.push({ id: n.id, reason }); } };
+  // Entry points: fan-in 0, fan-out > 0 — the code the repo starts from.
+  for (const n of nodes.filter((n) => n.fanIn === 0 && n.fanOut > 0).sort((a, b) => b.fanOut - a.fanOut).slice(0, 4)) push(n, 'entry');
+  // Churn hotspots: most-edited files over the last 90 days (real git churn).
+  for (const n of nodes.filter((n) => n.churn > 0).sort((a, b) => b.churn - a.churn).slice(0, 4)) push(n, 'churn');
+  // Fallbacks (still real graph facts) so the tour is never empty.
+  if (stops.length < 3) for (const n of [...nodes].sort((a, b) => (b.fanIn + b.fanOut) - (a.fanIn + a.fanOut)).slice(0, 3)) push(n, 'hub');
+  if (stops.length < 3) for (const n of [...nodes].filter((n) => n.loc >= 10).sort((a, b) => a.score - b.score).slice(0, 3)) push(n, 'worst');
+  return stops.slice(0, 7);
+}
+
+function tourNarration(stop) {
+  const n = state.data.nodes.find((x) => x.id === stop.id);
+  if (!n) return '';
+  const reason = {
+    entry: `Entry point — nothing imports it; it wires out to ${n.fanOut} file${n.fanOut === 1 ? '' : 's'}.`,
+    churn: `Churn hotspot — ${n.churn} commit${n.churn === 1 ? '' : 's'} in the last 90 days.`,
+    hub: `Dependency hub — ${n.fanIn} in, ${n.fanOut} out.`,
+    worst: `Among the lowest-graded files here.`,
+  }[stop.reason] ?? '';
+  const w = weakestDim(n);
+  const weak = w ? ` Weakest dimension: ${DIM_LABELS[w[0]] ?? w[0]} ${w[1]}.` : '';
+  const top = [...n.findings].sort((a, b) => (SEV_ORDER[a.severity] - SEV_ORDER[b.severity]) || (b.points - a.points))[0];
+  const issue = n.findings.length ? ` Top issue (${top.severity}): ${top.msg.replace(/`/g, '')}` : ' Clean — nothing to flag.';
+  return `${n.id} — grades ${n.grade} (${n.score}). ${reason}${weak}${issue}`;
+}
+
+function enterTour() {
+  if (!state.data || state.data.stats.empty) { toast('Nothing to tour — no gradeable files.'); return; }
+  const stops = buildTourStops();
+  if (!stops.length) { toast('Nothing to tour — no gradeable files.'); return; }
+  tour.on = true;
+  tour.stops = stops;
+  $('tglTour').classList.add('on');
+  $('tourBar').classList.remove('hidden');
+  showTourStop(0);
+}
+
+function exitTour() {
+  tour.on = false;
+  $('tourBar').classList.add('hidden');
+  $('tglTour').classList.remove('on');
+}
+
+function showTourStop(i) {
+  i = Math.max(0, Math.min(tour.stops.length - 1, i));
+  tour.idx = i;
+  const stop = tour.stops[i];
+  focusNodeById(stop.id);            // flies the camera in and opens the real report card
+  $('tourNarration').textContent = tourNarration(stop);
+  $('tourProgress').textContent = `${i + 1} / ${tour.stops.length}`;
+  $('tourPrev').disabled = i === 0;
+  $('tourNext').textContent = i === tour.stops.length - 1 ? 'Done' : 'Next →';
+}
+
+function tourStep(delta) {
+  if (delta > 0 && tour.idx === tour.stops.length - 1) { exitTour(); return; }
+  showTourStop(tour.idx + delta);
+}
+
+$('tglTour').onclick = () => { if (tour.on) exitTour(); else enterTour(); };
+$('tourPrev').onclick = () => tourStep(-1);
+$('tourNext').onclick = () => tourStep(1);
+$('tourClose').onclick = exitTour;
 
 // ---------- first-run welcome / help ----------
 const WELCOME_KEY = 'circuit.welcomed.v1';

@@ -3,6 +3,8 @@
 //   node server.js [repoPath] [--port 8901]
 // Headless CI mode (no HTTP server):
 //   node server.js --check [repoPath] [--min-grade B] [--sarif circuit.sarif]
+// Editor mode — the stdio LSP language server for in-editor live re-grade (CI-21):
+//   node server.js --lsp [repoPath]   (stdin/stdout speak LSP; see editor/README.md)
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -22,9 +24,11 @@ let port = 8923;
 let checkMode = false;      // headless CI grade-gate mode (--check)
 let minGrade = null;        // --min-grade B: fail (exit 1) if repo grades below this
 let sarifPath = null;       // --sarif out.sarif: write SARIF findings for CI annotations
+let lspMode = false;        // --lsp: run the editor language server on stdin/stdout
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--port') port = Number(args[++i]);
   else if (args[i] === '--check') checkMode = true;
+  else if (args[i] === '--lsp') lspMode = true;
   else if (args[i] === '--min-grade') minGrade = args[++i];
   else if (args[i] === '--sarif') sarifPath = path.resolve(args[++i]);
   else if (!args[i].startsWith('-')) root = path.resolve(args[i]);
@@ -39,6 +43,16 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
 if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) {
   console.error(`Not a directory: ${root}`);
   process.exit(1);
+}
+
+// ---- Editor mode (CI-21): hand stdin/stdout to the stdio LSP language server. ----
+// The `await` blocks the module here for the life of the LSP session, so the HTTP
+// bootstrap below never runs; when the editor disconnects, the session resolves
+// and we exit. The language server itself lives in editor/server.js.
+if (lspMode) {
+  const { startLsp } = await import('./editor/server.mjs');
+  await startLsp({ root });
+  process.exit(0);
 }
 
 // ---- Headless CI mode: grade, optionally emit SARIF, exit 0/1. No HTTP server. ----

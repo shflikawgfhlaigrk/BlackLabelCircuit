@@ -108,13 +108,31 @@ declared off-limits, never a heuristic guess.
 - **Zero violations → zero findings.** No rules file → the analysis is exactly as it
   is without one. Rules are enforced in `--check` / SARIF CI mode too.
 
+## Editor integration (live re-grade)
+
+Circuit ships a **language server** so the same review shows up *in your editor*,
+not just the 3D view. It's a zero-dependency stdio **LSP** server driven by the
+exact same `analyzeRepo` — save a file and Circuit re-grades the repo, surfaces
+each finding as a line-anchored diagnostic (carrying its dimension, severity and
+point deduction), and shows the repo grade in the status bar.
+
+```sh
+node ~/Circuit/server.js --lsp /path/to/repo   # stdin/stdout speak LSP
+```
+
+The VS Code client is in [`editor/`](editor/) — see [editor/README.md](editor/README.md).
+Like the rest of Circuit it makes **zero network calls**; your source never leaves
+the machine.
+
 ## Languages
 
 Deep (wiring + language-specific signals): **JavaScript/TypeScript, Python, Swift,
-Go, Rust, Java** (Swift wiring is type-reference based — no file imports in Swift —
-so it's heuristic; Go resolves package paths via `go.mod`, Rust resolves `mod`/`use`
-against the module layout, Java resolves fully-qualified imports via `package` + FQN).
-Light (metrics + universal signals): Kotlin, Ruby, C/C++/Obj-C, shell,
+Go, Rust, Java, Kotlin, Ruby** (Swift wiring is type-reference based — no file
+imports in Swift — so it's heuristic; Go resolves package paths via `go.mod`, Rust
+resolves `mod`/`use` against the module layout, Java resolves fully-qualified
+imports via `package` + FQN, Kotlin resolves `import` against declared packages and
+top-level symbols, Ruby resolves `require_relative` against the on-disk layout).
+Light (metrics + universal signals): C/C++/Obj-C, shell,
 CSS, HTML, JSON (validity-checked), YAML, TOML.
 
 ## Design notes

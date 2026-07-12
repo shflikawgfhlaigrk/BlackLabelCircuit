@@ -77,6 +77,13 @@
   </section>
 
   <section>
+    <h3>Tour <span class="muted small">guided walkthrough</span></h3>
+    <div class="chips">
+      <button class="chip toggle" id="tglTour" title="Fly through the codebase's entry points and hotspots, opening each file's review">▶ Guided tour</button>
+    </div>
+  </section>
+
+  <section>
     <h3>History <span class="muted small">grade over time</span></h3>
     <div class="chips">
       <button class="chip toggle" id="tglReplay" title="Replay the codebase's grade through its git history">▶ Refactor movie</button>
@@ -167,6 +174,15 @@
   </div>
   <button id="replayExport" class="btn ghost" title="Download the grade timeline as JSON">Export</button>
   <button id="replayClose" class="btn ghost" title="Exit replay">✕</button>
+</div>
+
+<!-- Guided-tour narration bar (CI-23). Hidden until a tour starts. -->
+<div id="tourBar" class="tour-bar hidden">
+  <span id="tourProgress" class="tour-progress mono muted">0 / 0</span>
+  <span id="tourNarration" class="tour-narration"></span>
+  <button id="tourPrev" class="btn ghost" title="Previous stop (←)">← Prev</button>
+  <button id="tourNext" class="btn" title="Next stop (→)">Next →</button>
+  <button id="tourClose" class="btn ghost" title="Exit tour (Esc)">✕</button>
 </div>
 
 <div id="toast" class="toast hidden"></div>

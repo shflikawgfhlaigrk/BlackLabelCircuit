@@ -277,6 +277,23 @@ body {
 .replay-meta { font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 320px; }
 @media (prefers-reduced-motion: reduce) { .replay-bar { box-shadow: 0 4px 16px rgba(0,0,0,0.5); } }
 
+/* Guided-tour narration bar (CI-23) — mirrors the replay bar, bottom-center. */
+.tour-bar {
+  position: fixed; left: 50%; bottom: 74px; transform: translateX(-50%); z-index: 61;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface-solid); border: 1px solid var(--border-strong);
+  border-radius: 12px; padding: 8px 12px; max-width: min(760px, calc(100vw - 48px));
+  box-shadow: 0 12px 48px rgba(0,0,0,0.55);
+}
+.tour-bar.hidden { display: none; }
+.tour-progress { font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tour-narration {
+  font-size: 12px; line-height: 1.35; min-width: 0; flex: 1;
+  overflow: hidden; text-overflow: ellipsis; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: 460px;
+}
+.tour-bar .btn { white-space: nowrap; }
+
 /* scrollbars */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: rgba(160, 185, 225, 0.15); border-radius: 4px; }
