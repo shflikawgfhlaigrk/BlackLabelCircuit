@@ -24,6 +24,20 @@ test('macOS entry point is a native AppKit launcher with managed server lifecycl
   assert.doesNotMatch(src, /Google Chrome/, 'launcher must not depend on Chrome');
 });
 
+test('drag-a-folder onboarding is wired end to end (CI-19)', () => {
+  const src = read('macos/CircuitLauncher.swift');
+  // Dock-icon / "Open With" folder open.
+  assert.match(src, /func application\([^)]*openFiles/, 'launcher handles application(_:openFiles:)');
+  // In-window drag well.
+  assert.match(src, /registerForDraggedTypes/, 'a view registers for dragged file types');
+  assert.match(src, /func draggingEntered/, 'drop target implements draggingEntered');
+  assert.match(src, /func performDragOperation/, 'drop target implements performDragOperation');
+  assert.match(src, /isDirectory/, 'drop only accepts a folder, not a file');
+  const plist = read('macos/Info.plist');
+  assert.match(plist, /CFBundleDocumentTypes/, 'Info.plist declares document types so folder drops route to the app');
+  assert.match(plist, /public\.folder/, 'Info.plist accepts folders (public.folder)');
+});
+
 test('release build signs inside-out and ships no system-node fallback', () => {
   const build = read('build.command');
   assert.match(build, /DEVELOPER_DIR="\/Applications\/Xcode\.app\/Contents\/Developer"/, 'ship builds must avoid mismatched CommandLineTools SDKs');

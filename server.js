@@ -11,6 +11,7 @@ import { analyzeRepo } from './lib/analyze.js';
 import { LANG_BY_EXT } from './lib/walk.js';
 import { resolveLicense } from './lib/license.js';
 import { runCheck } from './lib/report.js';
+import { buildHistory, headSha } from './lib/history.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, 'public');
@@ -76,6 +77,12 @@ const MIME = {
 let graph = null;
 let lastError = null;
 const sseClients = new Set();
+// Grade-over-history "refactor movie" (CI-20). Building it materializes N commits
+// into throwaway worktrees and grades each — expensive, so compute lazily on the
+// first /api/history hit and cache it keyed on HEAD (invalidated when new commits
+// land). analyzeRepo/buildHistory are synchronous, so no concurrent recompute is
+// possible: a second request simply waits behind the first.
+let history = null;
 
 // analyzeRepo is synchronous — requests queue behind it for the few hundred ms
 // a scan takes, which also makes re-entrancy impossible.
@@ -146,6 +153,20 @@ function handle(req, res) {
   if (url.pathname === '/api/rescan' && req.method === 'POST') {
     analyze('manual rescan');
     return send(res, 200, { ok: true });
+  }
+
+  // Grade-over-history timeline (CI-20). Returns { supported:false, reason } for
+  // repos with no/one commit, so the UI can honestly say "nothing to replay".
+  if (url.pathname === '/api/history') {
+    const head = headSha(root);
+    if (head && history && history.head === head) return send(res, 200, history);
+    try {
+      history = buildHistory(root, { log: (m) => console.log(m) });
+      return send(res, 200, history);
+    } catch (e) {
+      console.error('[circuit] history failed:', e.message);
+      return send(res, 500, { supported: false, reason: e.message, commits: [] });
+    }
   }
 
   if (url.pathname === '/api/file') {

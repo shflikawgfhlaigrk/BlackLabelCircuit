@@ -1,6 +1,59 @@
 import AppKit
 import Foundation
 
+// Drag-to-grade drop well (CI-19). A folder dropped here — or on the app's Dock
+// icon (routed via application(_:openFiles:)) — starts Circuit grading it, so a
+// first-time user never has to hunt through a file picker.
+final class DropView: NSView {
+    var onDrop: ((URL) -> Void)?
+    private var highlighted = false
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        registerForDraggedTypes([.fileURL])
+    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) not supported") }
+
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        guard folderURL(from: sender) != nil else { return [] }
+        highlighted = true
+        needsDisplay = true
+        return .copy
+    }
+    override func draggingExited(_ sender: NSDraggingInfo?) {
+        highlighted = false
+        needsDisplay = true
+    }
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        highlighted = false
+        needsDisplay = true
+        guard let url = folderURL(from: sender) else { return false }
+        onDrop?(url)
+        return true
+    }
+
+    // Only accept a directory — Circuit grades a repository, not a single file.
+    private func folderURL(from sender: NSDraggingInfo) -> URL? {
+        let opts: [NSPasteboard.ReadingOptionKey: Any] = [.urlReadingFileURLsOnly: true]
+        guard let urls = sender.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: opts) as? [URL] else { return nil }
+        return urls.first { (try? $0.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true }
+    }
+
+    override func draw(_ dirtyRect: NSRect) {
+        NSColor(calibratedRed: 0.02, green: 0.03, blue: 0.05, alpha: 1).setFill()
+        dirtyRect.fill()
+        let inset = bounds.insetBy(dx: 22, dy: 22)
+        let path = NSBezierPath(roundedRect: inset, xRadius: 16, yRadius: 16)
+        path.lineWidth = 2
+        path.setLineDash([8, 6], count: 2, phase: 0)
+        let stroke = highlighted
+            ? NSColor(calibratedRed: 0.49, green: 0.83, blue: 0.99, alpha: 1)
+            : NSColor(white: 1, alpha: 0.2)
+        stroke.setStroke()
+        path.stroke()
+    }
+}
+
 @main
 final class CircuitApp: NSObject, NSApplicationDelegate {
     private static var appDelegate: CircuitApp?
@@ -18,6 +71,14 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
     private var outputBuffer = ""
     private var isQuitting = false
 
+    // Onboarding / lifecycle state (CI-19).
+    private var didFinishLaunching = false
+    private var started = false
+    private var pendingRepo: URL?
+    private var nodeURL: URL?
+    private var serverURL: URL?
+    private var dropWindow: NSWindow?
+
     private let supportDirectory: URL = {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         return base.appendingPathComponent("Circuit", isDirectory: true)
@@ -27,51 +88,136 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
         supportDirectory.appendingPathComponent("recent-repos.txt")
     }
 
+    // A folder dropped on the Dock icon (or "Open With → Circuit") arrives here —
+    // possibly BEFORE applicationDidFinishLaunching. Stash it if we're not ready,
+    // otherwise start grading immediately, skipping the picker.
+    func application(_ sender: NSApplication, openFiles filenames: [String]) {
+        let dir = filenames.first { isDirectory($0) } ?? filenames.first
+        guard let dir else {
+            sender.reply(toOpenOrPrint: .failure)
+            return
+        }
+        let url = URL(fileURLWithPath: dir, isDirectory: true)
+        if didFinishLaunching { beginGrading(url) } else { pendingRepo = url }
+        sender.reply(toOpenOrPrint: .success)
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
+        didFinishLaunching = true
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
 
-        if requiresAppleSiliconGate() {
-            showAlert(
-                title: "Circuit requires Apple Silicon",
-                message: "This build bundles an arm64 Node runtime. Use Circuit on an Apple Silicon Mac."
-            )
-            NSApp.terminate(nil)
-            return
-        }
+        guard preflight() else { return }
 
-        guard let resources = Bundle.main.resourceURL else {
-            showAlert(title: "Circuit cannot start", message: "The app bundle resources are missing.")
-            NSApp.terminate(nil)
+        // A folder was already dropped on the Dock icon at launch — grade it now.
+        if let repo = pendingRepo {
+            beginGrading(repo)
             return
         }
-
-        let nodeURL = resources.appendingPathComponent("node/node")
-        let serverURL = resources.appendingPathComponent("app/server.js")
-        guard FileManager.default.isExecutableFile(atPath: nodeURL.path) else {
-            showAlert(title: "Circuit cannot start", message: "The bundled Node runtime is missing.")
-            NSApp.terminate(nil)
-            return
-        }
-        guard FileManager.default.fileExists(atPath: serverURL.path) else {
-            showAlert(title: "Circuit cannot start", message: "The bundled Circuit server is missing.")
-            NSApp.terminate(nil)
-            return
-        }
-
-        guard let repoURL = chooseRepository() else {
-            NSApp.terminate(nil)
-            return
-        }
-
-        remember(repoURL)
-        startServer(nodeURL: nodeURL, serverURL: serverURL, repoURL: repoURL)
+        // Otherwise present the drag-to-grade welcome window (drop a folder, or
+        // fall back to the native picker button).
+        showDropWindow()
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         isQuitting = true
         terminateServer()
         return .terminateNow
+    }
+
+    // Validate the runtime once, up front, so both the drop path and the picker
+    // path share the same guarantees. Terminates (with an alert) on failure.
+    private func preflight() -> Bool {
+        if requiresAppleSiliconGate() {
+            showAlert(
+                title: "Circuit requires Apple Silicon",
+                message: "This build bundles an arm64 Node runtime. Use Circuit on an Apple Silicon Mac."
+            )
+            NSApp.terminate(nil)
+            return false
+        }
+        guard let resources = Bundle.main.resourceURL else {
+            showAlert(title: "Circuit cannot start", message: "The app bundle resources are missing.")
+            NSApp.terminate(nil)
+            return false
+        }
+        let node = resources.appendingPathComponent("node/node")
+        let srv = resources.appendingPathComponent("app/server.js")
+        guard FileManager.default.isExecutableFile(atPath: node.path) else {
+            showAlert(title: "Circuit cannot start", message: "The bundled Node runtime is missing.")
+            NSApp.terminate(nil)
+            return false
+        }
+        guard FileManager.default.fileExists(atPath: srv.path) else {
+            showAlert(title: "Circuit cannot start", message: "The bundled Circuit server is missing.")
+            NSApp.terminate(nil)
+            return false
+        }
+        nodeURL = node
+        serverURL = srv
+        return true
+    }
+
+    // Start grading a chosen repository. Idempotent — the first folder wins for
+    // this launch (a second drop is ignored rather than spawning a rival server).
+    private func beginGrading(_ repoURL: URL) {
+        guard !started, let nodeURL, let serverURL else { return }
+        started = true
+        dropWindow?.orderOut(nil)
+        remember(repoURL)
+        startServer(nodeURL: nodeURL, serverURL: serverURL, repoURL: repoURL)
+    }
+
+    // The drag-to-grade welcome window: a dashed drop well that accepts a folder,
+    // plus a native picker button for users who'd rather browse.
+    private func showDropWindow() {
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 540, height: 380),
+            styleMask: [.titled, .closable, .miniaturizable],
+            backing: .buffered, defer: false
+        )
+        window.title = "Circuit"
+        window.center()
+        window.isReleasedWhenClosed = false
+
+        let drop = DropView(frame: NSRect(x: 0, y: 0, width: 540, height: 380))
+        drop.autoresizingMask = [.width, .height]
+        drop.onDrop = { [weak self] url in self?.beginGrading(url) }
+
+        let title = label("Drop a folder to grade it", size: 22, weight: .bold, color: NSColor(white: 1, alpha: 0.92))
+        title.frame = NSRect(x: 40, y: 250, width: 460, height: 34)
+        let sub = label("Drag any code repository here — Circuit grades every file and wires it in 3D.", size: 13, weight: .regular, color: NSColor(white: 1, alpha: 0.55))
+        sub.frame = NSRect(x: 40, y: 210, width: 460, height: 40)
+        sub.usesSingleLineMode = false
+        sub.cell?.wraps = true
+
+        let button = NSButton(title: "Choose a folder…", target: self, action: #selector(pickFolder))
+        button.bezelStyle = .rounded
+        button.frame = NSRect(x: 210, y: 120, width: 160, height: 32)
+
+        drop.addSubview(title)
+        drop.addSubview(sub)
+        drop.addSubview(button)
+        window.contentView = drop
+        window.makeKeyAndOrderFront(nil)
+        dropWindow = window
+    }
+
+    @objc private func pickFolder() {
+        if let repo = chooseRepository() { beginGrading(repo) }
+    }
+
+    private func label(_ text: String, size: CGFloat, weight: NSFont.Weight, color: NSColor) -> NSTextField {
+        let field = NSTextField(labelWithString: text)
+        field.font = NSFont.systemFont(ofSize: size, weight: weight)
+        field.textColor = color
+        field.alignment = .center
+        return field
+    }
+
+    private func isDirectory(_ path: String) -> Bool {
+        var isDir: ObjCBool = false
+        return FileManager.default.fileExists(atPath: path, isDirectory: &isDir) && isDir.boolValue
     }
 
     private func chooseRepository() -> URL? {

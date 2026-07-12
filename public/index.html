@@ -75,6 +75,13 @@
       <button class="chip toggle" id="tglBroken">Broken only</button>
     </div>
   </section>
+
+  <section>
+    <h3>History <span class="muted small">grade over time</span></h3>
+    <div class="chips">
+      <button class="chip toggle" id="tglReplay" title="Replay the codebase's grade through its git history">▶ Refactor movie</button>
+    </div>
+  </section>
 </aside>
 
 <main id="graph"></main>
@@ -148,6 +155,18 @@
     </div>
     <pre id="codeBody" class="mono"></pre>
   </div>
+</div>
+
+<!-- Grade-over-history replay scrubber (CI-20). Hidden until the movie loads. -->
+<div id="replayBar" class="replay-bar hidden">
+  <button id="replayPlay" class="btn replay-play" title="Play / pause (space)">▶</button>
+  <input id="replayScrub" class="replay-scrub" type="range" min="0" max="0" value="0" step="1" />
+  <div class="replay-info">
+    <span id="replayGrade" class="replay-grade">–</span>
+    <span id="replayMeta" class="replay-meta mono muted"></span>
+  </div>
+  <button id="replayExport" class="btn ghost" title="Download the grade timeline as JSON">Export</button>
+  <button id="replayClose" class="btn ghost" title="Exit replay">✕</button>
 </div>
 
 <div id="toast" class="toast hidden"></div>

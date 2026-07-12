@@ -258,6 +258,25 @@ body {
 }
 @keyframes toast-in { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
 
+/* Grade-over-history replay scrubber (CI-20) — floating transport bar. */
+.replay-bar {
+  /* Sits above the bottom-center demo banner (bottom:16px) so both stay legible
+     in a demo build; in a licensed build the banner is hidden and this just
+     floats a little higher, which is fine. */
+  position: fixed; left: 50%; bottom: 74px; transform: translateX(-50%); z-index: 61;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface-solid); border: 1px solid var(--border-strong);
+  border-radius: 12px; padding: 8px 12px; max-width: min(760px, calc(100vw - 48px));
+  box-shadow: 0 12px 48px rgba(0,0,0,0.55);
+}
+.replay-bar.hidden { display: none; }
+.replay-play { min-width: 34px; text-align: center; font-size: 13px; }
+.replay-scrub { width: 240px; accent-color: var(--accent); cursor: pointer; }
+.replay-info { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.replay-grade { font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; }
+.replay-meta { font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 320px; }
+@media (prefers-reduced-motion: reduce) { .replay-bar { box-shadow: 0 4px 16px rgba(0,0,0,0.5); } }
+
 /* scrollbars */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: rgba(160, 185, 225, 0.15); border-radius: 4px; }

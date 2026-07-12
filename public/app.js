@@ -45,6 +45,9 @@ const state = {
   is2d: false,
   topLabelIds: new Set(),
   adjacency: new Map(), // id → Set of neighbor ids
+  // Grade-over-history replay (CI-20): when `on`, nodes recolor to `frame`'s
+  // per-commit grades instead of the live HEAD grade.
+  replay: { on: false, loading: false, data: null, idx: 0, frame: null, playing: false, timer: null },
 };
 
 // ---------- graph setup ----------
@@ -129,6 +132,13 @@ function nodeColorFn(n) {
   const hood = activeNeighborhood();
   if (hood && !hood.has(n.id)) return DIM_NODE;
   if (n.missing) return BROKEN;
+  // In replay, a node's color is its grade AT THE SELECTED COMMIT. A file that
+  // didn't exist yet (or was deleted) at that commit has no grade in the frame —
+  // it dims, honestly showing it wasn't part of that snapshot.
+  if (state.replay.on && state.replay.frame) {
+    const g = state.replay.frame.nodes[n.id];
+    return g ? scoreColor(g.score) : DIM_NODE;
+  }
   return scoreColor(n.score);
 }
 
@@ -655,12 +665,126 @@ $('codeModal').addEventListener('click', (e) => { if (e.target === $('codeModal'
 
 document.addEventListener('keydown', (e) => {
   if (e.key === '/' && document.activeElement !== searchInput && $('welcome').classList.contains('hidden')) { e.preventDefault(); searchInput.focus(); }
+  // Replay transport: space toggles play, ←/→ step frames (when not typing).
+  if (state.replay.on && document.activeElement !== searchInput) {
+    if (e.key === ' ') { e.preventDefault(); if (state.replay.playing) stopPlay(); else playReplay(); return; }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); stopPlay(); stepReplay(-1); return; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); stopPlay(); stepReplay(1); return; }
+  }
   if (e.key === 'Escape') {
     if (!$('welcome').classList.contains('hidden')) closeWelcome();
     else if (!$('codeModal').classList.contains('hidden')) $('codeModal').classList.add('hidden');
+    else if (state.replay.on) exitReplay();
     else if (state.selected) { state.selected = null; hidePanel(); refreshStyles(); }
   }
 });
+
+// ---------- grade-over-history replay (CI-20 "refactor movie") ----------
+// Fetch the per-commit timeline once, then scrub/play it: the SAME 3D graph
+// recolors to each commit's real per-node grade. All data comes from
+// /api/history (genuine analyzeRepo output per commit) — nothing is synthesized
+// client-side, and commits the backend couldn't grade show ∅/— not a fake A.
+const REPLAY_FRAME_MS = 900;
+function fmtDate(ts) { try { return new Date(ts).toISOString().slice(0, 10); } catch { return ''; } }
+
+async function enterReplay() {
+  if (state.replay.loading) return;
+  state.replay.loading = true;
+  $('tglReplay').textContent = 'Loading…';
+  let data;
+  try {
+    const res = await fetch('/api/history');
+    data = await res.json();
+  } catch {
+    state.replay.loading = false;
+    $('tglReplay').textContent = '▶ Refactor movie';
+    toast('Could not load history');
+    return;
+  }
+  state.replay.loading = false;
+  $('tglReplay').textContent = '▶ Refactor movie';
+  if (!data.supported || !data.commits?.length) {
+    $('tglReplay').classList.remove('on');
+    toast(data.reason ? `No replay — ${data.reason}` : 'No history to replay');
+    return;
+  }
+  state.replay.data = data;
+  state.replay.on = true;
+  $('tglReplay').classList.add('on');
+  const scrub = $('replayScrub');
+  scrub.max = String(data.commits.length - 1);
+  $('replayBar').classList.remove('hidden');
+  if (data.dropped > 0) toast(`Replaying ${data.sampled} of ${data.totalCommits} commits — sampled evenly`);
+  showFrame(data.commits.length - 1); // start at HEAD (rightmost)
+}
+
+function exitReplay() {
+  stopPlay();
+  state.replay.on = false;
+  state.replay.frame = null;
+  $('replayBar').classList.add('hidden');
+  $('tglReplay').classList.remove('on');
+  refreshStyles();
+}
+
+function showFrame(i) {
+  const commits = state.replay.data.commits;
+  i = Math.max(0, Math.min(commits.length - 1, i));
+  state.replay.idx = i;
+  const c = commits[i];
+  state.replay.frame = c;
+  $('replayScrub').value = String(i);
+  const gradeEl = $('replayGrade');
+  if (c.grade == null) {
+    gradeEl.textContent = c.error ? '—' : '∅';
+    gradeEl.style.color = '#7e8da6';
+    gradeEl.title = c.error ? `Not gradeable — ${c.error}` : 'No source files to grade at this commit';
+  } else {
+    gradeEl.textContent = c.grade;
+    gradeEl.style.color = gradeColor(c.grade);
+    gradeEl.title = `${c.score} / 100 · ${c.files} file${c.files === 1 ? '' : 's'}`;
+  }
+  const scoreTxt = c.grade == null ? '' : ` (${c.score})`;
+  $('replayMeta').textContent = `${i + 1}/${commits.length} · ${c.shortSha} · ${fmtDate(c.ts)}${scoreTxt} · ${c.subject}`.slice(0, 150);
+  refreshStyles();
+}
+
+function stepReplay(delta) { showFrame(state.replay.idx + delta); }
+
+function playReplay() {
+  if (state.replay.playing) return;
+  if (state.replay.idx >= state.replay.data.commits.length - 1) showFrame(0); // restart from the start
+  state.replay.playing = true;
+  $('replayPlay').textContent = '⏸';
+  state.replay.timer = setInterval(() => {
+    if (state.replay.idx >= state.replay.data.commits.length - 1) { stopPlay(); return; }
+    stepReplay(1);
+  }, REPLAY_FRAME_MS);
+}
+function stopPlay() {
+  state.replay.playing = false;
+  clearInterval(state.replay.timer);
+  state.replay.timer = null;
+  $('replayPlay').textContent = '▶';
+}
+
+function exportTimeline() {
+  const d = state.replay.data;
+  if (!d) return;
+  const blob = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${d.name}-grade-timeline.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+$('tglReplay').onclick = () => { if (state.replay.on) exitReplay(); else enterReplay(); };
+$('replayPlay').onclick = () => { if (state.replay.playing) stopPlay(); else playReplay(); };
+$('replayScrub').oninput = () => { stopPlay(); showFrame(Number($('replayScrub').value)); };
+$('replayExport').onclick = exportTimeline;
+$('replayClose').onclick = exitReplay;
 
 // ---------- first-run welcome / help ----------
 const WELCOME_KEY = 'circuit.welcomed.v1';
