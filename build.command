@@ -81,11 +81,15 @@ elif [[ -f "/Applications/Circuit.app/Contents/Resources/Circuit.icns" ]]; then
 fi
 printf 'APPL????' > "$CONTENTS/PkgInfo"
 
+# editor/ must ship: server.js's `--lsp` flag does `await import('./editor/server.mjs')`,
+# so omitting it leaves the shipped app's advertised LSP mode throwing ERR_MODULE_NOT_FOUND
+# (that is exactly what build 4 as served does).
 rsync -a --delete \
   "$ROOT/server.js" \
   "$ROOT/package.json" \
   "$ROOT/lib" \
   "$ROOT/public" \
+  "$ROOT/editor" \
   "$RESOURCES/app/"
 
 NODE_SRC="$(node_source)"

@@ -199,6 +199,93 @@ test('scanSecrets does NOT flag env references, placeholders, or short values', 
   assert.equal(scanSecrets('const password = "";').length, 0);    // empty
 });
 
+test('scanSecrets flags a connection string carrying an inline password', () => {
+  const hits = scanSecrets([
+    'const db = "postgres://admin:Pr0d-P4ssw0rd@10.2.3.4:5432/app";',
+    'MONGO = "mongodb+srv://svc:8f3ac0b1d9e7@cluster0.abcd.mongodb.net"',
+    'url = "mysql://root:hunter2secret@db.internal:3306/main"',
+    'REDIS = "redis://:s3cr3tCacheKey@10.0.0.5:6379"',
+    'broker = "amqp://rabbit:R4bb1tPass@broker:5672"',
+  ].join('\n'));
+  assert.equal(hits.length, 5);
+  assert.match(hits[0].kind, /^postgres connection string/);
+  assert.match(hits[1].kind, /^mongodb\+srv connection string/);
+  assert.match(hits[3].kind, /^redis connection string/);  // empty user half
+  assert.equal(hits[4].line, 5);
+});
+
+test('scanSecrets does NOT flag credential-free, placeholder, or env-ref connection strings', () => {
+  assert.equal(scanSecrets('const db = "postgres://localhost:5432/app";').length, 0);      // no credentials
+  assert.equal(scanSecrets('DSN = "postgres://user:<password>@host:5432/db"').length, 0);  // angle placeholder
+  assert.equal(scanSecrets('uri = "mongodb+srv://user:password@cluster0.net"').length, 0); // placeholder word
+  assert.equal(scanSecrets('const u = `postgres://${USER}:${PASS}@${HOST}/db`').length, 0); // env ref
+  assert.equal(scanSecrets('DB = os.environ["postgres://u:p@h/db"]').length, 0);            // env ref
+  assert.equal(scanSecrets('url = "mysql://root:test@localhost:3306/testdb"').length, 0);   // test fixture value
+});
+
+test('scanSecrets flags a JWT only when its header really decodes to a token', () => {
+  const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+    + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+    + '.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  const hits = scanSecrets(`const token = "${jwt}";`);
+  assert.equal(hits.length, 1);
+  assert.equal(hits[0].kind, 'JWT');
+  assert.equal(hits[0].line, 1);
+});
+
+test('scanSecrets does NOT flag env-ref JWTs or base64-shaped strings that are not tokens', () => {
+  const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+    + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+    + '.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  assert.equal(scanSecrets('const token = process.env.JWT_TOKEN').length, 0);
+  assert.equal(scanSecrets(`const auth = \`Bearer \${${'token'}}\`; // ${jwt.slice(0, 0)}`).length, 0);
+  // header decodes to JSON but carries no `alg` — not a JWT
+  const notAlg = Buffer.from('{"hi":"there","x":1}').toString('base64url');
+  assert.equal(scanSecrets(`const s = "${notAlg}.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abcdefghijkl";`).length, 0);
+  // three dot-separated base64url-ish segments that are not a token at all
+  assert.equal(scanSecrets('const id = "eyJhbGciOiJ.notrealjson.xxxxxxxxxxxx";').length, 0);
+});
+
+test('analyzeRepo grades a connection string and a JWT as critical safety findings', () => {
+  const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+    + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+    + '.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-conn-'));
+  fs.writeFileSync(path.join(dir, 'db.js'),
+    `export const DSN = "postgres://admin:Pr0d-P4ssw0rd@10.2.3.4:5432/app";\nexport const TOKEN = "${jwt}";\n`);
+  try {
+    const g = analyzeRepo(dir);
+    const n = g.nodes.find((x) => x.id === 'db.js');
+    const conn = n.findings.find((f) => /connection string/.test(f.msg));
+    const tok = n.findings.find((f) => /Hardcoded JWT/.test(f.msg));
+    assert.ok(conn, 'connection-string finding is attached');
+    assert.equal(conn.dim, 'safety');
+    assert.equal(conn.severity, 'critical');
+    assert.equal(conn.line, 1);
+    assert.ok(tok, 'JWT finding is attached');
+    assert.equal(tok.severity, 'critical');
+    assert.equal(tok.line, 2);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('analyzeRepo reports NO secret findings for a clean, env-driven config', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-clean-'));
+  fs.writeFileSync(path.join(dir, 'cfg.js'),
+    'export const DSN = process.env.DATABASE_URL;\n'
+    + 'export const FALLBACK = "postgres://localhost:5432/app";\n'
+    + 'export const SAMPLE = "mongodb+srv://user:<password>@cluster0.net";\n');
+  try {
+    const g = analyzeRepo(dir);
+    const n = g.nodes.find((x) => x.id === 'cfg.js');
+    const secretFindings = n.findings.filter((f) => /Hardcoded/.test(f.msg));
+    assert.equal(secretFindings.length, 0, 'clean config produces zero secret findings');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('analyzeRepo grades a hardcoded secret as a critical safety finding', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-secret-'));
   fs.writeFileSync(path.join(dir, 'config.js'),
