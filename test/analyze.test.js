@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyzeRepo, stronglyConnected } from '../lib/analyze.js';
-import { gradeFile, letterFor } from '../lib/grade.js';
+import { gradeFile, letterFor, applyGraphFindings } from '../lib/grade.js';
 import { resolveJsImport } from '../lib/lang/javascript.js';
 import { scanSecrets } from '../lib/lang/common.js';
 
@@ -299,6 +299,76 @@ test('analyzeRepo grades a hardcoded secret as a critical safety finding', () =>
     assert.equal(finding.dim, 'safety');
     assert.equal(finding.severity, 'critical');
     assert.equal(finding.line, 2);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+// ---- Cycle severity scales with cycle size (CI-23) ----
+// A 2-file mutual import and a 30-file knot are not the same defect. These lock
+// the ordering and the escalation, not the specific point values, so retuning the
+// curve stays possible but flattening it back out cannot pass.
+
+const CLEAN_DIMS = { complexity: 100, safety: 100, structure: 100, hygiene: 100, coupling: 100, docs: 100 };
+const cleanNode = () => ({ findings: [], dimensions: { ...CLEAN_DIMS }, score: 100, grade: 'A+', parseFailed: false });
+const gradeCycleOf = (size) => applyGraphFindings(cleanNode(), {
+  cyclePeers: Array.from({ length: size - 1 }, (_, i) => `src/f${i}.js`),
+  churn: 0,
+});
+
+test('cycle penalty is strictly monotonic in cycle size', () => {
+  const sizes = [2, 3, 4, 5, 6, 10, 20];
+  const scores = sizes.map((s) => gradeCycleOf(s).score);
+  for (let i = 1; i < sizes.length; i++) {
+    assert.ok(
+      scores[i] < scores[i - 1],
+      `a ${sizes[i]}-file cycle must grade strictly worse than a ${sizes[i - 1]}-file cycle (got ${scores[i]} vs ${scores[i - 1]})`
+    );
+  }
+});
+
+test('a cycle past 5 files escalates to critical; a small one stays major', () => {
+  assert.equal(gradeCycleOf(2).findings[0].severity, 'major');
+  assert.equal(gradeCycleOf(5).findings[0].severity, 'major');
+  assert.equal(gradeCycleOf(6).findings[0].severity, 'critical');
+  assert.equal(gradeCycleOf(12).findings[0].severity, 'critical');
+});
+
+test('the cycle finding names the real cycle size and stays capped', () => {
+  assert.match(gradeCycleOf(7).findings[0].msg, /7-file import cycle/);
+  assert.ok(gradeCycleOf(200).findings[0].points <= 30, 'penalty is capped, never unbounded');
+  assert.ok(gradeCycleOf(200).dimensions.coupling >= 0, 'coupling never goes negative');
+});
+
+test('analyzeRepo: a real 8-file knot grades worse than a real 2-file cycle', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-cycle-'));
+  try {
+    // Genuine on-disk repo: a↔b mutual import, plus an 8-file ring c0→c1→…→c7→c0.
+    fs.writeFileSync(path.join(dir, 'a.js'), `import './b.js';\nexport const a = 1;\n`);
+    fs.writeFileSync(path.join(dir, 'b.js'), `import './a.js';\nexport const b = 2;\n`);
+    const RING = 8;
+    for (let i = 0; i < RING; i++) {
+      fs.writeFileSync(
+        path.join(dir, `c${i}.js`),
+        `import './c${(i + 1) % RING}.js';\nexport const c${i} = ${i};\n`
+      );
+    }
+    const g = analyzeRepo(dir);
+    const pick = (id) => g.nodes.find((n) => n.id === id);
+    const small = pick('a.js');
+    const knot = pick('c0.js');
+    assert.ok(small.inCycle && knot.inCycle, 'both are detected as cyclic');
+    assert.equal(g.stats.cycles, 2, 'two distinct strongly-connected components');
+
+    const cycleFinding = (n) => n.findings.find((f) => /import cycle/.test(f.msg));
+    assert.match(cycleFinding(small).msg, /2-file import cycle/);
+    assert.match(cycleFinding(knot).msg, /8-file import cycle/);
+    assert.equal(cycleFinding(small).severity, 'major');
+    assert.equal(cycleFinding(knot).severity, 'critical');
+    assert.ok(
+      knot.score < small.score,
+      `the 8-file knot must grade worse than the 2-file cycle (got ${knot.score} vs ${small.score})`
+    );
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
