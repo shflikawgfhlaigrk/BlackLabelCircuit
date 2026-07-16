@@ -340,6 +340,89 @@ test('the cycle finding names the real cycle size and stays capped', () => {
   assert.ok(gradeCycleOf(200).dimensions.coupling >= 0, 'coupling never goes negative');
 });
 
+// ---- Blast radius: fan-in only counts against a file that already grades badly ----
+// fanIn is a real graph fact the analyzer already measured. These lock the honesty
+// property first — a clean hub must never be penalised for being depended upon —
+// then the escalation, so the gate can be retuned but not inverted.
+
+const WEAK_DIMS = { complexity: 70, safety: 70, structure: 70, hygiene: 70, coupling: 70, docs: 70 };
+const weakNode = () => ({ findings: [], dimensions: { ...WEAK_DIMS }, score: 70, grade: letterFor(70), parseFailed: false });
+const gradeFanIn = (fanIn, base = weakNode()) => applyGraphFindings(base, { cyclePeers: [], churn: 0, fanIn });
+
+test('a clean hub is never penalised for being widely imported', () => {
+  const hub = gradeFanIn(80, cleanNode());
+  assert.equal(hub.findings.length, 0, 'being depended upon is not a defect — a clean hub must stay clean');
+  assert.equal(hub.score, 100);
+});
+
+test('fan-in below the hub threshold raises nothing, even on a weak file', () => {
+  assert.equal(gradeFanIn(9).findings.length, 0);
+  assert.equal(gradeFanIn(10).findings.length, 1, 'a weak file with 10 dependents is a blast-radius hotspot');
+});
+
+test('blast radius is monotonic in fan-in and stays capped', () => {
+  const fanIns = [10, 15, 20, 25, 26, 40, 100];
+  const scores = fanIns.map((f) => gradeFanIn(f).score);
+  for (let i = 1; i < fanIns.length; i++) {
+    assert.ok(
+      scores[i] < scores[i - 1],
+      `${fanIns[i]} dependents must grade worse than ${fanIns[i - 1]} (got ${scores[i]} vs ${scores[i - 1]})`
+    );
+  }
+  assert.ok(gradeFanIn(5000).findings[0].points <= 12, 'penalty is capped, never unbounded');
+  assert.ok(gradeFanIn(5000).dimensions.coupling >= 0, 'coupling never goes negative');
+});
+
+test('a blast radius past 25 dependents escalates to major; a smaller one stays info', () => {
+  assert.equal(gradeFanIn(10).findings[0].severity, 'info');
+  assert.equal(gradeFanIn(25).findings[0].severity, 'info');
+  assert.equal(gradeFanIn(26).findings[0].severity, 'major');
+  assert.equal(gradeFanIn(60).findings[0].severity, 'major');
+});
+
+test('the blast-radius finding names the real dependent count and deducts from coupling', () => {
+  const f = gradeFanIn(12).findings[0];
+  assert.match(f.msg, /12 files import this/);
+  assert.equal(f.dim, 'coupling');
+});
+
+test('analyzeRepo: a real weak hub is flagged with its real dependent count', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-fanin-'));
+  try {
+    // A genuinely bad hub — real defects the rubric already knows how to see
+    // (swallowed errors, eval, a committed secret, deep nesting) drag it under
+    // the gate, and 10 real importers give it a real fan-in of 10. Every number
+    // asserted below is the analyzer's own output over this code.
+    fs.writeFileSync(path.join(dir, 'hub.js'), [
+      'export function go(cfg) {',
+      '  const key = "sk_live_ABCDEF0123456789ABCDEF0123456789";',
+      '  try { risky(); } catch (e) {}',
+      '  try { more(); } catch (e) {}',
+      '  try { again(); } catch (e) {}',
+      '  eval(cfg.code);',
+      '  if (cfg.a) { if (cfg.b) { if (cfg.c) { if (cfg.d) { if (cfg.e) { if (cfg.f) { if (cfg.g) { return key; } } } } } } }',
+      '  return null;',
+      '}',
+      '',
+    ].join('\n'));
+    for (let i = 0; i < 10; i++) {
+      fs.writeFileSync(path.join(dir, `leaf${i}.js`), `import { go } from './hub.js';\nexport const run${i} = () => go();\n`);
+    }
+    const g = analyzeRepo(dir);
+    const hub = g.nodes.find((n) => n.id === 'hub.js');
+    assert.equal(hub.fanIn, 10, 'fan-in is the real measured edge count');
+    assert.ok(hub.score < 85, `the fixture must genuinely grade badly, not be asserted so (got ${hub.score})`);
+    const blast = hub.findings.find((f) => /files import this/.test(f.msg));
+    assert.ok(blast, `the weak hub must carry a blast-radius finding (grade ${hub.grade})`);
+    assert.match(blast.msg, /10 files import this/);
+
+    const leaf = g.nodes.find((n) => n.id === 'leaf0.js');
+    assert.equal(leaf.findings.filter((f) => /files import this/.test(f.msg)).length, 0, 'a leaf has no dependents to endanger');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('analyzeRepo: a real 8-file knot grades worse than a real 2-file cycle', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-cycle-'));
   try {
