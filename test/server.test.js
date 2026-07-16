@@ -58,26 +58,27 @@ function waitForUrl(child) {
   });
 }
 
-test('server auto-increments when the default port is occupied and grades the real fixture repo', async (t) => {
-  // Occupy 8923 so the server must auto-increment. On a dev machine a LIVE
-  // Circuit instance already holds 8923 — that provides the exact same
-  // "default port busy" condition, so tolerate EADDRINUSE and never disturb it.
-  let blocker = null;
-  try {
-    blocker = await listenOn(8923);
-    t.after(() => blocker.close());
-  } catch (e) {
-    if (e.code !== 'EADDRINUSE') throw e;
-  }
+// 8923 is the hands-off live-instance port: no test may bind it, and no test may
+// assume something else already holds it. Auto-increment is a property of any
+// occupied port, so exercise it on a dedicated test port instead.
+// Ports must not collide with other test files — `node --test` runs them in
+// parallel, and a collision shows up as a flaky off-by-one port assertion.
+// Taken elsewhere: 8923/8924 (live + its neighbour), 8951 (license.test.js).
+const BUSY_PORT = 8971;
+const FREE_PORT = 8981;
 
-  const child = spawn(process.execPath, ['server.js', FIXTURE], {
+test('auto-increment fires ONLY on EADDRINUSE: an occupied port steps to the next one', async (t) => {
+  const blocker = await listenOn(BUSY_PORT);
+  t.after(() => blocker.close());
+
+  const child = spawn(process.execPath, ['server.js', FIXTURE, '--port', String(BUSY_PORT)], {
     cwd: ROOT,
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   t.after(() => child.kill('SIGTERM'));
 
   const { url } = await waitForUrl(child);
-  assert.equal(url, 'http://localhost:8924');
+  assert.equal(url, `http://localhost:${BUSY_PORT + 1}`);
 
   // The first scan is deferred (setImmediate) so the UI shell paints before the
   // analysis blocks the event loop; poll until the graph is ready (503 → 200).
@@ -91,4 +92,24 @@ test('server auto-increments when the default port is occupied and grades the re
   assert.equal(graph.body.name, 'demo');
   assert.equal(graph.body.stats.files, 9);
   assert.equal(graph.body.stats.brokenEdges, 2);
+});
+
+// The EMPTY-port case. Auto-increment is NOT a safety net: it fires only on
+// EADDRINUSE, so a server pointed at a free port BINDS that port. Applied to the
+// default, this is why `node server.js <repo>` with :8923 empty seizes the
+// hands-off live port — the dev command must always pass an explicit --port.
+test('a FREE port is bound as-is — auto-increment is not a safety net (the empty-:8923 case)', async (t) => {
+  // Positive control: prove the port is genuinely free first, so a pass cannot
+  // come from something else already holding it and pushing us elsewhere.
+  const probe = await listenOn(FREE_PORT);
+  await new Promise((r) => probe.close(r));
+
+  const child = spawn(process.execPath, ['server.js', FIXTURE, '--port', String(FREE_PORT)], {
+    cwd: ROOT,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  t.after(() => child.kill('SIGTERM'));
+
+  const { url } = await waitForUrl(child);
+  assert.equal(url, `http://localhost:${FREE_PORT}`);
 });

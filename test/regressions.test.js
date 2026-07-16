@@ -4,8 +4,11 @@ import assert from 'node:assert/strict';
 import { analyzeJs } from '../lib/lang/javascript.js';
 import { analyzePython } from '../lib/lang/python.js';
 import { analyzeSwift } from '../lib/lang/swift.js';
-import { cleanSource } from '../lib/lang/clean.js';
+import { cleanSource, inSpan, lineOfOffset } from '../lib/lang/clean.js';
 import { gradeFile } from '../lib/grade.js';
+import { readdirSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const FILES = new Set(['src/util.js', 'src/a.js', 'pkg/__init__.py', 'pkg/mod.py', 'pkg/sib.py']);
 
@@ -147,4 +150,75 @@ test('five broken imports do not drag a perfect file below C', () => {
   });
   assert.ok(g.score >= 60, `expected >= 60 (D or better), got ${g.score}`);
   assert.ok(g.score < 90, `broken imports must still hurt, got ${g.score}`);
+});
+
+// ---- hands-off live port ----
+// :8923 is the live Circuit instance. server.js defaults to it and auto-increments
+// only on EADDRINUSE, so with the port EMPTY any test that names it binds it. That
+// rule was documented in CLAUDE.md and in a server.test.js comment but nothing
+// enforced it; this locks it for every test file, including future ones.
+
+// Assembled at runtime: the scan below reads this file too, so a literal here
+// would flag its own guard.
+const HANDS_OFF = '89' + '23';
+
+const TEST_DIR = dirname(fileURLToPath(import.meta.url));
+
+function spanAt(spans, offset) {
+  return spans.find((s) => offset >= s.start && offset < s.end) ?? null;
+}
+
+// 1-based lines where the port is named as a VALUE rather than as prose.
+// Matching runs over the RAW text and subtracts from it, so a cleanSource
+// mis-parse can never blank a hit out of existence — only a span it positively
+// identifies is exempt. Exempt: comments, and strings containing whitespace (a
+// test title reading `(the empty-:8923 case)` documents the rule, it does not
+// bind the port). Flagged: bare numerics, and whitespace-free strings — both
+// `['--port', '8923']` and `'http://localhost:8923'` reach the live instance.
+function handsOffPortHits(src) {
+  const clean = cleanSource(src, 'javascript');
+  const re = new RegExp(HANDS_OFF, 'g');
+  const hits = [];
+  let m;
+  while ((m = re.exec(clean.raw)) !== null) {
+    const span = spanAt(clean.spans, m.index);
+    if (span?.type === 'comment') continue;
+    if (span?.type === 'string' && /\s/.test(clean.raw.slice(span.start + 1, span.end - 1))) continue;
+    hits.push(lineOfOffset(clean.lineOffsets, m.index));
+  }
+  return hits;
+}
+
+test('hands-off-port guard fires on every binding form and ignores comment prose', () => {
+  assert.deepEqual(handsOffPortHits(`const p = ${HANDS_OFF};\n`), [1]);
+
+  // The fail-open trap this guard is built to survive: a naive comment-stripper
+  // reads the `//` in a URL as a line comment, drops the rest of the line, and
+  // reports the port CLEAN.
+  assert.deepEqual(handsOffPortHits(`const u = 'http://localhost:${HANDS_OFF}/api/graph';\n`), [1]);
+
+  assert.deepEqual(handsOffPortHits(`spawn(node, ['server.js', '--port', '${HANDS_OFF}']);\n`), [1]);
+
+  // Naming the port in a comment is how the rule is documented — must not fire.
+  assert.deepEqual(handsOffPortHits(`// never bind ${HANDS_OFF}\nconst p = 8971;\n`), []);
+  assert.deepEqual(handsOffPortHits(`/*\n * ${HANDS_OFF} is hands-off\n */\nconst p = 8971;\n`), []);
+
+  // Nor may it fire on prose in a string: a test title naming the port is
+  // documentation, and a guard that demanded it be renamed would be trading a
+  // true comment for a green check.
+  assert.deepEqual(handsOffPortHits(`test('the empty-:${HANDS_OFF} case', fn);\n`), []);
+});
+
+test('no test file binds the hands-off live port', () => {
+  const files = readdirSync(TEST_DIR).filter((f) => /\.(js|mjs)$/.test(f));
+  // Guards the denominator: a scan that silently reads nothing passes vacuously.
+  assert.ok(files.length >= 10, `expected the full test dir, saw ${files.length}`);
+
+  const violations = [];
+  for (const f of files) {
+    for (const line of handsOffPortHits(readFileSync(join(TEST_DIR, f), 'utf8'))) {
+      violations.push(`${f}:${line}`);
+    }
+  }
+  assert.deepEqual(violations, []);
 });
