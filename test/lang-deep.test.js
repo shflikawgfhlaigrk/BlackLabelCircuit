@@ -260,3 +260,88 @@ test('each deep language reports at least one broken edge from its fixture', () 
   assert.equal(kotlin.stats.brokenEdges, 1);
   assert.equal(ruby.stats.brokenEdges, 1);
 });
+
+// ---- Unused imports (JS/TS) ----
+// A binding the file never references again is a real, checkable fact. These
+// cover the accusation AND the false-accusation cases: the rule must stay silent
+// on every import that is genuinely load-bearing.
+import { cleanSource } from '../lib/lang/clean.js';
+import { unusedJsImports } from '../lib/lang/javascript.js';
+import { gradeFile } from '../lib/grade.js';
+
+const unused = (src, lang = 'javascript') =>
+  unusedJsImports(cleanSource(src, lang)).flatMap((u) => u.names).sort();
+
+test('unused import: an unreferenced named binding is flagged', () => {
+  assert.deepEqual(unused(`import { a, b } from './x.js';\nconsole.log(a);\n`), ['b']);
+});
+
+test('unused import: a referenced binding is NOT flagged', () => {
+  assert.deepEqual(unused(`import { a } from './x.js';\nconsole.log(a);\n`), []);
+});
+
+test('unused import: a side-effect import has no binding and is never flagged', () => {
+  assert.deepEqual(unused(`import './styles.css';\nimport 'reflect-metadata';\n`), []);
+});
+
+test('unused import: a re-export is the use of its binding', () => {
+  assert.deepEqual(unused(`export { a } from './x.js';\n`), []);
+});
+
+test('unused import: an alias is tracked by its LOCAL name', () => {
+  assert.deepEqual(unused(`import { a as b } from './x.js';\nconsole.log(a);\n`), ['b']);
+  assert.deepEqual(unused(`import { a as b } from './x.js';\nconsole.log(b);\n`), []);
+});
+
+test('unused import: default and namespace bindings are tracked', () => {
+  assert.deepEqual(unused(`import D from './d.js';\nimport * as ns from './n.js';\nns.go();\n`), ['D']);
+});
+
+test('unused import: a name appearing only in a string or comment is not a use', () => {
+  assert.deepEqual(unused(`import { a } from './x.js';\n// a is nice\nconst s = "a";\n`), ['a']);
+});
+
+test('unused import: multiline named lists are parsed', () => {
+  assert.deepEqual(unused(`import {\n  a,\n  b,\n} from './x.js';\nconsole.log(b);\n`), ['a']);
+});
+
+test('unused import: React is exempt in a classic-JSX file', () => {
+  assert.deepEqual(unused(`import React from 'react';\nexport const V = () => <div />;\n`), []);
+  // ...but not exempt when the file contains no JSX at all.
+  assert.deepEqual(unused(`import React from 'react';\nexport const V = 1;\n`), ['React']);
+});
+
+test('unused import: a TS type-only binding used in a type position is not flagged', () => {
+  assert.deepEqual(unused(`import type { T } from './t.js';\nconst x: T = 1;\n`, 'typescript'), []);
+});
+
+test('unused import: grades as a hygiene finding, never another dimension', () => {
+  const base = { loc: 10, functions: [], todos: [], commentedOutBlocks: [], longLines: [], commentLines: 0, branchCount: 0, maxNesting: 1 };
+  const g = gradeFile({ metrics: base, signals: { unusedImports: [{ line: 1, names: ['b'] }] }, imports: [], lang: 'javascript' });
+  const f = g.findings.filter((x) => /never used/.test(x.msg));
+  assert.equal(f.length, 1);
+  assert.equal(f[0].dim, 'hygiene');
+  assert.equal(f[0].line, 1);
+  assert.ok(g.dimensions.hygiene < 100);
+  // A clean file must not inherit the deduction.
+  const clean = gradeFile({ metrics: base, signals: {}, imports: [], lang: 'javascript' });
+  assert.equal(clean.dimensions.hygiene, 100);
+});
+
+// Regression: a template literal's `${…}` interpolation is CODE. The cleaner
+// blanks the literal whole, so without restoring the interpolations a binding
+// used only inside one was reported unused — a false accusation. Found by
+// running the rule against Circuit's own repo (test/windows-diag.mjs `os`).
+test('unused import: a binding used only inside a template interpolation is NOT flagged', () => {
+  assert.deepEqual(unused('import os from "node:os";\nconsole.log(`platform=${os.platform()}`);\n'), []);
+});
+
+test('unused import: nested braces inside an interpolation still resolve', () => {
+  assert.deepEqual(unused('import { j } from "./j.js";\nconsole.log(`v=${JSON.stringify({ k: j(1) })}`);\n'), []);
+  // A genuinely unused binding is still caught alongside a used interpolated one.
+  assert.deepEqual(unused('import { a, b } from "./x.js";\nconsole.log(`v=${a}`);\n'), ['b']);
+});
+
+test('unused import: prose inside a template literal is still not a use', () => {
+  assert.deepEqual(unused('import { a } from "./x.js";\nconsole.log(`a is nice`);\n'), ['a']);
+});
