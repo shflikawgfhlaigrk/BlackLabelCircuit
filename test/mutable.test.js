@@ -80,3 +80,25 @@ test('an attribute call default (self.build()) is not flagged as a constructor',
   const s = analyzePython('j.py', 'def f(x=obj.set()):\n    return x\n', 'python', new Set(['j.py']), new Set()).signals;
   assert.deepEqual(s.mutableDefaults, [], 'obj.set() is not the set() builtin');
 });
+
+// bytearray() and the collections containers (bare or `collections.`-dotted) build
+// a fresh shared mutable at def-time exactly like list()/dict()/set() — Circuit used
+// to miss them. defaultdict is usually called WITH an argument (defaultdict(list)).
+test('bytearray()/OrderedDict()/defaultdict()/Counter() constructor defaults flag', () => {
+  for (const ctor of ['bytearray()', 'OrderedDict()', 'collections.OrderedDict()',
+                      'defaultdict(list)', 'collections.defaultdict(int)', 'Counter()', 'collections.Counter()']) {
+    const s = analyzePython('k.py', `def f(x=${ctor}):\n    return x\n`, 'python', new Set(['k.py']), new Set()).signals;
+    assert.deepEqual(s.mutableDefaults, [1], `${ctor} is a mutable default`);
+  }
+});
+
+// bytes()/str() and friends are IMMUTABLE constructors — flagging one would be a
+// fabricated defect (§5.1). An unrelated method call that happens to end in a
+// collections name (x.Counter()) must also stay silent — only bare or
+// `collections.`-prefixed names count.
+test('bytes()/str() and attribute-call look-alikes are never flagged', () => {
+  for (const ctor of ['bytes()', 'str()', 'int()', 'x.Counter()', 'self.OrderedDict()']) {
+    const s = analyzePython('l.py', `def f(x=${ctor}):\n    return x\n`, 'python', new Set(['l.py']), new Set()).signals;
+    assert.deepEqual(s.mutableDefaults, [], `${ctor} is immutable/unrelated — never a fabricated defect`);
+  }
+});
