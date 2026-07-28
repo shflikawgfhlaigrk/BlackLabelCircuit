@@ -66,9 +66,11 @@ mkdir -p "$MACOS" "$RESOURCES/app" "$RESOURCES/node" "$BUILD_DIR"
 
 "${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target arm64-apple-macosx11.0 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
+  "$ROOT/macos/CircuitUpdater.swift" \
   -o "$BUILD_DIR/launcher-arm64"
 "${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target x86_64-apple-macosx11.0 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
+  "$ROOT/macos/CircuitUpdater.swift" \
   -o "$BUILD_DIR/launcher-x86_64"
 "${LIPO[@]}" -create "$BUILD_DIR/launcher-arm64" "$BUILD_DIR/launcher-x86_64" -output "$MACOS/Circuit"
 chmod 755 "$MACOS/Circuit"

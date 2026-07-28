@@ -106,8 +106,13 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
         didFinishLaunching = true
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
+        installMainMenu()
 
         guard preflight() else { return }
+
+        // Silent auto-update check (launch + daily throttle) — only surfaces UI when a
+        // strictly-newer build is actually published. See macos/CircuitUpdater.swift.
+        UpdaterUI.checkInBackgroundIfDue()
 
         // A folder was already dropped on the Dock icon at launch — grade it now.
         if let repo = pendingRepo {
@@ -123,6 +128,30 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
         isQuitting = true
         terminateServer()
         return .terminateNow
+    }
+
+    // The launcher builds its menu bar in code (there is no nib). The app menu carries
+    // "Check for Updates…" — the on-demand trigger for the updater — plus the standard
+    // Quit so Cmd-Q works.
+    private func installMainMenu() {
+        let appMenu = NSMenu()
+        let check = NSMenuItem(title: "Check for Updates…", action: #selector(checkForUpdates), keyEquivalent: "")
+        check.target = self
+        appMenu.addItem(check)
+        appMenu.addItem(.separator())
+        appMenu.addItem(NSMenuItem(title: "Quit Circuit",
+                                   action: #selector(NSApplication.terminate(_:)),
+                                   keyEquivalent: "q"))
+
+        let mainMenu = NSMenu()
+        let appMenuItem = NSMenuItem()
+        appMenuItem.submenu = appMenu
+        mainMenu.addItem(appMenuItem)
+        NSApp.mainMenu = mainMenu
+    }
+
+    @objc private func checkForUpdates() {
+        UpdaterUI.checkInteractively()
     }
 
     // Validate the runtime once, up front, so both the drop path and the picker
