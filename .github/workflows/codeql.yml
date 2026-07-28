@@ -1,0 +1,36 @@
+name: CodeQL (self-hosted)
+
+# Runs on our own runners. GitHub-hosted minutes are exhausted on this plan, so hosted
+# CodeQL jobs fail before their first step and alerts can never refresh. Self-hosted
+# minutes are free on every plan, so this also survives the enterprise trial lapsing.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "9 4 * * 1"
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: [self-hosted, Linux, X64]
+    timeout-minutes: 45
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [actions,javascript-typescript]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
