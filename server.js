@@ -4,6 +4,7 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { analyzeRepo } from './lib/analyze.js';
 import { LANG_BY_EXT } from './lib/walk.js';
@@ -36,23 +37,34 @@ const MIME = {
 };
 
 let graph = null;
-let lastError = null;
+// Client-safe failure record: a correlation id ONLY. Nothing derived from the
+// exception is kept here — see analyze().
+let lastFailure = null;
 const sseClients = new Set();
+
+// The single message any client is allowed to see when a scan fails. The real
+// cause (with stack) is on the server console under the correlation id.
+const ANALYZE_FAILED_MESSAGE = 'analysis failed — see the Circuit server log for details';
 
 // analyzeRepo is synchronous — requests queue behind it for the few hundred ms
 // a scan takes, which also makes re-entrancy impossible.
 function analyze(reason = 'startup') {
   try {
     graph = analyzeRepo(root);
-    lastError = null;
+    lastFailure = null;
     console.log(`[circuit] analyzed ${graph.stats.files} files, ${graph.stats.edges} edges (${graph.stats.brokenEdges} broken) — grade ${graph.stats.grade} (${graph.stats.score}) in ${graph.tookMs}ms [${reason}]`);
     broadcast('graph', { generatedAt: graph.generatedAt, reason });
   } catch (e) {
-    // Only the message string may reach clients — never the exception object
-    // itself (CodeQL js/stack-trace-exposure: stack frames leak file paths).
-    lastError = e instanceof Error ? e.message : String(e ?? 'analyze failed');
-    console.error('[circuit] analyze failed:', e);
-    broadcast('error', { message: lastError, reason });
+    // CodeQL js/stack-trace-exposure: NOTHING derived from the exception may reach
+    // a client — not e.stack, not e.message, not String(e). An earlier attempt kept
+    // `e instanceof Error ? e.message : String(e)`, which still leaked: analyzer
+    // messages quote absolute repo paths, and String(e) on a non-Error throw can
+    // carry a whole stack. The full error goes to the server console under a
+    // correlation id; the client gets the id and a fixed message, nothing else.
+    const errorId = randomUUID();
+    lastFailure = { errorId };
+    console.error(`[circuit] analyze failed [${errorId}] [${reason}]:`, e);
+    broadcast('error', { message: ANALYZE_FAILED_MESSAGE, errorId, reason });
   }
 }
 
@@ -95,7 +107,11 @@ function handle(req, res) {
   const url = new URL(req.url, `http://localhost:${port}`);
 
   if (url.pathname === '/api/graph') {
-    if (!graph) return send(res, lastError ? 500 : 503, { error: lastError ?? 'analyzing' });
+    if (!graph) {
+      return lastFailure
+        ? send(res, 500, { error: ANALYZE_FAILED_MESSAGE, errorId: lastFailure.errorId })
+        : send(res, 503, { error: 'analyzing' });
+    }
     return send(res, 200, graph);
   }
 

@@ -615,7 +615,13 @@ events.addEventListener('graph', async (e) => {
 events.addEventListener('error', (e) => {
   $('rescanBtn').textContent = 'Re-scan';
   clearTimeout(rescanRestore);
-  try { toast(`Analysis failed: ${JSON.parse(e.data).message}`); } catch { /* connection-level error */ }
+  // The server no longer sends the exception text (it leaked absolute paths and
+  // stack frames). It sends a fixed message plus a correlation id — show the id so
+  // the matching `[circuit] analyze failed [<id>]` line is findable in the log.
+  try {
+    const d = JSON.parse(e.data);
+    toast(`Analysis failed: ${d.message}${d.errorId ? ` [${String(d.errorId).slice(0, 8)}]` : ''}`);
+  } catch { /* connection-level error */ }
 });
 events.onerror = () => $('liveDot').classList.remove('on');
 
