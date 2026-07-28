@@ -48,7 +48,9 @@ function analyze(reason = 'startup') {
     console.log(`[circuit] analyzed ${graph.stats.files} files, ${graph.stats.edges} edges (${graph.stats.brokenEdges} broken) — grade ${graph.stats.grade} (${graph.stats.score}) in ${graph.tookMs}ms [${reason}]`);
     broadcast('graph', { generatedAt: graph.generatedAt, reason });
   } catch (e) {
-    lastError = String(e?.message ?? e);
+    // Only the message string may reach clients — never the exception object
+    // itself (CodeQL js/stack-trace-exposure: stack frames leak file paths).
+    lastError = e instanceof Error ? e.message : String(e ?? 'analyze failed');
     console.error('[circuit] analyze failed:', e);
     broadcast('error', { message: lastError, reason });
   }
