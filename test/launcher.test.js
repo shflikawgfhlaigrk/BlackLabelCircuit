@@ -32,6 +32,23 @@ function macosSDKPath(env) {
   return sdk;
 }
 
+// The compile gate must cover exactly the Swift sources the ship build compiles —
+// build.command is the source of truth. When a file joins the ship build (e.g.
+// macos/CircuitUpdater.swift in d70c75e), it joins this type-check automatically;
+// a lone-file gate would either miss cross-file breakage or fail on symbols that
+// live in the other compilation units.
+function launcherSources() {
+  const build = fs.readFileSync(path.join(ROOT, 'build.command'), 'utf8');
+  const sources = [...new Set(
+    [...build.matchAll(/\$ROOT\/(macos\/[\w.-]+\.swift)/g)].map((m) => m[1])
+  )];
+  assert.ok(
+    sources.includes('macos/CircuitLauncher.swift'),
+    `Swift compile gate cannot mirror the ship build: build.command no longer compiles macos/CircuitLauncher.swift (found: ${sources.join(', ') || 'none'}).`
+  );
+  return sources;
+}
+
 function typecheck(target) {
   const env = swiftEnv();
   const sdk = macosSDKPath(env);
@@ -40,7 +57,7 @@ function typecheck(target) {
     '-sdk', sdk,
     '-target', target,
     '-framework', 'AppKit',
-    path.join(ROOT, 'macos/CircuitLauncher.swift'),
+    ...launcherSources().map((rel) => path.join(ROOT, rel)),
   ], { encoding: 'utf8', env, timeout: 180_000 });
   if (result.error) {
     assert.fail(`Swift compile gate cannot run: swiftc failed to launch (${result.error.message}).`);
@@ -66,7 +83,7 @@ function read(rel) {
 // own toolchain fails loudly rather than reporting the Swift as compiling.
 const IS_MACOS = process.platform === 'darwin';
 for (const target of ['arm64-apple-macosx11.0', 'x86_64-apple-macosx11.0']) {
-  test(`CircuitLauncher.swift type-checks against the macOS SDK (${target})`, {
+  test(`macOS launcher Swift sources type-check against the macOS SDK (${target})`, {
     skip: IS_MACOS ? false : 'macOS launcher is only compiled on darwin',
   }, () => {
     const result = typecheck(target);

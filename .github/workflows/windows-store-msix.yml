@@ -1,0 +1,260 @@
+name: circuit-store-msix
+
+# Microsoft Store MSIX packaging lane for Circuit.
+#
+# Modelled on the PROVEN circuit-windows-spike msix job (the one lane known to work on a real
+# GitHub-hosted windows-latest runner). Differences: this lane is the *release* lane — it also
+# attempts the real Tauri shell build, and it reports the Partner Center IDENTITY STATUS so a
+# placeholder package can never be mistaken for a submittable one.
+#
+# STORE-FIRST + UNSIGNED BY DESIGN:
+#   The Microsoft Store re-signs an accepted package under the account's own certificate, so a
+#   Store submission does NOT need an Authenticode cert. No Authenticode cert has been bought.
+#   Consequence, stated plainly: the .msix this lane produces CANNOT be sideload-installed.
+#   Sideloading requires a signature. This artifact is for Partner Center upload only.
+#
+# PORTABILITY: everything runs from this repo's own checkout. No absolute paths, no sibling
+# repositories, no host-specific tooling beyond what the windows-latest image ships.
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_version:
+        description: 'MSIX version, 4 parts, revision must be 0 (e.g. 1.0.1.0). Blank = manifest default.'
+        required: false
+        default: ''
+  push:
+    tags:
+      - 'circuit-win-v*'
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------------------
+  # Attempt the REAL Tauri shell exe. Allowed to fail: the Rust/Tauri bring-up is heavier than
+  # the pack step and must not be able to block the packaging proof. When it fails, the msix
+  # job falls back to build-msix.sh's placeholder exe and SAYS SO in the artifact name.
+  # ---------------------------------------------------------------------------------------
+  shell:
+    name: Build Tauri shell exe (windows-latest)
+    runs-on: windows-latest
+    continue-on-error: true
+    outputs:
+      exe_built: ${{ steps.locate.outputs.exe_built }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install Rust (stable, msvc)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            windows/src-tauri/target
+          key: circuit-tauri-${{ runner.os }}-${{ hashFiles('windows/src-tauri/Cargo.toml') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch the Windows node sidecar
+        shell: bash
+        run: node windows/fetch-node-runtime.mjs
+
+      - name: Stage the app resource + vendor bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          node build-vendor.mjs
+          APP=windows/src-tauri/app
+          rm -rf "$APP"; mkdir -p "$APP"
+          cp server.js package.json "$APP/"
+          cp -R lib public editor "$APP/"
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2" --locked
+
+      - name: cargo tauri build
+        shell: bash
+        working-directory: windows/src-tauri
+        run: cargo tauri build
+
+      - name: Locate the produced exe
+        id: locate
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Tauri v2 names the main binary from productName ("Circuit"), but the Cargo [[bin]] is
+          # circuit-win. Accept either and normalise to Circuit.exe, which is what the
+          # AppxManifest declares as the Application Executable.
+          EXE=""
+          for c in windows/src-tauri/target/release/Circuit.exe \
+                   windows/src-tauri/target/release/circuit-win.exe; do
+            [ -f "$c" ] && { EXE="$c"; break; }
+          done
+          if [ -z "$EXE" ]; then
+            echo "::error::cargo tauri build produced no Circuit.exe / circuit-win.exe"
+            echo "exe_built=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          mkdir -p shell-out
+          cp "$EXE" shell-out/Circuit.exe
+          ls -la shell-out/Circuit.exe
+          echo "exe_built=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the shell exe
+        if: steps.locate.outputs.exe_built == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: circuit-windows-shell-exe
+          if-no-files-found: error
+          path: shell-out/Circuit.exe
+
+  # ---------------------------------------------------------------------------------------
+  # Pack the Store MSIX. FAILS CLOSED — a run that packs nothing ends RED and the artifact name
+  # says NOT-PACKED. Nothing here signs, submits, or ships.
+  # ---------------------------------------------------------------------------------------
+  msix:
+    name: Pack UNSIGNED Store MSIX (makeappx)
+    runs-on: windows-latest
+    needs: shell
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lock the packaging invariants (manifest, tiles, fail-closed gates)
+        run: node --test test/winmsix.test.js
+
+      - name: Store-tile gate self-test (proves the gate fires, not merely exists)
+        shell: bash
+        run: bash windows/msix/gate-selftest.sh
+
+      - name: Download the real shell exe if the shell job produced one
+        id: getexe
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: circuit-windows-shell-exe
+          path: shell-in
+
+      - name: Place the shell exe where build-msix.sh looks for it
+        id: exeprov
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -s shell-in/Circuit.exe ]; then
+            mkdir -p windows/src-tauri/target/release
+            cp shell-in/Circuit.exe windows/src-tauri/target/release/Circuit.exe
+            echo "exe=REALEXE" | tee -a "$GITHUB_OUTPUT"
+          else
+            # No real exe: build-msix.sh --pack-layout stages a placeholder so the PACK step is
+            # still proven. The resulting package is a packaging proof, NOT a shippable app.
+            echo "::warning::no Tauri exe available — packing with the placeholder exe"
+            echo "exe=PLACEHOLDEREXE" | tee -a "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch the Windows node sidecar (bundled runtime)
+        continue-on-error: true
+        shell: bash
+        run: node windows/fetch-node-runtime.mjs
+
+      - name: Put the Windows SDK makeappx.exe on PATH
+        shell: pwsh
+        run: |
+          $kit = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\makeappx.exe" `
+            -ErrorAction SilentlyContinue | Sort-Object FullName | Select-Object -Last 1
+          if (-not $kit) { Write-Error "makeappx.exe not found in the Windows SDK on this runner"; exit 1 }
+          $dir = Split-Path $kit.FullName
+          Write-Host "makeappx: $($kit.FullName)"
+          Add-Content -Path $env:GITHUB_PATH -Value $dir
+
+      - name: Assemble layout + makeappx pack -> UNSIGNED Store .msix
+        id: pack
+        shell: bash
+        env:
+          # These three are the Partner Center values. They do not exist until the app name is
+          # reserved. Add them as repository secrets AFTER reservation and this lane emits a
+          # STORE-READY package; until then it honestly emits IDENTITY-PLACEHOLDER.
+          PARTNER_CENTER_IDENTITY_NAME: ${{ secrets.PARTNER_CENTER_IDENTITY_NAME }}
+          PARTNER_CENTER_IDENTITY: ${{ secrets.PARTNER_CENTER_IDENTITY }}
+          PARTNER_CENTER_PUBLISHER_DISPLAY: ${{ secrets.PARTNER_CENTER_PUBLISHER_DISPLAY }}
+          PARTNER_CENTER_PACKAGE_VERSION: ${{ inputs.package_version }}
+        run: |
+          set -euo pipefail
+          command -v makeappx >/dev/null 2>&1 || { echo "::error::makeappx not on PATH"; exit 1; }
+          bash windows/build-msix.sh --pack-layout
+          OUT="windows/dist/Circuit.msix"
+          ls -la "$OUT"
+          # makeappx writes a real APPX/MSIX zip container. Prove the magic bytes, not presence.
+          node -e "const b=require('fs').readFileSync('$OUT');if(b[0]!==0x50||b[1]!==0x4b){console.error('not a zip container');process.exit(1)}console.log('PK ok, bytes='+b.length)"
+          echo "msix_bytes=$(wc -c < "$OUT")" | tee msix-friction.txt
+
+      - name: Compute sha256 of the staged MSIX
+        if: always()
+        shell: bash
+        run: |
+          if [ -f windows/dist/Circuit.msix ]; then
+            sha256sum windows/dist/Circuit.msix | tee msix-sha256.txt
+          else
+            echo "no msix produced" | tee msix-sha256.txt
+          fi
+
+      - name: IDENTITY STATUS — is this package actually submittable?
+        id: identity
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -s windows/dist/IDENTITY-STATUS.txt ]; then
+            cat windows/dist/IDENTITY-STATUS.txt
+            STATUS=$(head -1 windows/dist/IDENTITY-STATUS.txt)
+          else
+            STATUS=IDENTITY-UNKNOWN
+          fi
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          if [ "$STATUS" != "STORE-READY" ]; then
+            echo "::warning::$STATUS — the three Partner Center identity values are not set. This .msix is a packaging proof, not a submittable package."
+          fi
+
+      - name: VERDICT — a run only counts as a pack if the .msix exists
+        if: always()
+        shell: bash
+        run: |
+          if [ -s windows/dist/Circuit.msix ]; then
+            echo PACKED | tee msix-VERDICT.txt
+          else
+            echo NOT-PACKED | tee msix-VERDICT.txt
+            echo "::error::this run produced NO Circuit.msix — nothing was packed"
+            exit 1
+          fi
+
+      # The artifact NAME carries all three facts a downloader needs before they can believe it is
+      # a Store package: did it pack, is the exe real, is the identity resolved.
+      - name: Upload UNSIGNED Store MSIX
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: circuit-store-msix-UNSIGNED-${{ steps.pack.outcome == 'success' && 'PACKED' || 'NOT-PACKED' }}-${{ steps.exeprov.outputs.exe || 'UNKNOWNEXE' }}-${{ steps.identity.outputs.status || 'IDENTITY-UNKNOWN' }}
+          if-no-files-found: error
+          path: |
+            windows/dist/Circuit.msix
+            windows/dist/IDENTITY-STATUS.txt
+            msix-friction.txt
+            msix-sha256.txt
+            msix-VERDICT.txt
