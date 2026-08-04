@@ -26,6 +26,14 @@ on:
   push:
     tags:
       - 'circuit-win-v*'
+    # workflow_dispatch only registers from the DEFAULT branch, so while this lane
+    # lives on the feature branch a push trigger is the only way to exercise it.
+    # Remove once merged to main.
+    branches:
+      - 'windows-w1-circuit-20260720'
+    paths:
+      - 'windows/**'
+      - '.github/workflows/windows-store-msix.yml'
 
 permissions:
   contents: read
