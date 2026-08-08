@@ -1,0 +1,12 @@
+# Circuit line-ending + binary policy.
+# The Windows lane has a burned trap: CRLF line endings once dropped an ESM import at load
+# (regression-locked in test/regressions.test.js). Force LF on all text source so no editor or
+# git core.autocrlf can ever reintroduce it — on any contributor's machine, Windows included.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending-normalized (that corrupts the file). The MSIX Store
+# tiles are hand-encoded PNGs whose bytes legitimately contain 0x0d — mark them binary.
+*.png binary
+*.msix binary
+*.exe binary
+*.ico binary

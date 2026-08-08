@@ -150,7 +150,9 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
         NSApp.mainMenu = mainMenu
     }
 
-    @objc private func checkForUpdates() {
+    // Menu target-actions always arrive on the main thread; declaring the isolation
+    // lets this nonisolated delegate class call into the @MainActor UpdaterUI.
+    @MainActor @objc private func checkForUpdates() {
         UpdaterUI.checkInteractively()
     }
 
