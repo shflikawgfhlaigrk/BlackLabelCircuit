@@ -1,0 +1,2 @@
+# Staged packaging output — never committed (unsigned payloads / msix live in CI artifacts only).
+dist/
