@@ -1,0 +1,97 @@
+name: circuit-windows-msix
+
+# Windows MSIX packaging lane for Circuit (Black Label Windows port, plan item #3:
+# "exe proven, needs MSIX"). Builds the UNSIGNED exe with the exact steps of the proven
+# circuit-windows-spike lane (2026-07-08: green on windows-latest), then stages the MSIX
+# payload via windows/package-msix.ps1, which FAILS CLOSED on the Partner Center identity:
+# absent PARTNER_CENTER_READY the job stays green, prints "STAGED, AWAITING PARTNER CENTER",
+# and uploads the unsigned payload layout as the only artifact. Nothing here signs,
+# submits, or ships. windows-spike.yml is untouched; its build steps are COPIED below.
+
+on:
+  push:
+    branches: ['claude/windows-full-build-*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  msix:
+    name: Build exe + stage MSIX (fail-closed on Partner Center)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Circuit
+        uses: actions/checkout@v4
+
+      - name: Setup Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies (npm ci)
+        run: npm ci
+
+      # Same gate the proven proof job enforces: the packaging lane only proceeds on a
+      # tree whose test suite is green on Windows.
+      - name: Run Circuit's own test suite on Windows (gate)
+        run: npm test
+
+      # ---- Steps below are copied verbatim from the proven windows-spike.yml package job ----
+      - name: Build vendor bundle (browser UI)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node build-vendor.mjs || echo "vendor build skipped/failed (non-fatal for exe spike)"
+
+      - name: Package single-file Windows exe with pkg (UNSIGNED)
+        id: pkg
+        shell: bash
+        run: |
+          set -euo pipefail
+          START=$(date +%s)
+          # pkg bundles a Node runtime + server.js into a single .exe.
+          npx --yes pkg@5.8.1 server.js \
+            --targets node18-win-x64 \
+            --output circuit-windows-UNSIGNED-STAGED-ONLY.exe \
+            --public 2>&1 | tee pkg-build.log
+          END=$(date +%s)
+          echo "pkg_seconds=$((END-START))" | tee -a pkg-build.log
+          ls -la circuit-windows-UNSIGNED-STAGED-ONLY.exe
+
+      - name: Compute sha256 of the exe
+        if: always()
+        shell: bash
+        run: |
+          if [ -f circuit-windows-UNSIGNED-STAGED-ONLY.exe ]; then
+            sha256sum circuit-windows-UNSIGNED-STAGED-ONLY.exe | tee exe-sha256.txt
+          else
+            echo "no exe produced" | tee exe-sha256.txt
+          fi
+      # ---- End of steps copied from windows-spike.yml ----
+
+      # Fail-closed MSIX staging. With no PARTNER_CENTER_READY repo variable and no
+      # WINDOWS_MSIX_* secrets configured (today's state), the script prints
+      # "STAGED, AWAITING PARTNER CENTER", exits 0, and the unsigned payload layout is
+      # the only artifact. Once the founder arms the lane (see windows/README.md), the
+      # same step packs windows/dist/BlackLabelCircuit-UNSIGNED.msix — still never submitted.
+      - name: Stage MSIX payload (fail-closed on Partner Center identity)
+        shell: pwsh
+        env:
+          PARTNER_CENTER_READY: ${{ vars.PARTNER_CENTER_READY }}
+          WINDOWS_MSIX_PUBLISHER: ${{ secrets.WINDOWS_MSIX_PUBLISHER }}
+          WINDOWS_MSIX_IDENTITY_NAME: ${{ secrets.WINDOWS_MSIX_IDENTITY_NAME }}
+          WINDOWS_MSIX_PUBLISHER_DISPLAY: ${{ secrets.WINDOWS_MSIX_PUBLISHER_DISPLAY }}
+          WINDOWS_MSIX_VERSION: ${{ vars.WINDOWS_MSIX_VERSION }}
+        run: ./windows/package-msix.ps1 -ExePath circuit-windows-UNSIGNED-STAGED-ONLY.exe
+
+      - name: Upload MSIX payload artifact (unsigned, staged only)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: circuit-windows-msix-STAGED
+          if-no-files-found: warn
+          path: |
+            windows/dist/
+            pkg-build.log
+            exe-sha256.txt
