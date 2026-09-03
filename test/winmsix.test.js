@@ -172,6 +172,11 @@ test('build-msix.sh stages REAL tiles (no text-file placeholder) and runs the pr
 
 test('build-msix.sh stages the Store artifact UNSIGNED (Store signs) and packs with makeappx', () => {
   assert.match(build, /makeappx pack/, 'no makeappx pack step');
+  // Git Bash hands makeappx POSIX paths (/d/a/...) which it reads relative to the current drive
+  // (run 33730563460: "\\?\D:\d\a\...: The system cannot find the path specified"). The pack
+  // call must pass cygpath-converted native paths, never $LAYOUT/$OUT raw.
+  assert.match(build, /PACK_DIR="\$\(cygpath -w "\$LAYOUT"\)"/, 'the layout path is not converted to a native Windows path for makeappx');
+  assert.match(build, /makeappx pack \/d "\$PACK_DIR" \/p "\$PACK_OUT"/, 'makeappx must receive the converted paths');
   // The Store path must not run signtool — signing is only in the explicit --sideload test mode.
   const storeSectionOnly = build.split('--sideload')[0];
   assert.ok(!/signtool|sign-windows\.mjs/.test(storeSectionOnly),
