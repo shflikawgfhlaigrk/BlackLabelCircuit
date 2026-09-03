@@ -25,6 +25,7 @@
   "bundle": {
     "active": true,
     "targets": ["nsis"],
+    "icon": ["icons/icon.ico"],
     "publisher": "__PUBLISHER_DISPLAY_NAME__",
     "category": "DeveloperTool",
     "shortDescription": "Grade your codebase like a senior engineer, see the wiring in 3D.",
