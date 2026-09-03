@@ -69,7 +69,7 @@ function line(px, w, h, x0, y0, x1, y1, c, thick) {
     disc(px, w, h, x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, thick, c);
   }
 }
-function render(w, h) {
+export function render(w, h) {
   const px = canvas(w, h);
   const m = Math.min(w, h);
   const pt = (n) => [GRAPH.nodes[n][0] * w, GRAPH.nodes[n][1] * h];
