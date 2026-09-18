@@ -57,7 +57,7 @@ jobs:
         shell: pwsh
         run: |
           Remove-Item -Recurse -Force proof/${{ matrix.app }}/.build -ErrorAction SilentlyContinue
-          swift build --package-path proof/${{ matrix.app }}
+          swift build --package-path proof/${{ matrix.app }} -Xcxx -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH -Xcc -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Write-Host "BUILT ON WINDOWS: ${{ matrix.app }}"
 

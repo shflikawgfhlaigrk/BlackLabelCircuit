@@ -532,13 +532,15 @@ jobs:
         with:
           branch: swift-6.2-release
           tag: 6.2-RELEASE
+      # The -D switch lets a Visual Studio newer than the toolchain's clang compile C++ dependencies (STL1000).
       - name: swift build (${moduleName})
-        run: swift build -c debug
+        run: swift build -c debug -Xcxx -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH -Xcc -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH
 `;
 }
 
 // ---------------------------------------------------------------- verify loop
 const ERROR_RE = /^((?:[A-Za-z]:)?[^:\n]+\.swift):(\d+):(\d+): error: (.*)$/gm;
+export const WINDOWS_TOOLCHAIN_FLAGS = ['-Xcxx', '-D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH', '-Xcc', '-D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH'];
 // The build system reports some diagnostics (parse-phase ones) in its own shape.
 const ERROR_RE_ALT = /^error: ((?:[A-Za-z]:)?[^:\n]+\.swift):(\d+):(\d+):? (.*)$/gm;
 const MAX_DECL_ROUNDS = 10; // after this many declaration-level rounds a file is isolated whole
@@ -546,6 +548,10 @@ const MAX_DECL_ROUNDS = 10; // after this many declaration-level rounds a file i
 function runSwiftBuild(outDir, { sim, log }) {
   const args = ['build', '--package-path', outDir, '-Xswiftc', '-continue-building-after-errors', '-Xswiftc', '-suppress-warnings'];
   if (sim) args.push('-Xswiftc', `-D${SIM_FLAG}`);
+  // Windows: a Visual Studio newer than the Swift toolchain's bundled clang makes the
+  // MSVC STL refuse to compile any C++ dependency (STL1000). This is Microsoft's own
+  // switch for exactly that pairing; it changes no code.
+  if (process.platform === 'win32') args.push(...WINDOWS_TOOLCHAIN_FLAGS);
   log(`swift ${args.join(' ')}`);
   const r = spawnSync('swift', args, { encoding: 'utf8', maxBuffer: 512 * 1024 * 1024, env: { ...process.env, NO_COLOR: '1', TERM: 'dumb' } });
   // eslint-disable-next-line no-control-regex
