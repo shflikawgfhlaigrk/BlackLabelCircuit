@@ -34,6 +34,19 @@ on:
     paths:
       - 'windows/**'
       - '.github/workflows/windows-store-msix.yml'
+      # test/winmsix.test.js runs inside the msix job and reads windows-spike.yml: a change to
+      # either can turn this lane red, so it must re-run the lane (2026-08-04: it did not).
+      - '.github/workflows/windows-spike.yml'
+      - 'test/winmsix.test.js'
+  # PRs into the feature branch get the same lane, so a fix is proven BEFORE it lands.
+  pull_request:
+    branches:
+      - 'windows-w1-circuit-20260720'
+    paths:
+      - 'windows/**'
+      - '.github/workflows/windows-store-msix.yml'
+      - '.github/workflows/windows-spike.yml'
+      - 'test/winmsix.test.js'
 
 permissions:
   contents: read
@@ -91,10 +104,12 @@ jobs:
       - name: Install Tauri CLI
         run: cargo install tauri-cli --version "^2" --locked
 
+      # --no-bundle: this lane consumes the raw Circuit.exe (the msix job packs it); the NSIS
+      # installer would only add a network fetch of NSIS + a second failure surface.
       - name: cargo tauri build
         shell: bash
         working-directory: windows/src-tauri
-        run: cargo tauri build
+        run: cargo tauri build --no-bundle
 
       - name: Locate the produced exe
         id: locate

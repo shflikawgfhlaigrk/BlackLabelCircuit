@@ -6,6 +6,8 @@ import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
+import { ICON, readICO } from '../windows/msix/gen-icon.mjs';
+
 // Contract tests for the STAGED Circuit-Win Tauri shell (windows/). The Rust build
 // is VM-gated (no Rust toolchain on the authoring Mac), so these lock the parts that
 // CAN be proven from a cold shell on darwin: the server->shell stdout URL contract,
@@ -107,4 +109,38 @@ test('the Windows shell scaffold is present and pins Tauri v2', () => {
   }
   const cargo = fs.readFileSync(path.join(WIN, 'src-tauri', 'Cargo.toml'), 'utf8');
   assert.match(cargo, /tauri = \{ version = "2"/, 'must pin Tauri v2');
+});
+
+// --- tauri-build lock (2026-09-03) ----------------------------------------------------------
+// circuit-store-msix run 30881185084 died inside tauri-build's build script before a line of Rust
+// was compiled: "Permission core:window:allow-navigate not found" — navigate is a Rust-side
+// WebviewWindow call (main.rs), not an IPC permission, so no such core permission exists in Tauri
+// v2. The very next gate in tauri-build on Windows is the resource file: it aborts with
+// "`icons/icon.ico` not found; required for generating a Windows Resource file" when the icon is
+// absent. Both are provable on darwin, so both are locked here.
+test('capabilities name only real Tauri v2 permissions: navigation stays a Rust-side call', () => {
+  const caps = JSON.parse(fs.readFileSync(path.join(WIN, 'src-tauri', 'capabilities', 'default.json'), 'utf8'));
+  const ids = caps.permissions.map((p) => (typeof p === 'string' ? p : p.identifier));
+  assert.ok(!ids.includes('core:window:allow-navigate'),
+    'core:window:allow-navigate is not a Tauri v2 permission — tauri-build refuses the capability set');
+  assert.ok(!ids.some((id) => /navigate/.test(id)), 'no navigate permission exists in the Tauri v2 core');
+  // The shell navigates from Rust, which needs no capability entry — lock that the seam stays there.
+  const rs = fs.readFileSync(path.join(WIN, 'src-tauri', 'src', 'main.rs'), 'utf8');
+  assert.match(rs, /win\.navigate\(/, 'main.rs must navigate the main window from Rust');
+  // Every permission the shell does declare is one the compiled plugin set provides.
+  const known = /^(core:default|core:(window|webview|app|event|path|menu|tray|image|resources):[a-z-]+|dialog:[a-z-]+|shell:[a-z-]+)$/;
+  for (const id of ids) assert.match(id, known, `unknown permission namespace: ${id}`);
+});
+
+test('the Windows resource icon exists, is a well-formed ICO, and tauri.conf.json points at it', () => {
+  assert.equal(path.relative(WIN, ICON), path.join('src-tauri', 'icons', 'icon.ico'));
+  assert.ok(fs.existsSync(ICON), 'windows/src-tauri/icons/icon.ico is missing — cargo tauri build aborts without it');
+  const entries = readICO(ICON);
+  assert.ok(entries.length >= 2, 'the icon must carry more than one size');
+  assert.ok(entries.some((e) => e.w === 32 && e.h === 32), 'a 32x32 entry (window/taskbar) is required');
+  // Entry 0 is what tauri-codegen embeds as the runtime window icon; keep it a small bitmap, not the 256 PNG.
+  assert.equal(entries[0].kind, 'bmp');
+  const conf = JSON.parse(fs.readFileSync(path.join(WIN, 'src-tauri', 'tauri.conf.json'), 'utf8'));
+  // One shell builds both apps: the list also carries the .icns / PNGs the macOS bundle needs.
+  assert.ok(conf.bundle.icon.includes('icons/icon.ico'), 'bundle.icon must name the .ico tauri-build compiles into the exe');
 });

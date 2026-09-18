@@ -185,7 +185,17 @@ fi
 echo "== [4/4] makeappx pack -> UNSIGNED .msix (staged for Store) =="
 command -v makeappx >/dev/null 2>&1 || { echo "   ERROR: makeappx (Windows SDK) not on PATH — run in the W0 VM." >&2; exit 1; }
 mkdir -p "$(dirname "$OUT")"
-MSYS_NO_PATHCONV=1 makeappx pack /d "$LAYOUT" /p "$OUT" /overwrite
+# Git Bash on a Windows runner resolves this script's paths as POSIX (/d/a/...). With argument
+# conversion off (MSYS_NO_PATHCONV keeps the /d /p /overwrite switches intact) makeappx received
+# them verbatim and read them relative to the current drive — "\\?\D:\d\a\...: The system cannot
+# find the path specified" (run 33730563460). Hand it native Windows paths explicitly: cygpath
+# ships with Git for Windows; on a host without it (darwin) this step never runs anyway.
+if command -v cygpath >/dev/null 2>&1; then
+  PACK_DIR="$(cygpath -w "$LAYOUT")"; PACK_OUT="$(cygpath -w "$OUT")"
+else
+  PACK_DIR="$LAYOUT"; PACK_OUT="$OUT"
+fi
+MSYS_NO_PATHCONV=1 makeappx pack /d "$PACK_DIR" /p "$PACK_OUT" /overwrite
 echo "   staged (UNSIGNED, Store-ready): $OUT"
 
 if [ "$MODE" = "--sideload" ]; then
