@@ -8,9 +8,19 @@
 // Windows port check (no HTTP server): what runs on Windows as-is and which Windows
 // parts are needed first. --min-ready N fails (exit 1) below N% ready app code:
 //   node server.js --port-check [repoPath] [--json port.json] [--min-ready 80]
+// Convert for Windows (no HTTP server): writes a converted, buildable copy of the app
+// code to --out (the repo itself is never modified). --verify has the Swift compiler
+// decide, file by file, what really builds in the Windows configuration:
+//   node server.js --convert [repoPath] --out <dir> [--verify] [--sources Sources,Shared]
+//                  [--exclude path,…] [--module Name] [--json convert.json]
+// Re-check an already converted package with this machine's compiler (what a Windows
+// PC or CI runner runs — the native verdict):
+//   node server.js --reverify <convertedDir> [--json convert.json]
 import http from 'node:http';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { analyzeRepo } from './lib/analyze.js';
 import { LANG_BY_EXT } from './lib/walk.js';
@@ -18,6 +28,7 @@ import { resolveLicense } from './lib/license.js';
 import { runCheck } from './lib/report.js';
 import { buildHistory, headSha } from './lib/history.js';
 import { portCheck, formatPortReport } from './lib/port.js';
+import { convertRepo, reverifyConverted, formatConvertReport } from './lib/convert.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, 'public');
@@ -33,6 +44,13 @@ let portMode = false;       // --port-check: Windows port report, no HTTP server
 let portJson = null;        // --json out.json: write the full port report
 let minReady = null;        // --min-ready 80: fail (exit 1) below this % of ready app code
 let portTarget = 'windows'; // --target: the platform the port check measures against
+let convertMode = false;    // --convert: write a converted copy for the target, no HTTP server
+let convertOut = null;      // --out <dir>: where the converted copy goes (outside the repo)
+let convertVerify = false;  // --verify: build it; the compiler decides what converted
+let convertSources = null;  // --sources a,b: the folders that make up the desktop app module
+let convertExclude = [];    // --exclude a,b: paths to leave out of the module
+let convertModule = null;   // --module Name: the Swift module name of the converted package
+let reverifyMode = false;   // --reverify <convertedDir>: compiler check on an existing conversion
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--port') port = Number(args[++i]);
   else if (args[i] === '--check') checkMode = true;
@@ -43,6 +61,13 @@ for (let i = 0; i < args.length; i++) {
   else if (args[i] === '--json') portJson = path.resolve(args[++i]);
   else if (args[i] === '--min-ready') minReady = Number(args[++i]);
   else if (args[i] === '--target') portTarget = args[++i];
+  else if (args[i] === '--convert') convertMode = true;
+  else if (args[i] === '--reverify') reverifyMode = true;
+  else if (args[i] === '--out') convertOut = path.resolve(args[++i]);
+  else if (args[i] === '--verify') convertVerify = true;
+  else if (args[i] === '--sources') convertSources = args[++i].split(',').map((x) => x.trim()).filter(Boolean);
+  else if (args[i] === '--exclude') convertExclude = args[++i].split(',').map((x) => x.trim()).filter(Boolean);
+  else if (args[i] === '--module') convertModule = args[++i];
   else if (!args[i].startsWith('-')) root = path.resolve(args[i]);
 }
 // --min-grade / --sarif imply the headless check — you never want a long-lived
@@ -65,6 +90,44 @@ if (lspMode) {
   const { startLsp } = await import('./editor/server.mjs');
   await startLsp({ root });
   process.exit(0);
+}
+
+// ---- Re-verify a converted package natively (the Windows-side half of Convert). ----
+if (reverifyMode) {
+  let r;
+  try {
+    r = reverifyConverted(root, { log: (m) => console.log(`[circuit] ${m}`) });
+  } catch (e) {
+    console.error(`[circuit] ${e.message}`);
+    process.exit(2);
+  }
+  console.log(formatConvertReport(r));
+  if (portJson) fs.writeFileSync(portJson, JSON.stringify(r, null, 2));
+  process.exit(r.verification.ok ? 0 : 1);
+}
+
+// ---- Convert: converted copy + compiler verdict. Exit 0 only when what it claims builds. ----
+if (convertMode) {
+  if (!convertOut) {
+    console.error('Usage: circuit --convert [repoPath] --out <dir> [--verify] [--sources a,b] [--exclude a,b] [--module Name]');
+    process.exit(2);
+  }
+  let r;
+  try {
+    r = convertRepo(root, {
+      target: portTarget, out: convertOut, verify: convertVerify, sources: convertSources,
+      exclude: convertExclude, moduleName: convertModule, log: (m) => console.log(`[circuit] ${m}`),
+    });
+  } catch (e) {
+    console.error(`[circuit] ${e.message}`);
+    process.exit(2);
+  }
+  console.log(formatConvertReport(r));
+  if (portJson) {
+    fs.writeFileSync(portJson, JSON.stringify(r, null, 2));
+    console.log(`[circuit] wrote the full conversion report to ${portJson}`);
+  }
+  process.exit(r.verification.ran && !r.verification.ok ? 1 : 0);
 }
 
 // ---- Windows port check: report, optional JSON, optional gate. No HTTP server. ----
@@ -140,6 +203,44 @@ const sseClients = new Set();
 let history = null;
 // Windows port report (lazy, cached per analyzed graph — a rescan invalidates it).
 let portReport = null;
+// Convert run started from the UI. It runs as a child process of this same program
+// (`--convert … --verify`), so minutes of compiling never block the server; its
+// output lines are streamed to the page and the result is read back from its JSON.
+const convertJob = { running: false, log: [], result: null, error: null, out: null, startedAt: null };
+
+function convertOutDir() {
+  // CIRCUIT_CONVERT_DIR moves the output root (tests, shared build machines).
+  const base = process.env.CIRCUIT_CONVERT_DIR || path.join(os.homedir(), 'Circuit Converted');
+  return path.join(base, `${path.basename(root)}-windows`);
+}
+
+function startConvert({ verify }) {
+  const out = convertOutDir();
+  fs.mkdirSync(out, { recursive: true });
+  const resultPath = path.join(out, 'conversion.json');
+  Object.assign(convertJob, { running: true, log: [], result: null, error: null, out, startedAt: Date.now() });
+  const childArgs = [fileURLToPath(import.meta.url), '--convert', root, '--out', out];
+  if (verify) childArgs.push('--verify');
+  const child = spawn(process.execPath, childArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
+  const onData = (buf) => {
+    for (const line of String(buf).split('\n')) {
+      const text = line.replace(/^\[circuit\] /, '').trimEnd();
+      if (!text || text.startsWith('swift build ')) continue;
+      convertJob.log.push(text);
+      if (convertJob.log.length > 400) convertJob.log.shift();
+      broadcast('convert', { line: text });
+    }
+  };
+  child.stdout.on('data', onData);
+  child.stderr.on('data', onData);
+  child.on('error', (e) => { convertJob.running = false; convertJob.error = String(e.message ?? e); broadcast('convert-done', { ok: false, error: convertJob.error }); });
+  child.on('close', (code) => {
+    convertJob.running = false;
+    try { convertJob.result = JSON.parse(fs.readFileSync(resultPath, 'utf8')); } catch { convertJob.result = null; }
+    if (code === 2 || !convertJob.result) convertJob.error = convertJob.log[convertJob.log.length - 1] ?? `convert exited with code ${code}`;
+    broadcast('convert-done', { ok: !convertJob.error, error: convertJob.error });
+  });
+}
 
 // analyzeRepo is synchronous — requests queue behind it for the few hundred ms
 // a scan takes, which also makes re-entrancy impossible.
@@ -219,6 +320,21 @@ function handle(req, res) {
       }
     }
     return send(res, 200, portReport);
+  }
+
+  // Convert for Windows. POST starts a run (one at a time); GET reports it. The
+  // converted copy is written under ~/Circuit Converted — never into the repo.
+  if (url.pathname === '/api/convert') {
+    if (req.method === 'POST') {
+      if (convertJob.running) return send(res, 409, { error: 'a conversion is already running' });
+      const verify = url.searchParams.get('verify') !== '0';
+      startConvert({ verify });
+      return send(res, 202, { started: true, out: convertJob.out, verify });
+    }
+    return send(res, 200, {
+      running: convertJob.running, out: convertJob.out ?? convertOutDir(), startedAt: convertJob.startedAt,
+      log: convertJob.log.slice(-60), error: convertJob.error, result: convertJob.result,
+    });
   }
 
   if (url.pathname === '/api/rescan' && req.method === 'POST') {

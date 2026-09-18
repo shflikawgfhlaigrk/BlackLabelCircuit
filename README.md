@@ -108,6 +108,48 @@ declared off-limits, never a heuristic guess.
 - **Zero violations → zero findings.** No rules file → the analysis is exactly as it
   is without one. Rules are enforced in `--check` / SARIF CI mode too.
 
+## Convert for Windows
+
+The port check tells you what stands between a Mac codebase and Windows. **Convert does
+the part of that work software can do, and has your compiler prove it.**
+
+```sh
+node ~/Circuit/server.js --convert /path/to/repo --out /path/to/converted --verify
+node ~/Circuit/server.js --reverify /path/to/converted        # on the Windows PC / CI runner
+```
+
+In the app: **Convert → Convert for Windows**. The converted copy is written to
+`~/Circuit Converted/<repo>-windows`; the repo itself is never modified.
+
+1. **Rewrites** (deterministic — no model, no network): Apple-only imports with a same-API
+   replacement become a per-platform import (`Combine` → OpenCombine, `CryptoKit` →
+   swift-crypto, `SQLite3` → swift-toolchain-sqlite, `os`/`OSLog`/`UniformTypeIdentifiers` →
+   the bundled **CircuitPortKit**, `Darwin` → ucrt/WinSDK); `URLSession` users get
+   `FoundationNetworking`; Combine schedulers and Foundation publishers go through one kit
+   spelling that is right on both platforms; hard-coded macOS paths and commands in Python
+   and JS become portable helper calls (`circuit_port.py`, `circuit-port.mjs`).
+2. **A buildable package**: the converted sources, the kit, a generated `Package.swift`
+   (the desktop target's sources come from `project.yml` when there is one, and the Swift
+   settings from the Xcode project) and a GitHub Actions workflow that builds it on Windows.
+3. **`--verify`: the compiler decides.** Circuit builds the package in the Windows
+   configuration. Every declaration the compiler rejects is isolated to Apple platforms —
+   kept byte-for-byte for the Mac build, compiled out elsewhere — and recorded with the
+   compiler's own error; the build repeats until what remains compiles. Only code that
+   survives is counted as converted. Nothing is counted without `--verify`.
+
+On a Mac the Windows configuration is simulated (`-D CIRCUIT_WINDOWS_SIM` hides every
+Apple-only module). `--reverify` runs the same loop natively on Windows and is the final
+word; the generated workflow does exactly that.
+
+What Convert does **not** do: invent a Windows version of a screen or a system service.
+SwiftUI/AppKit views, AVFoundation, ScreenCaptureKit and the like have no same-API
+counterpart, so that code is isolated and listed in `CONVERSION.md` with the Windows part
+it is waiting for and its size. Each part added to CircuitPortKit converts more code in
+every app that uses it — re-run Convert and the compiler says how much.
+
+The 3D view colors every file by the verdict: builds unchanged · converted · builds with
+some declarations kept for the Mac · needs a Windows part.
+
 ## Editor integration (live re-grade)
 
 Circuit ships a **language server** so the same review shows up *in your editor*,

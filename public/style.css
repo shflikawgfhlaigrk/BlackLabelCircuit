@@ -394,3 +394,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .graph-overlay.analyzing .go-mark { animation: none; }
 }
+
+/* Convert panel */
+.convert-log { max-height: 140px; overflow: auto; margin: 8px 0 0; padding: 8px; border-radius: 8px; background: rgba(8, 12, 20, 0.7); border: 1px solid rgba(120, 140, 180, 0.18); font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; color: #9fb2d0; white-space: pre-wrap; word-break: break-word; }
+#convertStatus b { color: #e6edf7; }
+#convertStatus .convert-out { display: block; margin-top: 4px; word-break: break-all; }

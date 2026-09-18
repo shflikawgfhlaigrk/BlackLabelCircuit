@@ -16,6 +16,8 @@ const DIM_NODE = '#1c2431';
 // packages / commands / paths orange).
 const PORT_COLORS = { ready: '#86efac', guarded: '#fbbf24', ui: '#f472b6', system: '#f87171', other: '#fb923c' };
 const PORT_KIND_RANK = { ui: 3, system: 2, package: 1, unix: 1, command: 1, path: 1 };
+// Convert overlay: what the conversion did with each file, as judged by the compiler.
+const CONVERT_COLORS = { portable: '#86efac', converted: '#38bdf8', partial: '#fbbf24', 'needs-windows-part': '#f472b6', 'mac-only-skipped': '#fb923c', unverified: '#94a3b8', 'rewritten-unverified': '#94a3b8' };
 // Stops aligned to letter boundaries: A≈green, B≈lime, C≈yellow, D≈orange, F≈red.
 const SCORE_STOPS = [
   [100, [134, 239, 172]], [95, [134, 239, 172]], [84, [163, 230, 53]], [74, [234, 179, 8]],
@@ -55,6 +57,8 @@ const state = {
   replay: { on: false, loading: false, data: null, idx: 0, frame: null, playing: false, timer: null },
   // Windows port overlay: when `on`, nodes recolor by whether the file runs on Windows as-is.
   port: { on: false, loading: false, data: null, byId: new Map() },
+  // Convert: the last conversion result; when `on`, nodes recolor by its per-file verdict.
+  convert: { on: false, running: false, result: null, byId: new Map() },
 };
 
 // ---------- graph setup ----------
@@ -146,8 +150,26 @@ function nodeColorFn(n) {
     const g = state.replay.frame.nodes[n.id];
     return g ? scoreColor(g.score) : DIM_NODE;
   }
+  if (state.convert.on && state.convert.result) {
+    const c = state.convert.byId.get(n.id);
+    return c ? (CONVERT_COLORS[c.status] ?? DIM_NODE) : DIM_NODE;
+  }
   if (state.port.on && state.port.data) return portColor(state.port.byId.get(n.id));
   return scoreColor(n.score);
+}
+
+function convertLine(n) {
+  if (!state.convert.on || !state.convert.result) return '';
+  const c = state.convert.byId.get(n.id);
+  if (!c) return `<div class="tt-line">Convert: not part of the converted app code</div>`;
+  const text = c.status === 'portable' ? 'Convert: builds for Windows unchanged'
+    : c.status === 'converted' ? `Convert: converted, builds for Windows (${esc([...new Set(c.changes.map((x) => x.module ?? x.hit).filter(Boolean))].slice(0, 4).join(', '))})`
+      : c.status === 'partial' ? `Convert: builds for Windows; ${c.isolatedLoc} of ${c.loc} lines kept for the Mac`
+        : c.status === 'needs-windows-part' ? `Convert: needs a Windows part — ${esc((c.guardedModules ?? []).slice(0, 4).join(', ') || 'uses isolated code')}`
+          : c.status === 'mac-only-skipped' ? 'Convert: Mac-only parts skipped on Windows'
+            : 'Convert: rewritten, not verified by a compiler';
+  const why = c.errors?.[0] ? `<div class="tt-line muted">${esc(c.errors[0].slice(0, 120))}</div>` : '';
+  return `<div class="tt-line" style="color:${CONVERT_COLORS[c.status] ?? '#94a3b8'}">${text}</div>${why}`;
 }
 
 function portColor(p) {
@@ -238,7 +260,7 @@ function tooltipHtml(n) {
   return `<div><span class="tt-grade" style="color:${gradeColor(n.grade)}">${n.grade}</span>
       <span style="color:#9aa7bd"> ${n.score}</span></div>
     <div class="tt-path">${esc(n.id)}</div>
-    <div class="tt-line">${n.loc} loc · ${n.fanIn}↚ ${n.fanOut}↛ · ${findings === 0 ? 'clean' : findings + ' finding' + (findings === 1 ? '' : 's')}</div>${portLine(n)}`;
+    <div class="tt-line">${n.loc} loc · ${n.fanIn}↚ ${n.fanOut}↛ · ${findings === 0 ? 'clean' : findings + ' finding' + (findings === 1 ? '' : 's')}</div>${portLine(n)}${convertLine(n)}`;
 }
 
 function refreshStyles() {
@@ -707,6 +729,7 @@ $('tglWindows').onclick = async (e) => {
     state.port.data = data;
     state.port.byId = new Map(data.files.map((f) => [f.id, f]));
     state.port.on = true;
+    if (state.convert.on) $('tglConverted').click(); // one overlay at a time
     btn.classList.add('on');
     const a = data.summary.app;
     const needed = data.blockers.length;
@@ -722,6 +745,67 @@ $('tglWindows').onclick = async (e) => {
     btn.textContent = 'Windows port';
   }
 };
+// ---------- Convert for Windows ----------
+// The run happens in a separate process of the same program; progress lines arrive
+// over the event stream and the verdict is read back when it finishes.
+function showConvertResult(r) {
+  state.convert.result = r;
+  state.convert.byId = new Map((r?.files ?? []).map((f) => [f.id, f]));
+  const el = $('convertStatus');
+  el.classList.remove('hidden');
+  if (!r) { el.textContent = 'No conversion yet.'; return; }
+  const t = r.totals;
+  const out = `<span class="convert-out">Converted copy: ${esc(r.out)}</span>`;
+  if (!t.all.files) { el.innerHTML = 'No app source files to convert.'; return; }
+  if (r.verification.ran && r.verification.ok) {
+    const parts = r.windowsPartsNeeded.filter((p) => p.windows).length;
+    el.innerHTML = `<b>${t.buildsForWindowsPct}%</b> of the app code now builds for Windows (${t.buildsLoc.toLocaleString()} of ${t.all.loc.toLocaleString()} lines, measured by the compiler). `
+      + `${t.converted.files} file${t.converted.files === 1 ? '' : 's'} converted, ${t.partial.files} partly, ${t.needsWindowsPart.files} waiting on ${parts} Windows part${parts === 1 ? '' : 's'}. `
+      + `Checked by your Swift compiler (${esc(r.verification.configuration)}).${out}`;
+  } else if (r.verification.ran) {
+    el.innerHTML = `The compiler check did not finish: ${esc(r.verification.failure ?? 'unknown')}. Nothing is counted as converted.${out}`;
+  } else {
+    el.innerHTML = `${r.files.filter((f) => f.rewritten).length} files rewritten — not yet checked by a compiler, so nothing is counted as converted.${out}`;
+  }
+  $('tglConverted').classList.remove('hidden');
+}
+
+function setConvertRunning(on) {
+  state.convert.running = on;
+  $('convertBtn').textContent = on ? 'Converting…' : 'Convert for Windows';
+  $('convertBtn').disabled = on;
+}
+
+$('convertBtn').onclick = async () => {
+  if (state.convert.running) return;
+  setConvertRunning(true);
+  $('convertLog').textContent = '';
+  $('convertLog').classList.remove('hidden');
+  try {
+    const res = await fetch('/api/convert', { method: 'POST' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+  } catch (err) {
+    setConvertRunning(false);
+    toast(`Convert could not start: ${err.message}`);
+  }
+};
+
+$('tglConverted').onclick = (e) => {
+  state.convert.on = !state.convert.on;
+  e.currentTarget.classList.toggle('on', state.convert.on);
+  if (state.convert.on && state.port.on) $('tglWindows').click();
+  refreshStyles();
+};
+
+async function loadConvertState() {
+  try {
+    const data = await (await fetch('/api/convert')).json();
+    if (data.running) { setConvertRunning(true); $('convertLog').classList.remove('hidden'); $('convertLog').textContent = data.log.join('\n'); }
+    if (data.result) showConvertResult(data.result);
+  } catch { /* the panel just stays empty */ }
+}
+
 let rescanRestore;
 $('rescanBtn').onclick = async () => {
   $('rescanBtn').textContent = 'Scanning…';
@@ -975,12 +1059,27 @@ function toast(msg) {
 }
 
 const events = new EventSource('/api/events');
+loadConvertState();
 let hadHello = false;
 events.addEventListener('hello', () => {
   $('liveDot').classList.add('on');
   // On reconnect, re-fetch — a re-grade may have been broadcast while we were away.
   if (hadHello) loadGraph(true);
   hadHello = true;
+});
+events.addEventListener('convert', (e) => {
+  const { line } = JSON.parse(e.data);
+  const log = $('convertLog');
+  log.classList.remove('hidden');
+  log.textContent += `${log.textContent ? '\n' : ''}${line}`;
+  log.scrollTop = log.scrollHeight;
+});
+events.addEventListener('convert-done', async (e) => {
+  const { ok, error } = JSON.parse(e.data);
+  setConvertRunning(false);
+  await loadConvertState();
+  if (!ok) toast(`Convert failed: ${error}`);
+  else if (state.convert.result && !state.convert.on) $('tglConverted').click();
 });
 events.addEventListener('graph', async (e) => {
   $('liveDot').classList.add('pulse');

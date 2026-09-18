@@ -120,3 +120,13 @@ no online mode to switch out of.
 | No third-party runtime deps | import grep (step 4) | zero |
 | No license phone-home | fail-closed demo mode | offline |
 | No install-time downloads | vendored `public/vendor/` bundle | committed |
+
+## Convert and the network
+
+Circuit itself still opens no connection when converting: the rewrites, the kit and the
+report are all local. `--verify` runs **your** Swift toolchain (`swift build`), and SwiftPM
+downloads the same-API packages a conversion depends on (OpenCombine, swift-crypto,
+swift-toolchain-sqlite) the first time it builds them. In an air-gapped install, run Convert
+without `--verify` (nothing is then counted as converted), or point SwiftPM at an internal
+mirror of those three packages.
+

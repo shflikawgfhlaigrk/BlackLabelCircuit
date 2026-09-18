@@ -78,6 +78,16 @@
     <div id="portSummary" class="muted small hidden"></div>
   </section>
 
+  <section id="convertSection">
+    <h3>Convert <span class="muted small">Mac code → Windows build</span></h3>
+    <div class="chips">
+      <button class="chip" id="convertBtn" title="Write a converted copy of this codebase that builds for Windows. Your compiler decides, file by file, what converted; the repo itself is never changed.">Convert for Windows</button>
+      <button class="chip toggle hidden" id="tglConverted" title="Color every file by what the conversion did with it">Show result</button>
+    </div>
+    <div id="convertStatus" class="muted small hidden"></div>
+    <pre id="convertLog" class="convert-log hidden"></pre>
+  </section>
+
   <section>
     <h3>Tour <span class="muted small">guided walkthrough</span></h3>
     <div class="chips">
