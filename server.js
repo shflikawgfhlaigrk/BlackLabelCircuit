@@ -5,6 +5,9 @@
 //   node server.js --check [repoPath] [--min-grade B] [--sarif circuit.sarif]
 // Editor mode — the stdio LSP language server for in-editor live re-grade (CI-21):
 //   node server.js --lsp [repoPath]   (stdin/stdout speak LSP; see editor/README.md)
+// Windows port check (no HTTP server): what runs on Windows as-is and which Windows
+// parts are needed first. --min-ready N fails (exit 1) below N% ready app code:
+//   node server.js --port-check [repoPath] [--json port.json] [--min-ready 80]
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -14,6 +17,7 @@ import { LANG_BY_EXT } from './lib/walk.js';
 import { resolveLicense } from './lib/license.js';
 import { runCheck } from './lib/report.js';
 import { buildHistory, headSha } from './lib/history.js';
+import { portCheck, formatPortReport } from './lib/port.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, 'public');
@@ -25,12 +29,20 @@ let checkMode = false;      // headless CI grade-gate mode (--check)
 let minGrade = null;        // --min-grade B: fail (exit 1) if repo grades below this
 let sarifPath = null;       // --sarif out.sarif: write SARIF findings for CI annotations
 let lspMode = false;        // --lsp: run the editor language server on stdin/stdout
+let portMode = false;       // --port-check: Windows port report, no HTTP server
+let portJson = null;        // --json out.json: write the full port report
+let minReady = null;        // --min-ready 80: fail (exit 1) below this % of ready app code
+let portTarget = 'windows'; // --target: the platform the port check measures against
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--port') port = Number(args[++i]);
   else if (args[i] === '--check') checkMode = true;
   else if (args[i] === '--lsp') lspMode = true;
   else if (args[i] === '--min-grade') minGrade = args[++i];
   else if (args[i] === '--sarif') sarifPath = path.resolve(args[++i]);
+  else if (args[i] === '--port-check') portMode = true;
+  else if (args[i] === '--json') portJson = path.resolve(args[++i]);
+  else if (args[i] === '--min-ready') minReady = Number(args[++i]);
+  else if (args[i] === '--target') portTarget = args[++i];
   else if (!args[i].startsWith('-')) root = path.resolve(args[i]);
 }
 // --min-grade / --sarif imply the headless check — you never want a long-lived
@@ -52,6 +64,35 @@ if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) {
 if (lspMode) {
   const { startLsp } = await import('./editor/server.mjs');
   await startLsp({ root });
+  process.exit(0);
+}
+
+// ---- Windows port check: report, optional JSON, optional gate. No HTTP server. ----
+if (portMode) {
+  if (minReady != null && !(Number.isFinite(minReady) && minReady >= 0 && minReady <= 100)) {
+    console.error('Invalid --min-ready value (0-100).');
+    process.exit(2);
+  }
+  let r;
+  try {
+    r = portCheck(root, { target: portTarget });
+  } catch (e) {
+    console.error(`[circuit] ${e.message}`);
+    process.exit(2);
+  }
+  console.log(formatPortReport(r));
+  if (portJson) {
+    fs.writeFileSync(portJson, JSON.stringify(r, null, 2));
+    console.log(`[circuit] wrote the full port report to ${portJson}`);
+  }
+  if (minReady != null) {
+    const ready = r.summary.app.readyPct ?? 0;
+    const pass = ready >= minReady;
+    console.log(pass
+      ? `[circuit] PASS — ${ready}% of app code runs on ${portTarget} as-is (minimum ${minReady}%).`
+      : `[circuit] FAIL — ${ready}% of app code runs on ${portTarget} as-is, below the minimum ${minReady}%.`);
+    process.exit(pass ? 0 : 1);
+  }
   process.exit(0);
 }
 
@@ -97,12 +138,15 @@ const sseClients = new Set();
 // land). analyzeRepo/buildHistory are synchronous, so no concurrent recompute is
 // possible: a second request simply waits behind the first.
 let history = null;
+// Windows port report (lazy, cached per analyzed graph — a rescan invalidates it).
+let portReport = null;
 
 // analyzeRepo is synchronous — requests queue behind it for the few hundred ms
 // a scan takes, which also makes re-entrancy impossible.
 function analyze(reason = 'startup') {
   try {
     graph = analyzeRepo(root);
+    portReport = null;
     lastError = null;
     const g = graph.stats.empty
       ? `no source files to grade`
@@ -162,6 +206,19 @@ function handle(req, res) {
   if (url.pathname === '/api/graph') {
     if (!graph) return send(res, lastError ? 500 : 503, { error: lastError ?? 'analyzing' });
     return send(res, 200, graph);
+  }
+
+  // Windows port check (per-file status + the Windows parts needed), computed on
+  // first request after each analysis. Same offline posture as the grader.
+  if (url.pathname === '/api/port') {
+    if (!portReport || portReport.generatedAtGraph !== graph?.generatedAt) {
+      try {
+        portReport = { ...portCheck(root, { target: 'windows' }), generatedAtGraph: graph?.generatedAt ?? null };
+      } catch (e) {
+        return send(res, 500, { error: String(e?.message ?? e) });
+      }
+    }
+    return send(res, 200, portReport);
   }
 
   if (url.pathname === '/api/rescan' && req.method === 'POST') {

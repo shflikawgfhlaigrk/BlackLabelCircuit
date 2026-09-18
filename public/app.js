@@ -11,6 +11,11 @@ const BROKEN = '#ff3355';
 // broken wire but unmistakably "this crossing is not allowed".
 const RULE_VIOLATION = '#ff2d78';
 const DIM_NODE = '#1c2431';
+// Windows port overlay: ready → green, Mac-only parts skipped → amber, needs a
+// Windows part first → by the kind of part (screens pink, system services red,
+// packages / commands / paths orange).
+const PORT_COLORS = { ready: '#86efac', guarded: '#fbbf24', ui: '#f472b6', system: '#f87171', other: '#fb923c' };
+const PORT_KIND_RANK = { ui: 3, system: 2, package: 1, unix: 1, command: 1, path: 1 };
 // Stops aligned to letter boundaries: A≈green, B≈lime, C≈yellow, D≈orange, F≈red.
 const SCORE_STOPS = [
   [100, [134, 239, 172]], [95, [134, 239, 172]], [84, [163, 230, 53]], [74, [234, 179, 8]],
@@ -48,6 +53,8 @@ const state = {
   // Grade-over-history replay (CI-20): when `on`, nodes recolor to `frame`'s
   // per-commit grades instead of the live HEAD grade.
   replay: { on: false, loading: false, data: null, idx: 0, frame: null, playing: false, timer: null },
+  // Windows port overlay: when `on`, nodes recolor by whether the file runs on Windows as-is.
+  port: { on: false, loading: false, data: null, byId: new Map() },
 };
 
 // ---------- graph setup ----------
@@ -139,7 +146,38 @@ function nodeColorFn(n) {
     const g = state.replay.frame.nodes[n.id];
     return g ? scoreColor(g.score) : DIM_NODE;
   }
+  if (state.port.on && state.port.data) return portColor(state.port.byId.get(n.id));
   return scoreColor(n.score);
+}
+
+function portColor(p) {
+  if (!p) return DIM_NODE; // not source code the port check reads (docs, data, config)
+  if (p.status === 'ready') return PORT_COLORS.ready;
+  if (p.status === 'guarded') return PORT_COLORS.guarded;
+  const worst = worstPortKind(p);
+  return worst === 'ui' ? PORT_COLORS.ui : worst === 'system' ? PORT_COLORS.system : PORT_COLORS.other;
+}
+
+function worstPortKind(p) {
+  let worst = null;
+  for (const h of p.hits) {
+    if (h.guarded) continue;
+    if (!worst || (PORT_KIND_RANK[h.kind] ?? 0) > (PORT_KIND_RANK[worst] ?? 0)) worst = h.kind;
+  }
+  return worst;
+}
+
+function portLine(n) {
+  if (!state.port.on || !state.port.data) return '';
+  const p = state.port.byId.get(n.id);
+  if (!p) return `<div class="tt-line">Windows: not source code</div>`;
+  const ids = (guarded) => [...new Set(p.hits.filter((h) => h.guarded === guarded).map((h) => h.id))].slice(0, 4).join(', ');
+  const text = p.status === 'ready'
+    ? (p.handled ? 'Windows: runs as-is (has a Windows branch)' : 'Windows: runs as-is')
+    : p.status === 'guarded'
+      ? `Windows: builds, skips Mac-only ${esc(ids(true))}`
+      : `Windows: needs ${esc(ids(false))}`;
+  return `<div class="tt-line" style="color:${portColor(p)}">${text}</div>`;
 }
 
 function linkTouchesFocus(l) {
@@ -200,7 +238,7 @@ function tooltipHtml(n) {
   return `<div><span class="tt-grade" style="color:${gradeColor(n.grade)}">${n.grade}</span>
       <span style="color:#9aa7bd"> ${n.score}</span></div>
     <div class="tt-path">${esc(n.id)}</div>
-    <div class="tt-line">${n.loc} loc · ${n.fanIn}↚ ${n.fanOut}↛ · ${findings === 0 ? 'clean' : findings + ' finding' + (findings === 1 ? '' : 's')}</div>`;
+    <div class="tt-line">${n.loc} loc · ${n.fanIn}↚ ${n.fanOut}↛ · ${findings === 0 ? 'clean' : findings + ' finding' + (findings === 1 ? '' : 's')}</div>${portLine(n)}`;
 }
 
 function refreshStyles() {
@@ -651,6 +689,39 @@ $('tglBroken').onclick = (e) => {
   applyData();
 };
 $('statBroken').onclick = () => $('tglBroken').click();
+$('tglWindows').onclick = async (e) => {
+  const btn = e.currentTarget;
+  if (state.port.on) {
+    state.port.on = false;
+    btn.classList.remove('on');
+    $('portSummary').classList.add('hidden');
+    return refreshStyles();
+  }
+  if (state.port.loading) return;
+  state.port.loading = true;
+  btn.textContent = 'Checking…';
+  try {
+    const res = await fetch('/api/port');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+    state.port.data = data;
+    state.port.byId = new Map(data.files.map((f) => [f.id, f]));
+    state.port.on = true;
+    btn.classList.add('on');
+    const a = data.summary.app;
+    const needed = data.blockers.length;
+    $('portSummary').textContent = a.files === 0
+      ? 'No app source files to check.'
+      : `${a.readyPct}% of app code runs on Windows as-is · ${needed} Windows part${needed === 1 ? '' : 's'} needed`;
+    $('portSummary').classList.remove('hidden');
+    refreshStyles();
+  } catch (err) {
+    toast(`Windows port check failed: ${err.message}`);
+  } finally {
+    state.port.loading = false;
+    btn.textContent = 'Windows port';
+  }
+};
 let rescanRestore;
 $('rescanBtn').onclick = async () => {
   $('rescanBtn').textContent = 'Scanning…';
