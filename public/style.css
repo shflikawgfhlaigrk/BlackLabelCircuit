@@ -396,6 +396,24 @@ body {
 }
 
 /* Convert panel */
-.convert-log { max-height: 140px; overflow: auto; margin: 8px 0 0; padding: 8px; border-radius: 8px; background: rgba(8, 12, 20, 0.7); border: 1px solid rgba(120, 140, 180, 0.18); font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; color: #9fb2d0; white-space: pre-wrap; word-break: break-word; }
-#convertStatus b { color: #e6edf7; }
-#convertStatus .convert-out { display: block; margin-top: 4px; word-break: break-all; }
+.btn.primary { background: linear-gradient(180deg, #38bdf8, #0ea5e9); border-color: #7dd3fc; color: #04121c; font-weight: 600; }
+.btn.primary:hover { background: linear-gradient(180deg, #7dd3fc, #38bdf8); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.convert-box { width: min(760px, 94vw); height: auto; max-height: 90vh; }
+.convert-body { padding: 16px 20px 4px; overflow: auto; }
+.convert-intro { margin: 0 0 14px; color: var(--ink-2); font-size: 13px; line-height: 1.55; }
+.convert-intro b { color: var(--ink); }
+.convert-hero { display: flex; align-items: baseline; gap: 12px; margin: 2px 0 12px; }
+.convert-pct { font-size: 44px; font-weight: 700; color: var(--grade-a); letter-spacing: -0.02em; }
+.convert-pct.warn { color: var(--grade-c); }
+.convert-pct-label { color: var(--ink-2); font-size: 13px; line-height: 1.4; }
+.convert-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 12px; }
+.convert-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
+.convert-table td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.convert-table .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; }
+.convert-parts { font-size: 12px; color: var(--ink-2); line-height: 1.6; margin-bottom: 10px; }
+.convert-parts b { color: var(--ink); font-weight: 600; }
+.convert-out-row { display: flex; gap: 10px; align-items: baseline; margin: 6px 0 12px; word-break: break-all; }
+.convert-log { max-height: 170px; overflow: auto; margin: 0 0 12px; padding: 10px; border-radius: 8px; background: rgba(8, 12, 20, 0.7); border: 1px solid var(--border); font: 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: #9fb2d0; white-space: pre-wrap; word-break: break-word; }
+.convert-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 20px 16px; border-top: 1px solid var(--border); }
+#convertStatus b { color: var(--ink); }

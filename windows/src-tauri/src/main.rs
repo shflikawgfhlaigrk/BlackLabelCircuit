@@ -177,7 +177,11 @@ fn start_server(
         args.push("--port".to_string());
         args.push(port);
     }
-    let sidecar = app.shell().sidecar("node")?.args(args);
+    // CIRCUIT_PARENT_WATCH: the server exits when this shell's end of its stdin pipe
+    // closes — i.e. when the shell dies WITHOUT running its exit handler (a kill, a
+    // crash). The normal quit path still kills the child explicitly below; this covers
+    // the rest, so a dead window never leaves a server holding a port.
+    let sidecar = app.shell().sidecar("node")?.args(args).env("CIRCUIT_PARENT_WATCH", "1");
     let (mut rx, child) = sidecar.spawn()?;
     *app.state::<ServerChild>().0.lock().unwrap() = Some(child);
 

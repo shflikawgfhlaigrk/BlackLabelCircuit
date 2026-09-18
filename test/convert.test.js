@@ -298,4 +298,39 @@ test('api: POST /api/convert runs the conversion out of process and GET reports 
   assert.ok(state.result.files.some((f) => f.id === 'Sources/Model.swift' && f.status === 'rewritten-unverified'));
   assert.ok(fs.existsSync(path.join(body.out, 'Package.swift')));
   assert.ok(state.log.some((l) => /NOT verified/.test(l)));
+  // the report the panel's "View report" button reads
+  const report = await fetch(`${url}/api/convert/report`);
+  assert.equal(report.status, 200);
+  assert.match(await report.text(), /converted for windows by Circuit/);
+  // "Open output folder" only ever opens Convert's own folder: a GET is not an open,
+  // and the request cannot name a path
+  assert.equal((await fetch(`${url}/api/convert/open?dir=/etc`)).status, 404, 'GET falls through to static, which has no such file');
+});
+
+test('ui: the Convert button and the output button are in the page and wired', () => {
+  const html = fs.readFileSync(path.join(ROOT, 'public', 'index.html'), 'utf8');
+  const js = fs.readFileSync(path.join(ROOT, 'public', 'app.js'), 'utf8');
+  for (const id of ['convertOpenBtn', 'convertRun', 'convertOpenOut', 'convertReport', 'convertShow', 'convertModal']) {
+    assert.ok(html.includes(`id="${id}"`), `${id} is in index.html`);
+    assert.ok(js.includes(`$('${id}')`), `${id} is wired in app.js`);
+  }
+  assert.ok(js.includes("fetch('/api/convert/open', { method: 'POST' })"), 'the output button asks the server to open the folder');
+  const server = fs.readFileSync(path.join(ROOT, 'server.js'), 'utf8');
+  assert.ok(/convert\/open' && req\.method === 'POST'/.test(server), 'opening is POST-only');
+  assert.ok(!/convert\/open[\s\S]{0,400}searchParams/.test(server), 'the folder to open never comes from the request');
+});
+
+test('a server started by the app shell leaves when the shell goes away (no orphan holding the port)', { timeout: 30_000 }, async () => {
+  const { spawn } = await import('node:child_process');
+  const dir = fixture(APP);
+  const child = spawn(process.execPath, ['server.js', dir, '--port', '8963'], {
+    cwd: ROOT, stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env, CIRCUIT_PARENT_WATCH: '1' },
+  });
+  await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('server did not start')), 15_000);
+    child.stdout.on('data', (d) => { if (/http:\/\/localhost:\d+/.test(String(d))) { clearTimeout(timer); resolve(); } });
+  });
+  const exited = new Promise((resolve) => child.on('exit', (code) => resolve(code)));
+  child.stdin.end(); // what the OS does to the pipe when the parent process dies
+  assert.equal(await exited, 0);
 });

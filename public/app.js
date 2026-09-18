@@ -729,7 +729,7 @@ $('tglWindows').onclick = async (e) => {
     state.port.data = data;
     state.port.byId = new Map(data.files.map((f) => [f.id, f]));
     state.port.on = true;
-    if (state.convert.on) $('tglConverted').click(); // one overlay at a time
+    if (state.convert.on) setConvertOverlay(false); // one overlay at a time
     btn.classList.add('on');
     const a = data.summary.app;
     const needed = data.blockers.length;
@@ -747,36 +747,76 @@ $('tglWindows').onclick = async (e) => {
 };
 // ---------- Convert for Windows ----------
 // The run happens in a separate process of the same program; progress lines arrive
-// over the event stream and the verdict is read back when it finishes.
+// over the event stream and the verdict is read back when it finishes. The panel has
+// the two things a person needs: a button that converts, and a button that opens what
+// came out.
+const CONVERT_ROWS = [
+  ['portable', 'Builds for Windows unchanged'],
+  ['converted', 'Converted — builds for Windows'],
+  ['partial', 'Builds, with some declarations kept for the Mac'],
+  ['needs-windows-part', 'Needs a Windows part (kept for the Mac build)'],
+];
+
 function showConvertResult(r) {
   state.convert.result = r;
   state.convert.byId = new Map((r?.files ?? []).map((f) => [f.id, f]));
-  const el = $('convertStatus');
-  el.classList.remove('hidden');
-  if (!r) { el.textContent = 'No conversion yet.'; return; }
+  const side = $('convertStatus');
+  const has = Boolean(r && r.totals.all.files);
+  for (const id of ['convertOpenOut', 'convertReport']) $(id).disabled = !r;
+  $('convertShow').disabled = !has;
+  $('tglConverted').classList.toggle('hidden', !has);
+  $('convertResult').classList.toggle('hidden', !r);
+  side.classList.toggle('hidden', !r);
+  if (!r) return;
   const t = r.totals;
-  const out = `<span class="convert-out">Converted copy: ${esc(r.out)}</span>`;
-  if (!t.all.files) { el.innerHTML = 'No app source files to convert.'; return; }
-  if (r.verification.ran && r.verification.ok) {
-    const parts = r.windowsPartsNeeded.filter((p) => p.windows).length;
-    el.innerHTML = `<b>${t.buildsForWindowsPct}%</b> of the app code now builds for Windows (${t.buildsLoc.toLocaleString()} of ${t.all.loc.toLocaleString()} lines, measured by the compiler). `
-      + `${t.converted.files} file${t.converted.files === 1 ? '' : 's'} converted, ${t.partial.files} partly, ${t.needsWindowsPart.files} waiting on ${parts} Windows part${parts === 1 ? '' : 's'}. `
-      + `Checked by your Swift compiler (${esc(r.verification.configuration)}).${out}`;
-  } else if (r.verification.ran) {
-    el.innerHTML = `The compiler check did not finish: ${esc(r.verification.failure ?? 'unknown')}. Nothing is counted as converted.${out}`;
-  } else {
-    el.innerHTML = `${r.files.filter((f) => f.rewritten).length} files rewritten — not yet checked by a compiler, so nothing is counted as converted.${out}`;
+  $('convertOutPath').textContent = r.out;
+  const verified = r.verification.ran && r.verification.ok;
+  const pct = $('convertPct');
+  if (!has) {
+    pct.textContent = '—'; $('convertPctLabel').textContent = 'No app source files to convert.';
+    $('convertTable').innerHTML = ''; $('convertParts').innerHTML = ''; side.textContent = 'Nothing to convert.';
+    return;
   }
-  $('tglConverted').classList.remove('hidden');
+  pct.classList.toggle('warn', !verified);
+  if (verified) {
+    pct.textContent = `${t.buildsForWindowsPct}%`;
+    $('convertPctLabel').innerHTML = `of the app code builds for Windows — ${t.buildsLoc.toLocaleString()} of ${t.all.loc.toLocaleString()} lines.<br>Measured by your Swift compiler (${esc(r.verification.configuration)}).`;
+    side.innerHTML = `<b>${t.buildsForWindowsPct}%</b> of the app code builds for Windows.`;
+  } else {
+    pct.textContent = 'Not verified';
+    $('convertPctLabel').textContent = r.verification.ran
+      ? `The compiler check did not finish: ${r.verification.failure ?? 'unknown'}. Nothing is counted as converted.`
+      : 'The rewrites were applied, but no compiler has checked them, so nothing is counted as converted.';
+    side.textContent = 'Converted copy written — not verified by a compiler.';
+  }
+  $('convertTable').innerHTML = CONVERT_ROWS.map(([key, label]) => {
+    const b = key === 'needs-windows-part' ? t.needsWindowsPart : t[key];
+    const lines = key === 'partial' ? `${t.partial.buildsLoc.toLocaleString()} build · ${t.partial.isolatedLoc.toLocaleString()} kept for Mac` : `${b.loc.toLocaleString()} lines`;
+    return `<tr><td><span class="dot" style="background:${CONVERT_COLORS[key]}"></span>${label}</td><td class="num">${b.files} file${b.files === 1 ? '' : 's'}</td><td class="num">${lines}</td></tr>`;
+  }).join('');
+  const parts = r.windowsPartsNeeded.filter((p) => p.windows).slice(0, 6);
+  $('convertParts').innerHTML = parts.length
+    ? `<b>Windows parts the rest is waiting for:</b><br>${parts.map((p) => `${esc(p.id)} → ${esc(p.windows)} <span class="muted">(${p.loc.toLocaleString()} lines)</span>`).join('<br>')}`
+    : '';
 }
 
 function setConvertRunning(on) {
   state.convert.running = on;
-  $('convertBtn').textContent = on ? 'Converting…' : 'Convert for Windows';
-  $('convertBtn').disabled = on;
+  $('convertRun').textContent = on ? 'Converting…' : (state.convert.result ? 'Convert again' : 'Convert for Windows');
+  $('convertRun').disabled = on;
+  $('convertOpenBtn').textContent = on ? 'Converting…' : 'Convert';
 }
 
-$('convertBtn').onclick = async () => {
+function openConvertPanel() {
+  $('convertRepo').textContent = state.data?.name ? `— ${state.data.name}` : '';
+  $('convertModal').classList.remove('hidden');
+}
+$('convertOpenBtn').onclick = openConvertPanel;
+$('convertBtn').onclick = openConvertPanel;
+$('convertClose').onclick = () => $('convertModal').classList.add('hidden');
+$('convertModal').addEventListener('click', (e) => { if (e.target === $('convertModal')) $('convertModal').classList.add('hidden'); });
+
+$('convertRun').onclick = async () => {
   if (state.convert.running) return;
   setConvertRunning(true);
   $('convertLog').textContent = '';
@@ -791,18 +831,47 @@ $('convertBtn').onclick = async () => {
   }
 };
 
-$('tglConverted').onclick = (e) => {
-  state.convert.on = !state.convert.on;
-  e.currentTarget.classList.toggle('on', state.convert.on);
-  if (state.convert.on && state.port.on) $('tglWindows').click();
-  refreshStyles();
+$('convertOpenOut').onclick = async () => {
+  try {
+    const res = await fetch('/api/convert/open', { method: 'POST' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+    toast('Opened the converted code in your file manager.');
+  } catch (err) {
+    toast(`Could not open the output folder: ${err.message}`);
+  }
 };
+
+$('convertReport').onclick = async () => {
+  try {
+    const res = await fetch('/api/convert/report');
+    if (!res.ok) throw new Error((await res.json()).error ?? `HTTP ${res.status}`);
+    const text = await res.text();
+    $('codeTitle').textContent = 'CONVERSION.md';
+    $('codeBody').innerHTML = text.split('\n').map((l, i) => `<div class="cl"><span class="no">${i + 1}</span><span>${esc(l) || ' '}</span></div>`).join('');
+    $('convertModal').classList.add('hidden');
+    $('codeModal').classList.remove('hidden');
+  } catch (err) {
+    toast(`No report yet: ${err.message}`);
+  }
+};
+
+function setConvertOverlay(on) {
+  state.convert.on = on;
+  $('tglConverted').classList.toggle('on', on);
+  $('convertShow').textContent = on ? 'Hide on graph' : 'Show on graph';
+  if (on && state.port.on) $('tglWindows').click(); // one overlay at a time
+  refreshStyles();
+}
+$('tglConverted').onclick = () => setConvertOverlay(!state.convert.on);
+$('convertShow').onclick = () => { setConvertOverlay(!state.convert.on); if (state.convert.on) $('convertModal').classList.add('hidden'); };
 
 async function loadConvertState() {
   try {
     const data = await (await fetch('/api/convert')).json();
     if (data.running) { setConvertRunning(true); $('convertLog').classList.remove('hidden'); $('convertLog').textContent = data.log.join('\n'); }
-    if (data.result) showConvertResult(data.result);
+    showConvertResult(data.result ?? null);
+    if (!data.running) setConvertRunning(false);
   } catch { /* the panel just stays empty */ }
 }
 
@@ -834,6 +903,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     if (!$('welcome').classList.contains('hidden')) closeWelcome();
     else if (!$('codeModal').classList.contains('hidden')) $('codeModal').classList.add('hidden');
+    else if (!$('convertModal').classList.contains('hidden')) $('convertModal').classList.add('hidden');
     else if (tour.on) exitTour();
     else if (state.replay.on) exitReplay();
     else if (state.selected) { state.selected = null; hidePanel(); refreshStyles(); }
@@ -1079,7 +1149,7 @@ events.addEventListener('convert-done', async (e) => {
   setConvertRunning(false);
   await loadConvertState();
   if (!ok) toast(`Convert failed: ${error}`);
-  else if (state.convert.result && !state.convert.on) $('tglConverted').click();
+  else toast('Converted. Open output folder to get the code.');
 });
 events.addEventListener('graph', async (e) => {
   $('liveDot').classList.add('pulse');

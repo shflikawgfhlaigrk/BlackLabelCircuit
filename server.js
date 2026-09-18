@@ -185,6 +185,18 @@ if (checkMode) {
 
 const realRoot = fs.realpathSync(root);
 
+// Started by the app shell (CIRCUIT_PARENT_WATCH=1): the shell holds the other end of
+// our stdin. If it goes away without its exit handler running — a kill, a crash — the
+// pipe closes and we leave with it, so no orphaned server keeps the port. A terminal
+// run never sets the variable, so piping or closing stdin there changes nothing.
+if (process.env.CIRCUIT_PARENT_WATCH === '1') {
+  const leave = () => process.exit(0);
+  process.stdin.on('end', leave);
+  process.stdin.on('close', leave);
+  process.stdin.on('error', leave);
+  process.stdin.resume();
+}
+
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -331,10 +343,38 @@ function handle(req, res) {
       startConvert({ verify });
       return send(res, 202, { started: true, out: convertJob.out, verify });
     }
+    if (!convertJob.running && !convertJob.result) {
+      // a conversion finished in an earlier launch is still on disk: show it
+      try { convertJob.result = JSON.parse(fs.readFileSync(path.join(convertOutDir(), 'conversion.json'), 'utf8')); convertJob.out = convertOutDir(); } catch { /* none yet */ }
+    }
     return send(res, 200, {
       running: convertJob.running, out: convertJob.out ?? convertOutDir(), startedAt: convertJob.startedAt,
       log: convertJob.log.slice(-60), error: convertJob.error, result: convertJob.result,
     });
+  }
+
+  // Reveal the converted copy in the file manager. Only ever opens Convert's own
+  // output folder — the path is not taken from the request.
+  if (url.pathname === '/api/convert/open' && req.method === 'POST') {
+    const dir = convertJob.out ?? convertOutDir();
+    if (!fs.existsSync(dir)) return send(res, 404, { error: 'nothing has been converted yet' });
+    const opener = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'explorer.exe' : 'xdg-open';
+    try {
+      spawn(opener, [dir], { detached: true, stdio: 'ignore' }).on('error', () => {}).unref();
+    } catch (e) {
+      return send(res, 500, { error: String(e?.message ?? e) });
+    }
+    return send(res, 200, { ok: true, dir });
+  }
+
+  // The written report (CONVERSION.md) of the last conversion.
+  if (url.pathname === '/api/convert/report') {
+    const file = path.join(convertJob.out ?? convertOutDir(), 'CONVERSION.md');
+    try {
+      return send(res, 200, fs.readFileSync(file, 'utf8'), 'text/plain; charset=utf-8');
+    } catch {
+      return send(res, 404, { error: 'nothing has been converted yet' });
+    }
   }
 
   if (url.pathname === '/api/rescan' && req.method === 'POST') {
