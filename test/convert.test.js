@@ -334,3 +334,15 @@ test('a server started by the app shell leaves when the shell goes away (no orph
   child.stdin.end(); // what the OS does to the pipe when the parent process dies
   assert.equal(await exited, 0);
 });
+
+test('kit: anything that extends URLSession imports FoundationNetworking (found by the real Windows compiler)', () => {
+  // On Windows/Linux `URLSession` in Foundation is an unavailable placeholder; the class lives in
+  // FoundationNetworking. Native run 35367555545 rejected the kit for exactly this.
+  const dir = path.join(ROOT, 'lib', 'convert-kit', 'CircuitPortKit');
+  for (const name of fs.readdirSync(dir)) {
+    const text = fs.readFileSync(path.join(dir, name), 'utf8');
+    if (/extension\s+URLSession\b/.test(text)) {
+      assert.match(text, /#if canImport\(FoundationNetworking\)\nimport FoundationNetworking\n#endif/, `${name} extends URLSession`);
+    }
+  }
+});
