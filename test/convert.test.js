@@ -346,3 +346,21 @@ test('kit: anything that extends URLSession imports FoundationNetworking (found 
     }
   }
 });
+
+test('line counts are the same whether a converted package comes back with LF or CRLF endings', async () => {
+  const { recountConverted } = await import('../lib/convert.js');
+  const out = outDir();
+  fs.mkdirSync(path.join(out, 'app', 'Sources'), { recursive: true });
+  const body = ['import Foundation', '', 'struct Keep {}', '', ISOLATE_OPEN, 'struct Screen: View {', '  var body: some View { Text("x") }', '}', ISOLATE_CLOSE, ''].join('\n');
+  const record = { id: 'Sources/A.swift', lang: 'swift', loc: 5, rewritten: true, changes: [], guardedModules: ['SwiftUI'], isolated: true };
+  const report = { name: 'demo', target: 'windows', root: '/x', out, generatedAt: Date.now(), windowsPartsNeeded: [], verification: { ran: true, ok: true, passes: [{ pass: 1 }], configuration: 'native Windows build' }, before: { readyPct: 0 }, packages: [], kit: false, skipped: [], files: [record] };
+  const counts = {};
+  for (const [label, text] of [['lf', body], ['crlf', body.replace(/\n/g, '\r\n')]]) {
+    fs.writeFileSync(path.join(out, 'app', 'Sources', 'A.swift'), text);
+    fs.writeFileSync(path.join(out, 'conversion.json'), JSON.stringify(report));
+    const r = recountConverted(out);
+    counts[label] = [r.files[0].isolatedLoc, r.files[0].status, r.totals.buildsLoc];
+  }
+  assert.deepEqual(counts.lf, [3, 'partial', 2]);
+  assert.deepEqual(counts.crlf, counts.lf, 'a CRLF checkout (Windows runners) must not shrink the isolated count');
+});

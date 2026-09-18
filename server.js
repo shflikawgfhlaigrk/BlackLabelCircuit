@@ -28,7 +28,7 @@ import { resolveLicense } from './lib/license.js';
 import { runCheck } from './lib/report.js';
 import { buildHistory, headSha } from './lib/history.js';
 import { portCheck, formatPortReport } from './lib/port.js';
-import { convertRepo, reverifyConverted, formatConvertReport } from './lib/convert.js';
+import { convertRepo, reverifyConverted, recountConverted, formatConvertReport } from './lib/convert.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, 'public');
@@ -51,6 +51,7 @@ let convertSources = null;  // --sources a,b: the folders that make up the deskt
 let convertExclude = [];    // --exclude a,b: paths to leave out of the module
 let convertModule = null;   // --module Name: the Swift module name of the converted package
 let reverifyMode = false;   // --reverify <convertedDir>: compiler check on an existing conversion
+let recountMode = false;    // --recount <convertedDir>: rewrite the report from the files, no build
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--port') port = Number(args[++i]);
   else if (args[i] === '--check') checkMode = true;
@@ -63,6 +64,7 @@ for (let i = 0; i < args.length; i++) {
   else if (args[i] === '--target') portTarget = args[++i];
   else if (args[i] === '--convert') convertMode = true;
   else if (args[i] === '--reverify') reverifyMode = true;
+  else if (args[i] === '--recount') recountMode = true;
   else if (args[i] === '--out') convertOut = path.resolve(args[++i]);
   else if (args[i] === '--verify') convertVerify = true;
   else if (args[i] === '--sources') convertSources = args[++i].split(',').map((x) => x.trim()).filter(Boolean);
@@ -89,6 +91,17 @@ if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) {
 if (lspMode) {
   const { startLsp } = await import('./editor/server.mjs');
   await startLsp({ root });
+  process.exit(0);
+}
+
+// ---- Recount: the report of a converted package, recomputed from its files (no build). ----
+if (recountMode) {
+  try {
+    console.log(formatConvertReport(recountConverted(root)));
+  } catch (e) {
+    console.error(`[circuit] ${e.message}`);
+    process.exit(2);
+  }
   process.exit(0);
 }
 
