@@ -4,6 +4,11 @@
 // Converted code writes `DispatchQueue.main.circuitScheduler` and gets the right one.
 import Foundation
 import Dispatch
+// Off Apple platforms URLSession lives in FoundationNetworking (in Foundation itself the
+// name is only an unavailable placeholder, which cannot be extended).
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 #if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
 import Combine
