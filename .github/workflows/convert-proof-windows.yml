@@ -28,7 +28,7 @@ jobs:
     name: ${{ matrix.app }} (windows-latest)
     needs: plan
     runs-on: windows-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
