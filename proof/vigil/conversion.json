@@ -1,0 +1,2243 @@
+{
+  "root": "/Users/michaelbarber/BlackLabelHome",
+  "name": "BlackLabelHome",
+  "target": "windows",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/vigil",
+  "moduleName": "BlackLabelHomeCore",
+  "moduleSources": {
+    "from": "project.yml target Homefront",
+    "paths": [
+      "Homefront.swift",
+      "VigilHouseView.swift",
+      "VigilHouse3DView.swift",
+      "HomeCore.swift",
+      "HomeDatabase.swift",
+      "Automation.swift",
+      "Geofence.swift",
+      "DiscoveryCatalog.swift",
+      "HomeStore.swift",
+      "Discovery.swift",
+      "HomeViews.swift",
+      "CameraViews.swift",
+      "SensorViews.swift",
+      "AwayAlertsViews.swift",
+      "Energy.swift",
+      "EnergyViews.swift",
+      "Climate.swift",
+      "ClimateViews.swift",
+      "MenuBar.swift",
+      "MenuBarViews.swift",
+      "Updater.swift",
+      "Shared/BLShell.swift",
+      "engine"
+    ]
+  },
+  "generatedAt": 1789715624504,
+  "tookMs": 32787,
+  "before": {
+    "readyPct": 57.3,
+    "files": 120,
+    "loc": 33110
+  },
+  "after": {
+    "readyPct": 74.5,
+    "guardedLoc": 5648,
+    "needsWindowsLoc": 2607
+  },
+  "verification": {
+    "ran": true,
+    "ok": true,
+    "failure": null,
+    "passes": [
+      {
+        "pass": 1,
+        "isolated": 2
+      },
+      {
+        "pass": 2,
+        "isolated": 1
+      },
+      {
+        "pass": 3,
+        "isolated": 1
+      },
+      {
+        "pass": 4,
+        "isolated": 2
+      },
+      {
+        "pass": 5,
+        "isolated": 2
+      },
+      {
+        "pass": 6,
+        "isolated": 2
+      },
+      {
+        "pass": 7,
+        "isolated": 1
+      },
+      {
+        "pass": 8,
+        "isolated": 1
+      },
+      {
+        "pass": 9,
+        "isolated": 1
+      },
+      {
+        "pass": 10,
+        "isolated": 3
+      },
+      {
+        "pass": 11,
+        "isolated": 0
+      }
+    ],
+    "configuration": "simulated Windows configuration on macOS (-DCIRCUIT_WINDOWS_SIM)",
+    "native": false,
+    "platform": "darwin",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.33.1 clang-2100.3.33.1)"
+  },
+  "totals": {
+    "all": {
+      "files": 114,
+      "loc": 32039
+    },
+    "portable": {
+      "files": 90,
+      "loc": 16100
+    },
+    "converted": {
+      "files": 5,
+      "loc": 2844
+    },
+    "partial": {
+      "files": 2,
+      "loc": 441,
+      "isolatedLoc": 323,
+      "buildsLoc": 118
+    },
+    "needsWindowsPart": {
+      "files": 15,
+      "loc": 11224
+    },
+    "macOnlySkipped": {
+      "files": 2,
+      "loc": 1430
+    },
+    "unverified": {
+      "files": 0,
+      "loc": 0
+    },
+    "buildsLoc": 19062,
+    "isolatedLoc": 11547,
+    "buildsForWindowsPct": 59.5
+  },
+  "packages": [
+    {
+      "package": "OpenCombine",
+      "url": "https://github.com/OpenCombine/OpenCombine.git",
+      "from": "0.14.0"
+    },
+    {
+      "package": "swift-toolchain-sqlite",
+      "url": "https://github.com/swiftlang/swift-toolchain-sqlite.git",
+      "from": "1.0.0"
+    }
+  ],
+  "kit": true,
+  "windowsPartsNeeded": [
+    {
+      "id": "SwiftUI",
+      "windows": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)",
+      "effort": "L",
+      "files": 12,
+      "loc": 8695
+    },
+    {
+      "id": "AppKit",
+      "windows": "WinUI 3 / Win32 windows, menus and dialogs",
+      "effort": "L",
+      "files": 7,
+      "loc": 6689
+    },
+    {
+      "id": "SceneKit",
+      "windows": "no Windows build: a cross-platform 3D engine",
+      "effort": "L",
+      "files": 2,
+      "loc": 2553
+    },
+    {
+      "id": "(uses code that was isolated)",
+      "windows": null,
+      "effort": null,
+      "files": 3,
+      "loc": 2502
+    },
+    {
+      "id": "CoreWLAN",
+      "windows": "Native Wifi API (WlanApi)",
+      "effort": "M",
+      "files": 1,
+      "loc": 2209
+    },
+    {
+      "id": "AVFoundation",
+      "windows": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)",
+      "effort": "L",
+      "files": 1,
+      "loc": 2209
+    },
+    {
+      "id": "Vision",
+      "windows": "Windows.Media.Ocr or ONNX Runtime",
+      "effort": "M",
+      "files": 1,
+      "loc": 2209
+    },
+    {
+      "id": "UserNotifications",
+      "windows": "Windows toast notifications (AppNotificationManager)",
+      "effort": "S",
+      "files": 1,
+      "loc": 848
+    },
+    {
+      "id": "Network",
+      "windows": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)",
+      "effort": "M",
+      "files": 2,
+      "loc": 520
+    },
+    {
+      "id": "AVKit",
+      "windows": "MediaPlayerElement (WinUI)",
+      "effort": "M",
+      "files": 1,
+      "loc": 513
+    },
+    {
+      "id": "WebKit",
+      "windows": "WebView2",
+      "effort": "M",
+      "files": 1,
+      "loc": 118
+    },
+    {
+      "id": "CoreLocation",
+      "windows": "Windows.Devices.Geolocation",
+      "effort": "S",
+      "files": 1,
+      "loc": 103
+    }
+  ],
+  "skipped": [
+    {
+      "id": "Shared/VigilKit/HubModels.swift",
+      "why": "outside --sources"
+    },
+    {
+      "id": "Shared/VigilKit/MeshEvent.swift",
+      "why": "outside --sources"
+    },
+    {
+      "id": "Shared/VigilKit/VigilHubClient.swift",
+      "why": "outside --sources"
+    },
+    {
+      "id": "ios/SubscriptionStore.swift",
+      "why": "outside --sources"
+    },
+    {
+      "id": "ios/VigilPaidCore.swift",
+      "why": "outside --sources"
+    },
+    {
+      "id": "ios/VigilRemoteApp.swift",
+      "why": "outside --sources"
+    }
+  ],
+  "files": [
+    {
+      "id": "Automation.swift",
+      "lang": "swift",
+      "loc": 151,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "AwayAlertsViews.swift",
+      "lang": "swift",
+      "loc": 167,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 15,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "21:6 unknown attribute 'EnvironmentObject'",
+        "22:6 unknown attribute 'State'",
+        "23:6 unknown attribute 'State'",
+        "24:6 unknown attribute 'State'",
+        "30:20 cannot find type 'View' in scope",
+        "47:37 cannot find type 'View' in scope",
+        "56:38 cannot find type 'View' in scope",
+        "70:59 cannot find type 'View' in scope"
+      ],
+      "errorCount": 86,
+      "isolatedInPass": 3,
+      "whole": true,
+      "isolatedLoc": 167,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "CameraViews.swift",
+      "lang": "swift",
+      "loc": 513,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 16,
+          "kind": "guarded-import",
+          "module": "AVKit",
+          "to": "MediaPlayerElement (WinUI)"
+        },
+        {
+          "line": 17,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AVKit",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "71:27 cannot find type 'NSImage' in scope",
+        "98:30 cannot find type 'NSImage' in scope",
+        "177:6 unknown attribute 'EnvironmentObject'",
+        "178:6 unknown attribute 'EnvironmentObject'",
+        "180:6 unknown attribute 'State'",
+        "181:6 unknown attribute 'State'",
+        "182:6 unknown attribute 'State'",
+        "183:6 unknown attribute 'State'"
+      ],
+      "errorCount": 175,
+      "isolatedInPass": 7,
+      "whole": true,
+      "isolatedLoc": 513,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Climate.swift",
+      "lang": "swift",
+      "loc": 260,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 25,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "ClimateViews.swift",
+      "lang": "swift",
+      "loc": 283,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 16,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "96:6 unknown attribute 'EnvironmentObject'",
+        "97:6 unknown attribute 'EnvironmentObject'",
+        "98:6 unknown attribute 'EnvironmentObject'",
+        "99:6 unknown attribute 'StateObject'",
+        "99:40 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "111:20 cannot find type 'View' in scope",
+        "127:30 cannot find type 'View' in scope",
+        "161:34 cannot find type 'View' in scope"
+      ],
+      "errorCount": 126,
+      "isolatedInPass": 6,
+      "whole": false,
+      "isolatedLoc": 205,
+      "status": "partial"
+    },
+    {
+      "id": "Discovery.swift",
+      "lang": "swift",
+      "loc": 247,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 12,
+          "kind": "guarded-import",
+          "module": "Network",
+          "to": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)"
+        },
+        {
+          "line": 13,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 11,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "Network"
+      ],
+      "isolated": true,
+      "errors": [
+        "32:28 cannot find type 'NWBrowser' in scope",
+        "33:23 cannot find type 'NWConnection' in scope",
+        "59:47 cannot find type 'NWBrowser' in scope",
+        "40:21 cannot find 'NWBrowser' in scope",
+        "41:68 cannot infer type of closure parameter '_' without a type annotation",
+        "78:20 cannot find 'NWEndpoint' in scope",
+        "79:20 cannot find 'NWEndpoint' in scope",
+        "80:20 cannot find 'NWConnection' in scope"
+      ],
+      "errorCount": 17,
+      "isolatedInPass": 4,
+      "whole": true,
+      "isolatedLoc": 247,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "DiscoveryCatalog.swift",
+      "lang": "swift",
+      "loc": 155,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Energy.swift",
+      "lang": "swift",
+      "loc": 271,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 20,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "EnergyViews.swift",
+      "lang": "swift",
+      "loc": 273,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 12,
+          "kind": "guarded-import",
+          "module": "Network",
+          "to": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "Network"
+      ],
+      "isolated": true,
+      "errors": [
+        "100:6 unknown attribute 'EnvironmentObject'",
+        "101:6 unknown attribute 'StateObject'",
+        "101:39 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "102:6 unknown attribute 'State'",
+        "105:6 unknown attribute 'State'",
+        "106:30 ambiguous use of 'publish(every:tolerance:on:in:options:)'",
+        "111:20 cannot find type 'View' in scope",
+        "131:30 cannot find type 'View' in scope"
+      ],
+      "errorCount": 101,
+      "isolatedInPass": 4,
+      "whole": true,
+      "isolatedLoc": 273,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "engine/calibrate_node.py",
+      "lang": "python",
+      "loc": 47,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/calibrate_vitals.py",
+      "lang": "python",
+      "loc": 142,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/csi_capture.py",
+      "lang": "python",
+      "loc": 79,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/csi_detect.py",
+      "lang": "python",
+      "loc": 190,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/csi_reader.py",
+      "lang": "python",
+      "loc": 76,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/csi_sim.py",
+      "lang": "python",
+      "loc": 50,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/fall_detect.py",
+      "lang": "python",
+      "loc": 156,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/home_engine.py",
+      "lang": "python",
+      "loc": 2142,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "kind": "python-helper",
+          "hit": "~/Library",
+          "to": "circuit_port.app_support"
+        }
+      ],
+      "guardedModules": [],
+      "parses": true,
+      "after": "needs-windows",
+      "remaining": [
+        "~/Library",
+        "~/Library"
+      ],
+      "isolatedLoc": 2142,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "engine/pose_infer.py",
+      "lang": "python",
+      "loc": 121,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/predict.py",
+      "lang": "python",
+      "loc": 269,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/sentinel.py",
+      "lang": "python",
+      "loc": 1239,
+      "before": "guarded",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "guarded",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "mac-only-skipped"
+    },
+    {
+      "id": "engine/vigil_bus.py",
+      "lang": "python",
+      "loc": 4,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_fuse.py",
+      "lang": "python",
+      "loc": 4,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_heartbeat.py",
+      "lang": "python",
+      "loc": 117,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_home.py",
+      "lang": "python",
+      "loc": 430,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_map.py",
+      "lang": "python",
+      "loc": 169,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_paths.py",
+      "lang": "python",
+      "loc": 57,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_plan.py",
+      "lang": "python",
+      "loc": 4,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_rti.py",
+      "lang": "python",
+      "loc": 4,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_safety.py",
+      "lang": "python",
+      "loc": 4,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_source.py",
+      "lang": "python",
+      "loc": 418,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_spectra.py",
+      "lang": "python",
+      "loc": 4,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_steam.py",
+      "lang": "python",
+      "loc": 4,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_tracker.py",
+      "lang": "python",
+      "loc": 4,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil_transitions.py",
+      "lang": "python",
+      "loc": 4,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/__init__.py",
+      "lang": "python",
+      "loc": 9,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/benchmark.py",
+      "lang": "python",
+      "loc": 504,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/bus.py",
+      "lang": "python",
+      "loc": 67,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/cleaning.py",
+      "lang": "python",
+      "loc": 245,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/cli/__init__.py",
+      "lang": "python",
+      "loc": 1,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/cli/vigilctl.py",
+      "lang": "python",
+      "loc": 688,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/config.py",
+      "lang": "python",
+      "loc": 106,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/demo.py",
+      "lang": "python",
+      "loc": 471,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/desk/__init__.py",
+      "lang": "python",
+      "loc": 26,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/desk/intervention.py",
+      "lang": "python",
+      "loc": 86,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/desk/node.py",
+      "lang": "python",
+      "loc": 150,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/desk/presence.py",
+      "lang": "python",
+      "loc": 191,
+      "before": "guarded",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "guarded",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "mac-only-skipped"
+    },
+    {
+      "id": "engine/vigil/desk/synth.py",
+      "lang": "python",
+      "loc": 117,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/desk/tilt.py",
+      "lang": "python",
+      "loc": 301,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/falls/__init__.py",
+      "lang": "python",
+      "loc": 18,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/falls/alerts.py",
+      "lang": "python",
+      "loc": 140,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "osascript",
+        "osascript"
+      ],
+      "isolatedLoc": 140,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "engine/vigil/falls/emd.py",
+      "lang": "python",
+      "loc": 187,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/falls/fusion.py",
+      "lang": "python",
+      "loc": 317,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/falls/gate1.py",
+      "lang": "python",
+      "loc": 193,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/falls/gate2.py",
+      "lang": "python",
+      "loc": 527,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/frame.py",
+      "lang": "python",
+      "loc": 108,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/ingest.py",
+      "lang": "python",
+      "loc": 434,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/instrument/__init__.py",
+      "lang": "python",
+      "loc": 28,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/instrument/field_audio.py",
+      "lang": "python",
+      "loc": 163,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/instrument/mapping.py",
+      "lang": "python",
+      "loc": 194,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/instrument/midi.py",
+      "lang": "python",
+      "loc": 221,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/instrument/wallpaper.py",
+      "lang": "python",
+      "loc": 220,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/ledger/__init__.py",
+      "lang": "python",
+      "loc": 26,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/ledger/adl.py",
+      "lang": "python",
+      "loc": 301,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/ledger/graph.py",
+      "lang": "python",
+      "loc": 249,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/ledger/scrubber.py",
+      "lang": "python",
+      "loc": 122,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/ledger/steam.py",
+      "lang": "python",
+      "loc": 233,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/ledger/synth.py",
+      "lang": "python",
+      "loc": 146,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/machines/__init__.py",
+      "lang": "python",
+      "loc": 30,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/machines/drift.py",
+      "lang": "python",
+      "loc": 163,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/machines/safety.py",
+      "lang": "python",
+      "loc": 107,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/machines/spectra.py",
+      "lang": "python",
+      "loc": 348,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/machines/survey.py",
+      "lang": "python",
+      "loc": 206,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/machines/synth.py",
+      "lang": "python",
+      "loc": 112,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mapping/__init__.py",
+      "lang": "python",
+      "loc": 26,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mapping/fingerprint.py",
+      "lang": "python",
+      "loc": 316,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mapping/fuse.py",
+      "lang": "python",
+      "loc": 533,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mapping/geometry.py",
+      "lang": "python",
+      "loc": 232,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mapping/plan.py",
+      "lang": "python",
+      "loc": 341,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mapping/registry.py",
+      "lang": "python",
+      "loc": 125,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mapping/synth.py",
+      "lang": "python",
+      "loc": 274,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mapping/tracker.py",
+      "lang": "python",
+      "loc": 249,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mapping/transitions.py",
+      "lang": "python",
+      "loc": 343,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mesh/__init__.py",
+      "lang": "python",
+      "loc": 38,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mesh/deadman.py",
+      "lang": "python",
+      "loc": 221,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mesh/ember.py",
+      "lang": "python",
+      "loc": 191,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mesh/pact.py",
+      "lang": "python",
+      "loc": 445,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/mesh/relay.py",
+      "lang": "python",
+      "loc": 362,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/recorder.py",
+      "lang": "python",
+      "loc": 220,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "termios",
+        "tty"
+      ],
+      "isolatedLoc": 220,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "engine/vigil/rti.py",
+      "lang": "python",
+      "loc": 329,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/session.py",
+      "lang": "python",
+      "loc": 196,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/spectral.py",
+      "lang": "python",
+      "loc": 122,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/synth.py",
+      "lang": "python",
+      "loc": 174,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/vitals/__init__.py",
+      "lang": "python",
+      "loc": 26,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/vitals/apnea.py",
+      "lang": "python",
+      "loc": 160,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/vitals/breathing.py",
+      "lang": "python",
+      "loc": 176,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/vitals/gating.py",
+      "lang": "python",
+      "loc": 113,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/vitals/heart.py",
+      "lang": "python",
+      "loc": 210,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/vitals/vmd.py",
+      "lang": "python",
+      "loc": 85,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/vitals/windows.py",
+      "lang": "python",
+      "loc": 177,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/vigil/wizard.py",
+      "lang": "python",
+      "loc": 367,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "engine/win_import_check.py",
+      "lang": "python",
+      "loc": 82,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Geofence.swift",
+      "lang": "swift",
+      "loc": 103,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "CoreLocation",
+          "to": "Windows.Devices.Geolocation"
+        }
+      ],
+      "guardedModules": [
+        "CoreLocation"
+      ],
+      "isolated": true,
+      "errors": [
+        "17:57 cannot find type 'CLLocationManagerDelegate' in scope",
+        "23:59 cannot find type 'CLLocationManager' in scope",
+        "28:37 cannot find type 'CLLocationManager' in scope",
+        "28:79 cannot find type 'CLRegion' in scope",
+        "33:37 cannot find type 'CLLocationManager' in scope",
+        "33:78 cannot find type 'CLRegion' in scope",
+        "38:37 cannot find type 'CLLocationManager' in scope",
+        "38:87 cannot find type 'CLLocation' in scope"
+      ],
+      "errorCount": 14,
+      "isolatedInPass": 2,
+      "whole": true,
+      "isolatedLoc": 103,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "HomeCore.swift",
+      "lang": "swift",
+      "loc": 2041,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 12,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "HomeDatabase.swift",
+      "lang": "swift",
+      "loc": 144,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 5,
+          "kind": "dropin",
+          "module": "SQLite3",
+          "to": "swift-toolchain-sqlite (the same C API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Homefront.swift",
+      "lang": "swift",
+      "loc": 2209,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "SceneKit",
+          "to": "no Windows build: a cross-platform 3D engine"
+        },
+        {
+          "line": 12,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 13,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 14,
+          "kind": "guarded-import",
+          "module": "CoreWLAN",
+          "to": "Native Wifi API (WlanApi)"
+        },
+        {
+          "line": 15,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 16,
+          "kind": "guarded-import",
+          "module": "Vision",
+          "to": "Windows.Media.Ocr or ONNX Runtime"
+        },
+        {
+          "line": 12,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "SceneKit",
+        "AppKit",
+        "CoreWLAN",
+        "AVFoundation",
+        "Vision"
+      ],
+      "isolated": true,
+      "errors": [
+        "244:29 cannot find type 'HomeStore' in scope",
+        "289:23 cannot find type 'HomeStore' in scope",
+        "664:26 cannot find 'CWWiFiClient' in scope",
+        "776:34 cannot find type 'SCNVector3' in scope",
+        "775:53 cannot find type 'AVCaptureVideoDataOutputSampleBufferDelegate' in scope",
+        "793:24 cannot find type 'VNHumanBodyPose3DObservation' in scope",
+        "808:27 cannot find 'AVCaptureSession' in scope",
+        "816:27 cannot find 'VNDetectHumanBodyPoseRequest' in scope"
+      ],
+      "errorCount": 96,
+      "isolatedInPass": 10,
+      "whole": true,
+      "isolatedLoc": 2209,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "HomeStore.swift",
+      "lang": "swift",
+      "loc": 848,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 8,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "UserNotifications",
+          "to": "Windows toast notifications (AppNotificationManager)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "UserNotifications"
+      ],
+      "isolated": true,
+      "errors": [
+        "27:50 cannot find type 'UNUserNotificationCenterDelegate' in scope",
+        "29:43 cannot find type 'UNUserNotificationCenter' in scope",
+        "30:59 cannot find type 'UNNotification' in scope",
+        "31:85 cannot find type 'UNNotificationPresentationOptions' in scope",
+        "56:28 cannot find 'GeofenceMonitor' in scope",
+        "32:29 reference to member 'banner' cannot be resolved without a contextual type",
+        "32:38 reference to member 'list' cannot be resolved without a contextual type",
+        "32:45 reference to member 'sound' cannot be resolved without a contextual type"
+      ],
+      "errorCount": 29,
+      "isolatedInPass": 9,
+      "whole": true,
+      "isolatedLoc": 848,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "HomeViews.swift",
+      "lang": "swift",
+      "loc": 1728,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 9,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "45:35 cannot find type 'HomeStore' in scope",
+        "43:6 unknown attribute 'EnvironmentObject'",
+        "44:6 unknown attribute 'EnvironmentObject'",
+        "45:6 unknown attribute 'EnvironmentObject'",
+        "46:6 unknown attribute 'State'",
+        "50:6 unknown attribute 'AppStorage'",
+        "52:20 cannot find type 'View' in scope",
+        "84:31 cannot find type 'View' in scope"
+      ],
+      "errorCount": 160,
+      "isolatedInPass": 10,
+      "whole": true,
+      "isolatedLoc": 1728,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "MenuBar.swift",
+      "lang": "swift",
+      "loc": 100,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "MenuBarViews.swift",
+      "lang": "swift",
+      "loc": 116,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "23:44 type annotation missing in pattern",
+        "19:6 unknown attribute 'EnvironmentObject'",
+        "23:6 unknown attribute 'Environment'",
+        "25:6 unknown attribute 'State'",
+        "26:30 ambiguous use of 'publish(every:tolerance:on:in:options:)'",
+        "30:20 cannot find type 'View' in scope",
+        "47:30 cannot find type 'View' in scope",
+        "60:31 cannot find type 'View' in scope"
+      ],
+      "errorCount": 53,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 116,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "SensorViews.swift",
+      "lang": "swift",
+      "loc": 703,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "19:6 unknown attribute 'State'",
+        "41:20 cannot find type 'View' in scope",
+        "71:54 cannot find type 'View' in scope",
+        "71:6 unknown attribute 'ViewBuilder'",
+        "17:22 cannot find type 'View' in scope",
+        "102:6 unknown attribute 'EnvironmentObject'",
+        "103:6 unknown attribute 'EnvironmentObject'",
+        "104:6 unknown attribute 'State'"
+      ],
+      "errorCount": 383,
+      "isolatedInPass": 8,
+      "whole": true,
+      "isolatedLoc": 703,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Shared/BLShell.swift",
+      "lang": "swift",
+      "loc": 158,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "WebKit",
+          "to": "WebView2"
+        },
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "WebKit",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "24:26 cannot find 'Color' in scope",
+        "25:26 cannot find 'Color' in scope",
+        "26:26 cannot find 'Color' in scope",
+        "27:26 cannot find 'Color' in scope",
+        "28:26 cannot find 'Color' in scope",
+        "29:26 cannot find 'Color' in scope",
+        "30:26 cannot find 'Color' in scope",
+        "31:26 cannot find 'Color' in scope"
+      ],
+      "errorCount": 59,
+      "isolatedInPass": 1,
+      "whole": false,
+      "isolatedLoc": 118,
+      "status": "partial"
+    },
+    {
+      "id": "Updater.swift",
+      "lang": "swift",
+      "loc": 128,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 23,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "VigilHouse3DView.swift",
+      "lang": "swift",
+      "loc": 344,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 16,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 17,
+          "kind": "guarded-import",
+          "module": "SceneKit",
+          "to": "no Windows build: a cross-platform 3D engine"
+        },
+        {
+          "line": 18,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "SceneKit",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "44:42 cannot find type 'SCNView' in scope",
+        "44:30 cannot find type 'Context' in scope",
+        "77:28 cannot find type 'SCNView' in scope",
+        "77:46 cannot find type 'Context' in scope",
+        "84:19 cannot find type 'SCNNode' in scope",
+        "39:22 cannot find type 'NSViewRepresentable' in scope",
+        "101:23 cannot find 'NSColor' in scope",
+        "102:24 cannot find 'NSColor' in scope"
+      ],
+      "errorCount": 82,
+      "isolatedInPass": 6,
+      "whole": true,
+      "isolatedLoc": 344,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "VigilHouseView.swift",
+      "lang": "swift",
+      "loc": 1471,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 15,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "28:37 cannot find 'NSApplication' in scope",
+        "187:44 type annotation missing in pattern",
+        "186:6 unknown attribute 'EnvironmentObject'",
+        "187:6 unknown attribute 'Environment'",
+        "188:6 unknown attribute 'StateObject'",
+        "220:20 cannot find type 'View' in scope",
+        "244:30 cannot find type 'View' in scope",
+        "283:6 unknown attribute 'State'"
+      ],
+      "errorCount": 35,
+      "isolatedInPass": 10,
+      "whole": true,
+      "isolatedLoc": 1471,
+      "status": "needs-windows-part"
+    }
+  ]
+}

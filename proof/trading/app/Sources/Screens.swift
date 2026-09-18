@@ -1,0 +1,2245 @@
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
+import Foundation
+#if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
+import SwiftUI
+#endif
+#if canImport(Charts) && !CIRCUIT_WINDOWS_SIM
+import Charts
+#endif
+
+// MARK: - Equity curve (real SwiftUI Charts view fed by the graded session ledger)
+struct EquityCurveCard: View {
+    let points: [EquityPoint]
+    private var last: Double { points.last?.equity ?? 0 }
+    private var peak: Double { EquityCurve.peak(points) }
+    private var maxDD: Double { EquityCurve.maxDrawdown(points) }
+    private var curveTint: Color { last > 0 ? BLTheme.green : (last < 0 ? BLTheme.red : BLTheme.gold) }
+    // Pad the y-domain a touch so the line never hugs the frame edges.
+    private var yDomain: ClosedRange<Double> {
+        let lo = min(0, EquityCurve.trough(points)), hi = max(0, peak)
+        let pad = max(1, (hi - lo) * 0.12)
+        return (lo - pad)...(hi + pad)
+    }
+
+    var body: some View {
+        Panel(title: "Equity curve", icon: "chart.xyaxis.line", accent: points.isEmpty ? BLTheme.gold : curveTint) {
+            if points.isEmpty {
+                EmptyState(icon: "chart.xyaxis.line", title: "No equity curve yet",
+                           hint: "Grade committed signals Win or Loss and your cumulative session P&L plots here — real data only, no track record implied.")
+            } else {
+                HStack(spacing: 12) {
+                    curveStat("Session P&L", (last >= 0 ? "+" : "") + TradeMath.money(last), curveTint)
+                    curveStat("Peak", (peak >= 0 ? "+" : "") + TradeMath.money(peak), BLTheme.gold)
+                    curveStat("Max drawdown", maxDD > 0 ? "-" + TradeMath.money(maxDD) : TradeMath.money(0), BLTheme.red)
+                }
+                Chart {
+                    // Zero reference line.
+                    RuleMark(y: .value("Flat", 0))
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
+                        .foregroundStyle(BLTheme.sub.opacity(0.35))
+                    ForEach(points) { p in
+                        AreaMark(x: .value("Step", p.index), y: .value("Equity", p.equity))
+                            .interpolationMethod(.monotone)
+                            .foregroundStyle(LinearGradient(colors: [curveTint.opacity(0.28), curveTint.opacity(0.02)],
+                                                            startPoint: .top, endPoint: .bottom))
+                        LineMark(x: .value("Step", p.index), y: .value("Equity", p.equity))
+                            .interpolationMethod(.monotone)
+                            .lineStyle(StrokeStyle(lineWidth: 2.4, lineCap: .round))
+                            .foregroundStyle(curveTint)
+                    }
+                    if let lastPt = points.last {
+                        PointMark(x: .value("Step", lastPt.index), y: .value("Equity", lastPt.equity))
+                            .symbolSize(70)
+                            .foregroundStyle(curveTint)
+                    }
+                }
+                .chartYScale(domain: yDomain)
+                .chartXAxis {
+                    AxisMarks(values: .automatic(desiredCount: min(points.count, 6))) { _ in
+                        AxisGridLine().foregroundStyle(BLTheme.stroke.opacity(0.5))
+                        AxisValueLabel().foregroundStyle(BLTheme.sub)
+                    }
+                }
+                .chartYAxis {
+                    AxisMarks(position: .leading) { value in
+                        AxisGridLine().foregroundStyle(BLTheme.stroke.opacity(0.5))
+                        AxisValueLabel {
+                            if let v = value.as(Double.self) { Text(TradeMath.money(v)).foregroundStyle(BLTheme.sub) }
+                        }
+                    }
+                }
+                .frame(height: 200)
+                .padding(.top, 4)
+                Text("\(points.count - 1) graded signal\(points.count - 1 == 1 ? "" : "s") · cumulative realized P&L on this Mac. Not a track record.")
+                    .font(.system(size: 10.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+            }
+        }
+    }
+
+    @ViewBuilder private func curveStat(_ l: String, _ v: String, _ tint: Color) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(l.uppercased()).font(.system(size: 9.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.5)
+            Text(v).font(.system(size: 16, weight: .heavy, design: .rounded)).foregroundColor(tint).monospacedDigit()
+        }.frame(maxWidth: .infinity, alignment: .leading)
+            .padding(11).background(BLTheme.bg2).clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+// MARK: - Signals (primary dashboard — user-driven / scenario scoring engine)
+struct SignalsScreen: View {
+    @EnvironmentObject var model: AppModel
+    @EnvironmentObject var wc: WealthChartsStore
+    @EnvironmentObject var feed: FeedClient
+    @EnvironmentObject var nav: Nav
+    @EnvironmentObject var book: PaperBook          // the buyer's own paper ledger feeds the discipline cockpit
+    @State private var inp = SignalInputs()
+    @State private var committed = false
+    @State private var live = LiveFactorSnapshot()
+    @State private var factorsLoading = false
+    @State private var showConnectWC = false
+    // Backend engine fleet (real per-engine OOS verdicts on the buyer's own captured bars) + the
+    // real edge-gated fire journal. Empty until the buyer's WC feed has captured bars — honest.
+    @State private var fleet: [EngineRow] = []
+    @State private var backendFires: [FireRow] = []
+    @State private var fleetLoading = false
+    @State private var reference = ReferenceReport.empty   // reference OOS verdicts on historical ES
+    @State private var catalog = InstrumentCatalog.empty    // multi-asset instruments in the buyer's own bars
+    @State private var rerun: GateRerunReport? = nil       // buyer-triggered re-run of the gate on own bars
+    @State private var gateContracts = "1"                 // contract size the buyer wants the prop-firm gate to check
+    @State private var rerunning = false
+    @State private var dailyLogPath: String? = nil   // path shown after "Export daily logs"
+    @State private var dailyLogError: String? = nil  // shown when the CSV write fails — never a silent no-op
+    @State private var tAccount = "50000"             // order-ticket sizing inputs (your own values)
+    @State private var tRiskPct = "1"
+    @State private var ticketCopied = false
+
+    private var result: SignalResult { SignalEngine.evaluate(inp) }
+    // Discipline cockpit computed from the buyer's OWN closed paper trades against their active
+    // rule profile's caps. Pure compliance math (no aggregate win-rate/$/performance claim).
+    private func cockpitFills() -> [DisciplineFill] {
+        book.closed.compactMap { p in
+            guard let d = p.realizedDollars(), let dt = p.exitDate else { return nil }
+            return DisciplineFill(date: dt, pnl: d, contracts: p.quantity)
+        }
+    }
+    private var cockpit: DisciplineCockpit {
+        DisciplineCockpit.compute(fills: cockpitFills(), profile: model.activeProfile,
+                                  startingBalance: book.startingBalance, now: Date())
+    }
+    private var gates: [GateCheck] { GateEngine.evaluate(inp, result) }
+    private var tfVotes: [TimeframeVote] { ConsensusEngine.votes(inp) }
+    private var tfAgree: Int { ConsensusEngine.agreeing(tfVotes, with: result.direction) }
+    private var gatesOK: Bool { GateEngine.allPass(gates) }
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                HStack(alignment: .top) {
+                    ScreenTitle(title: "Signals", subtitle: "Live factor scoring from your own captured bars · 16 modules · 13 risk gates · 2-of-8 multi-TF consensus · direction lock · 6-tier trailing-stop plan. Instrument-specific modules (Session, SMT) apply to ES only and stay absent on other instruments.", icon: "dot.radiowaves.left.and.right")
+                    Spacer()
+                    // "Live" only while bars are actually printing (recency-gated); bars that stopped
+                    // render as an explicit stale state — an hours-old close is never labeled live.
+                    StatusPill(text: live.isLive ? "Live" : (live.hasData ? staleSinceText : "Awaiting feed"),
+                               tint: live.isLive ? BLTheme.green : (live.hasData ? BLTheme.red : BLTheme.gold))
+                }
+
+                // FIRST-CLASS "NO EDGE TODAY" verdict — the buyer's live gate result on THEIR OWN
+                // captured bars, promoted to the top of the dashboard with per-engine reject reasons
+                // front-and-center. This is the honesty wedge: the tool tells you plainly when none
+                // of your engines has an edge today, rather than manufacturing a signal.
+                noEdgeHero
+
+                // Reachable local account-reference entry point from the main dashboard.
+                wealthChartsBanner
+
+                // DISCIPLINE COCKPIT — live daily-loss + trailing-drawdown meters, a Tiltmeter, and
+                // risk-of-ruin, all computed from the buyer's OWN paper ledger against the caps THEY
+                // entered. When a hard cap is breached it AUTO-MUTES the signal display below. Pure
+                // compliance math on the buyer's own numbers — zero aggregate win-rate/$/P&L claim.
+                DisciplineCockpitPanel(cockpit: cockpit) { nav.section = .firms }
+
+                // The real edge-gated engine fleet (backend /api/screen + /api/fires) — every
+                // engine's honest OOS verdict on the buyer's OWN captured bars.
+                engineFleet
+
+                // FIRST-CLASS MULTI-ASSET PICKER (TR-05): every instrument in the buyer's OWN captured
+                // bars — beyond ES — classified by asset class, with which ES-tuned modules apply. The
+                // full fleet + edge-gate run per-instrument (never pooled). Honest "only ES captured so
+                // far" state; never a hardcoded list of instruments the buyer doesn't have.
+                multiAssetPanel
+
+                // One-click reproducible re-run of the SAME edge-gate over the buyer's own bars —
+                // prover_sha + full n / W / L / max-drawdown / p-value. Buyer-verifiable, no cherry-picking.
+                rerunGatePanel
+
+                // REFERENCE ONLY: the same edge-gate run on Black Label's OWN historical ES bars, so
+                // a cold buyer sees the gate produce a real, earned verdict before they've captured a
+                // single bar. NOT the buyer's account, NOT a promise, no aggregate/equity claim.
+                referenceOOSPanel
+
+                // Hero signal card + composite + consensus + gates. ALL of this is computed from the
+                // live factor inputs, so it renders ONLY when real captured data exists — otherwise a
+                // cold-start buyer would see a fabricated default plan (ES @ 5000, $50/pt). Honest
+                // empty state until the buyer's own feed produces bars.
+                if live.isLive && cockpit.muteSignals {
+                    // AUTO-MUTE: the buyer breached a hard cap they set — hide the trade plan for the
+                    // session. Their own rule profile enforcing itself; never places or blocks an order.
+                    signalsMutedCard
+                } else if live.isLive {
+                    signalCard
+
+                    // Prop-firm rule gate — annotates THIS trade plan against the buyer's active
+                    // funded-eval profile (their own caps) and hard-gates it when it would breach.
+                    // Reuses the honesty spine: engine/reason surface, zero aggregate P&L or win-rate.
+                    profileGateBanner
+
+                    // Multi-timeframe consensus strip + 13-gate risk checklist.
+                    HStack(alignment: .top, spacing: 16) {
+                        Panel(title: "Multi-timeframe consensus", icon: "rectangle.3.group.fill") {
+                            Text("Direction-lock requires \(ConsensusEngine.requiredAgree) of 8 timeframes to agree.")
+                                .font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                            HStack(spacing: 6) {
+                                ForEach(tfVotes) { v in tfChip(v) }
+                            }
+                            Stat(label: "Agreeing with \(result.direction.rawValue)", value: "\(tfAgree) / 8",
+                                 tint: tfAgree >= ConsensusEngine.requiredAgree ? BLTheme.green : BLTheme.red)
+                        }.frame(maxWidth: .infinity)
+                        Panel(title: "Risk gates", icon: "checklist", accent: gatesOK ? BLTheme.green : BLTheme.red) {
+                            HStack {
+                                Text(gatesOK ? "All gates passed — signal valid" : "Blocked by failed gate(s)")
+                                    .font(.system(size: 12, weight: .bold, design: .rounded)).foregroundColor(gatesOK ? BLTheme.green : BLTheme.red)
+                                Spacer()
+                                StatusPill(text: "\(GateEngine.passedCount(gates)) / 13", tint: gatesOK ? BLTheme.green : BLTheme.gold)
+                            }
+                            VStack(spacing: 6) { ForEach(gates) { gateRow($0) } }
+                        }.frame(maxWidth: .infinity)
+                    }
+                } else if live.hasData {
+                    // Bars exist but stopped printing: the signal display pauses rather than
+                    // presenting an old close as a current plan (§5.1).
+                    Panel(title: "Signal", icon: "dot.radiowaves.left.and.right", accent: BLTheme.red) {
+                        EmptyState(icon: "clock.badge.exclamationmark",
+                                   title: staleSinceText,
+                                   hint: "Your capture feed stopped printing bars, so the signal, consensus, and risk gates are paused — the last stored close is not a live price. Reconnect your feed to resume.")
+                        GoldButton(label: "Check my feed", icon: "globe") { nav.section = .feeds }
+                    }
+                } else {
+                    Panel(title: "Signal", icon: "dot.radiowaves.left.and.right", accent: BLTheme.gold) {
+                        EmptyState(icon: "antenna.radiowaves.left.and.right",
+                                   title: "Awaiting your live feed",
+                                   hint: "The signal, multi-timeframe consensus, and 13 risk gates compute from your own captured bars. Connect your feed and let bars accumulate — nothing is shown until it's real.")
+                        GoldButton(label: "Connect my feed", icon: "globe") { nav.section = .feeds }
+                    }
+                }
+
+                // Two-column: factor controls | factor breakdown.
+                HStack(alignment: .top, spacing: 16) {
+                    Panel(title: "Live factors", icon: "antenna.radiowaves.left.and.right",
+                          accent: live.isLive ? BLTheme.green : BLTheme.gold) {
+                        if live.hasData {
+                            HStack(spacing: 10) {
+                                Stat(label: "Symbol", value: TradingSymbolScope.displaySymbol(inp.symbol))
+                                Stat(label: "Price", value: TradeMath.num(live.price ?? 0))
+                                Stat(label: "ATR", value: TradeMath.num(live.atr ?? 0))
+                                // The bar timestamp behind the shown price — always visible, so the
+                                // price is never mistaken for fresher than it is.
+                                Stat(label: "As of", value: live.asOf.map { $0.formatted(date: .omitted, time: .shortened) } ?? "—",
+                                     tint: live.isStale ? BLTheme.red : BLTheme.text)
+                            }
+                            if live.isStale {
+                                Text(staleSinceText + " — these values come from your last captured bars, not a current price.")
+                                    .font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.red)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            Text("Auto-computed from your captured bars · \(live.available.count)/\(SignalFactor.allCases.count) factors have a live source")
+                                .font(.system(size: 10.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                            ForEach(SignalFactor.allCases) { f in liveFactorRow(f) }
+                        } else {
+                            EmptyState(icon: "antenna.radiowaves.left.and.right",
+                                       title: factorsLoading ? "Reading your live bars…" : "Waiting for your live prices",
+                                       hint: "Factors compute automatically once your own captured bars are available (≥\(LiveFactorEngine.minBars) bars). Read-only by design — nothing is shown until it's real.")
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+
+                    VStack(spacing: 16) {
+                        // Factor breakdown + Trade plan are computed from `inp`/`result`, which on a
+                        // cold start are the SignalInputs() ES defaults (price 5000, $50/pt). Render
+                        // them ONLY with real, RECENT captured data, else an honest await/stale state —
+                        // never a fabricated default ES plan and never a plan priced off stopped bars.
+                        if live.isLive {
+                            Panel(title: "Factor breakdown", icon: "list.bullet.indent") {
+                                ForEach(SignalFactor.allCases) { f in factorRow(f) }
+                                Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                                Stat(label: "Composite score", value: String(format: "%+.0f", result.score), big: true)
+                            }
+                            Panel(title: "Trade plan", icon: "scope") {
+                                Stat(label: "Direction", value: result.direction.rawValue, tint: result.direction.tint)
+                                Stat(label: "Entry", value: TradeMath.num(result.entry))
+                                Stat(label: "Stop", value: TradeMath.num(result.stop), tint: BLTheme.red)
+                                Stat(label: "Target", value: TradeMath.num(result.target), tint: BLTheme.green)
+                                Stat(label: "Risk", value: "\(TradeMath.num(result.riskPoints)) pts · \(result.riskDollarLabel)")
+                                Stat(label: "Reward : Risk", value: "\(TradeMath.num(result.rr))R", big: true)
+                                if !result.trailTiers.isEmpty {
+                                    Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                                    Text("6-TIER TRAILING STOP — suggested management, execute on your own platform")
+                                        .font(.system(size: 9.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.4)
+                                    ForEach(result.trailTiers) { t in
+                                        Stat(label: "Tier \(t.id) @ \(TradeMath.num(t.trigger))",
+                                             value: "stop → \(TradeMath.num(t.stop))\(t.id == 1 ? " (breakeven)" : "")",
+                                             tint: t.id == 1 ? BLTheme.gold : BLTheme.green)
+                                    }
+                                }
+                                // Manual order ticket — computes size from YOUR account/risk and
+                                // formats the full bracket to copy onto your own platform. WealthCharts
+                                // is data-only; automated orders, if enabled, route only through the
+                                // separate Execution broker path.
+                                if result.direction != .flat {
+                                    Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                                    Text("ORDER TICKET — manual copy (WealthCharts is data-only)")
+                                        .font(.system(size: 9.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.4)
+                                    HStack(spacing: 8) {
+                                        Field(title: "Account $", text: $tAccount)
+                                        Field(title: "Risk %", text: $tRiskPct)
+                                    }
+                                    GhostButton(label: "Copy order ticket", icon: "doc.on.doc") {
+                                        let txt = OrderTicket.format(result, account: Double(tAccount) ?? 0, riskPct: Double(tRiskPct) ?? 0)
+                                        NSPasteboard.general.clearContents()
+                                        NSPasteboard.general.setString(txt, forType: .string)
+                                        ticketCopied = true
+                                    }
+                                    if ticketCopied {
+                                        Text("Copied — paste into your own platform. WealthCharts is read-only market data here.")
+                                            .font(.system(size: 10, design: .rounded)).foregroundColor(BLTheme.green)
+                                    }
+                                }
+                            }
+                        } else {
+                            Panel(title: "Trade plan", icon: "scope") {
+                                EmptyState(icon: "scope",
+                                           title: live.hasData ? "Feed stale — plan paused" : "Awaiting your live feed",
+                                           hint: live.hasData
+                                               ? "Bars stopped printing (\(staleSinceText.lowercased())). A trade plan is never computed from a price that isn't current — reconnect your feed to resume."
+                                               : "The factor breakdown and trade plan compute from your own captured bars. Connect your feed and let bars accumulate — nothing is shown until it's real.")
+                                GhostButton(label: "Connect my feed", icon: "globe") { nav.section = .feeds }
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+
+                // Honestly-graded session ledger (persisted): committed signals graded W/L + running P&L.
+                Panel(title: "Session ledger", icon: "tray.full.fill") {
+                    HStack(spacing: 10) {
+                        Text("Honestly graded — you grade each committed signal Win or Loss. P&L is MODELED at the planned target / stop, not a broker-realized fill.")
+                            .font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                        Spacer()
+                    }
+                    HStack(spacing: 12) {
+                        ledgerStat("W / L", "\(model.signalWins) / \(model.signalLosses)", BLTheme.text)
+                        ledgerStat("Win rate", model.gradedSignals.isEmpty ? "—" : TradeMath.pct(model.signalWinRate), BLTheme.gold)
+                        ledgerStat("Session P&L (modeled)", (model.sessionPnL >= 0 ? "+" : "") + TradeMath.money(model.sessionPnL),
+                                   model.sessionPnL >= 0 ? BLTheme.green : BLTheme.red)
+                    }
+                    Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                    if model.signals.isEmpty {
+                        EmptyState(icon: "tray", title: "No committed signals", hint: "Commit a gate-passing signal above; grade it Win or Loss to build an honest session record on this Mac.")
+                    } else {
+                        ForEach(model.signals) { s in signalLogRow(s) }
+                        // Vault-backed daily logs — write the graded ledger, grouped by day, to a CSV
+                        // in your local vault. Signals-only, real data, modeled P&L labeled.
+                        if !model.gradedSignals.isEmpty {
+                            HStack(spacing: 8) {
+                                GhostButton(label: "Export daily logs", icon: "square.and.arrow.down") {
+                                    switch model.exportDailyLogs() {
+                                    case .saved(let path):     dailyLogPath = path; dailyLogError = nil
+                                    case .nothingToExport:     dailyLogPath = nil;  dailyLogError = "Nothing graded to export yet."
+                                    case .failed(let reason):  dailyLogPath = nil;  dailyLogError = "Export failed — \(reason)"
+                                    }
+                                }
+                                if let p = dailyLogPath {
+                                    Text("Saved to vault: \(p)").font(.system(size: 10, design: .rounded))
+                                        .foregroundColor(BLTheme.green).lineLimit(1).truncationMode(.middle)
+                                } else if let e = dailyLogError {
+                                    Text(e).font(.system(size: 10, weight: .semibold, design: .rounded))
+                                        .foregroundColor(BLTheme.red).lineLimit(2)
+                                }
+                            }.padding(.top, 4)
+                        }
+                    }
+                }
+
+                // Real equity curve, plotted from the graded session ledger above.
+                EquityCurveCard(points: model.equityCurve)
+            }
+            .padding(24)
+        }
+        .task {
+            await feed.connect(email: "local@blacklabel")
+            await feed.refreshStatus()
+            await loadFleet()
+            var ticks = 0
+            while !Task.isCancelled {
+                await refreshLive()
+                ticks += 1
+                if ticks % 20 == 0 {
+                    await feed.refreshStatus()   // re-resolve symbol ~every 30s
+                    await loadFleet()
+                }
+                try? await Task.sleep(nanoseconds: 1_500_000_000)   // 1.5s — was 5s
+            }
+        }
+        .sheet(isPresented: $showConnectWC) { ConnectWealthChartsSheet().environmentObject(wc).sheetCloseBar() }
+    }
+
+    // Pull the real engine fleet + fire journal from the buyer's own backend. Honest empties on a
+    // cold store; never blocks the screen.
+    private func loadFleet() async {
+        fleetLoading = true
+        let rows = await feed.engineScreen()
+        let fires = await feed.recentFires()
+        let ref = await feed.referenceReport()
+        let cat = await feed.instrumentCatalog()
+        await MainActor.run { fleet = rows; backendFires = fires; reference = ref; catalog = cat; fleetLoading = false }
+    }
+
+    // FIRST-CLASS "NO EDGE TODAY" hero. A pure roll-up (GateVerdict.compute) of the SAME engine
+    // fleet rows the panel below shows — promoted to the top so the honest verdict is the first
+    // thing a buyer reads. Empty store => honest "no bars captured yet" (never a manufactured
+    // signal). NO aggregate win-rate / P&L / promise — just how many engines have no edge today.
+    private var noEdgeHero: some View {
+        let v = GateVerdict.compute(fleet)
+        let accent = v.candidates > 0 ? BLTheme.green : BLTheme.gold
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 14) {
+                Image(systemName: !v.hasData ? "antenna.radiowaves.left.and.right"
+                      : (v.candidates > 0 ? "checkmark.seal.fill" : "shield.lefthalf.filled"))
+                    .font(.system(size: 21, weight: .black)).foregroundColor(Color(hex: 0x1A1305))
+                    .frame(width: 46, height: 46)
+                    .background(v.candidates > 0
+                                ? AnyShapeStyle(LinearGradient(colors: [BLTheme.green, BLTheme.green.opacity(0.7)], startPoint: .top, endPoint: .bottom))
+                                : AnyShapeStyle(BLTheme.goldGrad))
+                    .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+                    .shadow(color: accent.opacity(0.35), radius: 8, y: 2)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(v.headline).font(.system(size: 18, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.text)
+                    Text(v.subline).font(.system(size: 11.5, weight: .medium, design: .rounded))
+                        .foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer()
+                if v.hasData {
+                    StatusPill(text: v.isNoEdge ? "NO EDGE TODAY" : "\(v.candidates) OOS CAND",
+                               tint: v.isNoEdge ? BLTheme.gold : BLTheme.green)
+                }
+            }
+            if !v.hasData {
+                Text("The gate verdict is computed only from your own captured bars — nothing is shown until it's real.")
+                    .font(.system(size: 11.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+                GoldButton(label: "Connect my feed", icon: "globe") { nav.section = .feeds }
+            } else if !v.rejects.isEmpty {
+                Divider().background(BLTheme.stroke).padding(.vertical, 1)
+                Text("WHY — PER-ENGINE, ON YOUR BARS")
+                    .font(.system(size: 9.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.5)
+                VStack(spacing: 6) { ForEach(v.rejects) { rejectRow($0) } }
+            }
+        }
+        .padding(18)
+        .holoCard(radius: 16)
+    }
+
+    private func rejectRow(_ r: GateReject) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "xmark.seal").font(.system(size: 12, weight: .bold)).foregroundColor(BLTheme.sub).padding(.top, 1)
+            Text(EngineRoster.label(for: r.engine)).font(.system(size: 11.5, weight: .bold, design: .rounded))
+                .foregroundColor(BLTheme.text).frame(width: 118, alignment: .leading)
+            Text(r.reason).font(.system(size: 10.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 6).padding(.horizontal, 10).background(BLTheme.bg2).clipShape(RoundedRectangle(cornerRadius: 9))
+    }
+
+    // FIRST-CLASS MULTI-ASSET PICKER (TR-05). Enumerates the instruments in the buyer's OWN captured
+    // bars — beyond ES — from GET /api/instruments (never a hardcoded list). Each instrument shows its
+    // asset class, captured bar count, live state, dollar-per-point (only when the spec is known), and
+    // an HONEST per-instrument module note: on non-ES instruments Session + SMT are labeled ES-only and
+    // never run with wrong math. The fleet + edge-gate run per-instrument; "Re-run the edge gate on my
+    // bars" below judges every one of these on its own bars, never pooled.
+    private var multiAssetPanel: some View {
+        Panel(title: "My instruments (multi-asset)", icon: "square.grid.2x2.fill", accent: BLTheme.gold) {
+            Text(catalog.available ? catalog.label
+                 : "Every instrument you stream — ES, NQ/YM index futures, CL/GC, or SPY/QQQ ETFs — is analyzed on its OWN bars by the full engine fleet and the edge-gate. Points shown; dollars only where the contract spec is known.")
+                .font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 8) {
+                Text(catalog.headline)
+                    .font(.system(size: 11.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+                if catalog.available {
+                    StatusPill(text: "\(catalog.count) instr · \(catalog.nonEsCount) non-ES",
+                               tint: catalog.nonEsCount > 0 ? BLTheme.green : BLTheme.gold)
+                }
+            }
+            if !catalog.available {
+                EmptyState(icon: "square.grid.2x2",
+                           title: "No instruments captured yet",
+                           hint: catalog.reason ?? "Connect your feed and let bars accumulate — every instrument you stream will appear here, each analyzed on its own bars.")
+            } else {
+                if catalog.onlyES {
+                    Text("Only ES captured so far — capture NQ/YM/CL/ETFs on your feed and they will appear here, each judged on their own bars (never pooled with ES).")
+                        .font(.system(size: 10.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.gold.opacity(0.85))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                VStack(spacing: 8) { ForEach(catalog.instruments) { instrumentRow($0) } }
+                Text(catalog.esModulesNote)
+                    .font(.system(size: 9, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private func instrumentRow(_ i: InstrumentInfo) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: i.esModules ? "star.circle.fill" : "circle.grid.cross")
+                .font(.system(size: 14, weight: .bold)).foregroundColor(i.esModules ? BLTheme.gold : BLTheme.sub).frame(width: 18)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 6) {
+                    Text(i.display).font(.system(size: 13, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                    Text(i.assetClassLabel).font(.system(size: 9.5, weight: .heavy, design: .rounded))
+                        .foregroundColor(BLTheme.sub).padding(.horizontal, 6).padding(.vertical, 1)
+                        .background(BLTheme.panel2).clipShape(Capsule())
+                    if i.live { Text("LIVE").font(.system(size: 8.5, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.green) }
+                }
+                Text("\(i.bars) bars · \(i.dollarNote) · \(i.moduleNote)")
+                    .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .monospacedDigit().lineLimit(1)
+            }
+            Spacer()
+            StatusPill(text: i.esModules ? "ES-tuned modules on" : "Session/SMT ES-only",
+                       tint: i.esModules ? BLTheme.gold : BLTheme.sub)
+        }
+        .padding(12).background(BLTheme.panel2).clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(BLTheme.stroke, lineWidth: 1))
+    }
+
+    // One-click, buyer-reproducible re-run of the edge-gate over the buyer's OWN captured bars.
+    // Reuses the SHIPPED provers via GET /api/gate/rerun and shows prover_sha + n / W / L /
+    // max-drawdown / p-value per engine. NO cherry-picking, NO $ figures, NO win-rate marketing.
+    private var rerunGatePanel: some View {
+        Panel(title: "Re-run the edge gate on my bars", icon: "arrow.clockwise.circle.fill", accent: BLTheme.gold) {
+            Text("Runs the SAME shipped provers over YOUR captured bars — every engine, every instrument you stream, no cherry-picking. Shows the prover fingerprint (sha256 of the gate source), the OOS trade count, wins / losses, max drawdown in R, and the one-sided realized-mean-R p-value with serial-dependence penalty. Reproducible by you: shasum -a 256 bltd_store.py.")
+                .font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 10) {
+                GoldButton(label: rerunning ? "Re-running the gate…" : "Re-run the edge gate on my bars",
+                           icon: "arrow.clockwise") { Task { await runRerun() } }
+                    .disabled(rerunning)
+                if let r = rerun, r.available {
+                    Spacer()
+                    StatusPill(text: "\(r.candidateCount) cand · \(r.noEdgeCount) no edge · \(r.insufficientCount) thin",
+                               tint: r.candidateCount > 0 ? BLTheme.green : BLTheme.gold)
+                }
+            }
+            if let r = rerun {
+                if !r.available {
+                    EmptyState(icon: "shield.lefthalf.filled", title: "Nothing to re-run yet",
+                               hint: r.reason ?? "Connect your feed and let bars accumulate, then re-run the gate on your own data.")
+                } else {
+                    Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                    VStack(spacing: 8) { ForEach(r.engines) { rerunRow($0, minTrades: r.minTrades) } }
+                    rerunProvenance(r)
+                }
+            }
+        }
+    }
+
+    private func rerunRow(_ e: GateRerunEngine, minTrades: Int) -> some View {
+        let cand = e.isCandidate
+        let tint = cand ? BLTheme.green : (e.isInsufficient ? BLTheme.sub : BLTheme.gold)
+        let status = cand ? "OOS CAND" : (e.isInsufficient ? "THIN" : "NO EDGE")
+        return HStack(spacing: 12) {
+            Image(systemName: cand ? "checkmark.seal.fill" : "xmark.seal")
+                .font(.system(size: 14, weight: .bold)).foregroundColor(tint)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(EngineRoster.label(for: e.engine)).font(.system(size: 13, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                if let b = e.best {
+                    Text(b.statLine(minTrades: minTrades))
+                        .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                        .monospacedDigit().lineLimit(1)
+                }
+            }
+            Spacer()
+            StatusPill(text: status, tint: tint)
+        }
+        .padding(12).background(BLTheme.panel2).clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(BLTheme.stroke, lineWidth: 1))
+    }
+
+    private func rerunProvenance(_ r: GateRerunReport) -> some View {
+        let ran = r.generatedUTC.isEmpty ? "" : " · ran " + r.generatedUTC
+        let syms = r.symbols.isEmpty ? "" : " · your symbols: " + r.symbols.joined(separator: ", ")
+        return Text("Reproducible: " + r.proverLine + ran + syms)
+            .font(.system(size: 9, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func runRerun() async {
+        rerunning = true
+        let r = await feed.rerunGate()
+        await MainActor.run { rerun = r; rerunning = false }
+    }
+
+    // The edge-gated engine fleet, grouped by engine with its real status. NEVER hardcodes a
+    // metric — every value is a decoded EngineRow/FireRow from the buyer's own backend.
+    private var engineFleet: some View {
+        let byEngine = Dictionary(grouping: fleet, by: { $0.engine })
+        let order = EngineRoster.order
+        let engines = order.filter { byEngine[$0] != nil } + byEngine.keys.filter { !order.contains($0) }.sorted()
+        let provenCount = engines.filter { (byEngine[$0] ?? []).contains { $0.edge } }.count
+        return Panel(title: "Engine fleet", icon: "cpu.fill", accent: BLTheme.gold) {
+            HStack(spacing: 8) {
+                Text("Each engine shows OOS candidate math on YOUR captured bars — for whatever instruments you stream. An edge counts only when it clears statistical significance out-of-sample; signals remain research-only until live verification exists, and nothing shows live without real data.")
+                    .font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer()
+                if !fleet.isEmpty {
+                    StatusPill(text: "\(provenCount)/\(engines.count) OOS candidates", tint: provenCount > 0 ? BLTheme.green : BLTheme.gold)
+                }
+            }
+            if fleet.isEmpty {
+                EmptyState(icon: "cpu", title: fleetLoading ? "Loading engine fleet…" : "Engine fleet idle",
+                           hint: "Connect your feed and let bars accumulate — each engine arms only after your own data produces a statistically significant OOS candidate. Nothing is shown until it's real.")
+                GhostButton(label: "Connect my feed", icon: "globe") { nav.section = .feeds }
+            } else {
+                VStack(spacing: 8) { ForEach(engines, id: \.self) { e in engineFleetRow(e, byEngine[e] ?? []) } }
+            }
+            if !backendFires.isEmpty {
+                Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                Text("Recent edge-gated fires").font(.system(size: 11, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub)
+                VStack(spacing: 6) { ForEach(backendFires.prefix(8)) { fireFeedRow($0) } }
+            }
+        }
+    }
+
+    private func engineFleetRow(_ engine: String, _ rows: [EngineRow]) -> some View {
+        let proven = rows.filter { $0.edge }
+        let allWarming = !rows.isEmpty && rows.allSatisfy { $0.warming }
+        let best = proven.max(by: { $0.netPts < $1.netPts }) ?? rows.max(by: { $0.netPts < $1.netPts })
+        let tint = !proven.isEmpty ? BLTheme.green : (allWarming ? BLTheme.gold : BLTheme.sub)
+        let status = !proven.isEmpty ? "OOS CAND" : (allWarming ? "WARMING" : "NO EDGE")
+        return HStack(spacing: 12) {
+            Image(systemName: "bolt.horizontal.circle.fill").font(.system(size: 14, weight: .bold)).foregroundColor(tint)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(EngineRoster.label(for: engine)).font(.system(size: 13, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                Text(best?.reason ?? "no symbols captured yet").font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub).lineLimit(1)
+            }
+            Spacer()
+            if let b = best, !proven.isEmpty {
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("\(TradeMath.pct(b.winRate*100)) · \(String(format: "%+.1f", b.netPts)) pts").font(.system(size: 11, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text).monospacedDigit()
+                    Text("\(b.trades) OOS trades on \(b.symbol)").font(.system(size: 9.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                }
+            }
+            StatusPill(text: status, tint: tint)
+        }
+        .padding(12).background(BLTheme.panel2).clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(BLTheme.stroke, lineWidth: 1))
+    }
+
+    // REFERENCE OOS panel. Renders Black Label's own edge-gate verdicts computed on historical ES
+    // bars by the shipped provers (GET /api/reference). This exists so a cold buyer can see the gate
+    // produce a REAL, earned verdict before they've captured their own bars. HARD RULES honored:
+    // labeled "Reference only — historical ES, NOT your account, NOT a promise"; NO aggregate
+    // win-rate, NO blended equity curve, NO "verified-live" claim; an engine with no edge shows
+    // "NO EDGE" honestly; an absent artifact shows a pending empty state (never a painted number).
+    private var referenceOOSPanel: some View {
+        Panel(title: "Reference edge-gate verdicts", icon: "checkmark.shield.fill", accent: BLTheme.gold) {
+            // The mandatory reference-only label — verbatim, unmistakable, always shown.
+            HStack(spacing: 6) {
+                Image(systemName: "info.circle.fill").font(.system(size: 11)).foregroundColor(BLTheme.gold)
+                Text("Reference only — computed on historical ES data, NOT your account, NOT a promise, no performance guaranteed.")
+                    .font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.gold)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(BLTheme.gold.opacity(0.10))
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(BLTheme.gold.opacity(0.35), lineWidth: 1))
+
+            if !reference.available || reference.engines.isEmpty {
+                EmptyState(icon: "shield.lefthalf.filled", title: "Reference verdicts pending",
+                           hint: reference.reason ?? "Reference verdicts are not bundled in this build.")
+            } else {
+                Text("This is the SAME edge-gate your own engines use, run on Black Label's own historical ES bars. It is how the tool tells you when it has no edge: most engines below show NO EDGE on real data. An engine is a candidate only when it clears out-of-sample statistical significance. Your own fleet above arms only on the bars YOUR feed captures.")
+                    .font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 8) {
+                    StatusPill(text: "\(reference.candidateCount)/\(reference.engineCount) OOS candidates on ES",
+                               tint: reference.candidateCount > 0 ? BLTheme.green : BLTheme.sub)
+                    Spacer()
+                    Text("source: \(reference.source)")
+                        .font(.system(size: 9, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub).lineLimit(1)
+                }
+                VStack(spacing: 8) { ForEach(reference.engines) { referenceRow($0) } }
+                // Provenance line — every number above is reproducible from this.
+                Text("Reproducible: \(reference.engineCount) engines · prover \(reference.proverSHA) · generated \(reference.generatedUTC)")
+                    .font(.system(size: 9, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private func referenceRow(_ e: ReferenceEngine) -> some View {
+        let cand = e.isCandidate
+        let tint = cand ? BLTheme.green : BLTheme.sub
+        // Show the best (most significant) contract verdict; when none is proven, show the first
+        // real contract's honest "no edge" line. NEVER blend contracts into one number.
+        let best = e.contracts.first(where: { $0.proven }) ?? e.contracts.first
+        return HStack(spacing: 12) {
+            Image(systemName: cand ? "checkmark.seal.fill" : "xmark.seal")
+                .font(.system(size: 14, weight: .bold)).foregroundColor(tint)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(EngineRoster.label(for: e.engine)).font(.system(size: 13, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                if let b = best {
+                    Text("\(b.verdict) · \(b.trades) OOS trades on \(b.symbol)")
+                        .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub).lineLimit(1)
+                }
+            }
+            Spacer()
+            if let b = best {
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("\(TradeMath.pct(b.winRate*100)) · \(String(format: "%+.1f", b.netPts)) pts")
+                        .font(.system(size: 11, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text).monospacedDigit()
+                    if let f = b.from, let t = b.to {
+                        Text("ES \(f) → \(t)").font(.system(size: 9, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    }
+                }
+            }
+            StatusPill(text: cand ? "OOS CAND" : "NO EDGE", tint: tint)
+        }
+        .padding(12).background(BLTheme.panel2).clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(BLTheme.stroke, lineWidth: 1))
+    }
+
+    private func fireFeedRow(_ f: FireRow) -> some View {
+        let up = f.direction.lowercased() == "long"
+        return HStack(spacing: 10) {
+            Image(systemName: up ? "arrow.up.right.circle.fill" : "arrow.down.right.circle.fill")
+                .font(.system(size: 12, weight: .bold)).foregroundColor(up ? BLTheme.green : BLTheme.red)
+            Text(EngineRoster.label(for: f.engine)).font(.system(size: 11.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+            Text(f.symbol ?? "—").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+            Spacer()
+            Text("@ \(TradeMath.num(f.entry))").font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.text).monospacedDigit()
+            if let ts = f.ts { Text(ts).font(.system(size: 9.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub) }
+        }
+        .padding(.vertical, 6).padding(.horizontal, 10).background(BLTheme.bg2).clipShape(RoundedRectangle(cornerRadius: 9))
+    }
+
+    // Reachable local platform-account reference banner - visible on the primary dashboard.
+    private var wealthChartsBanner: some View {
+        let connected = wc.account.isConfigured
+        return HStack(spacing: 14) {
+            Image(systemName: connected ? "checkmark.seal.fill" : "link.badge.plus")
+                .font(.system(size: 16, weight: .bold)).foregroundColor(Color(hex: 0x1A1305))
+                .frame(width: 38, height: 38)
+                .background(connected ? AnyShapeStyle(LinearGradient(colors: [BLTheme.green, BLTheme.green.opacity(0.7)], startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(BLTheme.goldGrad))
+                .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+                .shadow(color: (connected ? BLTheme.green : BLTheme.gold).opacity(0.35), radius: 7, y: 2)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(connected ? "Platform account saved" : "Save your platform account")
+                    .font(.system(size: 14, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                Text(connected
+                     ? "\(wc.account.username) · saved on this Mac. Live data comes from your selected platform session in the app-owned browser. Trading remains manual on your platform."
+                     : "Save your platform account label on this Mac. Live data comes from your selected platform session in the app-owned browser.")
+                    .font(.system(size: 11.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer()
+            GoldButton(label: connected ? "Manage" : "Connect", icon: connected ? "pencil" : "link") { showConnectWC = true }
+        }
+        .padding(16)
+        .holoCard(radius: 16)
+    }
+
+    // Prop-firm rule gate. Evaluates the CURRENT trade plan (stop distance + $/pt) at the buyer's
+    // chosen contract size against their ACTIVE rule profile (the caps THEY entered). Shows an honest
+    // "within limits at N — max M contracts" or a HARD red breach with the specific reason. No
+    // performance/win-rate/$ claim — purely the buyer's own risk math against their own firm limits.
+    private var profileGateBanner: some View {
+        let profile = model.activeProfile
+        let n = max(1, Int(gateContracts) ?? 1)
+        let d = RuleProfileGate.evaluate(riskPoints: result.riskPoints, pointValue: result.pointValue,
+                                         contracts: n, profile: profile)
+        let breach = d.isBreach
+        let accent: Color = {
+            switch d.verdict {
+            case .breach: return BLTheme.red
+            case .withinLimits: return BLTheme.green
+            default: return BLTheme.gold
+            }
+        }()
+        return Panel(title: "Prop-firm rule gate", icon: "shield.lefthalf.filled", accent: accent) {
+            if profile == nil {
+                HStack {
+                    Text("No prop-firm profile selected. Add your funded-eval firm's limits to gate this signal against your daily-loss, trailing-drawdown, and position caps.")
+                        .font(.system(size: 11.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer()
+                    GhostButton(label: "Set up profiles", icon: "building.columns.fill") { nav.section = .firms }
+                }
+            } else if d.verdict == .emptyProfile {
+                HStack {
+                    Text("“\(profile!.name)” has no limits set yet. Enter your firm's daily-loss / trailing-drawdown / position caps to gate this signal.")
+                        .font(.system(size: 11.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer()
+                    GhostButton(label: "Edit profile", icon: "pencil") { nav.section = .firms }
+                }
+            } else {
+                HStack(spacing: 10) {
+                    Image(systemName: breach ? "exclamationmark.octagon.fill" : "checkmark.shield.fill")
+                        .font(.system(size: 15, weight: .bold)).foregroundColor(accent)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(profile!.name).font(.system(size: 13, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                        Text(d.annotation).font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(accent)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer()
+                    StatusPill(text: breach ? "BREACH" : (d.verdict == .noSignal ? "NO SIGNAL" : "WITHIN LIMITS"), tint: accent)
+                }
+                // Contract-size input the gate is evaluated at.
+                HStack(spacing: 12) {
+                    Field(title: "Contracts to check", text: $gateContracts, prompt: "1")
+                        .frame(maxWidth: 180)
+                    if d.dollarRiskAtSize > 0 {
+                        Stat(label: "One stop-out risk", value: RuleProfileGate.money(d.dollarRiskAtSize),
+                             tint: breach ? BLTheme.red : BLTheme.text)
+                    }
+                    Spacer()
+                }
+                // Hard visual gate: every breach reason, spelled out.
+                if breach {
+                    VStack(alignment: .leading, spacing: 5) {
+                        ForEach(d.reasons, id: \.self) { reason in
+                            HStack(spacing: 7) {
+                                Image(systemName: "xmark.circle.fill").font(.system(size: 11)).foregroundColor(BLTheme.red)
+                                Text(reason).font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.text)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                    }
+                    .padding(10).frame(maxWidth: .infinity, alignment: .leading)
+                    .background(BLTheme.red.opacity(0.10)).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(BLTheme.red.opacity(0.4), lineWidth: 1))
+                }
+                Text("Limits are the caps you entered for \(profile!.name)\(profile!.sourceURL.isEmpty ? "" : " · \(profile!.sourceURL)") — confirm current terms on the firm's site. This gate is a risk annotation on your own plan; it never places or blocks an order.")
+                    .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    // Shown INSTEAD of the trade plan when the discipline cockpit auto-mutes (a hard cap breached).
+    private var signalsMutedCard: some View {
+        Panel(title: "Signal display muted", icon: "bell.slash.fill", accent: BLTheme.red) {
+            HStack(spacing: 10) {
+                Image(systemName: "exclamationmark.octagon.fill").font(.system(size: 16, weight: .bold)).foregroundColor(BLTheme.red)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Discipline stop — you hit a cap you set")
+                        .font(.system(size: 13, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                    Text(cockpit.muteReason)
+                        .font(.system(size: 11.5, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.red)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer()
+                StatusPill(text: "Muted", tint: BLTheme.red)
+            }
+            Text("The trade plan is intentionally hidden until your next session. This is your own rule profile enforcing itself — it never places or blocks an order.")
+                .font(.system(size: 10.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                .fixedSize(horizontal: false, vertical: true)
+            GhostButton(label: "Review profile", icon: "building.columns.fill") { nav.section = .firms }
+        }
+    }
+
+    // Hero card.
+    private var signalCard: some View {
+        let r = result
+        return HStack(spacing: 22) {
+            // Direction badge.
+            VStack(spacing: 8) {
+                Image(systemName: r.direction.icon).font(.system(size: 30, weight: .black))
+                    .foregroundColor(Color(hex: 0x111111))
+                    .frame(width: 78, height: 78)
+                    .background(r.direction == .flat ? AnyShapeStyle(BLTheme.sub.opacity(0.5)) : AnyShapeStyle(LinearGradient(colors: [r.direction.tint, r.direction.tint.opacity(0.7)], startPoint: .top, endPoint: .bottom)))
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .shadow(color: r.direction.tint.opacity(0.5), radius: 16, y: 4)
+                Text(r.direction.rawValue).font(.system(size: 15, weight: .heavy, design: .rounded)).foregroundColor(r.direction.tint).tracking(1)
+            }
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    Text(r.symbol).font(.system(size: 22, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.text)
+                    StatusPill(text: "\(Int(r.confidence))% conf", tint: BLTheme.gold)
+                }
+                Text("Composite score \(String(format: "%+.0f", r.score)) / 100")
+                    .font(.system(size: 12.5, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.sub)
+                // Score bar.
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(BLTheme.bg2).frame(height: 10)
+                        Capsule().fill(LinearGradient(colors: [r.direction.tint.opacity(0.7), r.direction.tint], startPoint: .leading, endPoint: .trailing))
+                            .frame(width: max(8, geo.size.width * CGFloat(abs(r.score)/100)), height: 10)
+                            .shadow(color: r.direction.tint.opacity(0.5), radius: 6)
+                    }
+                }.frame(height: 10)
+                HStack(spacing: 18) {
+                    plan("Entry", TradeMath.num(r.entry), BLTheme.text)
+                    plan("Stop", TradeMath.num(r.stop), BLTheme.red)
+                    plan("Target", TradeMath.num(r.target), BLTheme.green)
+                    plan("R:R", "\(TradeMath.num(r.rr))R", BLTheme.gold)
+                }.padding(.top, 4)
+            }
+            Spacer()
+            VStack(spacing: 8) {
+                GoldButton(label: committed ? "Committed" : (gatesOK ? "Commit signal" : "Gates blocking"), icon: committed ? "checkmark" : (gatesOK ? "tray.and.arrow.down" : "lock.fill")) {
+                    guard gatesOK else { return }
+                    let log = SignalLog(symbol: r.symbol, direction: r.direction.rawValue, score: r.score,
+                                        entry: r.entry, stop: r.stop, target: r.target,
+                                        riskDollars: r.riskDollars, rr: r.rr,
+                                        gatesPassed: GateEngine.passedCount(gates), tfAgree: tfAgree)
+                    model.commit(log)
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) { committed = true }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) { committed = false }
+                }
+                .opacity(gatesOK ? 1 : 0.55).disabled(!gatesOK)
+                Text(gatesOK ? (r.hasDollar ? TradeMath.money(r.riskDollars) + " at risk" : "\(TradeMath.num(r.riskPoints)) pts at risk · $/pt n/a") : "Pass all 13 gates to commit").font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+            }
+        }
+        .padding(22)
+        // Holographic hero surface + a direction-tinted glow on top (semantic long/short colour).
+        .holoCard(radius: 22)
+        .shadow(color: r.direction.tint.opacity(0.18), radius: 26, y: 10)
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: r.direction)
+    }
+
+    @ViewBuilder private func plan(_ l: String, _ v: String, _ tint: Color) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(l.uppercased()).font(.system(size: 9.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.5)
+            Text(v).font(.system(size: 15, weight: .heavy, design: .rounded)).foregroundColor(tint).monospacedDigit()
+        }
+    }
+
+    @ViewBuilder private func factorRow(_ f: SignalFactor) -> some View {
+        let c = SignalEngine.contribution(f, inp)
+        HStack(spacing: 10) {
+            Image(systemName: f.icon).font(.system(size: 11, weight: .bold)).foregroundColor(BLTheme.gold).frame(width: 18)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(f.rawValue).font(.system(size: 12.5, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.text)
+                Text("w \(String(format: "%.0f%%", f.weight*100)) · \(f.blurb)").font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub).lineLimit(1)
+            }
+            Spacer()
+            Text(String(format: "%+.0f", c)).font(.system(size: 13, weight: .bold, design: .rounded)).monospacedDigit()
+                .foregroundColor(c > 0.5 ? BLTheme.green : (c < -0.5 ? BLTheme.red : BLTheme.sub))
+        }
+    }
+
+    @ViewBuilder private func tfChip(_ v: TimeframeVote) -> some View {
+        VStack(spacing: 3) {
+            Image(systemName: v.direction.icon).font(.system(size: 10, weight: .black)).foregroundColor(v.direction.tint)
+            Text(v.label).font(.system(size: 9, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub)
+        }
+        .frame(maxWidth: .infinity).padding(.vertical, 7)
+        .background(v.direction.tint.opacity(0.12)).clipShape(RoundedRectangle(cornerRadius: 8))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(v.direction.tint.opacity(0.4), lineWidth: 1))
+    }
+
+    @ViewBuilder private func gateRow(_ c: GateCheck) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: c.passed ? "checkmark.circle.fill" : "xmark.circle.fill")
+                .font(.system(size: 12, weight: .bold)).foregroundColor(c.passed ? BLTheme.green : BLTheme.red)
+            Text(c.gate.rawValue).font(.system(size: 11.5, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.text)
+            Spacer()
+            Text(c.detail).font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub).lineLimit(1)
+        }
+    }
+
+    @ViewBuilder private func ledgerStat(_ l: String, _ v: String, _ tint: Color) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(l.uppercased()).font(.system(size: 9.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.5)
+            Text(v).font(.system(size: 17, weight: .heavy, design: .rounded)).foregroundColor(tint).monospacedDigit()
+        }.frame(maxWidth: .infinity, alignment: .leading)
+            .padding(12).background(BLTheme.bg2).clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+
+    @ViewBuilder private func signalLogRow(_ s: SignalLog) -> some View {
+        HStack(spacing: 14) {
+            Image(systemName: s.dir.icon).font(.system(size: 13, weight: .bold)).foregroundColor(Color(hex: 0x111111))
+                .frame(width: 30, height: 30).background(s.dir.tint).clipShape(RoundedRectangle(cornerRadius: 9))
+            VStack(alignment: .leading, spacing: 3) {
+                Text(s.symbol).font(.system(size: 15, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                HStack(spacing: 8) {
+                    StatusPill(text: s.direction, tint: s.dir.tint)
+                    Text("\(TradeMath.num(s.rr))R · \(s.gatesPassed)/13 gates · \(s.tfAgree)/8 TF").font(.system(size: 10.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                }
+            }
+            Spacer()
+            // Honest grading: pending shows Win/Loss buttons; graded shows result + P&L.
+            if s.grade == "pending" {
+                HStack(spacing: 6) {
+                    GhostButton(label: "Win", icon: "checkmark", tint: BLTheme.green) { model.grade(s, as: "win") }
+                    GhostButton(label: "Loss", icon: "xmark", tint: BLTheme.red) { model.grade(s, as: "loss") }
+                }
+            } else {
+                VStack(alignment: .trailing, spacing: 2) {
+                    StatusPill(text: s.grade, tint: s.grade == "win" ? BLTheme.green : BLTheme.red)
+                    Text((s.pnl >= 0 ? "+" : "") + TradeMath.money(s.pnl))
+                        .font(.system(size: 14, weight: .heavy, design: .rounded)).foregroundColor(s.pnl >= 0 ? BLTheme.green : BLTheme.red).monospacedDigit()
+                }
+            }
+        }
+        .padding(14).background(BLTheme.panel2).clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(BLTheme.stroke, lineWidth: 1))
+        .contextMenu {
+            if s.grade != "pending" { Button("Reset grade") { model.grade(s, as: "pending") } }
+            Button("Delete", role: .destructive) { model.deleteSignal(s) }
+        }
+    }
+
+    // Stale-feed wording carries the last bar's timestamp so the buyer sees exactly how old
+    // the stored data is — never a bare "stale" with the age hidden.
+    private var staleSinceText: String {
+        guard let t = live.asOf else { return "Feed stale" }
+        return "Feed stale since \(t.formatted(date: .omitted, time: .shortened))"
+    }
+
+    // Live factor loading — pulls the buyer's own recent ES bars and auto-computes every factor
+    // that has a real source. Read-only by design; the buyer never edits these. Honest empties on
+    // a cold store (no bars → nothing shown, never fabricated).
+    private func refreshLive() async {
+        // Symbol is resolved by the periodic feed.refreshStatus() in the .task loop — never a
+        // hardcoded root; it's whatever the buyer's feed streams (e.g. CM.ESU6).
+        guard let esSym = feed.symbols.live.first ?? feed.symbols.busiest ?? feed.symbols.liveTicks.first else {
+            await MainActor.run { live = LiveFactorSnapshot(); factorsLoading = false }
+            await feed.connect(email: "local@blacklabel")
+            await feed.refreshStatus()
+            return
+        }
+        if live.bars == 0 { factorsLoading = true }
+        let liveSym = esSym                       // the buyer's OWN live instrument (any, not just ES)
+        let esFamily = TradingSymbolScope.isES(liveSym)
+        var bars = await feed.recentBars(symbol: liveSym)
+        // Fold the live last-price tick into the latest bar so price + price-relative factors update
+        // every cycle, not only when a 15s bar closes. Real tick only (nil when gated) — never invented.
+        if let tick = await feed.liveTick(symbol: liveSym) { bars = LiveFold.apply(tick, to: bars) }
+        // NQ reference is fetched ONLY for ES (SMT is an ES<->NQ factor); never compare an instrument
+        // to itself, which would fabricate a neutral SMT score on non-ES. WealthCharts may stream
+        // either the micro or full-size NQ contract, so try both matching-expiry symbols.
+        let nqBars = esFamily ? await referenceNQBars(for: liveSym) : []
+        let snap = LiveFactorEngine.compute(bars: bars, nqBars: nqBars, fires: backendFires,
+                                            now: Date(), esFamily: esFamily)
+        await MainActor.run {
+            live = snap
+            factorsLoading = false
+            inp.symbol = liveSym                   // real instrument, never hardcoded "ES"
+            if let p = snap.price { inp.price = p }
+            if let a = snap.atr { inp.atr = a }
+            // Real contract spec for this instrument; 0 when unknown → dollar figures show "n/a"
+            // rather than a fabricated ES-multiplier dollar amount.
+            inp.pointValue = TradingSymbolScope.pointValue(for: liveSym) ?? 0
+            inp.factors = snap.factors             // unavailable factors absent → contribute 0
+        }
+    }
+
+    // Map the live ES contract to its matching-expiry NQ references for SMT. NQ is a correlated
+    // REFERENCE only, used solely when the live instrument is ES-family.
+    private func referenceNQBars(for es: String) async -> [Bar] {
+        for symbol in nqSymbols(for: es) {
+            let bars = await feed.recentBars(symbol: symbol)
+            if !bars.isEmpty { return bars }
+        }
+        return []
+    }
+
+    private func nqSymbols(for es: String) -> [String] {
+        guard let r = es.range(of: "ES") else { return [] }
+        var out: [String] = []
+        for root in ["MNQ", "NQ"] {
+            let symbol = es.replacingCharacters(in: r, with: root)
+            if !out.contains(symbol) { out.append(symbol) }
+        }
+        return out
+    }
+
+    // Read-only live factor row — the live raw score, or an honest "no live data" tag for factors
+    // that need order-flow / correlated-asset data the OHLCV store doesn't carry.
+    @ViewBuilder private func liveFactorRow(_ f: SignalFactor) -> some View {
+        let v = live.factors[f.rawValue]
+        HStack(spacing: 10) {
+            Image(systemName: f.icon).font(.system(size: 11, weight: .bold)).foregroundColor(v != nil ? BLTheme.gold : BLTheme.sub).frame(width: 18)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(f.rawValue).font(.system(size: 12.5, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.text)
+                Text("w \(String(format: "%.0f%%", f.weight*100)) · \(f.blurb)").font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub).lineLimit(1)
+            }
+            Spacer()
+            if let v = v {
+                Text(String(format: "%+.2f", v)).font(.system(size: 13, weight: .bold, design: .rounded)).monospacedDigit()
+                    .foregroundColor(v > 0.05 ? BLTheme.green : (v < -0.05 ? BLTheme.red : BLTheme.sub))
+            } else if live.esOnlyAbsent.contains(f.rawValue) {
+                // TR-05 (c): honest, explicit reason on non-ES instruments — never silent wrong math.
+                Text("ES-only module (n/a here)").font(.system(size: 10, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.gold.opacity(0.85))
+            } else {
+                Text("no live data").font(.system(size: 10, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.sub.opacity(0.8))
+            }
+        }
+    }
+}
+
+// MARK: - Journal (full CRUD, persisted)
+struct JournalScreen: View {
+    @EnvironmentObject var model: AppModel
+    @State private var editing: Trade?
+    @State private var showImport = false
+    @State private var query = ""
+    @State private var resultFilter: TradeResult? = nil
+    let cols = [GridItem(.adaptive(minimum: 220), spacing: 14)]
+
+    // Global search/filter over the journal (symbol / tags / notes + result).
+    private var filtered: [Trade] {
+        model.trades.filter { t in
+            (resultFilter == nil || t.result == resultFilter) &&
+            (query.isEmpty || t.symbol.lowercased().contains(query.lowercased())
+                || t.notes.lowercased().contains(query.lowercased())
+                || t.allTags.contains { $0.contains(query.lowercased()) })
+        }
+    }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .top) {
+                ScreenTitle(title: "Journal", subtitle: "Every trade, with live risk math. Import your broker CSV, tag setups, track MAE/MFE + hold time.", icon: "list.bullet.rectangle.fill")
+                Spacer()
+                GhostButton(label: "Import CSV", icon: "square.and.arrow.down") { showImport = true }
+                GoldButton(label: "Log trade", icon: "plus") { editing = Trade() }
+            }.padding(24)
+            ScrollView {
+                VStack(spacing: 16) {
+                    LazyVGrid(columns: cols, spacing: 14) {
+                        MetricCard(label: "Trades", value: "\(model.trades.count)", icon: "list.bullet.rectangle.fill")
+                        MetricCard(label: "Win rate", value: model.closedTrades.isEmpty ? "—" : TradeMath.pct(model.winRate), icon: "target")
+                        MetricCard(label: "Avg R", value: model.closedTrades.isEmpty ? "—" : "\(TradeMath.num(model.avgRMultiple))R", icon: "chart.line.uptrend.xyaxis")
+                        MetricCard(label: "Total P&L", value: TradeMath.money(model.totalPnL), icon: "dollarsign.circle.fill",
+                                   tint: model.totalPnL >= 0 ? BLTheme.green : BLTheme.red)
+                    }
+                    if model.trades.isEmpty {
+                        EmptyState(icon: "chart.xyaxis.line", title: "No trades logged yet", hint: "Tap “Log trade” to record an entry, stop, and target — or “Import CSV” to bring in your broker export. The dashboard math updates live.")
+                            .padding(.top, 30)
+                    } else {
+                        // Search + result filter (global).
+                        HStack(spacing: 10) {
+                            HStack(spacing: 7) {
+                                Image(systemName: "magnifyingglass").font(.system(size: 11)).foregroundColor(BLTheme.sub)
+                                TextField("Search symbol, tag, or note…", text: $query).textFieldStyle(.plain).font(.system(size: 12.5, design: .rounded)).foregroundColor(BLTheme.text)
+                            }.padding(.vertical, 8).padding(.horizontal, 11).background(BLTheme.bg2).clipShape(RoundedRectangle(cornerRadius: 9)).overlay(RoundedRectangle(cornerRadius: 9).stroke(BLTheme.stroke, lineWidth: 1))
+                            ForEach([Optional<TradeResult>.none, .some(.win), .some(.loss), .some(.open)], id: \.self) { rf in
+                                Button { resultFilter = rf } label: {
+                                    Text(rf.map { $0.label } ?? "All").font(.system(size: 11.5, weight: .semibold, design: .rounded))
+                                        .foregroundColor(resultFilter == rf ? Color(hex: 0x1A1305) : BLTheme.sub)
+                                        .padding(.vertical, 6).padding(.horizontal, 12)
+                                        .background(resultFilter == rf ? AnyShapeStyle(BLTheme.goldGrad) : AnyShapeStyle(BLTheme.bg2)).clipShape(Capsule())
+                                        .overlay(Capsule().stroke(BLTheme.stroke, lineWidth: 1))
+                                }.buttonStyle(.plain)
+                            }
+                        }
+                        if filtered.isEmpty {
+                            EmptyState(icon: "magnifyingglass", title: "No trades match", hint: "Adjust your search or filter.").padding(.top, 20)
+                        } else {
+                            Text("\(filtered.count) of \(model.trades.count) trades").font(.system(size: 10.5, design: .rounded)).foregroundColor(BLTheme.sub).frame(maxWidth: .infinity, alignment: .leading)
+                            LazyVStack(spacing: 10) { ForEach(filtered) { t in tradeRow(t) } }
+                        }
+                    }
+                }
+                .padding(.horizontal, 24).padding(.bottom, 24)
+            }
+        }
+        .sheet(item: $editing) { t in TradeEditor(trade: t).environmentObject(model).sheetCloseBar() }
+        .sheet(isPresented: $showImport) { JournalImportSheet().environmentObject(model).sheetCloseBar() }
+    }
+    @ViewBuilder private func tradeRow(_ t: Trade) -> some View {
+        TradeRowView(trade: t) { editing = t }
+            .contextMenu { Button("Delete", role: .destructive) { model.delete(t) } }
+    }
+}
+
+// Broker-CSV journal import: paste/import, auto-map columns, preview, then commit. Honest —
+// only mappable rows import; the mapping + skipped count are shown so nothing is silently faked.
+struct JournalImportSheet: View {
+    @EnvironmentObject var model: AppModel
+    @Environment(\.dismiss) var dismiss
+    @State private var text = ""
+    @State private var parsed: (rows: [ImportedTrade], skipped: Int, mapping: [String: Int])? = nil
+    @State private var imported = 0
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Import broker CSV").font(.system(size: 18, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.text)
+                Text("Paste your broker/platform trade export. We auto-detect columns (symbol, side, qty, entry/exit, P&L, times, MAE/MFE, tags). Only mappable rows import — nothing is invented.")
+                    .font(.system(size: 11.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+                TextEditor(text: $text).font(.system(size: 11, design: .monospaced)).foregroundColor(BLTheme.text)
+                    .scrollContentBackground(.hidden).padding(8).frame(height: 160)
+                    .background(BLTheme.bg2).clipShape(RoundedRectangle(cornerRadius: 10)).overlay(RoundedRectangle(cornerRadius: 10).stroke(BLTheme.stroke, lineWidth: 1))
+                HStack {
+                    GhostButton(label: "Import file", icon: "doc.badge.plus") { importFile() }
+                    GoldButton(label: "Preview", icon: "eye") { parsed = BrokerCSV.parse(text); imported = 0 }
+                    Spacer()
+                }
+                if let p = parsed {
+                    if p.rows.isEmpty {
+                        EmptyState(icon: "exclamationmark.triangle", title: "No mappable rows",
+                                   hint: "Couldn't find a P&L column or an entry/exit pair. Make sure the first row is a header with recognizable column names.")
+                    } else {
+                        // Mapping summary.
+                        Panel(title: "Detected columns", icon: "checkmark.seal.fill", accent: BLTheme.green) {
+                            FlowTags(p.mapping.keys.sorted())
+                            Text("\(p.rows.count) rows ready · \(p.skipped) skipped").font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.sub)
+                        }
+                        // Preview first 8.
+                        Panel(title: "Preview", icon: "list.bullet", accent: BLTheme.gold) {
+                            ForEach(Array(p.rows.prefix(8).enumerated()), id: \.offset) { (_, r) in
+                                HStack(spacing: 10) {
+                                    Text(r.symbol.isEmpty ? "—" : r.symbol).font(.system(size: 12, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text).frame(width: 60, alignment: .leading)
+                                    StatusPill(text: r.isLong ? "Long" : "Short", tint: r.isLong ? BLTheme.green : BLTheme.red)
+                                    if r.qty > 0 { Text("×\(TradeMath.numTrim(r.qty))").font(.system(size: 11, design: .rounded)).foregroundColor(BLTheme.sub) }
+                                    Spacer()
+                                    Text((r.pnl >= 0 ? "+" : "") + TradeMath.money2(r.pnl)).font(.system(size: 12.5, weight: .heavy, design: .rounded)).monospacedDigit().foregroundColor(r.pnl >= 0 ? BLTheme.green : BLTheme.red)
+                                }.padding(.vertical, 6).padding(.horizontal, 11).background(BLTheme.bg2).clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
+                            if p.rows.count > 8 { Text("+ \(p.rows.count - 8) more").font(.system(size: 10.5, design: .rounded)).foregroundColor(BLTheme.sub) }
+                        }
+                    }
+                }
+                if imported > 0 {
+                    Text("Imported \(imported) trades into your journal.").font(.system(size: 12.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.green)
+                }
+                HStack { Spacer()
+                    GhostButton(label: imported > 0 ? "Done" : "Cancel") { dismiss() }
+                    if let p = parsed, !p.rows.isEmpty, imported == 0 {
+                        GoldButton(label: "Import \(p.rows.count) trades", icon: "tray.and.arrow.down") {
+                            imported = model.importTrades(p.rows)
+                        }
+                    }
+                }
+            }.padding(24).frame(width: 600)
+        }.frame(width: 600, height: 640).background(BLTheme.bg)
+    }
+    private func importFile() {
+        let panel = NSOpenPanel(); panel.allowedContentTypes = [.commaSeparatedText, .plainText]; panel.allowsMultipleSelection = false
+        panel.begin { resp in
+            if resp == .OK, let url = panel.url, let s = try? String(contentsOf: url, encoding: .utf8) { text = s; parsed = BrokerCSV.parse(s); imported = 0 }
+        }
+    }
+}
+
+// Simple wrapping tag row for the detected-columns summary.
+struct FlowTags: View {
+    let items: [String]
+    init(_ items: [String]) { self.items = items }
+    var body: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 6)], alignment: .leading, spacing: 6) {
+            ForEach(items, id: \.self) { t in
+                Text(t.uppercased()).font(.system(size: 10, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.gold).tracking(0.4)
+                    .padding(.vertical, 4).padding(.horizontal, 9).background(BLTheme.gold.opacity(0.14)).clipShape(Capsule())
+                    .overlay(Capsule().stroke(BLTheme.gold.opacity(0.4), lineWidth: 1))
+            }
+        }
+    }
+}
+
+struct TradeRowView: View {
+    let trade: Trade; let tap: () -> Void
+    @State private var hover = false
+    var body: some View {
+        let t = trade
+        Button(action: tap) {
+            HStack(spacing: 14) {
+                Image(systemName: t.direction.icon).font(.system(size: 13, weight: .bold)).foregroundColor(Color(hex: 0x1A1305))
+                    .frame(width: 30, height: 30).background(t.direction.tint).clipShape(RoundedRectangle(cornerRadius: 9))
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(t.symbol.isEmpty ? "—" : t.symbol.uppercased()).font(.system(size: 15, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                    HStack(spacing: 8) {
+                        StatusPill(text: t.result.label, tint: t.result.tint)
+                        Text("R:R \(TradeMath.num(t.rrRatio))").font(.system(size: 11.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    }
+                }
+                Spacer()
+                VStack(alignment: .trailing, spacing: 2) {
+                    if t.result == .open {
+                        Text("OPEN").font(.system(size: 13, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.gold)
+                        Text("risk \(TradeMath.money(t.riskDollars))").font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    } else {
+                        Text((t.pnl >= 0 ? "+" : "") + TradeMath.money2(t.pnl))
+                            .font(.system(size: 16, weight: .heavy, design: .rounded)).foregroundColor(t.pnl >= 0 ? BLTheme.green : BLTheme.red)
+                        Text("\(TradeMath.num(t.rMultiple))R").font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    }
+                }
+            }
+            .padding(16).background(hover ? BLTheme.panel2 : BLTheme.panel).clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(hover ? BLTheme.gold.opacity(0.35) : BLTheme.stroke, lineWidth: 1))
+            .shadow(color: Color.black.opacity(hover ? 0.3 : 0.15), radius: hover ? 10 : 5, y: 3)
+        }.buttonStyle(.plain)
+        .onHover { h in withAnimation(.easeOut(duration: 0.15)) { hover = h } }
+    }
+}
+
+struct TradeEditor: View {
+    @EnvironmentObject var model: AppModel
+    @Environment(\.dismiss) var dismiss
+    @State var trade: Trade
+    @State private var entry = ""; @State private var stop = ""; @State private var target = ""
+    @State private var size = ""; @State private var pnl = ""
+    @State private var exit = ""; @State private var mae = ""; @State private var mfe = ""
+    @State private var tagsText = ""; @State private var hasClose = false
+    @State private var confirmDelete = false
+    // Delete only offers on a trade that is actually in the journal — never on a fresh "Log trade".
+    private var isExisting: Bool { model.trades.contains { $0.id == trade.id } }
+    var body: some View {
+        ScrollView {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(trade.symbol.isEmpty ? "Log trade" : "Edit trade").font(.system(size: 18, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.text)
+            HStack(spacing: 12) {
+                Field(title: "Symbol", text: $trade.symbol, prompt: "ES or CM.ESU6")
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("DIRECTION").font(.system(size: 10, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.5)
+                    Picker("", selection: $trade.direction) { ForEach(TradeDirection.allCases) { Text($0.label).tag($0) } }
+                        .pickerStyle(.segmented).labelsHidden()
+                }
+            }
+            HStack(spacing: 12) {
+                Field(title: "Entry", text: $entry, prompt: "5000")
+                Field(title: "Stop", text: $stop, prompt: "4990")
+                Field(title: "Target", text: $target, prompt: "5025")
+                Field(title: "Size", text: $size, prompt: "2")
+            }
+            let c = computed()
+            HStack(spacing: 20) {
+                Stat(label: "Risk / unit", value: TradeMath.num(c.riskPerUnit))
+                Stat(label: "Dollar risk", value: TradeMath.money(c.riskDollars))
+                Stat(label: "R:R", value: TradeMath.num(c.rrRatio), big: true)
+            }
+            VStack(alignment: .leading, spacing: 4) {
+                Text("RESULT").font(.system(size: 10, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.5)
+                Picker("", selection: $trade.result) { ForEach(TradeResult.allCases) { Text($0.label).tag($0) } }
+                    .pickerStyle(.segmented).labelsHidden()
+            }
+            if trade.result != .open {
+                HStack(spacing: 12) {
+                    Field(title: "Realized P&L ($)", text: $pnl, prompt: trade.result == .loss ? "-200" : "450")
+                    Field(title: "Exit price", text: $exit, prompt: "5012")
+                }
+                HStack(spacing: 12) {
+                    Field(title: "MAE (R)", text: $mae, prompt: "0.6")
+                    Field(title: "MFE (R)", text: $mfe, prompt: "2.4")
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("CLOSE TIME").font(.system(size: 10, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.5)
+                        HStack {
+                            Toggle("", isOn: $hasClose).labelsHidden().tint(BLTheme.gold)
+                            if hasClose {
+                                DatePicker("", selection: Binding(get: { trade.closed ?? Date() }, set: { trade.closed = $0 }), displayedComponents: [.date, .hourAndMinute])
+                                    .labelsHidden().datePickerStyle(.compact)
+                            } else { Text("open-ended").font(.system(size: 11, design: .rounded)).foregroundColor(BLTheme.sub) }
+                        }
+                    }
+                }
+            }
+            Field(title: "Tags (comma-separated)", text: $tagsText, prompt: "breakout, fomo, a-setup")
+            VStack(alignment: .leading, spacing: 4) {
+                Text("NOTES").font(.system(size: 10, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub)
+                TextEditor(text: $trade.notes).font(.system(size: 13, design: .rounded)).foregroundColor(BLTheme.text)
+                    .scrollContentBackground(.hidden).padding(8).frame(height: 60).background(BLTheme.bg2).clipShape(RoundedRectangle(cornerRadius: 10))
+                Text("Tip: #hashtags in notes also count as tags in Analytics.").font(.system(size: 10, design: .rounded)).foregroundColor(BLTheme.sub)
+            }
+            HStack {
+                // Visible delete for an existing trade — the row context menu stays as a shortcut,
+                // but removal must never be discoverable only by right-click.
+                if isExisting {
+                    GhostButton(label: "Delete", icon: "trash", tint: BLTheme.red) { confirmDelete = true }
+                }
+                Spacer()
+                GhostButton(label: "Cancel") { dismiss() }
+                GoldButton(label: "Save trade", icon: "checkmark") {
+                    var t = computed()
+                    let s = t.symbol.trimmingCharacters(in: .whitespacesAndNewlines)
+                    t.symbol = s.isEmpty ? "ES" : s.uppercased()
+                    guard TradingSymbolScope.inScope(t.symbol) else { return }
+                    t.id = trade.id
+                    model.upsert(t)
+                    dismiss()
+                }
+            }
+            .confirmationDialog("Delete this trade from your journal?", isPresented: $confirmDelete) {
+                Button("Delete trade", role: .destructive) { model.delete(trade); dismiss() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This removes the trade and its stats from the journal on this Mac.")
+            }
+        }
+        .padding(24).frame(width: 540)
+        }
+        .frame(width: 540, height: 700).background(BLTheme.bg)
+        .onAppear {
+            entry = trade.entry > 0 ? trimmed(trade.entry) : ""
+            stop = trade.stop > 0 ? trimmed(trade.stop) : ""
+            target = trade.target > 0 ? trimmed(trade.target) : ""
+            size = trade.size > 0 ? trimmed(trade.size) : ""
+            pnl = trade.pnl != 0 ? trimmed(trade.pnl) : ""
+            exit = trade.exit > 0 ? trimmed(trade.exit) : ""
+            mae = trade.maeR > 0 ? trimmed(trade.maeR) : ""
+            mfe = trade.mfeR > 0 ? trimmed(trade.mfeR) : ""
+            tagsText = trade.tags.joined(separator: ", ")
+            hasClose = trade.closed != nil
+        }
+    }
+    private func trimmed(_ v: Double) -> String { v == v.rounded() ? String(Int(v)) : String(v) }
+    private func computed() -> Trade {
+        var t = trade
+        t.entry = Double(entry) ?? 0; t.stop = Double(stop) ?? 0; t.target = Double(target) ?? 0
+        t.size = Double(size) ?? 0
+        t.pnl = t.result == .open ? 0 : (Double(pnl) ?? 0)
+        t.exit = Double(exit) ?? 0
+        t.maeR = Double(mae) ?? 0
+        t.mfeR = Double(mfe) ?? 0
+        t.closed = (t.result != .open && hasClose) ? (trade.closed ?? Date()) : nil
+        t.tags = tagsText.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces).lowercased() }.filter { !$0.isEmpty }
+        return t
+    }
+}
+
+// MARK: - Calculators
+struct CalculatorsScreen: View {
+    @State private var account = "50000"; @State private var riskPct = "1"; @State private var psEntry = "5000"; @State private var psStop = "4990"
+    @State private var rrEntry = "5000"; @State private var rrStop = "4990"; @State private var rrTarget = "5030"
+    @State private var cStart = "10000"; @State private var cMonthly = "5"; @State private var cMonths = "12"
+    let cols = [GridItem(.adaptive(minimum: 320), spacing: 16)]
+
+    private var ps: (riskDollars: Double, perUnitRisk: Double, size: Double, notional: Double) {
+        TradeMath.positionSize(account: Double(account) ?? 0, riskPct: Double(riskPct) ?? 0, entry: Double(psEntry) ?? 0, stop: Double(psStop) ?? 0)
+    }
+    private var rr: (risk: Double, reward: Double, ratio: Double) {
+        TradeMath.riskReward(entry: Double(rrEntry) ?? 0, stop: Double(rrStop) ?? 0, target: Double(rrTarget) ?? 0)
+    }
+    private var compounded: [Double] {
+        TradeMath.compound(start: Double(cStart) ?? 0, monthlyPct: Double(cMonthly) ?? 0, months: Int(cMonths) ?? 0)
+    }
+
+    var body: some View {
+        ScrollView { VStack(alignment: .leading, spacing: 20) {
+            ScreenTitle(title: "Calculators", subtitle: "Position sizing, risk:reward, and compounding.", icon: "function")
+            LazyVGrid(columns: cols, spacing: 16) {
+                Panel(title: "Position Size", icon: "scalemass.fill") {
+                    HStack(spacing: 10) { Field(title: "Account", text: $account); Field(title: "Risk %", text: $riskPct) }
+                    HStack(spacing: 10) { Field(title: "Entry", text: $psEntry); Field(title: "Stop", text: $psStop) }
+                    Stat(label: "Risk amount", value: TradeMath.money2(ps.riskDollars))
+                    Stat(label: "Per-unit risk", value: TradeMath.num(ps.perUnitRisk))
+                    Stat(label: "Position size", value: TradeMath.num(ps.size), big: true)
+                    Stat(label: "Notional", value: TradeMath.money(ps.notional))
+                }
+                Panel(title: "Risk : Reward", icon: "arrow.left.arrow.right") {
+                    HStack(spacing: 10) { Field(title: "Entry", text: $rrEntry); Field(title: "Stop", text: $rrStop); Field(title: "Target", text: $rrTarget) }
+                    Stat(label: "Risk / unit", value: TradeMath.num(rr.risk))
+                    Stat(label: "Reward / unit", value: TradeMath.num(rr.reward))
+                    Stat(label: "R:R ratio", value: TradeMath.num(rr.ratio), big: true)
+                    Stat(label: "1R move equals", value: "\(TradeMath.num(rr.risk)) pts")
+                }
+                Panel(title: "Compounding Projector", icon: "chart.line.uptrend.xyaxis") {
+                    HStack(spacing: 10) { Field(title: "Start", text: $cStart); Field(title: "Monthly %", text: $cMonthly); Field(title: "Months", text: $cMonths) }
+                    Stat(label: "Ending balance", value: TradeMath.money(compounded.last ?? (Double(cStart) ?? 0)), big: true)
+                    Stat(label: "Total growth", value: {
+                        let s = Double(cStart) ?? 0; let e = compounded.last ?? s
+                        return s > 0 ? TradeMath.pct((e - s) / s * 100) : "—"
+                    }())
+                    if !compounded.isEmpty {
+                        Divider().background(BLTheme.stroke)
+                        ForEach(Array(milestones().enumerated()), id: \.offset) { _, row in
+                            Stat(label: "Month \(row.0)", value: TradeMath.money(row.1))
+                        }
+                    }
+                }
+            }
+        }.padding(24) }
+    }
+    private func milestones() -> [(Int, Double)] {
+        let n = compounded.count
+        guard n > 0 else { return [] }
+        if n <= 4 { return compounded.enumerated().map { ($0.offset + 1, $0.element) } }
+        let picks = [n/4, n/2, (3*n)/4, n].map { max(1, $0) }
+        var seen = Set<Int>(); var out: [(Int, Double)] = []
+        for m in picks where !seen.contains(m) { seen.insert(m); out.append((m, compounded[m-1])) }
+        return out
+    }
+}
+
+// MARK: - Firms (prop firm reference)
+struct FirmsScreen: View {
+    @EnvironmentObject var model: AppModel
+    @EnvironmentObject var book: PaperBook
+    private var cockpit: DisciplineCockpit {
+        let fills: [DisciplineFill] = book.closed.compactMap { p in
+            guard let d = p.realizedDollars(), let dt = p.exitDate else { return nil }
+            return DisciplineFill(date: dt, pnl: d, contracts: p.quantity)
+        }
+        return DisciplineCockpit.compute(fills: fills, profile: model.activeProfile,
+                                         startingBalance: book.startingBalance, now: Date())
+    }
+    var body: some View {
+        ScrollView { VStack(alignment: .leading, spacing: 16) {
+            ScreenTitle(title: "Prop-firm rule profiles",
+                        subtitle: "Enter YOUR funded-eval firm's limits — then Signals annotates and gates every trade plan against them. We ship no firm numbers: confirm current terms on the firm's site and enter them yourself.",
+                        icon: "building.columns.fill")
+
+            // Live discipline cockpit for the active profile — meters, Tiltmeter, risk of ruin, all
+            // computed from the buyer's own paper ledger against the caps they entered.
+            DisciplineCockpitPanel(cockpit: cockpit)
+
+            // Active profile — the one gating displayed signals.
+            Panel(title: "Active profile", icon: "shield.lefthalf.filled") {
+                if model.profiles.isEmpty {
+                    EmptyState(icon: "shield",
+                               title: "No rule profiles yet",
+                               hint: "Add a blank firm template or a custom profile below, then enter your own daily-loss, trailing-drawdown, and position caps. Signals will gate each trade plan against the active profile.")
+                } else {
+                    Picker(selection: $model.activeProfileID) {
+                        Text("None — no gating").tag(UUID?.none)
+                        ForEach(model.profiles) { p in
+                            Text(p.name.isEmpty ? "Untitled profile" : p.name).tag(UUID?.some(p.id))
+                        }
+                    } label: { EmptyView() }
+                    .pickerStyle(.menu).labelsHidden().frame(maxWidth: 320, alignment: .leading)
+                    if let a = model.activeProfile {
+                        Text(a.hasLimits
+                             ? "Signals is gating trade plans against “\(a.name)”."
+                             : "“\(a.name)” has no limits set yet — edit it below to enable gating.")
+                            .font(.system(size: 11.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    } else {
+                        Text("Gating is off — no profile is active.").font(.system(size: 11.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    }
+                }
+            }
+
+            // Add a profile — sourced firm presets (cited, pre-filled) + blank firm templates + a
+            // custom blank. Sourced numbers come from each firm's OWN page (2026-07-12); every field
+            // stays editable, and a 0 cell is deliberately user-entered (see each preset's note).
+            Panel(title: "Add a profile", icon: "plus.circle.fill") {
+                Text("Sourced presets pre-fill from each firm's own rules page (confirm before you trade — rules change). Templates start blank. Every number stays editable.")
+                    .font(.system(size: 11.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 10) {
+                    Menu {
+                        ForEach(RuleProfilePresets.sourcedByFirm, id: \.firm) { group in
+                            Menu(group.firm) {
+                                ForEach(group.presets) { p in
+                                    Button(p.accountLabel) { model.upsertProfile(p.makeProfile()) }
+                                }
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 6) { Image(systemName: "checkmark.seal.fill"); Text("Sourced firm preset") }
+                            .font(.system(size: 13, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.text)
+                            .padding(.vertical, 9).padding(.horizontal, 16)
+                            .background(BLTheme.bg2).clipShape(Capsule())
+                            .overlay(Capsule().stroke(BLTheme.gold.opacity(0.5), lineWidth: 1))
+                    }.menuStyle(.borderlessButton).fixedSize()
+                    Menu {
+                        ForEach(RuleProfilePresets.templates) { t in
+                            Button(t.name) { model.upsertProfile(RuleProfilePresets.profile(for: t.name)) }
+                        }
+                    } label: {
+                        HStack(spacing: 6) { Image(systemName: "building.columns.fill"); Text("Blank firm template") }
+                            .font(.system(size: 13, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.text)
+                            .padding(.vertical, 9).padding(.horizontal, 16)
+                            .background(BLTheme.bg2).clipShape(Capsule())
+                            .overlay(Capsule().stroke(BLTheme.gold.opacity(0.3), lineWidth: 1))
+                    }.menuStyle(.borderlessButton).fixedSize()
+                    GhostButton(label: "Custom profile", icon: "square.and.pencil") {
+                        model.upsertProfile(RuleProfilePresets.custom())
+                    }
+                    Spacer()
+                }
+            }
+
+            // One editor card per profile.
+            ForEach(model.profiles) { p in ProfileEditorCard(profile: p) }
+
+            // Reference: the same futures firms as qualitative reference only — no numbers here.
+            Panel(title: "Reference: futures firms", icon: "list.bullet") {
+                Text("Qualitative reference only (no numbers). Confirm current terms on each firm's site, then enter them into a profile above.")
+                    .font(.system(size: 11.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+                ForEach(FirmData.all) { f in FirmRow(firm: f) }
+            }
+        }.padding(24) }
+    }
+}
+
+// Editor for a single rule profile. Local string state so typing never churns the store; Save
+// commits the parsed numbers back to the model. Every field is the buyer's own — nothing invented.
+struct ProfileEditorCard: View {
+    @EnvironmentObject var model: AppModel
+    let profile: RuleProfile
+    @State private var name: String
+    @State private var dailyLoss: String
+    @State private var trailing: String
+    @State private var maxPos: String
+    @State private var scaling: String
+    @State private var pointValue: String
+    @State private var source: String
+    @State private var saved = false
+    @State private var saveFailed = false
+
+    init(profile: RuleProfile) {
+        self.profile = profile
+        _name = State(initialValue: profile.name)
+        _dailyLoss = State(initialValue: profile.dailyLossLimit > 0 ? RuleProfileCardFmt.num(profile.dailyLossLimit) : "")
+        _trailing = State(initialValue: profile.trailingDrawdown > 0 ? RuleProfileCardFmt.num(profile.trailingDrawdown) : "")
+        _maxPos = State(initialValue: profile.maxPositionSize > 0 ? RuleProfileCardFmt.num(profile.maxPositionSize) : "")
+        _scaling = State(initialValue: profile.contractScaling > 0 ? RuleProfileCardFmt.num(profile.contractScaling) : "")
+        _pointValue = State(initialValue: profile.pointValue > 0 ? RuleProfileCardFmt.num(profile.pointValue) : "")
+        _source = State(initialValue: profile.sourceURL)
+    }
+
+    private var isActive: Bool { model.activeProfileID == profile.id }
+
+    var body: some View {
+        Panel(title: name.isEmpty ? "Untitled profile" : name,
+              icon: "doc.text.fill",
+              accent: isActive ? BLTheme.green : BLTheme.gold) {
+            HStack {
+                if isActive { StatusPill(text: "Active", tint: BLTheme.green) }
+                Spacer()
+                GhostButton(label: isActive ? "Active" : "Make active", icon: isActive ? "checkmark" : "shield") {
+                    model.setActiveProfile(profile)
+                }
+                GhostButton(label: "Delete", icon: "trash", tint: BLTheme.red) { model.deleteProfile(profile) }
+            }
+            Field(title: "Profile name", text: $name, prompt: "e.g. Topstep 50K")
+            HStack(spacing: 12) {
+                Field(title: "Daily loss limit ($)", text: $dailyLoss, prompt: "your firm's number")
+                Field(title: "Trailing drawdown ($)", text: $trailing, prompt: "your firm's number")
+            }
+            HStack(spacing: 12) {
+                Field(title: "Max position (contracts)", text: $maxPos, prompt: "e.g. 5")
+                Field(title: "Scaling-plan cap (contracts)", text: $scaling, prompt: "e.g. 3")
+                Field(title: "$ per point / contract", text: $pointValue, prompt: "e.g. 50 (ES)")
+            }
+            Field(title: "Source URL (the firm's terms you confirmed)", text: $source, prompt: "https://…")
+            Text("Leave a field blank to skip that cap. Enter numbers from the firm's own terms — confirm current terms on the firm's site.")
+                .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 10) {
+                GoldButton(label: "Save profile", icon: "checkmark") {
+                    var p = profile
+                    p.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+                    p.dailyLossLimit = max(0, Double(dailyLoss) ?? 0)
+                    p.trailingDrawdown = max(0, Double(trailing) ?? 0)
+                    p.maxPositionSize = max(0, Double(maxPos) ?? 0)
+                    p.contractScaling = max(0, Double(scaling) ?? 0)
+                    p.pointValue = max(0, Double(pointValue) ?? 0)
+                    p.sourceURL = source.trimmingCharacters(in: .whitespacesAndNewlines)
+                    model.upsertProfile(p)
+                    // "Saved." only when the write actually reached disk — never an asserted success.
+                    withAnimation { saved = model.lastSaveOK; saveFailed = !model.lastSaveOK }
+                    if model.lastSaveOK {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { withAnimation { saved = false } }
+                    }
+                }
+                if saved { Text("Saved.").font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.green) }
+                if saveFailed {
+                    Text("Couldn't save — writing to disk failed (check free space and permissions).")
+                        .font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.red)
+                }
+                Spacer()
+            }
+        }
+    }
+}
+
+enum RuleProfileCardFmt {
+    static func num(_ v: Double) -> String { v == v.rounded() ? String(Int(v)) : String(v) }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DISCIPLINE COCKPIT UI — renders the pure-logic DisciplineCockpit (RuleProfile.swift) as live
+// gauges. Every value is the buyer's own compliance math against caps THEY entered: NO aggregate
+// win-rate / P&L / performance figure is shown (§5.1 / H1). Shared by Signals + Firms screens.
+struct DisciplineMeterBar: View {
+    let label: String
+    let meter: DisciplineCockpit.Meter
+    private var tint: Color {
+        if meter.isBreached { return BLTheme.red }
+        return meter.fraction >= 0.75 ? BLTheme.gold : BLTheme.green
+    }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            HStack {
+                Text(label).font(.system(size: 11.5, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.sub)
+                Spacer()
+                if meter.isSet {
+                    Text("\(RuleProfileGate.money(meter.used)) / \(RuleProfileGate.money(meter.limit))")
+                        .font(.system(size: 12, weight: .bold, design: .rounded)).foregroundColor(tint)
+                } else {
+                    Text("not set").font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.sub)
+                }
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(BLTheme.bg2).frame(height: 8)
+                    Capsule().fill(tint)
+                        .frame(width: max(0, min(1, meter.isSet ? meter.fraction : 0)) * geo.size.width, height: 8)
+                }
+            }.frame(height: 8)
+            if meter.isBreached {
+                Text("Cap breached").font(.system(size: 10, weight: .bold, design: .rounded)).foregroundColor(BLTheme.red)
+            } else if meter.isSet {
+                Text("\(RuleProfileGate.money(max(0, meter.remaining))) of room left")
+                    .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+            } else {
+                Text("Enter this cap on your active profile to gauge it")
+                    .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+            }
+        }
+    }
+}
+
+struct DisciplineCockpitPanel: View {
+    let cockpit: DisciplineCockpit
+    var onManageProfile: () -> Void = {}
+
+    private var accent: Color {
+        if cockpit.muteSignals { return BLTheme.red }
+        if cockpit.tilt.level == .high || cockpit.dailyLoss.fraction >= 0.75 || cockpit.trailingDrawdown.fraction >= 0.75 {
+            return BLTheme.gold
+        }
+        return BLTheme.green
+    }
+    private var tiltTint: Color {
+        switch cockpit.tilt.level {
+        case .high: return BLTheme.red
+        case .elevated: return BLTheme.gold
+        default: return BLTheme.green
+        }
+    }
+
+    var body: some View {
+        Panel(title: "Discipline cockpit", icon: "gauge.with.dots.needle.bottom.50percent", accent: accent) {
+            if !cockpit.hasData {
+                EmptyState(icon: "gauge.with.dots.needle.bottom.50percent",
+                           title: "No trades to grade yet",
+                           hint: "Log trades in Paper Trade and the cockpit grades your discipline live — daily-loss and trailing-drawdown meters, a Tiltmeter, and risk of ruin, all against your active rule profile's caps. Nothing is shown until it's your own real data.")
+            } else {
+                if cockpit.muteSignals {
+                    HStack(spacing: 9) {
+                        Image(systemName: "bell.slash.fill").font(.system(size: 13, weight: .bold)).foregroundColor(BLTheme.red)
+                        Text(cockpit.muteReason)
+                            .font(.system(size: 11.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.red)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Spacer()
+                    }
+                    .padding(10).frame(maxWidth: .infinity, alignment: .leading)
+                    .background(BLTheme.red.opacity(0.10)).clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(BLTheme.red.opacity(0.4), lineWidth: 1))
+                }
+                if !cockpit.hasProfile {
+                    HStack(spacing: 8) {
+                        Text("No active profile caps — enter your funded-eval firm's daily-loss and trailing-drawdown limits to arm the meters.")
+                            .font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Spacer()
+                        GhostButton(label: "Set caps", icon: "building.columns.fill", action: onManageProfile)
+                    }
+                }
+                DisciplineMeterBar(label: "Daily loss used", meter: cockpit.dailyLoss)
+                DisciplineMeterBar(label: "Trailing drawdown", meter: cockpit.trailingDrawdown)
+
+                Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                // Tiltmeter — behavioral escalation vs the buyer's OWN baseline (frequency + size).
+                HStack {
+                    Text("Tiltmeter").font(.system(size: 11.5, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.sub)
+                    Spacer()
+                    StatusPill(text: cockpit.tilt.level.rawValue, tint: cockpit.tilt.level == .insufficient ? BLTheme.sub : tiltTint)
+                }
+                if cockpit.tilt.level == .insufficient {
+                    Text("Needs at least \(DisciplineCockpit.minBaselineDays) prior trading days to set your baseline — no invented tilt until then.")
+                        .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(BLTheme.bg2).frame(height: 8)
+                            Capsule().fill(tiltTint).frame(width: max(0, min(1, cockpit.tilt.gauge)) * geo.size.width, height: 8)
+                        }
+                    }.frame(height: 8)
+                    ForEach(cockpit.tilt.reasons, id: \.self) { reason in
+                        HStack(spacing: 6) {
+                            Image(systemName: "arrow.up.right").font(.system(size: 10, weight: .bold)).foregroundColor(tiltTint)
+                            Text(reason).font(.system(size: 10.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.text)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    if cockpit.tilt.reasons.isEmpty {
+                        Text("Trading in line with your own baseline pace and size.")
+                            .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    }
+                }
+
+                Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                // Risk of ruin — probability of hitting the buyer's OWN floor at their current risk.
+                switch cockpit.ruin.state {
+                case .computed:
+                    Stat(label: "Risk of ruin (your numbers)",
+                         value: String(format: "%.1f%%", cockpit.ruin.probability * 100),
+                         tint: cockpit.ruin.probability >= 0.25 ? BLTheme.red : (cockpit.ruin.probability >= 0.05 ? BLTheme.gold : BLTheme.green))
+                    Text(cockpit.ruin.note)
+                        .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                        .fixedSize(horizontal: false, vertical: true)
+                case .noEdge:
+                    Stat(label: "Risk of ruin (your numbers)", value: "≈ 100%", tint: BLTheme.red)
+                    Text(cockpit.ruin.note)
+                        .font(.system(size: 10, weight: .medium, design: .rounded)).foregroundColor(BLTheme.red)
+                        .fixedSize(horizontal: false, vertical: true)
+                case .insufficient:
+                    Text("Risk of ruin: " + cockpit.ruin.note)
+                        .font(.system(size: 10.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Text("All figures are computed from your own paper ledger against the caps you entered — a compliance/risk view, not a performance record. Never auto-trades.")
+                    .font(.system(size: 9.5, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+}
+
+struct FirmRow: View {
+    let firm: PropFirm
+    @State private var hover = false
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "building.columns.fill").font(.system(size: 13, weight: .bold)).foregroundColor(Color(hex: 0x1A1305))
+                .frame(width: 30, height: 30).background(BLTheme.goldGrad).clipShape(RoundedRectangle(cornerRadius: 9))
+                .shadow(color: BLTheme.gold.opacity(0.3), radius: 5, y: 1)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(firm.name).font(.system(size: 15, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                Text(firm.note).font(.system(size: 12.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer()
+        }
+        .padding(16).frame(maxWidth: .infinity, alignment: .leading)
+        .background(hover ? BLTheme.panel2 : BLTheme.panel).clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(hover ? BLTheme.gold.opacity(0.3) : BLTheme.stroke, lineWidth: 1))
+        .shadow(color: Color.black.opacity(0.18), radius: hover ? 10 : 5, y: 3)
+        .onHover { h in withAnimation(.easeOut(duration: 0.15)) { hover = h } }
+    }
+}
+
+// MARK: - Settings (account management incl. deletion)
+struct SettingsScreen: View {
+    @EnvironmentObject var session: Session
+    @EnvironmentObject var model: AppModel
+    @EnvironmentObject var feed: FeedClient
+    @State private var confirmDelete = false
+    @State private var googleClientID = AppSettingsStore.googleClientID
+    @State private var googleSaved = false
+    @State private var feedURLDraft = ""
+    @State private var feedSaved = false
+    // TR-17: neutral, honest refund line until a founder-ratified refund policy exists. NO invented
+    // guarantee ships here (§5.1) — swap this string for the ratified policy copy once Michael sets one.
+    static let refundPolicyLine = "Refunds: if something isn't right, email us — we handle billing issues case by case with a human, not an auto-decline."
+    var body: some View {
+        ScrollView { VStack(alignment: .leading, spacing: 20) {
+            ScreenTitle(title: "Settings", subtitle: "Account, connections, and app info.", icon: "gearshape.fill")
+            Panel(title: "Account", icon: "person.crop.circle") {
+                Stat(label: "Signed in as", value: session.email.isEmpty ? "guest" : session.email)
+                HStack {
+                    GhostButton(label: "Sign out", icon: "rectangle.portrait.and.arrow.right") { withAnimation { session.signOut() } }
+                    if session.email != "guest" && !session.email.isEmpty {
+                        GhostButton(label: "Delete account", icon: "trash", tint: BLTheme.red) { confirmDelete = true }
+                    }
+                }
+            }
+
+            // Theme / Appearance Studio — the buyer owns the holographic look (live preview + presets).
+            ThemeStudioPanel()
+
+            // Headline ask: a real, reachable place to store the local platform account label.
+            WealthChartsPanel()
+
+            // Live data feed — buyer-configurable backend that serves THEIR own captured bars.
+            Panel(title: "Live data feed", icon: "dot.radiowaves.left.and.right") {
+                HStack(spacing: 8) {
+                    Circle().fill(feedStatusColor).frame(width: 9, height: 9)
+                    Text(feed.state.label).font(.system(size: 12.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                    if let e = feed.lastError { Text("· \(e)").font(.system(size: 11, design: .rounded)).foregroundColor(BLTheme.red) }
+                    Spacer()
+                    GhostButton(label: "Test", icon: "arrow.clockwise") { Task { await feed.connect(email: session.email); await feed.refreshStatus() } }
+                }
+            Text("Black Label Trading uses the bundled browser bridge to open TopstepX or WealthCharts in a product-owned browser profile, then posts observed market data into the local webhook/store on this Mac. Nothing is fetched from us. Point this at your own backend host/port only if you run the local backend elsewhere on your machine or network.")
+                    .font(.system(size: 11.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+                Field(title: "Backend URL", text: $feedURLDraft, prompt: FeedClient.defaultURL)
+                HStack(spacing: 8) {
+                    GoldButton(label: "Save", icon: "checkmark") {
+                        let v = feedURLDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+                        feed.baseURL = v.isEmpty ? FeedClient.defaultURL : v
+                        feedURLDraft = feed.baseURL
+                        withAnimation { feedSaved = true }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { withAnimation { feedSaved = false } }
+                        Task { await feed.connect(email: session.email); await feed.refreshStatus() }
+                    }
+                    GhostButton(label: "Reset", icon: "arrow.uturn.left") {
+                        feed.baseURL = FeedClient.defaultURL; feedURLDraft = FeedClient.defaultURL
+                        Task { await feed.connect(email: session.email); await feed.refreshStatus() }
+                    }
+                    if feedSaved { Text("Saved.").font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.green) }
+                }
+                if !feed.symbols.pickerList.isEmpty {
+                    Text("Captured instruments: \(feed.symbols.pickerList.prefix(12).joined(separator: ", "))")
+                        .font(.system(size: 11, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .onAppear { feedURLDraft = feed.baseURL; Task { await feed.refreshStatus() } }
+
+            // TR-06 — honest edge-gate alerts to an endpoint the buyer OWNS (off by default).
+            EdgeGateAlertsPanel()
+
+            // TR-20 — feed-cost transparency + provable no-network posture.
+            FeedCostPanel()
+
+            // Make the Google sign-in option configurable rather than silently hidden.
+            Panel(title: "Sign-in providers", icon: "globe") {
+                Text("Both the Apple and Google buttons always appear on the login screen. Apple sign-in runs for real in the signed (provisioned) build; email/password and guest always work. To make the Google button do a real login, paste your own Google DESKTOP OAuth client ID below — it's stored on this Mac, never bundled. A Web client ID will NOT work for the app's loopback flow; create a \"Desktop\" client in the Google Cloud console.")
+                    .font(.system(size: 11.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+                Field(title: "Google Desktop Client ID", text: $googleClientID, prompt: "xxxx…apps.googleusercontent.com")
+                HStack(spacing: 8) {
+                    GoldButton(label: "Save", icon: "checkmark") {
+                        AppSettingsStore.setGoogleClientID(googleClientID)
+                        googleClientID = AppSettingsStore.googleClientID
+                        withAnimation { googleSaved = true }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { withAnimation { googleSaved = false } }
+                    }
+                    if !googleClientID.isEmpty {
+                        GhostButton(label: "Clear", icon: "xmark", tint: BLTheme.red) {
+                            AppSettingsStore.setGoogleClientID(""); googleClientID = ""
+                        }
+                    }
+                    if googleSaved {
+                        Text("Saved — the Google button now does a real login (sign out to use it).")
+                            .font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.green)
+                    }
+                }
+            }
+            Panel(title: "Products & roadmap", icon: "shippingbox.fill") {
+                productRow("Trading", "see blacklabelbots.com", "7 distinct edge-gated research strategies, multi-TF analysis, alerts, replay, and manual paper tools. Signals only — orders stay on your broker platform.", BLTheme.gold, "Available")
+                productRow("Marketing", "see blacklabelbots.com", "Six-platform content pipeline. Channels post from credentials you own.", BLTheme.sub, "Coming soon")
+                productRow("Outbound", "see blacklabelbots.com", "Lead gen and outreach — scoped intro before a monthly lane opens.", BLTheme.sub, "Intro")
+                Text("Current pricing lives on blacklabelbots.com (kept there so it's never stale in the app). This app is a scenario-scoring dashboard for the engine method — it scores factors you set, runs the 13 gates, and keeps an honestly-graded session ledger on this Mac. It is not a broker execution record or track record.")
+                    .font(.system(size: 11.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true).padding(.top, 4)
+            }
+            // TR-17 — HONEST renewal / refund / support posture, in-app. Answers the BBB-documented
+            // subscription-renewal-trap pain (TradingView/LuxAlgo/TrendSpider/Tickeron) with the plain
+            // truth, and deliberately makes NO refund PROMISE the company has not ratified.
+            // ⚠️ FOUNDER INPUT NEEDED: replace `refundPolicyLine` below with ratified refund-policy copy
+            // once Michael decides one (30-day? pro-rata? none?). Until then it stays a neutral,
+            // reachable "email a human" — never an invented guarantee (§5.1).
+            Panel(title: "Billing, renewal & support", icon: "creditcard") {
+                Text("Cancel anytime. Your plan does not roll you into a renewal trap — manage or cancel it yourself; there is no phone maze and no retention gauntlet.")
+                    .font(.system(size: 12.5, design: .rounded)).foregroundColor(BLTheme.text).fixedSize(horizontal: false, vertical: true)
+                Text(Self.refundPolicyLine)
+                    .font(.system(size: 12, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+                Text("Billing questions go to a real person, not a chatbot wall: info@blacklabelbots.com.")
+                    .font(.system(size: 12, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 8) {
+                    GhostButton(label: "Manage / cancel plan", icon: "arrow.up.right.square") {
+                        if let url = URL(string: "https://blacklabelbots.com/dashboard") { NSWorkspace.shared.open(url) }
+                    }
+                    GhostButton(label: "Email support", icon: "envelope") {
+                        if let url = URL(string: "mailto:info@blacklabelbots.com") { NSWorkspace.shared.open(url) }
+                    }
+                }
+            }
+            Panel(title: "About", icon: "info.circle") {
+                Text("Black Label Trading v1.0").font(.system(size: 13, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                Text("A signal dashboard built on the Black Label engine method: a multi-module composite scoring engine, a 13-gate risk checklist, multi-timeframe consensus, a trade journal, risk calculators, and a prop-firm reference. Live data comes from the TopstepX or WealthCharts session you sign into in the app-owned browser, pushed into your local backend. All data is stored privately on this Mac.")
+                    .font(.system(size: 12.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+            }
+        }.padding(24) }
+        .alert("Delete your account?", isPresented: $confirmDelete) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                let email = session.email
+                AccountStore.delete(email)
+                withAnimation { session.signOut() }
+            }
+        } message: { Text("This permanently removes your account credentials from this Mac. Your saved trades and signals remain in the app's local store.") }
+    }
+    private var feedStatusColor: Color {
+        switch feed.state {
+        case .live: return BLTheme.green
+        case .idle, .connecting: return BLTheme.gold
+        case .loggedOut, .notSignedIn: return BLTheme.red
+        case .offline: return BLTheme.sub
+        }
+    }
+    @ViewBuilder private func productRow(_ name: String, _ price: String, _ desc: String, _ tint: Color, _ status: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 8) {
+                    Text(name).font(.system(size: 13.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                    Text(price).font(.system(size: 11.5, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.gold)
+                }
+                Text(desc).font(.system(size: 11.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer()
+            StatusPill(text: status, tint: tint)
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+// MARK: - TR-06 Edge-gate alerts (honest push to an endpoint the BUYER owns)
+// Posts the edge-gate VERDICT — including the honest "no edge on your bars today" — to the buyer's
+// OWN ntfy topic / webhook / Pushover, never through a Black Label relay. OFF by default; with no
+// endpoint the backend makes ZERO network calls. A push can never become an order.
+struct EdgeGateAlertsPanel: View {
+    @EnvironmentObject var feed: FeedClient
+    @State private var status = AlertStatus.empty
+    @State private var enabled = false
+    @State private var provider = "ntfy"
+    @State private var endpoint = ""
+    @State private var pushToken = ""
+    @State private var pushUser = ""
+    @State private var saved = false
+    @State private var saveFailed = false   // sticky until the next attempt — a failed save is never silent
+    @State private var sendMsg: String? = nil
+    @State private var sendOK = false
+    @State private var busy = false
+    private let providers = ["ntfy", "pushover", "webhook"]
+
+    var body: some View {
+        Panel(title: "Edge-gate alerts", icon: "bell.badge") {
+            Text("Get the edge-gate's verdict pushed to a channel YOU own — including the honest \u{201C}no edge on your bars today.\u{201D} It posts only to the endpoint you set below, never to a Black Label server, and never sends a win-rate or P&L. A push is information out; it can never place a trade.")
+                .font(.system(size: 11.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+            Toggle(isOn: $enabled) {
+                Text("Enable edge-gate alerts").font(.system(size: 12.5, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.text)
+            }.tint(BLTheme.gold)
+            HStack(spacing: 8) {
+                Text("CHANNEL").font(.system(size: 10, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.6)
+                Picker("", selection: $provider) { ForEach(providers, id: \.self) { Text($0).tag($0) } }
+                    .pickerStyle(.segmented).labelsHidden().frame(width: 240)
+                Spacer()
+            }
+            Field(title: provider == "pushover" ? "Endpoint (optional — blank uses Pushover API)" : "Your endpoint URL (https://…)",
+                  text: $endpoint, prompt: provider == "ntfy" ? "https://ntfy.sh/your-topic" : "https://…")
+            if provider == "pushover" {
+                Field(title: "Pushover app token", text: $pushToken, prompt: "your own app token")
+                Field(title: "Pushover user key", text: $pushUser, prompt: "your own user key")
+            }
+            HStack(spacing: 8) {
+                GoldButton(label: "Save", icon: "checkmark") {
+                    busy = true; saveFailed = false
+                    Task {
+                        let ok = await feed.saveAlertConfig(enabled: enabled, endpoint: endpoint,
+                                                            provider: provider, pushoverToken: pushToken,
+                                                            pushoverUser: pushUser)
+                        status = await feed.alertStatus()
+                        busy = false
+                        withAnimation { saved = ok; saveFailed = !ok }
+                        if ok { DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { withAnimation { saved = false } } }
+                    }
+                }
+                GhostButton(label: "Send test", icon: "paperplane") {
+                    busy = true; sendMsg = nil
+                    Task {
+                        let r = await feed.testAlert()
+                        busy = false
+                        sendOK = r.sent
+                        // Honest status: "posted to your endpoint", never "delivered".
+                        sendMsg = r.networked ? (r.sent ? "Posted to your endpoint." : r.reason)
+                                              : "No endpoint configured — nothing was sent (0 network calls)."
+                    }
+                }
+                if saved { Text("Saved.").font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.green) }
+                if saveFailed {
+                    Text("Couldn't save — backend unreachable. Nothing was configured; try again.")
+                        .font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(BLTheme.red)
+                }
+                if busy { Text("…").font(.system(size: 12, design: .rounded)).foregroundColor(BLTheme.sub) }
+            }
+            if let m = sendMsg {
+                Text(m).font(.system(size: 11.5, weight: .semibold, design: .rounded))
+                    .foregroundColor(sendOK ? BLTheme.green : BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+            }
+            HStack(spacing: 6) {
+                Circle().fill(status.configured && status.enabled ? BLTheme.green : BLTheme.sub).frame(width: 8, height: 8)
+                Text(statusLine).font(.system(size: 11, design: .rounded)).foregroundColor(BLTheme.sub)
+            }
+        }
+        .onAppear {
+            Task {
+                status = await feed.alertStatus()
+                enabled = status.enabled
+                provider = status.provider.isEmpty ? "ntfy" : status.provider
+                endpoint = status.endpoint
+            }
+        }
+    }
+    private var statusLine: String {
+        if !status.enabled { return "Alerts off — no network calls are made." }
+        if !status.configured { return "On, but no endpoint set — nothing is sent yet." }
+        return "On — posting to your \(status.provider) endpoint." + (status.egressOk ? "" : " (endpoint must be https://)")
+    }
+}
+
+// MARK: - TR-20 Feed cost & network transparency (the plain truth, provable)
+struct FeedCostPanel: View {
+    var body: some View {
+        Panel(title: "Feed cost & network", icon: "lock.shield") {
+            Text("You already own the feed. Black Label Trading reads YOUR own WealthCharts or TopstepX session in a product-owned browser on this Mac — it does not resell data and there is no subscription you pay us for quotes. Because the bars come from your already-open session, there is $0 extra CME real-time add-on to buy on our side — you are on your entitlement, not ours.")
+                .font(.system(size: 11.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+            Divider().background(BLTheme.stroke)
+            Text("This app phones home to nobody.").font(.system(size: 12.5, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+            bullet("Your captured bars, journal, and gate verdicts stay on this Mac.")
+            bullet("Outbound connections go only to localhost, the broker/feed YOU connect (with your own credentials), and the alert endpoint YOU configure.")
+            bullet("No Black Label server ever receives your data. No analytics, no telemetry, no tracker.")
+            Text("Provable, not just promised: a build-time test (backend/test_egress.py) fails the release if any egress destination is a Black Label server or a tracker; the signed app declares network.client (outbound only) and no inbound server entitlement. Details in docs/EGRESS-AND-FEED-COST.md.")
+                .font(.system(size: 11, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true).padding(.top, 2)
+        }
+    }
+    @ViewBuilder private func bullet(_ s: String) -> some View {
+        HStack(alignment: .top, spacing: 6) {
+            Text("•").font(.system(size: 12, weight: .bold, design: .rounded)).foregroundColor(BLTheme.gold)
+            Text(s).font(.system(size: 11.5, design: .rounded)).foregroundColor(BLTheme.sub).fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+// MARK: - Platform account reference panel (reusable - shown in Settings)
+// HONEST FRAMING: stores the buyer's own platform account reference on THIS Mac only.
+// Not a login flow; does not auto-trade or move money. Username + note -> UserDefaults,
+// optional password -> private app storage. The UI states plainly what is and isn't connected.
+struct WealthChartsPanel: View {
+    @EnvironmentObject var wc: WealthChartsStore
+    @State private var showConnect = false
+    @State private var confirmRecovery = false
+
+    var body: some View {
+        Panel(title: "Platform account reference", icon: "link", accent: wc.account.isConfigured ? BLTheme.green : BLTheme.gold) {
+            HStack(spacing: 10) {
+                Image(systemName: wc.account.isConfigured ? "checkmark.seal.fill" : "link.badge.plus")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundColor(wc.account.isConfigured ? BLTheme.green : BLTheme.gold)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(wc.account.isConfigured ? "Account saved on this Mac" : "No Topstep account saved")
+                        .font(.system(size: 13, weight: .bold, design: .rounded)).foregroundColor(BLTheme.text)
+                    Text(wc.account.isConfigured
+                         ? "Stored locally - signals-only. Live data comes from the platform you sign into in the capture browser."
+                         : "Add your platform account label to keep it on hand for the engine method.")
+                        .font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer()
+                StatusPill(text: wc.account.isConfigured ? "Saved" : "Not connected",
+                           tint: wc.account.isConfigured ? BLTheme.green : BLTheme.sub)
+            }
+
+            if wc.account.isConfigured {
+                Divider().background(BLTheme.stroke).padding(.vertical, 2)
+                Stat(label: "Username", value: wc.account.username)
+                if !wc.account.note.isEmpty { Stat(label: "Label", value: wc.account.note) }
+                Stat(label: "Password", value: wc.hasSecret ? "Saved privately on this Mac" : "Not saved")
+                if let when = wc.account.connectedAt {
+                    Stat(label: "Saved", value: when.formatted(date: .abbreviated, time: .shortened))
+                }
+            }
+
+            HStack(spacing: 8) {
+                GoldButton(label: wc.account.isConfigured ? "Update account" : "Save account",
+                           icon: wc.account.isConfigured ? "pencil" : "link") { showConnect = true }
+                if wc.account.isConfigured {
+                    GhostButton(label: "Disconnect", icon: "xmark.circle", tint: BLTheme.red) { wc.disconnect() }
+                    GhostButton(label: "Recover prior Keychain password", icon: "key.fill") {
+                        confirmRecovery = true
+                    }
+                }
+            }.padding(.top, 2)
+
+            if !wc.recoveryMessage.isEmpty {
+                Text(wc.recoveryMessage)
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundColor(wc.hasSecret ? BLTheme.green : BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Text("These details stay on this Mac (username and label in local preferences; optional reference password in an owner-only private app file). This panel does not log in for you. Platform sign-in stays in the app-owned capture browser profile. Existing Keychain records are never read in the background or deleted.")
+                .font(.system(size: 11, design: .rounded)).foregroundColor(BLTheme.sub)
+                .fixedSize(horizontal: false, vertical: true).padding(.top, 2)
+        }
+        .sheet(isPresented: $showConnect) { ConnectWealthChartsSheet().environmentObject(wc).sheetCloseBar() }
+        .confirmationDialog("Recover a previous Keychain password?", isPresented: $confirmRecovery) {
+            Button("Recover now") { wc.recoverPreviousPassword() }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This foreground action may show one macOS Keychain prompt. It copies a prior password into prompt-free private app storage and leaves the original Keychain item untouched.")
+        }
+    }
+}
+
+// Sheet to enter / update the local platform account reference.
+struct ConnectWealthChartsSheet: View {
+    @EnvironmentObject var wc: WealthChartsStore
+    @Environment(\.dismiss) var dismiss
+    @State private var username = ""
+    @State private var password = ""
+    @State private var note = ""
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(spacing: 10) {
+                    Image(systemName: "link").font(.system(size: 15, weight: .bold)).foregroundColor(Color(hex: 0x1A1305))
+                        .frame(width: 30, height: 30).background(BLTheme.goldGrad).clipShape(RoundedRectangle(cornerRadius: 9))
+                Text("Save platform account").font(.system(size: 18, weight: .heavy, design: .rounded)).foregroundColor(BLTheme.text)
+                }
+                Text("Saved on this Mac only. This panel stores your account label; it does not place trades or move money. An optional reference password is stored in owner-only private app storage. Orders remain manual on your platform.")
+                    .font(.system(size: 12, weight: .medium, design: .rounded)).foregroundColor(BLTheme.sub)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Field(title: "Platform username / email", text: $username, prompt: "you@example.com")
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("PASSWORD (OPTIONAL)").font(.system(size: 10, weight: .bold, design: .rounded)).foregroundColor(BLTheme.sub).tracking(0.6)
+                    SecureField("••••••••", text: $password)
+                        .textFieldStyle(.plain).font(.system(size: 14, weight: .medium, design: .rounded)).foregroundColor(BLTheme.text)
+                        .padding(.vertical, 10).padding(.horizontal, 12)
+                        .background(BLTheme.bg2).clipShape(RoundedRectangle(cornerRadius: 10))
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(BLTheme.stroke, lineWidth: 1))
+                    Text("Stored in an atomic owner-only file on this device. Leave blank to keep any active saved password. Prior Keychain data is recoverable only from the explicit Settings action.")
+                        .font(.system(size: 10.5, design: .rounded)).foregroundColor(BLTheme.sub)
+                }
+                Field(title: "Label (optional)", text: $note, prompt: "e.g. WealthCharts main / Topstep 50K eval")
+
+                HStack { Spacer()
+                    GhostButton(label: "Cancel") { dismiss() }
+                    GoldButton(label: "Save connection", icon: "checkmark") {
+                        wc.save(username: username, password: password, note: note)
+                        dismiss()
+                    }
+                }.padding(.top, 4)
+            }
+            .padding(24).frame(width: 460)
+        }
+        .frame(width: 460, height: 460).background(BLTheme.bg)
+        .onAppear { username = wc.account.username; note = wc.account.note }
+    }
+}
+#endif // circuit-convert

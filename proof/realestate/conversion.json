@@ -1,0 +1,2383 @@
+{
+  "root": "/Users/michaelbarber/BlackLabelRealEstate",
+  "name": "BlackLabelRealEstate",
+  "target": "windows",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/realestate",
+  "moduleName": "BlackLabelRealEstateCore",
+  "moduleSources": {
+    "from": "project.yml target BlackLabelRealEstate",
+    "paths": [
+      "Sources",
+      "Sources/Fonts",
+      "mcp"
+    ]
+  },
+  "generatedAt": 1789715818214,
+  "tookMs": 132955,
+  "before": {
+    "readyPct": 43.7,
+    "files": 81,
+    "loc": 31534
+  },
+  "after": {
+    "readyPct": 73.2,
+    "guardedLoc": 8289,
+    "needsWindowsLoc": 0
+  },
+  "verification": {
+    "ran": true,
+    "ok": true,
+    "failure": null,
+    "passes": [
+      {
+        "pass": 1,
+        "isolated": 3
+      },
+      {
+        "pass": 2,
+        "isolated": 3
+      },
+      {
+        "pass": 3,
+        "isolated": 2
+      },
+      {
+        "pass": 4,
+        "isolated": 1
+      },
+      {
+        "pass": 5,
+        "isolated": 2
+      },
+      {
+        "pass": 6,
+        "isolated": 7
+      },
+      {
+        "pass": 7,
+        "isolated": 3
+      },
+      {
+        "pass": 8,
+        "isolated": 1
+      },
+      {
+        "pass": 9,
+        "isolated": 3
+      },
+      {
+        "pass": 10,
+        "isolated": 2
+      },
+      {
+        "pass": 11,
+        "isolated": 1
+      },
+      {
+        "pass": 12,
+        "isolated": 1
+      },
+      {
+        "pass": 13,
+        "isolated": 1
+      },
+      {
+        "pass": 14,
+        "isolated": 3
+      },
+      {
+        "pass": 15,
+        "isolated": 1
+      },
+      {
+        "pass": 16,
+        "isolated": 1
+      },
+      {
+        "pass": 17,
+        "isolated": 1
+      },
+      {
+        "pass": 18,
+        "isolated": 2
+      },
+      {
+        "pass": 19,
+        "isolated": 1
+      },
+      {
+        "pass": 20,
+        "isolated": 2
+      },
+      {
+        "pass": 21,
+        "isolated": 2
+      },
+      {
+        "pass": 22,
+        "isolated": 2
+      },
+      {
+        "pass": 23,
+        "isolated": 2
+      },
+      {
+        "pass": 24,
+        "isolated": 1
+      },
+      {
+        "pass": 25,
+        "isolated": 2
+      },
+      {
+        "pass": 26,
+        "isolated": 1
+      },
+      {
+        "pass": 27,
+        "isolated": 1
+      },
+      {
+        "pass": 28,
+        "isolated": 1
+      },
+      {
+        "pass": 29,
+        "isolated": 1
+      },
+      {
+        "pass": 30,
+        "isolated": 4
+      },
+      {
+        "pass": 31,
+        "isolated": 1
+      },
+      {
+        "pass": 32,
+        "isolated": 1
+      },
+      {
+        "pass": 33,
+        "isolated": 1
+      },
+      {
+        "pass": 34,
+        "isolated": 3
+      },
+      {
+        "pass": 35,
+        "isolated": 1
+      },
+      {
+        "pass": 36,
+        "isolated": 1
+      },
+      {
+        "pass": 37,
+        "isolated": 2
+      },
+      {
+        "pass": 38,
+        "isolated": 1
+      },
+      {
+        "pass": 39,
+        "isolated": 2
+      },
+      {
+        "pass": 40,
+        "isolated": 1
+      },
+      {
+        "pass": 41,
+        "isolated": 1
+      },
+      {
+        "pass": 42,
+        "isolated": 1
+      },
+      {
+        "pass": 43,
+        "isolated": 3
+      },
+      {
+        "pass": 44,
+        "isolated": 6
+      },
+      {
+        "pass": 45,
+        "isolated": 1
+      },
+      {
+        "pass": 46,
+        "isolated": 0
+      }
+    ],
+    "configuration": "simulated Windows configuration on macOS (-DCIRCUIT_WINDOWS_SIM)",
+    "native": false,
+    "platform": "darwin",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.33.1 clang-2100.3.33.1)"
+  },
+  "totals": {
+    "all": {
+      "files": 78,
+      "loc": 30396
+    },
+    "portable": {
+      "files": 22,
+      "loc": 6945
+    },
+    "converted": {
+      "files": 4,
+      "loc": 973
+    },
+    "partial": {
+      "files": 29,
+      "loc": 10964,
+      "isolatedLoc": 6763,
+      "buildsLoc": 4201
+    },
+    "needsWindowsPart": {
+      "files": 23,
+      "loc": 11514
+    },
+    "macOnlySkipped": {
+      "files": 0,
+      "loc": 0
+    },
+    "unverified": {
+      "files": 0,
+      "loc": 0
+    },
+    "buildsLoc": 12119,
+    "isolatedLoc": 18277,
+    "buildsForWindowsPct": 39.9
+  },
+  "packages": [
+    {
+      "package": "swift-toolchain-sqlite",
+      "url": "https://github.com/swiftlang/swift-toolchain-sqlite.git",
+      "from": "1.0.0"
+    },
+    {
+      "package": "swift-crypto",
+      "url": "https://github.com/apple/swift-crypto.git",
+      "from": "3.0.0"
+    },
+    {
+      "package": "OpenCombine",
+      "url": "https://github.com/OpenCombine/OpenCombine.git",
+      "from": "0.14.0"
+    }
+  ],
+  "kit": true,
+  "windowsPartsNeeded": [
+    {
+      "id": "SwiftUI",
+      "windows": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)",
+      "effort": "L",
+      "files": 29,
+      "loc": 13260
+    },
+    {
+      "id": "(uses code that was isolated)",
+      "windows": null,
+      "effort": null,
+      "files": 22,
+      "loc": 4874
+    },
+    {
+      "id": "MapKit",
+      "windows": "a WebView2 map (MapLibre) or the Bing Maps SDK",
+      "effort": "M",
+      "files": 2,
+      "loc": 1714
+    },
+    {
+      "id": "AuthenticationServices",
+      "windows": "browser sign-in (OAuth) and WebAuthn through Windows Hello",
+      "effort": "M",
+      "files": 2,
+      "loc": 525
+    },
+    {
+      "id": "CoreLocation",
+      "windows": "Windows.Devices.Geolocation",
+      "effort": "S",
+      "files": 1,
+      "loc": 288
+    },
+    {
+      "id": "UserNotifications",
+      "windows": "Windows toast notifications (AppNotificationManager)",
+      "effort": "S",
+      "files": 1,
+      "loc": 146
+    },
+    {
+      "id": "Security",
+      "windows": "Windows Credential Manager (CredRead/CredWrite) and DPAPI",
+      "effort": "M",
+      "files": 1,
+      "loc": 143
+    },
+    {
+      "id": "LocalAuthentication",
+      "windows": "Windows Hello (UserConsentVerifier)",
+      "effort": "M",
+      "files": 1,
+      "loc": 143
+    }
+  ],
+  "skipped": [
+    {
+      "id": "Sources/main.swift",
+      "why": "the Mac entry point — the Windows app brings its own"
+    }
+  ],
+  "files": [
+    {
+      "id": "mcp/arv-obfuscated.mjs",
+      "lang": "javascript",
+      "loc": 1,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "mcp/arv.mjs",
+      "lang": "javascript",
+      "loc": 987,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "mcp/mcp-kit.mjs",
+      "lang": "javascript",
+      "loc": 844,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "mcp/server.mjs",
+      "lang": "javascript",
+      "loc": 899,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/AdaptiveLayout.swift",
+      "lang": "swift",
+      "loc": 126,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "89:11 cannot find type 'Font' in scope",
+        "97:11 cannot find type 'View' in scope",
+        "109:28 cannot find type 'View' in scope",
+        "112:6 unknown attribute 'ViewBuilder'",
+        "113:20 cannot find type 'View' in scope",
+        "109:35 cannot find type 'View' in scope",
+        "131:31 cannot find type 'View' in scope",
+        "133:20 cannot find type 'HorizontalAlignment' in scope"
+      ],
+      "errorCount": 23,
+      "isolatedInPass": 5,
+      "whole": false,
+      "isolatedLoc": 51,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/AICopy.swift",
+      "lang": "swift",
+      "loc": 80,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/APIConfig.swift",
+      "lang": "swift",
+      "loc": 77,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Auth.swift",
+      "lang": "swift",
+      "loc": 363,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "AuthenticationServices",
+          "to": "browser sign-in (OAuth) and WebAuthn through Windows Hello"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AuthenticationServices"
+      ],
+      "isolated": true,
+      "errors": [
+        "12:19 cannot find type 'View' in scope",
+        "44:38 cannot find type 'SettingsStore' in scope",
+        "43:6 unknown attribute 'EnvironmentObject'",
+        "44:6 unknown attribute 'EnvironmentObject'",
+        "45:6 unknown attribute 'EnvironmentObject'",
+        "46:6 unknown attribute 'State'",
+        "47:6 unknown attribute 'State'",
+        "48:6 unknown attribute 'State'"
+      ],
+      "errorCount": 144,
+      "isolatedInPass": 5,
+      "whole": true,
+      "isolatedLoc": 363,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Compat.swift",
+      "lang": "swift",
+      "loc": 158,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 9,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "18:11 cannot find type 'View' in scope",
+        "23:111 cannot find type 'View' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 10,
+      "whole": false,
+      "isolatedLoc": 13,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/ComplianceEngine.swift",
+      "lang": "swift",
+      "loc": 151,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Comps.swift",
+      "lang": "swift",
+      "loc": 600,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 25,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "417:66 cannot find type 'ParcelLookup' in scope",
+        "520:71 cannot find type 'PropertyPage' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 23,
+      "whole": false,
+      "isolatedLoc": 450,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/CoverageScreen.swift",
+      "lang": "swift",
+      "loc": 132,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "17:6 unknown attribute 'State'",
+        "18:6 unknown attribute 'State'",
+        "19:6 unknown attribute 'State'",
+        "20:6 unknown attribute 'State'",
+        "22:20 cannot find type 'View' in scope",
+        "32:36 cannot find type 'View' in scope",
+        "61:50 cannot find type 'View' in scope",
+        "61:6 unknown attribute 'ViewBuilder'"
+      ],
+      "errorCount": 37,
+      "isolatedInPass": 2,
+      "whole": true,
+      "isolatedLoc": 132,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/CSVImport.swift",
+      "lang": "swift",
+      "loc": 183,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "122:99 cannot find type 'Lead' in scope",
+        "150:26 cannot find type 'Lead' in scope",
+        "162:24 cannot find type 'Lead' in scope",
+        "171:48 cannot find type 'Lead' in scope",
+        "124:21 cannot find 'Lead' in scope",
+        "123:34 cannot find type 'Lead' in scope"
+      ],
+      "errorCount": 6,
+      "isolatedInPass": 32,
+      "whole": true,
+      "isolatedLoc": 183,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/DatabaseListEngine.swift",
+      "lang": "swift",
+      "loc": 374,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "392:33 cannot find type 'PropertyRecord' in scope",
+        "298:39 cannot find type 'PropertyRecord' in scope",
+        "303:37 cannot find type 'Lead' in scope",
+        "245:23 cannot find type 'PropertyRecord' in scope",
+        "236:8 type 'SavedDatabaseList' does not conform to protocol 'Decodable'",
+        "236:8 type 'SavedDatabaseList' does not conform to protocol 'Encodable'",
+        "236:8 type 'SavedDatabaseList' does not conform to protocol 'Hashable'",
+        "236:8 type 'SavedDatabaseList' does not conform to protocol 'Equatable'"
+      ],
+      "errorCount": 8,
+      "isolatedInPass": 30,
+      "whole": false,
+      "isolatedLoc": 146,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/DealAccounting.swift",
+      "lang": "swift",
+      "loc": 120,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "101:63 cannot find type 'Lead' in scope",
+        "128:61 cannot find type 'Lead' in scope",
+        "110:26 generic parameter 'Key' could not be inferred",
+        "110:114 cannot infer type of closure parameter 'a' without a type annotation"
+      ],
+      "errorCount": 4,
+      "isolatedInPass": 26,
+      "whole": false,
+      "isolatedLoc": 65,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/DealScorecard.swift",
+      "lang": "swift",
+      "loc": 313,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "113:39 cannot find type 'Deal' in scope",
+        "127:31 cannot find type 'Deal' in scope",
+        "207:46 cannot find type 'Deal' in scope",
+        "264:43 cannot find type 'Deal' in scope",
+        "292:45 cannot find type 'Deal' in scope",
+        "316:43 cannot find type 'Deal' in scope",
+        "334:43 cannot find type 'Deal' in scope",
+        "342:44 cannot find type 'Deal' in scope"
+      ],
+      "errorCount": 8,
+      "isolatedInPass": 44,
+      "whole": false,
+      "isolatedLoc": 229,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/DealScreens.swift",
+      "lang": "swift",
+      "loc": 691,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "140:38 cannot find type 'SettingsStore' in scope",
+        "139:6 unknown attribute 'EnvironmentObject'",
+        "140:6 unknown attribute 'EnvironmentObject'",
+        "141:6 unknown attribute 'ObservedObject'",
+        "142:6 unknown attribute 'State'",
+        "143:6 unknown attribute 'State'",
+        "153:20 cannot find type 'View' in scope",
+        "138:21 cannot find type 'View' in scope"
+      ],
+      "errorCount": 379,
+      "isolatedInPass": 6,
+      "whole": true,
+      "isolatedLoc": 691,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/DemoData.swift",
+      "lang": "swift",
+      "loc": 315,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "47:47 cannot find type 'Lead' in scope",
+        "161:47 cannot find type 'Deal' in scope",
+        "211:53 cannot find type 'Deal' in scope",
+        "211:43 cannot find type 'Deal' in scope",
+        "215:41 cannot find type 'Deal' in scope",
+        "270:47 cannot find type 'Offer' in scope",
+        "270:36 cannot find type 'Deal' in scope",
+        "300:41 cannot find type 'Lead' in scope"
+      ],
+      "errorCount": 10,
+      "isolatedInPass": 44,
+      "whole": true,
+      "isolatedLoc": 315,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Dispositions.swift",
+      "lang": "swift",
+      "loc": 83,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "77:38 cannot find type 'Deal' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 43,
+      "whole": false,
+      "isolatedLoc": 59,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/FieldMode.swift",
+      "lang": "swift",
+      "loc": 317,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/FieldModeScreen.swift",
+      "lang": "swift",
+      "loc": 329,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 13,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 14,
+          "kind": "guarded-import",
+          "module": "CoreLocation",
+          "to": "Windows.Devices.Geolocation"
+        },
+        {
+          "line": 15,
+          "kind": "guarded-import",
+          "module": "MapKit",
+          "to": "a WebView2 map (MapLibre) or the Bing Maps SDK"
+        },
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "CoreLocation",
+        "MapKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "58:32 cannot find type 'CLLocationCoordinate2D' in scope",
+        "57:55 cannot find type 'CLLocationManagerDelegate' in scope",
+        "68:27 cannot find 'CLLocationManager' in scope",
+        "83:53 cannot find type 'CLLocationManager' in scope",
+        "101:31 cannot find type 'CLLocationManager' in scope",
+        "101:76 cannot find type 'CLLocation' in scope",
+        "107:31 cannot find type 'CLLocationManager' in scope",
+        "116:17 cannot find type 'MKCoordinateRegion' in scope"
+      ],
+      "errorCount": 147,
+      "isolatedInPass": 6,
+      "whole": false,
+      "isolatedLoc": 288,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/FileExport.swift",
+      "lang": "swift",
+      "loc": 28,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 12,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "30:17 cannot find 'NSSavePanel' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 6,
+      "whole": false,
+      "isolatedLoc": 17,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/FloodOverlay.swift",
+      "lang": "swift",
+      "loc": 134,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Holographic.swift",
+      "lang": "swift",
+      "loc": 668,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 32,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "134:17 cannot find type 'Color' in scope",
+        "135:19 cannot find type 'Color' in scope",
+        "136:20 cannot find type 'Color' in scope",
+        "196:16 cannot find type 'HoloTheme' in scope",
+        "193:8 type 'HoloPreset' does not conform to protocol 'Decodable'",
+        "203:65 cannot find 'HoloTheme' in scope",
+        "203:22 cannot find type 'EnvironmentKey' in scope",
+        "204:11 cannot find type 'EnvironmentValues' in scope"
+      ],
+      "errorCount": 191,
+      "isolatedInPass": 1,
+      "whole": false,
+      "isolatedLoc": 573,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/Keychain.swift",
+      "lang": "swift",
+      "loc": 352,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        },
+        {
+          "line": 12,
+          "kind": "guarded-import",
+          "module": "LocalAuthentication",
+          "to": "Windows Hello (UserConsentVerifier)"
+        }
+      ],
+      "guardedModules": [
+        "Security",
+        "LocalAuthentication"
+      ],
+      "isolated": true,
+      "errors": [
+        "245:23 cannot find 'LAContext' in scope",
+        "348:9 cannot find 'LegacyKeychainRecovery' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 9,
+      "whole": false,
+      "isolatedLoc": 143,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/LeadScoring.swift",
+      "lang": "swift",
+      "loc": 171,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "112:28 cannot find type 'Lead' in scope",
+        "178:44 cannot find type 'Lead' in scope",
+        "178:32 cannot find type 'Lead' in scope",
+        "183:38 cannot find type 'Lead' in scope",
+        "117:38 cannot infer contextual base in reference to member 'database'",
+        "158:55 cannot infer contextual base in reference to member 'contacted'",
+        "158:81 cannot infer contextual base in reference to member 'appointment'",
+        "158:109 cannot infer contextual base in reference to member 'negotiating'"
+      ],
+      "errorCount": 8,
+      "isolatedInPass": 38,
+      "whole": false,
+      "isolatedLoc": 127,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/LeadScreens.swift",
+      "lang": "swift",
+      "loc": 599,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 11,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "22:6 unknown attribute 'EnvironmentObject'",
+        "24:6 unknown attribute 'State'",
+        "25:6 unknown attribute 'State'",
+        "26:6 unknown attribute 'State'",
+        "27:6 unknown attribute 'State'",
+        "38:20 cannot find type 'View' in scope",
+        "94:34 cannot find type 'View' in scope",
+        "21:21 cannot find type 'View' in scope"
+      ],
+      "errorCount": 544,
+      "isolatedInPass": 9,
+      "whole": true,
+      "isolatedLoc": 599,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/ListBuilderScreen.swift",
+      "lang": "swift",
+      "loc": 859,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 13,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "23:6 unknown attribute 'EnvironmentObject'",
+        "25:6 unknown attribute 'State'",
+        "27:20 cannot find type 'View' in scope",
+        "18:27 cannot find type 'View' in scope",
+        "49:6 unknown attribute 'EnvironmentObject'",
+        "52:6 unknown attribute 'State'",
+        "53:6 unknown attribute 'State'",
+        "54:6 unknown attribute 'State'"
+      ],
+      "errorCount": 496,
+      "isolatedInPass": 9,
+      "whole": true,
+      "isolatedLoc": 859,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/ListEngine.swift",
+      "lang": "swift",
+      "loc": 212,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "15:22 cannot find type 'LeadSource' in scope",
+        "16:23 cannot find type 'LeadStatus' in scope",
+        "13:8 type 'LeadFilter' does not conform to protocol 'Decodable'",
+        "36:23 cannot find type 'Lead' in scope",
+        "13:8 type 'LeadFilter' does not conform to protocol 'Encodable'",
+        "13:8 type 'LeadFilter' does not conform to protocol 'Hashable'",
+        "13:8 type 'LeadFilter' does not conform to protocol 'Equatable'",
+        "93:17 cannot find type 'Lead' in scope"
+      ],
+      "errorCount": 34,
+      "isolatedInPass": 44,
+      "whole": true,
+      "isolatedLoc": 212,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/LocalDatabase.swift",
+      "lang": "swift",
+      "loc": 133,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 23,
+          "kind": "dropin",
+          "module": "SQLite3",
+          "to": "swift-toolchain-sqlite (the same C API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/LotFlipScout.swift",
+      "lang": "swift",
+      "loc": 871,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 31,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "494:88 cannot find type 'PropertyRecord' in scope",
+        "603:17 cannot find type 'PropertyRecord' in scope",
+        "668:74 cannot find type 'PropertyPage' in scope",
+        "624:95 cannot find type 'Lead' in scope",
+        "367:34 cannot find type 'CentralTeardownIndex' in scope",
+        "664:22 cannot find type 'DatabaseDealCandidate' in scope",
+        "372:31 cannot find 'CentralTeardownIndex' in scope",
+        "394:45 cannot find 'ParcelLookup' in scope"
+      ],
+      "errorCount": 11,
+      "isolatedInPass": 18,
+      "whole": false,
+      "isolatedLoc": 648,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/LotFlipScoutScreen.swift",
+      "lang": "swift",
+      "loc": 614,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "87:6 unknown attribute 'EnvironmentObject'",
+        "89:6 unknown attribute 'State'",
+        "90:6 unknown attribute 'State'",
+        "91:6 unknown attribute 'State'",
+        "92:6 unknown attribute 'State'",
+        "93:6 unknown attribute 'State'",
+        "95:6 unknown attribute 'State'",
+        "96:6 unknown attribute 'State'"
+      ],
+      "errorCount": 327,
+      "isolatedInPass": 30,
+      "whole": true,
+      "isolatedLoc": 614,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/MailSend.swift",
+      "lang": "swift",
+      "loc": 223,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 20,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/MarketIntelligence.swift",
+      "lang": "swift",
+      "loc": 483,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 7,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "340:35 cannot find type 'AppModel' in scope",
+        "340:6 unknown attribute 'EnvironmentObject'",
+        "341:6 unknown attribute 'State'",
+        "342:6 unknown attribute 'State'",
+        "343:6 unknown attribute 'State'",
+        "344:6 unknown attribute 'State'",
+        "345:6 unknown attribute 'State'",
+        "346:6 unknown attribute 'State'"
+      ],
+      "errorCount": 118,
+      "isolatedInPass": 37,
+      "whole": false,
+      "isolatedLoc": 197,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/Model.swift",
+      "lang": "swift",
+      "loc": 1345,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 4,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 5,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 3,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "169:15 cannot find type 'Color' in scope",
+        "294:17 cannot find type 'LeadStatus' in scope",
+        "966:35 cannot find type 'Lead' in scope",
+        "29:15 cannot find type 'Color' in scope",
+        "222:15 cannot find type 'Color' in scope",
+        "261:15 cannot find type 'Color' in scope",
+        "390:87 cannot find type 'Lead' in scope",
+        "407:113 cannot find type 'Lead' in scope"
+      ],
+      "errorCount": 48,
+      "isolatedInPass": 22,
+      "whole": false,
+      "isolatedLoc": 1044,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/MoreScreens.swift",
+      "lang": "swift",
+      "loc": 915,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "22:45 cannot find type 'Offer' in scope",
+        "22:64 cannot find type 'Deal' in scope",
+        "32:44 cannot find type 'Offer' in scope",
+        "32:63 cannot find type 'Deal' in scope",
+        "36:37 cannot find type 'Offer' in scope",
+        "36:56 cannot find type 'Deal' in scope",
+        "40:37 cannot find type 'Offer' in scope",
+        "40:56 cannot find type 'Deal' in scope"
+      ],
+      "errorCount": 697,
+      "isolatedInPass": 43,
+      "whole": true,
+      "isolatedLoc": 915,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/NationalPropertyAuditReport.swift",
+      "lang": "swift",
+      "loc": 176,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/NationalPropertyBulkImport.swift",
+      "lang": "swift",
+      "loc": 335,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 4,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "88:20 cannot find 'CSVImport' in scope",
+        "111:34 cannot find 'CSVImport' in scope",
+        "119:26 cannot find 'CSVImport' in scope"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 37,
+      "whole": false,
+      "isolatedLoc": 256,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/NationalPropertyIndex.swift",
+      "lang": "swift",
+      "loc": 417,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 4,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "354:20 cannot find 'CSVImport' in scope",
+        "296:30 cannot find type 'NationalPropertyCSVImporter' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 39,
+      "whole": false,
+      "isolatedLoc": 150,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/Onboarding.swift",
+      "lang": "swift",
+      "loc": 29,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/OutreachEngine.swift",
+      "lang": "swift",
+      "loc": 346,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "145:89 cannot find type 'Lead' in scope",
+        "196:44 cannot find type 'Lead' in scope",
+        "211:51 cannot find type 'Lead' in scope",
+        "225:79 cannot find type 'Lead' in scope",
+        "148:25 generic parameter 'Key' could not be inferred",
+        "148:25 generic parameter 'Value' could not be inferred",
+        "98:31 cannot find 'MailDropExport' in scope",
+        "98:27 no exact matches in call to instance method 'map'"
+      ],
+      "errorCount": 11,
+      "isolatedInPass": 27,
+      "whole": false,
+      "isolatedLoc": 140,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/OutreachScreens.swift",
+      "lang": "swift",
+      "loc": 594,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 5,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "19:15 cannot find type 'Color' in scope",
+        "104:20 cannot find type 'View' in scope",
+        "102:20 cannot find type 'View' in scope",
+        "119:6 unknown attribute 'EnvironmentObject'",
+        "120:6 unknown attribute 'State'",
+        "121:6 unknown attribute 'State'",
+        "122:6 unknown attribute 'State'",
+        "127:20 cannot find type 'View' in scope"
+      ],
+      "errorCount": 498,
+      "isolatedInPass": 7,
+      "whole": true,
+      "isolatedLoc": 594,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/ParcelLookup.swift",
+      "lang": "swift",
+      "loc": 1331,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 17,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "886:78 cannot find type 'PropertyPage' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 20,
+      "whole": false,
+      "isolatedLoc": 604,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/PipelineScreen.swift",
+      "lang": "swift",
+      "loc": 745,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 4,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "17:6 unknown attribute 'EnvironmentObject'",
+        "18:6 unknown attribute 'ObservedObject'",
+        "19:6 unknown attribute 'State'",
+        "20:6 unknown attribute 'State'",
+        "22:20 cannot find type 'View' in scope",
+        "16:24 cannot find type 'View' in scope",
+        "66:6 unknown attribute 'EnvironmentObject'",
+        "70:6 unknown attribute 'State'"
+      ],
+      "errorCount": 467,
+      "isolatedInPass": 22,
+      "whole": true,
+      "isolatedLoc": 745,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/PowerScreens.swift",
+      "lang": "swift",
+      "loc": 397,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "17:6 unknown attribute 'EnvironmentObject'",
+        "18:6 unknown attribute 'State'",
+        "19:6 unknown attribute 'State'",
+        "20:6 unknown attribute 'State'",
+        "21:6 unknown attribute 'State'",
+        "22:6 unknown attribute 'State'",
+        "23:6 unknown attribute 'State'",
+        "28:20 cannot find type 'View' in scope"
+      ],
+      "errorCount": 426,
+      "isolatedInPass": 15,
+      "whole": true,
+      "isolatedLoc": 397,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Premium.swift",
+      "lang": "swift",
+      "loc": 216,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "22:35 cannot find 'Color' in scope",
+        "22:57 cannot find 'Color' in scope",
+        "22:79 cannot find 'Color' in scope",
+        "23:35 cannot find 'Color' in scope",
+        "23:57 cannot find 'Color' in scope",
+        "23:79 cannot find 'Color' in scope",
+        "24:35 cannot find 'Color' in scope",
+        "24:57 cannot find 'Color' in scope"
+      ],
+      "errorCount": 72,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 216,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/PropertyDossier.swift",
+      "lang": "swift",
+      "loc": 452,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 6,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "392:6 unknown attribute 'Binding'",
+        "394:6 unknown attribute 'State'",
+        "395:6 unknown attribute 'State'",
+        "396:6 unknown attribute 'State'",
+        "397:6 unknown attribute 'State'",
+        "399:20 cannot find type 'View' in scope",
+        "448:79 cannot find type 'View' in scope",
+        "448:6 unknown attribute 'ViewBuilder'"
+      ],
+      "errorCount": 84,
+      "isolatedInPass": 14,
+      "whole": true,
+      "isolatedLoc": 452,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/PropertyIndexScreen.swift",
+      "lang": "swift",
+      "loc": 534,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 18,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "29:6 unknown attribute 'EnvironmentObject'",
+        "32:6 unknown attribute 'State'",
+        "35:6 unknown attribute 'State'",
+        "36:6 unknown attribute 'State'",
+        "37:6 unknown attribute 'State'",
+        "38:6 unknown attribute 'State'",
+        "39:6 unknown attribute 'State'",
+        "40:6 unknown attribute 'State'"
+      ],
+      "errorCount": 198,
+      "isolatedInPass": 14,
+      "whole": true,
+      "isolatedLoc": 534,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/PropertyMapScreen.swift",
+      "lang": "swift",
+      "loc": 1426,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 6,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "MapKit",
+          "to": "a WebView2 map (MapLibre) or the Bing Maps SDK"
+        },
+        {
+          "line": 9,
+          "kind": "kit",
+          "module": "OSLog",
+          "to": "CircuitPortKit Logger / os_log"
+        },
+        {
+          "line": 9,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "MapKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "39:21 cannot find type 'CLLocationCoordinate2D' in scope",
+        "40:15 cannot find type 'Color' in scope",
+        "45:17 cannot find type 'PropertyRecord' in scope",
+        "51:67 cannot find type 'CLLocationCoordinate2D' in scope",
+        "51:97 cannot find type 'Color' in scope",
+        "51:152 cannot find type 'PropertyRecord' in scope",
+        "93:20 cannot find type 'Color' in scope",
+        "116:28 cannot find type 'Color' in scope"
+      ],
+      "errorCount": 127,
+      "isolatedInPass": 44,
+      "whole": true,
+      "isolatedLoc": 1426,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/RealEstateAPI.swift",
+      "lang": "swift",
+      "loc": 482,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 25,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "449:24 cannot find 'Keychain' in scope",
+        "76:14 cannot find 'RealEstateAPI' in scope",
+        "77:21 cannot find 'RealEstateAPI' in scope",
+        "78:17 cannot find 'RealEstateAPI' in scope",
+        "79:18 cannot find 'RealEstateAPI' in scope",
+        "80:21 cannot find 'RealEstateAPI' in scope",
+        "81:22 cannot find 'RealEstateAPI' in scope",
+        "82:25 cannot find 'RealEstateAPI' in scope"
+      ],
+      "errorCount": 25,
+      "isolatedInPass": 16,
+      "whole": false,
+      "isolatedLoc": 337,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/REStore.swift",
+      "lang": "swift",
+      "loc": 403,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Route.swift",
+      "lang": "swift",
+      "loc": 254,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/RouteScreen.swift",
+      "lang": "swift",
+      "loc": 221,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 5,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "89:38 cannot find type 'SettingsStore' in scope",
+        "88:6 unknown attribute 'EnvironmentObject'",
+        "89:6 unknown attribute 'EnvironmentObject'",
+        "90:6 unknown attribute 'State'",
+        "91:6 unknown attribute 'State'",
+        "92:6 unknown attribute 'State'",
+        "93:6 unknown attribute 'State'",
+        "94:6 unknown attribute 'State'"
+      ],
+      "errorCount": 124,
+      "isolatedInPass": 7,
+      "whole": true,
+      "isolatedLoc": 221,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/SavedSearchMonitor.swift",
+      "lang": "swift",
+      "loc": 142,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "62:38 cannot find type 'PropertyRecord' in scope",
+        "65:39 cannot find type 'PropertyRecord' in scope",
+        "87:58 cannot find type 'PropertyRecord' in scope",
+        "63:43 extra argument 'for' in call",
+        "63:37 missing arguments for parameters 'state', 'parcel', 'owner', 'situs' in call"
+      ],
+      "errorCount": 5,
+      "isolatedInPass": 34,
+      "whole": false,
+      "isolatedLoc": 59,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/SavedSearchMonitorScreen.swift",
+      "lang": "swift",
+      "loc": 146,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "UserNotifications",
+          "to": "Windows toast notifications (AppNotificationManager)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "UserNotifications"
+      ],
+      "isolated": true,
+      "errors": [
+        "23:56 cannot find type 'UNUserNotificationCenterDelegate' in scope",
+        "25:47 cannot find type 'UNUserNotificationCenter' in scope",
+        "26:63 cannot find type 'UNNotification' in scope",
+        "27:89 cannot find type 'UNNotificationPresentationOptions' in scope",
+        "57:6 unknown attribute 'EnvironmentObject'",
+        "58:6 unknown attribute 'State'",
+        "59:6 unknown attribute 'State'",
+        "60:6 unknown attribute 'State'"
+      ],
+      "errorCount": 67,
+      "isolatedInPass": 10,
+      "whole": true,
+      "isolatedLoc": 146,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Screens.swift",
+      "lang": "swift",
+      "loc": 1263,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "77:35 cannot find type 'AppModel' in scope",
+        "77:6 unknown attribute 'EnvironmentObject'",
+        "79:17 cannot find 'GridItem' in scope",
+        "81:6 unknown attribute 'State'",
+        "82:20 cannot find type 'View' in scope",
+        "124:34 cannot find type 'View' in scope",
+        "135:135 cannot find type 'View' in scope",
+        "135:6 unknown attribute 'ViewBuilder'"
+      ],
+      "errorCount": 861,
+      "isolatedInPass": 39,
+      "whole": true,
+      "isolatedLoc": 1263,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Settings.swift",
+      "lang": "swift",
+      "loc": 147,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 6,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 7,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "27:18 cannot find type 'Color' in scope",
+        "27:25 cannot find type 'Color' in scope",
+        "27:32 cannot find type 'Color' in scope",
+        "35:16 cannot find type 'Color' in scope",
+        "36:13 cannot find type 'Color' in scope",
+        "67:17 cannot find type 'AccentChoice' in scope",
+        "95:15 cannot find type 'HoloTheme' in scope",
+        "63:8 type 'SettingsData' does not conform to protocol 'Decodable'"
+      ],
+      "errorCount": 21,
+      "isolatedInPass": 1,
+      "whole": false,
+      "isolatedLoc": 127,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/SkipTrace.swift",
+      "lang": "swift",
+      "loc": 103,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "55:35 cannot find type 'Lead' in scope",
+        "55:48 cannot find type 'ParcelLookup' in scope",
+        "80:60 cannot find type 'Lead' in scope",
+        "80:51 cannot find type 'Lead' in scope",
+        "96:37 cannot find type 'Lead' in scope",
+        "96:51 cannot find type 'ParcelLookup' in scope",
+        "61:25 cannot find 'ParcelLookup' in scope",
+        "69:26 cannot find 'ParcelEnrich' in scope"
+      ],
+      "errorCount": 9,
+      "isolatedInPass": 31,
+      "whole": false,
+      "isolatedLoc": 56,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/SkipTraceProvider.swift",
+      "lang": "swift",
+      "loc": 297,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 21,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "150:36 cannot find type 'Lead' in scope",
+        "221:30 cannot find type 'Lead' in scope",
+        "239:92 cannot find type 'Lead' in scope",
+        "239:62 cannot find type 'Lead' in scope"
+      ],
+      "errorCount": 4,
+      "isolatedInPass": 25,
+      "whole": false,
+      "isolatedLoc": 145,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/SkipTraceWaterfall.swift",
+      "lang": "swift",
+      "loc": 161,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "71:35 cannot find type 'Lead' in scope",
+        "76:38 cannot find type 'Lead' in scope",
+        "107:27 cannot find type 'Lead' in scope",
+        "137:34 cannot find type 'Lead' in scope",
+        "150:73 cannot find type 'Lead' in scope",
+        "150:64 cannot find type 'Lead' in scope"
+      ],
+      "errorCount": 6,
+      "isolatedInPass": 25,
+      "whole": false,
+      "isolatedLoc": 99,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/SkipTraceYield.swift",
+      "lang": "swift",
+      "loc": 114,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/SocialAuth.swift",
+      "lang": "swift",
+      "loc": 247,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "AuthenticationServices",
+          "to": "browser sign-in (OAuth) and WebAuthn through Windows Hello"
+        },
+        {
+          "line": 8,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AuthenticationServices"
+      ],
+      "isolated": true,
+      "errors": [
+        "33:35 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
+        "36:26 cannot find type 'ASWebAuthenticationSession' in scope",
+        "174:73 cannot find type 'ASPresentationAnchor' in scope",
+        "174:42 cannot find type 'ASWebAuthenticationSession' in scope",
+        "94:17 cannot find 'ASWebAuthenticationSession' in scope",
+        "98:33 cannot find 'ASWebAuthenticationSessionError' in scope",
+        "99:32 cannot find 'ASWebAuthenticationSessionError' in scope",
+        "175:81 cannot find 'ASPresentationAnchor' in scope"
+      ],
+      "errorCount": 9,
+      "isolatedInPass": 7,
+      "whole": false,
+      "isolatedLoc": 162,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/SourceFinder.swift",
+      "lang": "swift",
+      "loc": 157,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 13,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "86:45 cannot find type 'ParcelLookup' in scope",
+        "154:28 cannot find type 'TeardownCandidate' in scope",
+        "87:25 cannot find 'ParcelLookup' in scope",
+        "125:17 cannot find type 'LeadSource' in scope"
+      ],
+      "errorCount": 4,
+      "isolatedInPass": 21,
+      "whole": false,
+      "isolatedLoc": 83,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/TeardownScout.swift",
+      "lang": "swift",
+      "loc": 196,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "80:48 cannot find type 'PropertyRecord' in scope",
+        "35:30 cannot find 'TeardownScout' in scope",
+        "37:29 cannot find 'TeardownScout' in scope",
+        "198:11 cannot find type 'TeardownCandidate' in scope"
+      ],
+      "errorCount": 4,
+      "isolatedInPass": 18,
+      "whole": true,
+      "isolatedLoc": 196,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Theme.swift",
+      "lang": "swift",
+      "loc": 458,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "410:23 cannot find type 'View' in scope",
+        "152:26 cannot find type 'LinearGradient' in scope",
+        "160:11 cannot find type 'Color' in scope",
+        "170:41 cannot find type 'View' in scope",
+        "170:24 cannot find type 'Content' in scope",
+        "167:22 cannot find type 'ViewModifier' in scope",
+        "182:11 cannot find type 'View' in scope",
+        "188:20 cannot find type 'View' in scope"
+      ],
+      "errorCount": 168,
+      "isolatedInPass": 2,
+      "whole": false,
+      "isolatedLoc": 341,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/TitleChain.swift",
+      "lang": "swift",
+      "loc": 1457,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/TitleChainScreen.swift",
+      "lang": "swift",
+      "loc": 320,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "189:6 unknown attribute 'EnvironmentObject'",
+        "191:6 unknown attribute 'State'",
+        "192:6 unknown attribute 'State'",
+        "193:6 unknown attribute 'State'",
+        "194:6 unknown attribute 'State'",
+        "198:20 cannot find type 'View' in scope",
+        "230:83 cannot find type 'View' in scope",
+        "230:6 unknown attribute 'ViewBuilder'"
+      ],
+      "errorCount": 88,
+      "isolatedInPass": 6,
+      "whole": false,
+      "isolatedLoc": 154,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/Trial.swift",
+      "lang": "swift",
+      "loc": 315,
+      "before": "guarded",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "70:27 cannot find 'Keychain' in scope",
+        "92:27 cannot find 'Keychain' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 12,
+      "whole": true,
+      "isolatedLoc": 315,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/TrialGate.swift",
+      "lang": "swift",
+      "loc": 126,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "88:33 type annotation missing in pattern",
+        "88:6 unknown attribute 'Environment'",
+        "89:20 cannot find type 'View' in scope",
+        "106:60 cannot find type 'View' in scope",
+        "106:6 unknown attribute 'ViewBuilder'",
+        "87:27 cannot find type 'View' in scope",
+        "113:44 call to main actor-isolated static method 'openCheckout()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "114:20 cannot find type 'View' in scope"
+      ],
+      "errorCount": 51,
+      "isolatedInPass": 6,
+      "whole": true,
+      "isolatedLoc": 126,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Updater.swift",
+      "lang": "swift",
+      "loc": 363,
+      "before": "guarded",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/UpdaterUI.swift",
+      "lang": "swift",
+      "loc": 125,
+      "before": "guarded",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/USStates.swift",
+      "lang": "swift",
+      "loc": 112,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows-electron/electron-builder.config.js",
+      "lang": "javascript",
+      "loc": 61,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows-electron/main.js",
+      "lang": "javascript",
+      "loc": 54,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows-electron/serve.js",
+      "lang": "javascript",
+      "loc": 39,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows/msix/gen-assets.mjs",
+      "lang": "javascript",
+      "loc": 173,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows/ui/api.js",
+      "lang": "javascript",
+      "loc": 169,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows/ui/app.js",
+      "lang": "javascript",
+      "loc": 543,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    }
+  ]
+}

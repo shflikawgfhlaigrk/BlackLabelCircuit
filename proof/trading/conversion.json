@@ -1,0 +1,1649 @@
+{
+  "root": "/Users/michaelbarber/BlackLabelTrading",
+  "name": "BlackLabelTrading",
+  "target": "windows",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/trading",
+  "moduleName": "BlackLabelTradingCore",
+  "moduleSources": {
+    "from": "project.yml target BlackLabelTrading",
+    "paths": [
+      "Sources",
+      "backend"
+    ]
+  },
+  "generatedAt": 1789715685136,
+  "tookMs": 60538,
+  "before": {
+    "readyPct": 47.8,
+    "files": 67,
+    "loc": 28518
+  },
+  "after": {
+    "readyPct": 69.2,
+    "guardedLoc": 4106,
+    "needsWindowsLoc": 4423
+  },
+  "verification": {
+    "ran": true,
+    "ok": true,
+    "failure": null,
+    "passes": [
+      {
+        "pass": 1,
+        "isolated": 3
+      },
+      {
+        "pass": 2,
+        "isolated": 1
+      },
+      {
+        "pass": 3,
+        "isolated": 1
+      },
+      {
+        "pass": 4,
+        "isolated": 2
+      },
+      {
+        "pass": 5,
+        "isolated": 2
+      },
+      {
+        "pass": 6,
+        "isolated": 1
+      },
+      {
+        "pass": 7,
+        "isolated": 2
+      },
+      {
+        "pass": 8,
+        "isolated": 1
+      },
+      {
+        "pass": 9,
+        "isolated": 2
+      },
+      {
+        "pass": 10,
+        "isolated": 1
+      },
+      {
+        "pass": 11,
+        "isolated": 1
+      },
+      {
+        "pass": 12,
+        "isolated": 1
+      },
+      {
+        "pass": 13,
+        "isolated": 1
+      },
+      {
+        "pass": 14,
+        "isolated": 3
+      },
+      {
+        "pass": 15,
+        "isolated": 1
+      },
+      {
+        "pass": 16,
+        "isolated": 1
+      },
+      {
+        "pass": 17,
+        "isolated": 1
+      },
+      {
+        "pass": 18,
+        "isolated": 2
+      },
+      {
+        "pass": 19,
+        "isolated": 1
+      },
+      {
+        "pass": 20,
+        "isolated": 4
+      },
+      {
+        "pass": 21,
+        "isolated": 1
+      },
+      {
+        "pass": 22,
+        "isolated": 0
+      }
+    ],
+    "configuration": "simulated Windows configuration on macOS (-DCIRCUIT_WINDOWS_SIM)",
+    "native": false,
+    "platform": "darwin",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.33.1 clang-2100.3.33.1)"
+  },
+  "totals": {
+    "all": {
+      "files": 63,
+      "loc": 27347
+    },
+    "portable": {
+      "files": 33,
+      "loc": 11925
+    },
+    "converted": {
+      "files": 4,
+      "loc": 973
+    },
+    "partial": {
+      "files": 7,
+      "loc": 2114,
+      "isolatedLoc": 1264,
+      "buildsLoc": 850
+    },
+    "needsWindowsPart": {
+      "files": 19,
+      "loc": 12335
+    },
+    "macOnlySkipped": {
+      "files": 0,
+      "loc": 0
+    },
+    "unverified": {
+      "files": 0,
+      "loc": 0
+    },
+    "buildsLoc": 13748,
+    "isolatedLoc": 13599,
+    "buildsForWindowsPct": 50.3
+  },
+  "packages": [
+    {
+      "package": "OpenCombine",
+      "url": "https://github.com/OpenCombine/OpenCombine.git",
+      "from": "0.14.0"
+    },
+    {
+      "package": "swift-crypto",
+      "url": "https://github.com/apple/swift-crypto.git",
+      "from": "3.0.0"
+    }
+  ],
+  "kit": true,
+  "windowsPartsNeeded": [
+    {
+      "id": "SwiftUI",
+      "windows": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)",
+      "effort": "L",
+      "files": 11,
+      "loc": 7612
+    },
+    {
+      "id": "AppKit",
+      "windows": "WinUI 3 / Win32 windows, menus and dialogs",
+      "effort": "L",
+      "files": 9,
+      "loc": 5456
+    },
+    {
+      "id": "(uses code that was isolated)",
+      "windows": null,
+      "effort": null,
+      "files": 13,
+      "loc": 4758
+    },
+    {
+      "id": "Charts",
+      "windows": "charts drawn in the Windows UI layer",
+      "effort": "M",
+      "files": 3,
+      "loc": 4425
+    },
+    {
+      "id": "UserNotifications",
+      "windows": "Windows toast notifications (AppNotificationManager)",
+      "effort": "S",
+      "files": 1,
+      "loc": 1556
+    },
+    {
+      "id": "CoreGraphics",
+      "windows": "Direct2D / WIC for drawing, Win32 for displays and window lists",
+      "effort": "M",
+      "files": 1,
+      "loc": 690
+    },
+    {
+      "id": "CoreText",
+      "windows": "DirectWrite",
+      "effort": "M",
+      "files": 1,
+      "loc": 690
+    },
+    {
+      "id": "ImageIO",
+      "windows": "Windows Imaging Component (WIC)",
+      "effort": "S",
+      "files": 1,
+      "loc": 690
+    },
+    {
+      "id": "AuthenticationServices",
+      "windows": "browser sign-in (OAuth) and WebAuthn through Windows Hello",
+      "effort": "M",
+      "files": 1,
+      "loc": 322
+    },
+    {
+      "id": "Security",
+      "windows": "Windows Credential Manager (CredRead/CredWrite) and DPAPI",
+      "effort": "M",
+      "files": 1,
+      "loc": 322
+    }
+  ],
+  "skipped": [
+    {
+      "id": "Sources/main.swift",
+      "why": "the Mac entry point — the Windows app brings its own"
+    },
+    {
+      "id": "archive/execution/Execution.swift",
+      "why": "outside --sources"
+    },
+    {
+      "id": "render-proof/main.swift",
+      "why": "the Mac entry point — the Windows app brings its own"
+    }
+  ],
+  "files": [
+    {
+      "id": "audit/reference_oos_2026-08-01/BlackLabel-reference-OOS-audit-2026-08-01/export_reference_oos_audit.py",
+      "lang": "python",
+      "loc": 287,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_alerts.py",
+      "lang": "python",
+      "loc": 309,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_analytics.py",
+      "lang": "python",
+      "loc": 909,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_api.py",
+      "lang": "python",
+      "loc": 798,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "~/Library"
+      ],
+      "isolatedLoc": 798,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "backend/bltd_browser.py",
+      "lang": "python",
+      "loc": 128,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "open",
+        "/Applications",
+        "/Applications",
+        "/Applications",
+        "/Applications",
+        "open"
+      ],
+      "isolatedLoc": 128,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "backend/bltd_capture.py",
+      "lang": "python",
+      "loc": 1061,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_feeds.py",
+      "lang": "python",
+      "loc": 532,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_optimizer_cli.py",
+      "lang": "python",
+      "loc": 724,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_optimizer.py",
+      "lang": "python",
+      "loc": 508,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_parsers.py",
+      "lang": "python",
+      "loc": 275,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_paths.py",
+      "lang": "python",
+      "loc": 53,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "kind": "python-helper",
+          "hit": "~/Library",
+          "to": "circuit_port.app_support"
+        }
+      ],
+      "guardedModules": [],
+      "parses": true,
+      "after": "needs-windows",
+      "remaining": [
+        "~/Library"
+      ],
+      "isolatedLoc": 53,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "backend/bltd_pg.py",
+      "lang": "python",
+      "loc": 70,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_projectx.py",
+      "lang": "python",
+      "loc": 276,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_rithmic.py",
+      "lang": "python",
+      "loc": 156,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_rprotocol.py",
+      "lang": "python",
+      "loc": 236,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_store.py",
+      "lang": "python",
+      "loc": 2207,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "~/Library"
+      ],
+      "isolatedLoc": 2207,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "backend/bltd_topstep_bridge.py",
+      "lang": "python",
+      "loc": 110,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/bltd_tradovate.py",
+      "lang": "python",
+      "loc": 308,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/claim_linter.py",
+      "lang": "python",
+      "loc": 206,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/export_reference_oos_audit.py",
+      "lang": "python",
+      "loc": 287,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "backend/gen_reference.py",
+      "lang": "python",
+      "loc": 277,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "mcp/mcp-kit.mjs",
+      "lang": "javascript",
+      "loc": 844,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "mcp/server.mjs",
+      "lang": "javascript",
+      "loc": 753,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "prove-live-pipeline.py",
+      "lang": "python",
+      "loc": 62,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "render-proof/watchdog-wedge-proof.py",
+      "lang": "python",
+      "loc": 109,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/AlertsEngine.swift",
+      "lang": "swift",
+      "loc": 160,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 6,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/Analytics.swift",
+      "lang": "swift",
+      "loc": 253,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "24:42 cannot find type 'TradeDirection' in scope",
+        "64:34 cannot find type 'TradeStat' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 9,
+      "whole": true,
+      "isolatedLoc": 253,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Auth.swift",
+      "lang": "swift",
+      "loc": 322,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "AuthenticationServices",
+          "to": "browser sign-in (OAuth) and WebAuthn through Windows Hello"
+        },
+        {
+          "line": 3,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 5,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        },
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AuthenticationServices",
+        "AppKit",
+        "Security"
+      ],
+      "isolated": true,
+      "errors": [
+        "42:42 type annotation missing in pattern",
+        "37:6 unknown attribute 'EnvironmentObject'",
+        "38:6 unknown attribute 'State'",
+        "39:6 unknown attribute 'State'",
+        "40:6 unknown attribute 'State'",
+        "41:6 unknown attribute 'State'",
+        "42:6 unknown attribute 'Environment'",
+        "43:6 unknown attribute 'State'"
+      ],
+      "errorCount": 99,
+      "isolatedInPass": 4,
+      "whole": true,
+      "isolatedLoc": 322,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Backtest.swift",
+      "lang": "swift",
+      "loc": 277,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "170:96 cannot find type 'TradeStat' in scope",
+        "155:20 cannot find type 'TradeDirection' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 14,
+      "whole": false,
+      "isolatedLoc": 134,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/BacktestDepth.swift",
+      "lang": "swift",
+      "loc": 150,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "101:31 cannot find type 'TradeStat' in scope",
+        "42:24 cannot find type 'TradeStat' in scope",
+        "21:17 cannot find type 'PerfReport' in scope",
+        "31:25 cannot find type 'PerfReport' in scope",
+        "31:38 cannot find 'PerfReport' in scope"
+      ],
+      "errorCount": 5,
+      "isolatedInPass": 14,
+      "whole": false,
+      "isolatedLoc": 113,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/Charting.swift",
+      "lang": "swift",
+      "loc": 433,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/ChartRender.swift",
+      "lang": "swift",
+      "loc": 690,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 15,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        },
+        {
+          "line": 16,
+          "kind": "guarded-import",
+          "module": "CoreText",
+          "to": "DirectWrite"
+        },
+        {
+          "line": 17,
+          "kind": "guarded-import",
+          "module": "ImageIO",
+          "to": "Windows Imaging Component (WIC)"
+        },
+        {
+          "line": 18,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "CoreGraphics",
+        "CoreText",
+        "ImageIO"
+      ],
+      "isolated": true,
+      "errors": [
+        "187:32 cannot find type 'CGContext' in scope",
+        "32:26 cannot find 'CGColor' in scope",
+        "33:26 cannot find 'CGColor' in scope",
+        "34:26 cannot find 'CGColor' in scope",
+        "35:26 cannot find 'CGColor' in scope",
+        "36:26 cannot find 'CGColor' in scope",
+        "37:26 cannot find 'CGColor' in scope",
+        "38:28 cannot find 'CGColor' in scope"
+      ],
+      "errorCount": 24,
+      "isolatedInPass": 18,
+      "whole": true,
+      "isolatedLoc": 690,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/ChartScreen.swift",
+      "lang": "swift",
+      "loc": 723,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 6,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 8,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "100:34 cannot find type 'FeedClient' in scope",
+        "101:33 cannot find type 'Nav' in scope",
+        "99:6 unknown attribute 'EnvironmentObject'",
+        "100:6 unknown attribute 'EnvironmentObject'",
+        "101:6 unknown attribute 'EnvironmentObject'",
+        "102:6 unknown attribute 'State'",
+        "103:6 unknown attribute 'State'",
+        "104:6 unknown attribute 'State'"
+      ],
+      "errorCount": 341,
+      "isolatedInPass": 17,
+      "whole": true,
+      "isolatedLoc": 723,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/EngineFireMarkers.swift",
+      "lang": "swift",
+      "loc": 154,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "75:23 cannot find type 'EngineMarker' in scope",
+        "75:47 cannot find type 'EngineLegendRow' in scope",
+        "151:59 cannot find type 'EngineLegendRow' in scope"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 20,
+      "whole": true,
+      "isolatedLoc": 154,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/FeedClient.swift",
+      "lang": "swift",
+      "loc": 503,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 15,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "494:32 cannot find type 'ApiFeedStatus' in scope",
+        "508:72 cannot find type 'ApiFeedStatus' in scope",
+        "496:16 cannot find 'ApiFeedStatus' in scope",
+        "518:20 cannot find 'ApiFeedStatus' in scope"
+      ],
+      "errorCount": 4,
+      "isolatedInPass": 12,
+      "whole": true,
+      "isolatedLoc": 503,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Feeds.swift",
+      "lang": "swift",
+      "loc": 573,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "114:15 cannot find type 'Color' in scope",
+        "219:6 unknown attribute 'EnvironmentObject'",
+        "220:6 unknown attribute 'State'",
+        "221:6 unknown attribute 'State'",
+        "222:6 unknown attribute 'State'",
+        "223:6 unknown attribute 'State'",
+        "224:6 unknown attribute 'State'",
+        "225:6 unknown attribute 'State'"
+      ],
+      "errorCount": 191,
+      "isolatedInPass": 11,
+      "whole": false,
+      "isolatedLoc": 447,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/FeedTypes.swift",
+      "lang": "swift",
+      "loc": 979,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Holographic.swift",
+      "lang": "swift",
+      "loc": 607,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 31,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 32,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "153:17 cannot find type 'Color' in scope",
+        "43:22 cannot find type 'Color' in scope",
+        "44:22 cannot find type 'Color' in scope",
+        "49:27 cannot find type 'Color' in scope",
+        "50:23 cannot find type 'Color' in scope",
+        "55:80 cannot find type 'Font' in scope",
+        "55:52 cannot find type 'Font' in scope",
+        "58:77 cannot find type 'Font' in scope"
+      ],
+      "errorCount": 219,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 607,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/HoloTheme.swift",
+      "lang": "swift",
+      "loc": 181,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/JournalImport.swift",
+      "lang": "swift",
+      "loc": 247,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "188:35 cannot find type 'TradeStat' in scope",
+        "201:38 cannot find type 'TradeStat' in scope",
+        "235:45 cannot find type 'TradeStat' in scope"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 10,
+      "whole": false,
+      "isolatedLoc": 76,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/LiveChart.swift",
+      "lang": "swift",
+      "loc": 301,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 15,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 16,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "36:28 cannot find type 'NSView' in scope",
+        "57:27 cannot find type 'NSTrackingArea' in scope",
+        "62:14 initializer does not override a designated initializer from its superclass",
+        "66:18 property does not override any property from its superclass",
+        "67:18 property does not override any property from its superclass",
+        "68:48 cannot find type 'NSEvent' in scope",
+        "181:43 cannot find type 'NSEvent' in scope",
+        "197:39 cannot find type 'NSEvent' in scope"
+      ],
+      "errorCount": 77,
+      "isolatedInPass": 18,
+      "whole": true,
+      "isolatedLoc": 301,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Model.swift",
+      "lang": "swift",
+      "loc": 547,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 4,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 5,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "18:15 cannot find type 'Color' in scope",
+        "26:15 cannot find type 'Color' in scope",
+        "598:15 cannot find type 'Color' in scope",
+        "18:39 cannot find 'BLTheme' in scope",
+        "18:55 cannot find 'BLTheme' in scope",
+        "27:42 cannot find 'BLTheme' in scope",
+        "27:74 cannot find 'BLTheme' in scope",
+        "27:108 cannot find 'BLTheme' in scope"
+      ],
+      "errorCount": 20,
+      "isolatedInPass": 5,
+      "whole": false,
+      "isolatedLoc": 270,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/PaperTrade.swift",
+      "lang": "swift",
+      "loc": 115,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "17:20 cannot find type 'TradeDirection' in scope",
+        "14:8 type 'PaperPosition' does not conform to protocol 'Decodable'",
+        "14:8 type 'PaperPosition' does not conform to protocol 'Encodable'",
+        "14:8 type 'PaperPosition' does not conform to protocol 'Hashable'",
+        "14:8 type 'PaperPosition' does not conform to protocol 'Equatable'",
+        "101:90 'nil' is not compatible with closure result type 'TradeStat'"
+      ],
+      "errorCount": 6,
+      "isolatedInPass": 9,
+      "whole": true,
+      "isolatedLoc": 115,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Patterns.swift",
+      "lang": "swift",
+      "loc": 289,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Replay.swift",
+      "lang": "swift",
+      "loc": 56,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "29:48 cannot find type 'VisualStrategy' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 7,
+      "whole": false,
+      "isolatedLoc": 36,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/RuleProfile.swift",
+      "lang": "swift",
+      "loc": 426,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Screener.swift",
+      "lang": "swift",
+      "loc": 133,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Screens.swift",
+      "lang": "swift",
+      "loc": 2140,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "Charts",
+          "to": "charts drawn in the Windows UI layer"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "Charts"
+      ],
+      "isolated": true,
+      "errors": [
+        "15:28 cannot find type 'Color' in scope",
+        "23:20 cannot find type 'View' in scope",
+        "78:90 cannot find type 'View' in scope",
+        "78:75 cannot find type 'Color' in scope",
+        "78:6 unknown attribute 'ViewBuilder'",
+        "10:25 cannot find type 'View' in scope",
+        "91:34 cannot find type 'FeedClient' in scope",
+        "92:33 cannot find type 'Nav' in scope"
+      ],
+      "errorCount": 194,
+      "isolatedInPass": 20,
+      "whole": true,
+      "isolatedLoc": 2140,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Screens2.swift",
+      "lang": "swift",
+      "loc": 1556,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 6,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "Charts",
+          "to": "charts drawn in the Windows UI layer"
+        },
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "UserNotifications",
+          "to": "Windows toast notifications (AppNotificationManager)"
+        },
+        {
+          "line": 9,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        },
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "Charts",
+        "UserNotifications",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "43:33 cannot find type 'Nav' in scope",
+        "43:6 unknown attribute 'EnvironmentObject'",
+        "44:6 unknown attribute 'EnvironmentObject'",
+        "45:6 unknown attribute 'State'",
+        "46:6 unknown attribute 'FocusState'",
+        "48:31 cannot find type 'Section' in scope",
+        "57:20 cannot find type 'View' in scope",
+        "100:26 cannot find type 'Section' in scope"
+      ],
+      "errorCount": 202,
+      "isolatedInPass": 20,
+      "whole": true,
+      "isolatedLoc": 1556,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Screens3.swift",
+      "lang": "swift",
+      "loc": 729,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 5,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 6,
+          "kind": "guarded-import",
+          "module": "Charts",
+          "to": "charts drawn in the Windows UI layer"
+        },
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 8,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "Charts",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "22:44 cannot find type 'View' in scope",
+        "22:114 cannot find type 'View' in scope",
+        "22:68 unknown attribute 'ViewBuilder'",
+        "22:2 unknown attribute 'ViewBuilder'",
+        "28:75 cannot find type 'View' in scope",
+        "28:53 cannot find type 'Binding' in scope",
+        "28:2 unknown attribute 'ViewBuilder'",
+        "36:78 cannot find type 'View' in scope"
+      ],
+      "errorCount": 527,
+      "isolatedInPass": 5,
+      "whole": true,
+      "isolatedLoc": 729,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/SignalCore.swift",
+      "lang": "swift",
+      "loc": 489,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/StoreDisk.swift",
+      "lang": "swift",
+      "loc": 21,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/StrategyBuilder.swift",
+      "lang": "swift",
+      "loc": 264,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "88:20 cannot find type 'TradeDirection' in scope",
+        "215:47 cannot find type 'VisualStrategy' in scope",
+        "254:33 cannot find type 'VisualStrategy' in scope",
+        "262:19 cannot find type 'VisualStrategy' in scope",
+        "263:22 cannot find type 'VisualStrategy' in scope",
+        "270:88 cannot find 'VisualStrategy' in scope",
+        "270:80 failed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)"
+      ],
+      "errorCount": 7,
+      "isolatedInPass": 6,
+      "whole": false,
+      "isolatedLoc": 188,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/Theme.swift",
+      "lang": "swift",
+      "loc": 232,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "144:23 cannot find type 'View' in scope",
+        "145:66 cannot find type 'Color' in scope",
+        "21:25 cannot find 'Color' in scope",
+        "34:11 cannot find type 'Color' in scope",
+        "42:20 cannot find type 'View' in scope",
+        "40:14 cannot find type 'View' in scope",
+        "53:6 unknown attribute 'Binding'",
+        "56:6 unknown attribute 'FocusState'"
+      ],
+      "errorCount": 145,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 232,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/ThemeStudio.swift",
+      "lang": "swift",
+      "loc": 285,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "13:6 unknown attribute 'EnvironmentObject'",
+        "14:6 unknown attribute 'State'",
+        "15:6 unknown attribute 'State'",
+        "18:20 cannot find type 'Binding' in scope",
+        "20:20 cannot find type 'View' in scope",
+        "40:35 cannot find type 'View' in scope",
+        "82:32 cannot find type 'View' in scope",
+        "150:33 cannot find type 'View' in scope"
+      ],
+      "errorCount": 126,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 285,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/TradeMath.swift",
+      "lang": "swift",
+      "loc": 50,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/TradingKeychain.swift",
+      "lang": "swift",
+      "loc": 171,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        }
+      ],
+      "guardedModules": [
+        "Security"
+      ],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/TradingSessionStore.swift",
+      "lang": "swift",
+      "loc": 61,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Updater.swift",
+      "lang": "swift",
+      "loc": 536,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 27,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 28,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        },
+        {
+          "line": 26,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "Security"
+      ],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/UpdaterUI.swift",
+      "lang": "swift",
+      "loc": 539,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 6,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 8,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        },
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "57:17 cannot find 'NSAlert' in scope",
+        "58:25 cannot infer contextual base in reference to member 'informational'",
+        "70:24 cannot find 'NSAlert' in scope",
+        "463:9 cannot find 'NSApp' in scope",
+        "582:17 cannot find 'NSAlert' in scope",
+        "583:25 cannot infer contextual base in reference to member 'informational'"
+      ],
+      "errorCount": 6,
+      "isolatedInPass": 3,
+      "whole": true,
+      "isolatedLoc": 539,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/WatchlistModel.swift",
+      "lang": "swift",
+      "loc": 106,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "windows/msix/check-assets.mjs",
+      "lang": "javascript",
+      "loc": 107,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows/supervise.py",
+      "lang": "python",
+      "loc": 457,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    }
+  ]
+}

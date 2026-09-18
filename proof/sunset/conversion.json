@@ -1,0 +1,1681 @@
+{
+  "root": "/Users/michaelbarber/BlackLabelAcetate",
+  "name": "BlackLabelAcetate",
+  "target": "windows",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/sunset",
+  "moduleName": "BlackLabelAcetateCore",
+  "moduleSources": {
+    "from": "project.yml target Sunset",
+    "paths": [
+      "Shared/BLShell.swift",
+      "Shared/Updater.swift",
+      "DSP/FFTAnalyzer.swift",
+      "DSP/Biquad.swift",
+      "DSP/LoudnessMeter.swift",
+      "DSP/LoudnessMatch.swift",
+      "DSP/Dynamics.swift",
+      "DSP/Imager.swift",
+      "DSP/Dither.swift",
+      "DSP/ReferenceMatch.swift",
+      "DSP/MaskingDetector.swift",
+      "DSP/Sidechain.swift",
+      "DSP/SoftClipper.swift",
+      "DSP/LowEndAnalyzer.swift",
+      "DSP/CrestMeter.swift",
+      "DSP/DeltaAudition.swift",
+      "DSP/CodecPreview.swift",
+      "DSP/SpeechLeveler.swift",
+      "DSP/Saturation.swift",
+      "DSP/Distortion.swift",
+      "DSP/Bitcrusher.swift",
+      "DSP/DynamicEQ.swift",
+      "DSP/GateExpander.swift",
+      "DSP/DeEsser.swift",
+      "DSP/TransientShaper.swift",
+      "DSP/Reverb.swift",
+      "DSP/Delay.swift",
+      "DSP/Modulation.swift",
+      "DSP/MidSide.swift",
+      "DSP/Widener.swift",
+      "DSP/Exciter.swift",
+      "DSP/Resonator.swift",
+      "DSP/RingMod.swift",
+      "DSP/FrequencyShifter.swift",
+      "DSP/FilterFX.swift",
+      "DSP/PitchEngine.swift",
+      "DSP/Vocoder.swift",
+      "Audio/AudioFileIO.swift",
+      "Audio/MasteringEngine.swift",
+      "Audio/DeliveryPack.swift",
+      "Audio/MixEngine.swift",
+      "Audio/PlaybackEngine.swift",
+      "UI/WaveformView.swift",
+      "Model/Presets.swift",
+      "Model/SessionChain.swift",
+      "Model/InsertParams.swift",
+      "Model/DNAProfile.swift",
+      "Model/LinkReference.swift",
+      "Model/AudioDoctor.swift",
+      "Model/ReportCard.swift",
+      "Model/MasterProof.swift",
+      "Model/Project.swift",
+      "UI/SunsetApp.swift",
+      "UI/UpdaterUI.swift",
+      "UI/StudioTheme.swift",
+      "UI/MixConsoleView.swift",
+      "UI/MasterChainView.swift",
+      "UI/StudioDashboardView.swift",
+      "UI/ContentView.swift",
+      "UI/ReferenceView.swift",
+      "UI/DoctorView.swift",
+      "UI/SpectrumView.swift",
+      "UI/Spectrum3DView.swift",
+      "UI/MetersView.swift"
+    ]
+  },
+  "generatedAt": 1789715591641,
+  "tookMs": 27010,
+  "before": {
+    "readyPct": 66.1,
+    "files": 77,
+    "loc": 21071
+  },
+  "after": {
+    "readyPct": 77.6,
+    "guardedLoc": 4215,
+    "needsWindowsLoc": 435
+  },
+  "verification": {
+    "ran": true,
+    "ok": true,
+    "failure": null,
+    "passes": [
+      {
+        "pass": 1,
+        "isolated": 5
+      },
+      {
+        "pass": 2,
+        "isolated": 3
+      },
+      {
+        "pass": 3,
+        "isolated": 3
+      },
+      {
+        "pass": 4,
+        "isolated": 3
+      },
+      {
+        "pass": 5,
+        "isolated": 2
+      },
+      {
+        "pass": 6,
+        "isolated": 1
+      },
+      {
+        "pass": 7,
+        "isolated": 1
+      },
+      {
+        "pass": 8,
+        "isolated": 1
+      },
+      {
+        "pass": 9,
+        "isolated": 2
+      },
+      {
+        "pass": 10,
+        "isolated": 0
+      }
+    ],
+    "configuration": "simulated Windows configuration on macOS (-DCIRCUIT_WINDOWS_SIM)",
+    "native": false,
+    "platform": "darwin",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.33.1 clang-2100.3.33.1)"
+  },
+  "totals": {
+    "all": {
+      "files": 75,
+      "loc": 20581
+    },
+    "portable": {
+      "files": 55,
+      "loc": 13347
+    },
+    "converted": {
+      "files": 2,
+      "loc": 519
+    },
+    "partial": {
+      "files": 4,
+      "loc": 942,
+      "isolatedLoc": 726,
+      "buildsLoc": 216
+    },
+    "needsWindowsPart": {
+      "files": 14,
+      "loc": 5773
+    },
+    "macOnlySkipped": {
+      "files": 0,
+      "loc": 0
+    },
+    "unverified": {
+      "files": 0,
+      "loc": 0
+    },
+    "buildsLoc": 14082,
+    "isolatedLoc": 6499,
+    "buildsForWindowsPct": 68.4
+  },
+  "packages": [
+    {
+      "package": "swift-crypto",
+      "url": "https://github.com/apple/swift-crypto.git",
+      "from": "3.0.0"
+    }
+  ],
+  "kit": true,
+  "windowsPartsNeeded": [
+    {
+      "id": "SwiftUI",
+      "windows": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)",
+      "effort": "L",
+      "files": 14,
+      "loc": 5756
+    },
+    {
+      "id": "AppKit",
+      "windows": "WinUI 3 / Win32 windows, menus and dialogs",
+      "effort": "L",
+      "files": 8,
+      "loc": 4127
+    },
+    {
+      "id": "AVFoundation",
+      "windows": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)",
+      "effort": "L",
+      "files": 3,
+      "loc": 564
+    },
+    {
+      "id": "AudioToolbox",
+      "windows": "WASAPI / Media Foundation",
+      "effort": "M",
+      "files": 2,
+      "loc": 491
+    },
+    {
+      "id": "WebKit",
+      "windows": "WebView2",
+      "effort": "M",
+      "files": 1,
+      "loc": 202
+    },
+    {
+      "id": "AuthenticationServices",
+      "windows": "browser sign-in (OAuth) and WebAuthn through Windows Hello",
+      "effort": "M",
+      "files": 1,
+      "loc": 202
+    },
+    {
+      "id": "SceneKit",
+      "windows": "no Windows build: a cross-platform 3D engine",
+      "effort": "L",
+      "files": 1,
+      "loc": 110
+    }
+  ],
+  "skipped": [
+    {
+      "id": "cli/main.swift",
+      "why": "the Mac entry point — the Windows app brings its own"
+    },
+    {
+      "id": "cli/mixtest.swift",
+      "why": "outside --sources"
+    }
+  ],
+  "files": [
+    {
+      "id": "Audio/AudioFileIO.swift",
+      "lang": "swift",
+      "loc": 533,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "AudioToolbox",
+          "to": "WASAPI / Media Foundation"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "AudioToolbox"
+      ],
+      "isolated": true,
+      "errors": [
+        "418:44 cannot find type 'AudioFormatID' in scope",
+        "191:43 cannot find type 'AVAudioFormat' in scope",
+        "191:63 cannot find type 'AVAudioFormat' in scope",
+        "198:57 cannot find type 'AVAudioFile' in scope",
+        "199:59 cannot find type 'AVAudioFormat' in scope",
+        "200:59 cannot find type 'AVAudioFrameCount' in scope",
+        "209:46 cannot find type 'AVAudioFile' in scope",
+        "210:45 cannot find type 'AVAudioFormat' in scope"
+      ],
+      "errorCount": 12,
+      "isolatedInPass": 2,
+      "whole": false,
+      "isolatedLoc": 430,
+      "status": "partial"
+    },
+    {
+      "id": "Audio/DeliveryPack.swift",
+      "lang": "swift",
+      "loc": 107,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Audio/MasteringEngine.swift",
+      "lang": "swift",
+      "loc": 333,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Audio/MixEngine.swift",
+      "lang": "swift",
+      "loc": 777,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Audio/PlaybackEngine.swift",
+      "lang": "swift",
+      "loc": 73,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation"
+      ],
+      "isolated": true,
+      "errors": [
+        "15:26 cannot find 'AVAudioEngine' in scope",
+        "16:26 cannot find 'AVAudioPlayerNode' in scope",
+        "18:30 cannot find type 'AVAudioFramePosition' in scope",
+        "19:28 cannot find type 'AVAudioFramePosition' in scope",
+        "27:79 cannot find type 'AVAudioPCMBuffer' in scope",
+        "30:25 cannot find 'AVAudioFormat' in scope",
+        "31:49 cannot find 'AVAudioChannelCount' in scope",
+        "33:17 cannot find 'AVAudioFrameCount' in scope"
+      ],
+      "errorCount": 11,
+      "isolatedInPass": 2,
+      "whole": true,
+      "isolatedLoc": 73,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "DSP/Biquad.swift",
+      "lang": "swift",
+      "loc": 136,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Bitcrusher.swift",
+      "lang": "swift",
+      "loc": 60,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/CodecPreview.swift",
+      "lang": "swift",
+      "loc": 78,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 17,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 18,
+          "kind": "guarded-import",
+          "module": "AudioToolbox",
+          "to": "WASAPI / Media Foundation"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "AudioToolbox"
+      ],
+      "isolated": true,
+      "errors": [
+        "56:69 cannot find 'kAudioFormatMPEG4AAC' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 2,
+      "whole": false,
+      "isolatedLoc": 61,
+      "status": "partial"
+    },
+    {
+      "id": "DSP/CrestMeter.swift",
+      "lang": "swift",
+      "loc": 118,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/DeEsser.swift",
+      "lang": "swift",
+      "loc": 133,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Delay.swift",
+      "lang": "swift",
+      "loc": 166,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/DeltaAudition.swift",
+      "lang": "swift",
+      "loc": 107,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Distortion.swift",
+      "lang": "swift",
+      "loc": 92,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Dither.swift",
+      "lang": "swift",
+      "loc": 60,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/DynamicEQ.swift",
+      "lang": "swift",
+      "loc": 162,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Dynamics.swift",
+      "lang": "swift",
+      "loc": 323,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Exciter.swift",
+      "lang": "swift",
+      "loc": 101,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/FFTAnalyzer.swift",
+      "lang": "swift",
+      "loc": 119,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/FilterFX.swift",
+      "lang": "swift",
+      "loc": 164,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/FrequencyShifter.swift",
+      "lang": "swift",
+      "loc": 90,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/GateExpander.swift",
+      "lang": "swift",
+      "loc": 113,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Imager.swift",
+      "lang": "swift",
+      "loc": 64,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/LoudnessMatch.swift",
+      "lang": "swift",
+      "loc": 27,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/LoudnessMeter.swift",
+      "lang": "swift",
+      "loc": 222,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/LowEndAnalyzer.swift",
+      "lang": "swift",
+      "loc": 182,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/MaskingDetector.swift",
+      "lang": "swift",
+      "loc": 171,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/MidSide.swift",
+      "lang": "swift",
+      "loc": 88,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Modulation.swift",
+      "lang": "swift",
+      "loc": 335,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/PitchEngine.swift",
+      "lang": "swift",
+      "loc": 822,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/ReferenceMatch.swift",
+      "lang": "swift",
+      "loc": 229,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Resonator.swift",
+      "lang": "swift",
+      "loc": 82,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Reverb.swift",
+      "lang": "swift",
+      "loc": 185,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/RingMod.swift",
+      "lang": "swift",
+      "loc": 48,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Saturation.swift",
+      "lang": "swift",
+      "loc": 171,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Sidechain.swift",
+      "lang": "swift",
+      "loc": 119,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/SoftClipper.swift",
+      "lang": "swift",
+      "loc": 168,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/SpeechLeveler.swift",
+      "lang": "swift",
+      "loc": 683,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/TransientShaper.swift",
+      "lang": "swift",
+      "loc": 80,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Vocoder.swift",
+      "lang": "swift",
+      "loc": 208,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "DSP/Widener.swift",
+      "lang": "swift",
+      "loc": 91,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "functions/_middleware.js",
+      "lang": "javascript",
+      "loc": 28,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "functions/api/_engine.js",
+      "lang": "javascript",
+      "loc": 879,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "functions/api/_terms.js",
+      "lang": "javascript",
+      "loc": 2,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "functions/api/support.js",
+      "lang": "javascript",
+      "loc": 39,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "mcp/mcp-kit.mjs",
+      "lang": "javascript",
+      "loc": 844,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "mcp/server.mjs",
+      "lang": "javascript",
+      "loc": 905,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Model/AudioDoctor.swift",
+      "lang": "swift",
+      "loc": 830,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Model/DNAProfile.swift",
+      "lang": "swift",
+      "loc": 60,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Model/InsertParams.swift",
+      "lang": "swift",
+      "loc": 393,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Model/LinkReference.swift",
+      "lang": "swift",
+      "loc": 93,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Model/MasterProof.swift",
+      "lang": "swift",
+      "loc": 48,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Model/Presets.swift",
+      "lang": "swift",
+      "loc": 400,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Model/Project.swift",
+      "lang": "swift",
+      "loc": 1190,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 5,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "179:20 cannot find 'PlaybackEngine' in scope",
+        "81:43 cannot find 'WaveformView' in scope",
+        "86:44 cannot find 'WaveformView' in scope",
+        "87:40 cannot find 'WaveformView' in scope",
+        "291:26 cannot find 'WaveformView' in scope",
+        "654:40 cannot find 'WaveformView' in scope",
+        "663:40 cannot find 'WaveformView' in scope",
+        "696:25 type 'AudioIO' has no member 'export'"
+      ],
+      "errorCount": 15,
+      "isolatedInPass": 7,
+      "whole": true,
+      "isolatedLoc": 1190,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Model/ReportCard.swift",
+      "lang": "swift",
+      "loc": 68,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Model/SessionChain.swift",
+      "lang": "swift",
+      "loc": 873,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Shared/BLShell.swift",
+      "lang": "swift",
+      "loc": 295,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "WebKit",
+          "to": "WebView2"
+        },
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 10,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "AuthenticationServices",
+          "to": "browser sign-in (OAuth) and WebAuthn through Windows Hello"
+        },
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "WebKit",
+        "AppKit",
+        "AuthenticationServices"
+      ],
+      "isolated": true,
+      "errors": [
+        "32:26 cannot find 'Color' in scope",
+        "207:22 cannot find type 'View' in scope",
+        "30:26 cannot find 'Color' in scope",
+        "47:32 cannot find type 'NSImage' in scope",
+        "49:16 cannot find 'NSImage' in scope",
+        "54:22 cannot find type 'NSImage' in scope",
+        "147:11 cannot find type 'View' in scope",
+        "164:6 unknown attribute 'State'"
+      ],
+      "errorCount": 121,
+      "isolatedInPass": 1,
+      "whole": false,
+      "isolatedLoc": 202,
+      "status": "partial"
+    },
+    {
+      "id": "Shared/Updater.swift",
+      "lang": "swift",
+      "loc": 426,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 23,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 24,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        },
+        {
+          "line": 22,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "Security"
+      ],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "UI/ContentView.swift",
+      "lang": "swift",
+      "loc": 528,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 5,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "17:6 unknown attribute 'EnvironmentObject'",
+        "18:6 unknown attribute 'State'",
+        "20:20 cannot find type 'View' in scope",
+        "35:34 cannot find type 'View' in scope",
+        "94:30 cannot find type 'View' in scope",
+        "108:32 cannot find type 'View' in scope",
+        "128:127 cannot find type 'View' in scope",
+        "145:60 cannot find type 'View' in scope"
+      ],
+      "errorCount": 253,
+      "isolatedInPass": 5,
+      "whole": true,
+      "isolatedLoc": 528,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/DoctorView.swift",
+      "lang": "swift",
+      "loc": 326,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "7:6 unknown attribute 'EnvironmentObject'",
+        "9:20 cannot find type 'View' in scope",
+        "34:30 cannot find type 'View' in scope",
+        "54:60 cannot find type 'View' in scope",
+        "95:60 cannot find type 'View' in scope",
+        "114:62 cannot find type 'View' in scope",
+        "150:66 cannot find type 'View' in scope",
+        "175:64 cannot find type 'View' in scope"
+      ],
+      "errorCount": 151,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 326,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/MasterChainView.swift",
+      "lang": "swift",
+      "loc": 201,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "16:6 unknown attribute 'EnvironmentObject'",
+        "18:24 cannot find type 'Binding' in scope",
+        "22:20 cannot find type 'View' in scope",
+        "41:30 cannot find type 'View' in scope",
+        "59:91 cannot find type 'View' in scope",
+        "87:31 cannot find type 'View' in scope",
+        "102:38 cannot find type 'View' in scope",
+        "118:38 cannot find type 'View' in scope"
+      ],
+      "errorCount": 59,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 201,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/MetersView.swift",
+      "lang": "swift",
+      "loc": 89,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "19:20 cannot find type 'View' in scope",
+        "43:57 cannot find type 'View' in scope",
+        "52:56 cannot find type 'View' in scope",
+        "68:37 cannot find type 'View' in scope",
+        "15:20 cannot find type 'View' in scope",
+        "20:9 cannot find 'VStack' in scope",
+        "22:13 cannot find 'VStack' in scope",
+        "31:13 cannot find 'Text' in scope"
+      ],
+      "errorCount": 25,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 89,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/MixConsoleView.swift",
+      "lang": "swift",
+      "loc": 834,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "16:6 unknown attribute 'EnvironmentObject'",
+        "18:20 cannot find type 'View' in scope",
+        "35:36 cannot find type 'View' in scope",
+        "49:37 cannot find type 'View' in scope",
+        "60:31 cannot find type 'View' in scope",
+        "72:33 cannot find type 'View' in scope",
+        "86:36 cannot find type 'View' in scope",
+        "115:35 cannot find type 'View' in scope"
+      ],
+      "errorCount": 310,
+      "isolatedInPass": 4,
+      "whole": true,
+      "isolatedLoc": 834,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/ReferenceView.swift",
+      "lang": "swift",
+      "loc": 121,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "16:6 unknown attribute 'EnvironmentObject'",
+        "18:20 cannot find type 'View' in scope",
+        "95:30 cannot find type 'View' in scope",
+        "103:61 cannot find type 'View' in scope",
+        "15:23 cannot find type 'View' in scope",
+        "19:9 cannot find 'ScrollView' in scope",
+        "20:13 cannot find 'VStack' in scope",
+        "23:17 cannot find 'Card' in scope"
+      ],
+      "errorCount": 70,
+      "isolatedInPass": 4,
+      "whole": true,
+      "isolatedLoc": 121,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/Spectrum3DView.swift",
+      "lang": "swift",
+      "loc": 110,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "SceneKit",
+          "to": "no Windows build: a cross-platform 3D engine"
+        },
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "SceneKit",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "22:47 cannot find type 'SCNView' in scope",
+        "23:43 cannot find type 'NSEvent' in scope",
+        "40:42 cannot find type 'SCNView' in scope",
+        "40:30 cannot find type 'Context' in scope",
+        "53:28 cannot find type 'SCNView' in scope",
+        "53:46 cannot find type 'Context' in scope",
+        "63:34 cannot find type 'SCNScene' in scope",
+        "106:59 cannot find type 'NSColor' in scope"
+      ],
+      "errorCount": 50,
+      "isolatedInPass": 4,
+      "whole": true,
+      "isolatedLoc": 110,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/SpectrumView.swift",
+      "lang": "swift",
+      "loc": 106,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "17:20 cannot find type 'View' in scope",
+        "45:30 cannot find type 'View' in scope",
+        "52:70 cannot find type 'View' in scope",
+        "52:55 cannot find type 'Color' in scope",
+        "61:30 cannot find type 'GraphicsContext' in scope",
+        "112:99 cannot find type 'Path' in scope",
+        "10:22 cannot find type 'View' in scope",
+        "18:9 cannot find 'VStack' in scope"
+      ],
+      "errorCount": 42,
+      "isolatedInPass": 6,
+      "whole": true,
+      "isolatedLoc": 106,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/StudioDashboardView.swift",
+      "lang": "swift",
+      "loc": 1764,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 3,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "15:35 cannot find type 'AppState' in scope",
+        "15:6 unknown attribute 'EnvironmentObject'",
+        "16:6 unknown attribute 'State'",
+        "17:6 unknown attribute 'State'",
+        "18:6 unknown attribute 'State'",
+        "27:20 cannot find type 'View' in scope",
+        "53:35 cannot find type 'View' in scope",
+        "75:34 cannot find type 'View' in scope"
+      ],
+      "errorCount": 84,
+      "isolatedInPass": 9,
+      "whole": true,
+      "isolatedLoc": 1764,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/StudioTheme.swift",
+      "lang": "swift",
+      "loc": 169,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 5,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "26:29 cannot find type 'View' in scope",
+        "17:22 cannot find 'Color' in scope",
+        "62:6 unknown attribute 'Binding'",
+        "70:20 cannot find type 'View' in scope",
+        "60:18 cannot find type 'View' in scope",
+        "89:6 unknown attribute 'Binding'",
+        "91:20 cannot find type 'View' in scope",
+        "87:18 cannot find type 'View' in scope"
+      ],
+      "errorCount": 58,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 169,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/SunsetApp.swift",
+      "lang": "swift",
+      "loc": 36,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "11:1 'SunsetApp' is annotated with '@main' and must provide a main static function of type () -> Void, () throws -> Void, () async -> Void, or () async throws -> Void",
+        "14:6 unknown attribute 'StateObject'",
+        "14:38 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "31:20 cannot find type 'Scene' in scope",
+        "12:19 cannot find type 'App' in scope",
+        "23:9 cannot find 'NSApplication' in scope",
+        "24:9 cannot find 'NSApplication' in scope",
+        "28:19 call to main actor-isolated static method 'checkInBackgroundIfDue()' in a synchronous nonisolated context [#ActorIsolatedCall]"
+      ],
+      "errorCount": 12,
+      "isolatedInPass": 3,
+      "whole": false,
+      "isolatedLoc": 33,
+      "status": "partial"
+    },
+    {
+      "id": "UI/UpdaterUI.swift",
+      "lang": "swift",
+      "loc": 179,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "72:38 cannot find type 'NSPanel' in scope",
+        "51:17 cannot find 'NSAlert' in scope",
+        "52:25 cannot infer contextual base in reference to member 'informational'",
+        "64:17 cannot find 'NSWorkspace' in scope",
+        "87:21 cannot find 'NSPanel' in scope",
+        "91:21 cannot find 'NSTextField' in scope",
+        "93:23 cannot infer contextual base in reference to member 'systemFont'",
+        "96:19 cannot find 'NSProgressIndicator' in scope"
+      ],
+      "errorCount": 14,
+      "isolatedInPass": 3,
+      "whole": true,
+      "isolatedLoc": 179,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "UI/WaveformView.swift",
+      "lang": "swift",
+      "loc": 83,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "16:15 cannot find type 'Color' in scope",
+        "16:23 cannot find 'Palette' in scope",
+        "20:20 cannot find type 'View' in scope",
+        "39:30 cannot find type 'GraphicsContext' in scope",
+        "13:22 cannot find type 'View' in scope",
+        "21:9 cannot find 'GeometryReader' in scope",
+        "22:13 cannot find 'Canvas' in scope",
+        "24:31 cannot find 'Rectangle' in scope"
+      ],
+      "errorCount": 19,
+      "isolatedInPass": 3,
+      "whole": true,
+      "isolatedLoc": 83,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "web/assets/analytics.js",
+      "lang": "javascript",
+      "loc": 97,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "web/assets/depth.js",
+      "lang": "javascript",
+      "loc": 121,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "web/assets/public-funnel-20260914.js",
+      "lang": "javascript",
+      "loc": 61,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "web/assets/sunset-experience-20260914.mjs",
+      "lang": "javascript",
+      "loc": 13,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "web/support-widget.js",
+      "lang": "javascript",
+      "loc": 550,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    }
+  ]
+}

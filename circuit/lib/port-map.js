@@ -1,0 +1,226 @@
+// Windows port map: what each macOS-only building block needs on Windows.
+// Pure data, used by lib/port.js. Deterministic — no model, no network.
+//
+//   kind     portable  runs on Windows unchanged (listed so the report can say so)
+//            ui        the screens: needs the Windows UI layer
+//            system    an Apple system service: needs its Windows counterpart
+//            package   a macOS-only third-party package: swap for the Windows one
+//            unix      POSIX-only module: needs a Windows code path
+//   windows  the Windows counterpart a port uses
+//   effort   size of building that counterpart ONCE (it is then reused by every app):
+//            S ≤ 1 day · M 2–5 days · L 1–3 weeks
+//
+// A module that is not in these tables is reported as "unknown" (never assumed portable).
+
+const P = (note) => ({ kind: 'portable', note });
+const U = (windows, effort) => ({ kind: 'ui', windows, effort });
+const S = (windows, effort) => ({ kind: 'system', windows, effort });
+const K = (windows, effort) => ({ kind: 'package', windows, effort });
+const X = (windows, effort) => ({ kind: 'unix', windows, effort });
+
+// Swift / Objective-C framework modules (`import X`, `@import X;`, `#import <X/...>`).
+export const APPLE_MODULES = {
+  Swift: P(), Foundation: P('swift-corelibs-foundation; URLSession also needs `import FoundationNetworking`'),
+  FoundationNetworking: P(), FoundationEssentials: P(), Dispatch: P(), XCTest: P(), Testing: P(),
+  Observation: P(), RegexBuilder: P(), Distributed: P(), Synchronization: P(), _Concurrency: P(),
+  Crypto: P('swift-crypto'), Logging: P('swift-log'), ArgumentParser: P('swift-argument-parser'),
+  NIO: P(), NIOCore: P(), NIOPosix: P(), NIOHTTP1: P(), NIOSSL: P(), AsyncHTTPClient: P(),
+  Collections: P(), Algorithms: P(), Numerics: P(), SystemPackage: P('swift-system'), GRDB: P(),
+  OpenCombine: P('Combine, same API'), OpenCombineFoundation: P(), OpenCombineDispatch: P(),
+  SwiftToolchainCSQLite: P('swift-toolchain-sqlite'), CircuitPortKit: P('the parts Circuit Convert ships'),
+  CoreFoundation: P('part of swift-corelibs-foundation'), ucrt: P(), WinSDK: P(), Glibc: P(), Musl: P(),
+
+  SwiftUI: U('WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)', 'L'),
+  AppKit: U('WinUI 3 / Win32 windows, menus and dialogs', 'L'),
+  Cocoa: U('WinUI 3 / Win32 windows, menus and dialogs', 'L'),
+  UIKit: U('WinUI 3', 'L'),
+  AVKit: U('MediaPlayerElement (WinUI)', 'M'),
+  QuickLook: U('Windows preview handlers or an in-app viewer', 'M'),
+  QuickLookUI: U('Windows preview handlers or an in-app viewer', 'M'),
+  QuartzCore: U('Windows.UI.Composition', 'M'),
+  Charts: U('charts drawn in the Windows UI layer', 'M'),
+  WidgetKit: U('Windows widget board (Adaptive Cards) or an in-app panel', 'M'),
+  SafariServices: U('WebView2', 'M'),
+
+  Darwin: S('ucrt + WinSDK (the C library import differs per OS)', 'S'),
+  SQLite3: S('swift-toolchain-sqlite (the same C API)', 'S'),
+  Combine: S('OpenCombine (same API)', 'S'),
+  CryptoKit: S('swift-crypto (`import Crypto`, same API)', 'S'),
+  CommonCrypto: S('swift-crypto or BCrypt', 'S'),
+  Security: S('Windows Credential Manager (CredRead/CredWrite) and DPAPI', 'M'),
+  LocalAuthentication: S('Windows Hello (UserConsentVerifier)', 'M'),
+  AuthenticationServices: S('browser sign-in (OAuth) and WebAuthn through Windows Hello', 'M'),
+  os: S('swift-log (os_log / Logger have no Windows build)', 'S'),
+  OSLog: S('swift-log (OSLogStore has no Windows build)', 'S'),
+  UserNotifications: S('Windows toast notifications (AppNotificationManager)', 'S'),
+  ServiceManagement: S('a startup task or the HKCU Run key', 'S'),
+  EventKit: S('Microsoft Graph calendar or Windows.ApplicationModel.Appointments', 'M'),
+  Contacts: S('Windows.ApplicationModel.Contacts or Microsoft Graph', 'M'),
+  AVFoundation: S('Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)', 'L'),
+  AVFAudio: S('WASAPI / XAudio2', 'M'),
+  CoreAudio: S('WASAPI', 'L'),
+  AudioToolbox: S('WASAPI / Media Foundation', 'M'),
+  CoreMedia: S('Media Foundation', 'M'),
+  CoreVideo: S('Media Foundation / Direct3D surfaces', 'M'),
+  MediaPlayer: S('SystemMediaTransportControls', 'S'),
+  Speech: S('Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)', 'M'),
+  NaturalLanguage: S('an on-device model through ONNX Runtime', 'M'),
+  CoreML: S('ONNX Runtime / Windows ML', 'M'),
+  Vision: S('Windows.Media.Ocr or ONNX Runtime', 'M'),
+  VisionKit: S('Windows.Media.Ocr or ONNX Runtime', 'M'),
+  ScreenCaptureKit: S('Windows.Graphics.Capture', 'L'),
+  CoreGraphics: S('Direct2D / WIC for drawing, Win32 for displays and window lists', 'M'),
+  CoreImage: S('Direct2D effects / WIC', 'M'),
+  ImageIO: S('Windows Imaging Component (WIC)', 'S'),
+  UniformTypeIdentifiers: S('file extensions + MIME types (no UTType on Windows)', 'S'),
+  CoreText: S('DirectWrite', 'M'),
+  Quartz: S('Direct2D / Win32', 'M'),
+  PDFKit: S('Windows.Data.Pdf or PDFium', 'M'),
+  WebKit: S('WebView2', 'M'),
+  MapKit: S('a WebView2 map (MapLibre) or the Bing Maps SDK', 'M'),
+  CoreLocation: S('Windows.Devices.Geolocation', 'S'),
+  CoreWLAN: S('Native Wifi API (WlanApi)', 'M'),
+  CoreBluetooth: S('Windows.Devices.Bluetooth', 'M'),
+  Network: S('Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)', 'M'),
+  dnssd: S('DnsServiceBrowse (Windows DNS-SD)', 'S'),
+  SystemConfiguration: S('IP Helper API / NetworkInformation', 'S'),
+  IOKit: S('SetupAPI / WMI', 'M'),
+  ApplicationServices: S('UI Automation (reading and targeting other apps) and SendInput (typing)', 'L'),
+  HIServices: S('UI Automation and SendInput', 'L'),
+  Carbon: S('RegisterHotKey (global hotkeys)', 'S'),
+  ScriptingBridge: S('COM automation or UI Automation', 'L'),
+  OSAKit: S('COM automation or PowerShell', 'L'),
+  AppleScriptObjC: S('COM automation or PowerShell', 'L'),
+  StoreKit: S('Windows.Services.Store', 'M'),
+  CloudKit: S('an own sync service (no CloudKit SDK on Windows)', 'L'),
+  CoreData: S('SQLite (e.g. GRDB); Core Data has no Windows build', 'L'),
+  SwiftData: S('SQLite (e.g. GRDB); SwiftData has no Windows build', 'L'),
+  Photos: S('file pickers over the Pictures library', 'M'),
+  PhotosUI: S('file pickers over the Pictures library', 'M'),
+  Intents: S('no Shortcuts on Windows: a URI protocol or command palette', 'M'),
+  AppIntents: S('no Shortcuts on Windows: a URI protocol or command palette', 'M'),
+  HomeKit: S('no Windows HomeKit: Matter or vendor APIs', 'L'),
+  GameController: S('Windows.Gaming.Input', 'M'),
+  Metal: S('Direct3D 12', 'L'),
+  MetalKit: S('Direct3D 12', 'L'),
+  SceneKit: S('no Windows build: a cross-platform 3D engine', 'L'),
+  SpriteKit: S('no Windows build: a cross-platform 2D engine', 'L'),
+  RealityKit: S('no Windows build: a cross-platform 3D engine', 'L'),
+  MultipeerConnectivity: S('Wi-Fi Direct or own sockets', 'M'),
+  CoreSpotlight: S('Windows Search (no app index API): an in-app index', 'M'),
+  CoreServices: S('Win32 file and launch APIs', 'M'),
+  LaunchServices: S('ShellExecuteEx / file-type associations', 'S'),
+  FinderSync: S('Explorer shell extensions', 'L'),
+  ExtensionFoundation: S('no app-extension host on Windows: an in-process plug-in', 'M'),
+  ExtensionKit: S('no app-extension host on Windows: an in-process plug-in', 'M'),
+  EndpointSecurity: S('ETW / minifilter drivers', 'L'),
+  SystemExtensions: S('Windows services and drivers', 'L'),
+  NetworkExtension: S('WFP / WinTun', 'L'),
+  Virtualization: S('Hyper-V / WSL APIs', 'L'),
+
+  Sparkle: K('WinSparkle or Store updates', 'S'),
+  KeyboardShortcuts: K('RegisterHotKey', 'S'),
+  HotKey: K('RegisterHotKey', 'S'),
+  LaunchAtLogin: K('a startup task', 'S'),
+  MenuBarExtraAccess: K('a notification-area icon (Shell_NotifyIcon)', 'S'),
+};
+
+// Python modules that exist only on macOS (PyObjC bridges, macOS-only packages)
+// or only on POSIX systems.
+export const PYTHON_MODULES = {
+  AppKit: U('pywin32 / a Windows UI toolkit', 'L'),
+  Cocoa: U('pywin32 / a Windows UI toolkit', 'L'),
+  rumps: K('pystray (notification-area icon)', 'S'),
+  Foundation: S('the Python standard library or pywin32', 'M'),
+  objc: S('pywin32 / comtypes', 'M'),
+  PyObjCTools: S('pywin32 / comtypes', 'M'),
+  Quartz: S('pywin32 / mss (screen capture) / Pillow', 'M'),
+  CoreWLAN: S('Native Wifi API through pywin32 or netsh', 'M'),
+  CoreLocation: S('Windows.Devices.Geolocation through winrt', 'S'),
+  AVFoundation: S('Media Foundation through winrt, or sounddevice', 'M'),
+  ScriptingBridge: S('pywin32 COM automation', 'L'),
+  LaunchServices: S('os.startfile / ShellExecute', 'S'),
+  ApplicationServices: S('pywinauto / UI Automation', 'L'),
+  HIServices: S('pywinauto / UI Automation', 'L'),
+  Vision: S('Windows.Media.Ocr through winrt', 'M'),
+  Speech: S('Windows.Media.SpeechRecognition through winrt', 'M'),
+  EventKit: S('Microsoft Graph calendar', 'M'),
+  Contacts: S('Microsoft Graph contacts', 'M'),
+  CoreFoundation: S('the Python standard library or pywin32', 'M'),
+  pync: K('Windows toast notifications (winotify / win11toast)', 'S'),
+  osascript: K('PowerShell or pywin32 COM', 'M'),
+  applescript: K('PowerShell or pywin32 COM', 'M'),
+  mac_notifications: K('Windows toast notifications (winotify / win11toast)', 'S'),
+  fcntl: X('msvcrt locking, or portalocker', 'S'),
+  termios: X('msvcrt console calls', 'S'),
+  tty: X('msvcrt console calls', 'S'),
+  pty: X('pywinpty', 'M'),
+  pwd: X('getpass.getuser / os.environ', 'S'),
+  grp: X('no groups on Windows: drop or use pywin32', 'S'),
+  resource: X('psutil', 'S'),
+  posix: X('os (portable calls)', 'S'),
+  crypt: X('hashlib / passlib', 'S'),
+  syslog: X('logging handlers / Windows Event Log', 'S'),
+};
+
+// npm packages that only run on macOS.
+export const JS_MODULES = {
+  'node-mac-permissions': K('Windows privacy settings have no API: explain and deep-link ms-settings:', 'S'),
+  'mac-screen-capture-permissions': K('not needed on Windows (no capture permission prompt)', 'S'),
+  'node-mac-contacts': K('Microsoft Graph contacts', 'M'),
+  'node-mac-auth': K('Windows Hello (UserConsentVerifier)', 'M'),
+  'applescript': K('PowerShell or COM automation', 'M'),
+  'run-applescript': K('PowerShell or COM automation', 'M'),
+  'node-osascript': K('PowerShell or COM automation', 'M'),
+  'osx-temperature-sensor': K('WMI (MSAcpi_ThermalZoneTemperature)', 'S'),
+  'macos-release': K('os.release() on Windows', 'S'),
+  'electron-osx-sign': K('Store signing or signtool (build tooling)', 'S'),
+  '@electron/osx-sign': K('Store signing or signtool (build tooling)', 'S'),
+  '@electron/notarize': K('Store signing or signtool (build tooling)', 'S'),
+  'fsevents': K('fs.watch / chokidar (fsevents is macOS-only)', 'S'),
+};
+
+// macOS-only command-line tools, found as program names inside code strings
+// (Process / subprocess / child_process / shell). `id` is what the report shows.
+export const MAC_COMMANDS = [
+  { id: 'osascript', re: /\bosascript\b/, windows: 'PowerShell or COM automation', effort: 'M' },
+  { id: 'launchctl', re: /\blaunchctl\b/, windows: 'Task Scheduler (schtasks) or Windows services', effort: 'S' },
+  { id: 'pbcopy/pbpaste', re: /\bpb(copy|paste)\b/, windows: 'the Windows clipboard (Set-Clipboard / Clipboard API)', effort: 'S' },
+  { id: 'screencapture', re: /\bscreencapture\b/, windows: 'Windows.Graphics.Capture', effort: 'M' },
+  { id: 'afplay', re: /\bafplay\b/, windows: 'Media Foundation / SoundPlayer', effort: 'S' },
+  { id: 'say', re: /\/usr\/bin\/say\b|["'`]say["'`]\s*[,\]]|["'`]say\s+-[vro]\b/, windows: 'Windows.Media.SpeechSynthesis', effort: 'S' },
+  { id: 'open', re: /\/usr\/bin\/open\b|["'`]open\s+-[abeRgnWFj]\b|["'`]open["'`]\s*,\s*["'`]-[abeRgnWFj]\b/, windows: 'ShellExecute / start', effort: 'S' },
+  { id: 'defaults', re: /\bdefaults\s+(read|write|delete|domains|import|export)\b|["'`]defaults["'`]\s*,\s*["'`](read|write|delete)\b/, windows: 'the registry or a settings file', effort: 'S' },
+  { id: 'security (Keychain)', re: /\bsecurity\s+(find|add|delete)-(generic|internet)-password\b|\bsecurity\s+(unlock|create|lock)-keychain\b|["'`]security["'`]\s*,\s*["'`](find|add|delete)-(generic|internet)-password\b/, windows: 'Windows Credential Manager', effort: 'M' },
+  { id: 'networksetup', re: /\bnetworksetup\b/, windows: 'netsh / IP Helper API', effort: 'S' },
+  { id: 'system_profiler', re: /\bsystem_profiler\b/, windows: 'WMI / Get-CimInstance', effort: 'S' },
+  { id: 'sw_vers', re: /\bsw_vers\b/, windows: 'the OS version API', effort: 'S' },
+  { id: 'mdfind/mdls', re: /\bmd(find|ls)\b/, windows: 'Windows Search or a file walk', effort: 'M' },
+  { id: 'pmset/caffeinate', re: /\b(pmset|caffeinate)\b/, windows: 'SetThreadExecutionState / powercfg', effort: 'S' },
+  { id: 'scutil', re: /\bscutil\b/, windows: 'IP Helper API / hostname APIs', effort: 'S' },
+  { id: 'diskutil/hdiutil', re: /\b(diskutil|hdiutil)\b/, windows: 'Storage cmdlets / Mount-DiskImage', effort: 'M' },
+  { id: 'tccutil', re: /\btccutil\b/, windows: 'Windows privacy settings (no reset API)', effort: 'S' },
+  { id: 'sips', re: /\bsips\b/, windows: 'WIC / Pillow', effort: 'S' },
+  { id: 'textutil', re: /\btextutil\b/, windows: 'a document-conversion library', effort: 'S' },
+  { id: 'plutil', re: /\bplutil\b/, windows: 'plistlib / a JSON settings file', effort: 'S' },
+  { id: 'ditto', re: /["'`](\/usr\/bin\/)?ditto\b/, windows: 'Expand-Archive / robocopy', effort: 'S' },
+  { id: 'xattr', re: /["'`](\/usr\/bin\/)?xattr\b/, windows: 'alternate data streams (Zone.Identifier)', effort: 'S' },
+  { id: 'killall', re: /["'`](\/usr\/bin\/)?killall\b/, windows: 'taskkill / Stop-Process', effort: 'S' },
+  { id: 'ioreg', re: /\bioreg\b/, windows: 'WMI / SetupAPI', effort: 'S' },
+  { id: 'dscl', re: /\bdscl\b/, windows: 'net user / directory APIs', effort: 'S' },
+  { id: 'lsregister', re: /\blsregister\b/, windows: 'file-type associations in the registry', effort: 'S' },
+  { id: 'codesign/notarytool', re: /\b(codesign|notarytool|stapler|spctl)\b/, windows: 'Store signing or signtool', effort: 'S' },
+  { id: 'xcodebuild/xcrun', re: /\b(xcodebuild|xcrun)\b/, windows: 'the Windows build (swift build / dotnet / cargo)', effort: 'S' },
+  { id: 'brew', re: /["'`](\/opt\/homebrew\/bin\/|\/usr\/local\/bin\/)?brew\s+(install|list|info)\b/, windows: 'winget', effort: 'S' },
+];
+
+// Hard-coded macOS paths inside code strings.
+export const MAC_PATHS = [
+  { id: '~/Library', re: /["'`]~\/Library\b|Library\/(Application Support|Caches|Preferences|LaunchAgents|Logs|Containers|Group Containers|Keychains)\b/, windows: '%APPDATA% / %LOCALAPPDATA% (resolve per OS)', effort: 'S' },
+  { id: '/Applications', re: /["'`]\/Applications\//, windows: '%ProgramFiles% / %LOCALAPPDATA%\\Programs', effort: 'S' },
+  { id: '/Library or /System', re: /["'`]\/(Library|System)\//, windows: '%ProgramData% / %SystemRoot%', effort: 'S' },
+  { id: '/Users', re: /["'`]\/Users\//, windows: '%USERPROFILE% (never hard-code a home)', effort: 'S' },
+  { id: '/Volumes', re: /["'`]\/Volumes\//, windows: 'drive letters / volume APIs', effort: 'S' },
+  { id: 'Homebrew paths', re: /\/opt\/homebrew\b|\/usr\/local\/(Cellar|opt|Homebrew)\b/, windows: 'winget install locations / PATH lookup', effort: 'S' },
+  { id: '.app bundle paths', re: /\.app\/Contents\//, windows: 'the install directory next to the .exe', effort: 'S' },
+];

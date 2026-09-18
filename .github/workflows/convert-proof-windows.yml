@@ -1,0 +1,87 @@
+name: convert-proof-windows
+
+# Circuit Convert — the Windows-side half. Each package under proof/ was converted on a
+# Mac (compiler-checked in the simulated Windows configuration). This lane runs the same
+# compiler loop NATIVELY on a Windows runner: whatever the real Windows compiler rejects
+# is isolated the same way, then the final package is built once more from clean.
+# proof/apps.json lists which packages this push verifies.
+
+on:
+  push:
+    branches: ['convert-proof/**']
+    paths: ['proof/apps.json', '.github/workflows/convert-proof-windows.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.read.outputs.apps }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read
+        run: echo "apps=$(tr -d '\n ' < proof/apps.json)" >> "$GITHUB_OUTPUT"
+
+  verify:
+    name: ${{ matrix.app }} (windows-latest)
+    needs: plan
+    runs-on: windows-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJson(needs.plan.outputs.apps) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: compnerd/gha-setup-swift@main
+        with:
+          branch: swift-6.2-release
+          tag: 6.2-RELEASE
+
+      - name: Toolchain
+        run: |
+          swift --version
+          node --version
+
+      - name: Native Windows compiler check (Circuit --reverify)
+        run: node circuit/server.js --reverify proof/${{ matrix.app }} --json proof-${{ matrix.app }}.json
+
+      - name: Build the final package once more, from clean
+        shell: pwsh
+        run: |
+          Remove-Item -Recurse -Force proof/${{ matrix.app }}/.build -ErrorAction SilentlyContinue
+          swift build --package-path proof/${{ matrix.app }}
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Write-Host "BUILT ON WINDOWS: ${{ matrix.app }}"
+
+      - name: Verdict
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path proof-${{ matrix.app }}.json) {
+            $r = Get-Content proof-${{ matrix.app }}.json -Raw | ConvertFrom-Json
+            "app=$($r.name) ok=$($r.verification.ok) config=$($r.verification.configuration) builds=$($r.totals.buildsLoc)/$($r.totals.all.loc) pct=$($r.totals.buildsForWindowsPct) passes=$($r.verification.passes.Count)" | Tee-Object -FilePath verdict-${{ matrix.app }}.txt
+          }
+
+      - name: Upload the verified package + report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-verified-${{ matrix.app }}
+          if-no-files-found: warn
+          path: |
+            proof/${{ matrix.app }}/Package.swift
+            proof/${{ matrix.app }}/Package.resolved
+            proof/${{ matrix.app }}/CONVERSION.md
+            proof/${{ matrix.app }}/conversion.json
+            proof/${{ matrix.app }}/app/**
+            proof/${{ matrix.app }}/kit/**
+            proof-${{ matrix.app }}.json
+            verdict-${{ matrix.app }}.txt

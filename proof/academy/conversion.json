@@ -1,0 +1,718 @@
+{
+  "root": "/Users/michaelbarber/BlackLabelAcademy",
+  "name": "BlackLabelAcademy",
+  "target": "windows",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/academy",
+  "moduleName": "BlackLabelAcademyCore",
+  "moduleSources": {
+    "from": "every app Swift file outside iOS / widget / marketing folders",
+    "paths": null
+  },
+  "generatedAt": 1789715551811,
+  "tookMs": 28518,
+  "before": {
+    "readyPct": 17.6,
+    "files": 24,
+    "loc": 6969
+  },
+  "after": {
+    "readyPct": 75,
+    "guardedLoc": 1751,
+    "needsWindowsLoc": 0
+  },
+  "verification": {
+    "ran": true,
+    "ok": true,
+    "failure": null,
+    "passes": [
+      {
+        "pass": 1,
+        "isolated": 1
+      },
+      {
+        "pass": 2,
+        "isolated": 3
+      },
+      {
+        "pass": 3,
+        "isolated": 1
+      },
+      {
+        "pass": 4,
+        "isolated": 1
+      },
+      {
+        "pass": 5,
+        "isolated": 1
+      },
+      {
+        "pass": 6,
+        "isolated": 1
+      },
+      {
+        "pass": 7,
+        "isolated": 1
+      },
+      {
+        "pass": 8,
+        "isolated": 1
+      },
+      {
+        "pass": 9,
+        "isolated": 4
+      },
+      {
+        "pass": 10,
+        "isolated": 1
+      },
+      {
+        "pass": 11,
+        "isolated": 1
+      },
+      {
+        "pass": 12,
+        "isolated": 0
+      }
+    ],
+    "configuration": "simulated Windows configuration on macOS (-DCIRCUIT_WINDOWS_SIM)",
+    "native": false,
+    "platform": "darwin",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.33.1 clang-2100.3.33.1)"
+  },
+  "totals": {
+    "all": {
+      "files": 22,
+      "loc": 6866
+    },
+    "portable": {
+      "files": 7,
+      "loc": 1789
+    },
+    "converted": {
+      "files": 5,
+      "loc": 1663
+    },
+    "partial": {
+      "files": 4,
+      "loc": 1257,
+      "isolatedLoc": 515,
+      "buildsLoc": 742
+    },
+    "needsWindowsPart": {
+      "files": 6,
+      "loc": 2157
+    },
+    "macOnlySkipped": {
+      "files": 0,
+      "loc": 0
+    },
+    "unverified": {
+      "files": 0,
+      "loc": 0
+    },
+    "buildsLoc": 4194,
+    "isolatedLoc": 2672,
+    "buildsForWindowsPct": 61.1
+  },
+  "packages": [
+    {
+      "package": "OpenCombine",
+      "url": "https://github.com/OpenCombine/OpenCombine.git",
+      "from": "0.14.0"
+    },
+    {
+      "package": "swift-toolchain-sqlite",
+      "url": "https://github.com/swiftlang/swift-toolchain-sqlite.git",
+      "from": "1.0.0"
+    }
+  ],
+  "kit": true,
+  "windowsPartsNeeded": [
+    {
+      "id": "SwiftUI",
+      "windows": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)",
+      "effort": "L",
+      "files": 7,
+      "loc": 2405
+    },
+    {
+      "id": "CoreSpotlight",
+      "windows": "Windows Search (no app index API): an in-app index",
+      "effort": "M",
+      "files": 2,
+      "loc": 1706
+    },
+    {
+      "id": "CoreGraphics",
+      "windows": "Direct2D / WIC for drawing, Win32 for displays and window lists",
+      "effort": "M",
+      "files": 1,
+      "loc": 269
+    },
+    {
+      "id": "(uses code that was isolated)",
+      "windows": null,
+      "effort": null,
+      "files": 2,
+      "loc": 172
+    }
+  ],
+  "skipped": [
+    {
+      "id": "marketing/appstore-screenshots-20260720/Shots.swift",
+      "why": "another target (iOS, widget, marketing, …)"
+    },
+    {
+      "id": "widget/AcademyStudyWidget.swift",
+      "why": "another target (iOS, widget, marketing, …)"
+    }
+  ],
+  "files": [
+    {
+      "id": "Sources/App.swift",
+      "lang": "swift",
+      "loc": 67,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "6:1 'BlackLabelAcademyApp' is annotated with '@main' and must provide a main static function of type () -> Void, () throws -> Void, () async -> Void, or () async throws -> Void",
+        "54:20 cannot find type 'Scene' in scope",
+        "7:30 cannot find type 'App' in scope",
+        "20:69 cannot find 'runSpotlightSelfTest' in scope",
+        "23:66 call to main actor-isolated global function 'runRecallSelfTest()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "30:66 call to main actor-isolated global function 'runStudyHabitSelfTest()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "34:66 call to main actor-isolated global function 'runCohortSelfTest()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "55:9 cannot find 'WindowGroup' in scope"
+      ],
+      "errorCount": 10,
+      "isolatedInPass": 4,
+      "whole": true,
+      "isolatedLoc": 67,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Calculators.swift",
+      "lang": "swift",
+      "loc": 189,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 7,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "134:41 type annotation missing in pattern",
+        "134:6 unknown attribute 'Environment'",
+        "135:20 cannot find type 'View' in scope",
+        "133:26 cannot find type 'View' in scope",
+        "158:6 unknown attribute 'State'",
+        "171:20 cannot find type 'View' in scope",
+        "156:24 cannot find type 'View' in scope",
+        "136:9 cannot find 'VStack' in scope"
+      ],
+      "errorCount": 55,
+      "isolatedInPass": 5,
+      "whole": false,
+      "isolatedLoc": 74,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/Certificates.swift",
+      "lang": "swift",
+      "loc": 383,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "CoreGraphics"
+      ],
+      "isolated": true,
+      "errors": [
+        "141:24 cannot find 'Color' in scope",
+        "142:25 cannot find 'Color' in scope",
+        "144:20 cannot find type 'View' in scope",
+        "138:29 cannot find type 'View' in scope",
+        "308:41 type annotation missing in pattern",
+        "307:6 unknown attribute 'ObservedObject'",
+        "308:6 unknown attribute 'Environment'",
+        "309:6 unknown attribute 'State'"
+      ],
+      "errorCount": 17,
+      "isolatedInPass": 9,
+      "whole": false,
+      "isolatedLoc": 269,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/Cohort.swift",
+      "lang": "swift",
+      "loc": 545,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 30,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 29,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "383:6 generic struct 'StateObject' requires that 'CohortClient' conform to 'ObservableObject'"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 9,
+      "whole": false,
+      "isolatedLoc": 57,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/ContentDB.swift",
+      "lang": "swift",
+      "loc": 129,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "dropin",
+          "module": "SQLite3",
+          "to": "swift-toolchain-sqlite (the same C API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/Holographic.swift",
+      "lang": "swift",
+      "loc": 58,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "11:59 type annotation missing in pattern",
+        "10:6 unknown attribute 'AppStorage'",
+        "11:6 unknown attribute 'Environment'",
+        "12:20 cannot find type 'View' in scope",
+        "29:85 cannot find type 'View' in scope",
+        "29:28 cannot find type 'Color' in scope",
+        "29:66 cannot find type 'Alignment' in scope",
+        "9:24 cannot find type 'View' in scope"
+      ],
+      "errorCount": 19,
+      "isolatedInPass": 2,
+      "whole": true,
+      "isolatedLoc": 58,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/iOSLayout.swift",
+      "lang": "swift",
+      "loc": 598,
+      "before": "guarded",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Markdown.swift",
+      "lang": "swift",
+      "loc": 175,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "51:38 cannot find type 'View' in scope",
+        "51:6 unknown attribute 'ViewBuilder'",
+        "88:6 unknown attribute 'State'",
+        "90:20 cannot find type 'View' in scope",
+        "86:22 cannot find type 'View' in scope",
+        "145:20 cannot find type 'View' in scope",
+        "142:29 cannot find type 'View' in scope",
+        "54:13 cannot find 'FoilText' in scope"
+      ],
+      "errorCount": 60,
+      "isolatedInPass": 3,
+      "whole": true,
+      "isolatedLoc": 175,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Model.swift",
+      "lang": "swift",
+      "loc": 448,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 4,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 5,
+          "kind": "dropin",
+          "module": "SQLite3",
+          "to": "swift-toolchain-sqlite (the same C API)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/Recall.swift",
+      "lang": "swift",
+      "loc": 273,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 15,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 16,
+          "kind": "dropin",
+          "module": "SQLite3",
+          "to": "swift-toolchain-sqlite (the same C API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/Spotlight.swift",
+      "lang": "swift",
+      "loc": 95,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "CoreSpotlight",
+          "to": "Windows Search (no app index API): an in-app index"
+        }
+      ],
+      "guardedModules": [
+        "CoreSpotlight"
+      ],
+      "isolated": true,
+      "errors": [
+        "52:43 cannot find type 'CSSearchableItem' in scope",
+        "53:21 cannot find 'CSSearchableItemAttributeSet' in scope",
+        "59:16 cannot find 'CSSearchableItem' in scope",
+        "66:21 cannot find 'CSSearchableIndex' in scope",
+        "75:19 cannot find 'CSSearchableItemActivityIdentifier' in scope",
+        "93:17 cannot find 'SpotlightIndexer' in scope",
+        "104:67 cannot find 'SpotlightIndexer' in scope"
+      ],
+      "errorCount": 7,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 95,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/StatClaim.swift",
+      "lang": "swift",
+      "loc": 172,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Store.swift",
+      "lang": "swift",
+      "loc": 429,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/StudyHabit.swift",
+      "lang": "swift",
+      "loc": 382,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 17,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 18,
+          "kind": "dropin",
+          "module": "SQLite3",
+          "to": "swift-toolchain-sqlite (the same C API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/StudyWidgetData.swift",
+      "lang": "swift",
+      "loc": 54,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Theme.swift",
+      "lang": "swift",
+      "loc": 151,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "48:26 cannot find type 'LinearGradient' in scope",
+        "40:27 cannot find 'Color' in scope",
+        "11:11 cannot find type 'Color' in scope",
+        "21:11 cannot find type 'View' in scope",
+        "64:6 unknown attribute 'State'",
+        "65:20 cannot find type 'View' in scope",
+        "59:20 cannot find type 'View' in scope",
+        "89:6 unknown attribute 'State'"
+      ],
+      "errorCount": 18,
+      "isolatedInPass": 2,
+      "whole": true,
+      "isolatedLoc": 151,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "Sources/Trial.swift",
+      "lang": "swift",
+      "loc": 302,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Tutor.swift",
+      "lang": "swift",
+      "loc": 140,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "88:17 cannot find 'MD' in scope",
+        "128:16 cannot find 'TutorEngine' in scope",
+        "130:40 cannot find 'TutorEngine' in scope",
+        "135:45 cannot find 'TutorEngine' in scope",
+        "136:21 cannot find 'TutorEngine' in scope",
+        "138:17 cannot find 'TutorEngine' in scope",
+        "145:41 cannot find 'TutorEngine' in scope"
+      ],
+      "errorCount": 7,
+      "isolatedInPass": 7,
+      "whole": false,
+      "isolatedLoc": 115,
+      "status": "partial"
+    },
+    {
+      "id": "Sources/Updater.swift",
+      "lang": "swift",
+      "loc": 431,
+      "before": "guarded",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/UpdaterUI.swift",
+      "lang": "swift",
+      "loc": 133,
+      "before": "guarded",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "Sources/Views.swift",
+      "lang": "swift",
+      "loc": 1611,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "CoreSpotlight",
+          "to": "Windows Search (no app index API): an in-app index"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "CoreSpotlight"
+      ],
+      "isolated": true,
+      "errors": [
+        "18:11 cannot find type 'Image' in scope",
+        "38:6 unknown attribute 'StateObject'",
+        "38:38 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "39:6 unknown attribute 'State'",
+        "40:6 unknown attribute 'State'",
+        "41:6 unknown attribute 'State'",
+        "42:6 unknown attribute 'State'",
+        "43:6 unknown attribute 'State'"
+      ],
+      "errorCount": 129,
+      "isolatedInPass": 9,
+      "whole": true,
+      "isolatedLoc": 1611,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "web/cohort-worker.js",
+      "lang": "javascript",
+      "loc": 101,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    }
+  ]
+}
