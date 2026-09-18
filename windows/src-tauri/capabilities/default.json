@@ -2,17 +2,24 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Circuit shell: pick a repo folder, spawn the bundled node server sidecar, open the 3D UI.",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "core:default",
-    "core:window:allow-navigate",
     "core:window:allow-show",
     "core:window:allow-set-focus",
     "dialog:default",
     "shell:allow-execute",
     {
       "identifier": "shell:allow-spawn",
-      "allow": [{ "name": "binaries/node", "sidecar": true, "args": true }]
+      "allow": [
+        {
+          "name": "binaries/node",
+          "sidecar": true,
+          "args": true
+        }
+      ]
     }
   ]
 }

@@ -41,9 +41,13 @@ fn main() {
         .setup(|app| {
             let handle = app.handle().clone();
 
-            // Repo picker (recents seed the default location) — mirrors the macOS
-            // launcher.  A cancel means "nothing to grade": quit cleanly.
-            let repo = match choose_repository(&handle) {
+            // A folder passed on the command line (`Circuit <repo>`, `open -a Circuit
+            // --args <repo>`) opens directly; otherwise the repo picker (recents seed
+            // the default location) — mirrors the macOS launcher.  Non-directory args
+            // (e.g. a Finder `-psn_…` token) are ignored.  A cancel means "nothing to
+            // grade": quit cleanly.
+            let from_args = std::env::args().skip(1).map(PathBuf::from).find(|p| p.is_dir());
+            let repo = match from_args.or_else(|| choose_repository(&handle)) {
                 Some(r) => r,
                 None => {
                     handle.exit(0);
@@ -163,10 +167,17 @@ fn start_server(
     server_js: PathBuf,
     repo: PathBuf,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let sidecar = app.shell().sidecar("node")?.args([
+    let mut args = vec![
         server_js.to_string_lossy().to_string(),
         repo.to_string_lossy().to_string(),
-    ]);
+    ];
+    // CIRCUIT_PORT pins the server's port (dev machines keep the default port
+    // hands-off; a buyer with a port clash can move it). Invalid values are ignored.
+    if let Some(port) = std::env::var("CIRCUIT_PORT").ok().filter(|p| p.parse::<u16>().is_ok()) {
+        args.push("--port".to_string());
+        args.push(port);
+    }
+    let sidecar = app.shell().sidecar("node")?.args(args);
     let (mut rx, child) = sidecar.spawn()?;
     *app.state::<ServerChild>().0.lock().unwrap() = Some(child);
 
