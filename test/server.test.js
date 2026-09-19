@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import fs from 'node:fs';
 import http from 'node:http';
 import net from 'node:net';
 import path from 'node:path';
@@ -112,4 +113,16 @@ test('a FREE port is bound as-is — auto-increment is not a safety net (the emp
 
   const { url } = await waitForUrl(child);
   assert.equal(url, `http://localhost:${FREE_PORT}`);
+});
+
+test('no response carries text derived from an exception: a fixed message and a correlation id only', () => {
+  // CodeQL js/stack-trace-exposure (main 6c23f3a): exception text quotes absolute paths and
+  // stacks. Every send()/broadcast() that reports a failure goes through a fixed message.
+  const server = fs.readFileSync(path.join(ROOT, 'server.js'), 'utf8');
+  const calls = [...server.matchAll(/\b(?:send|broadcast)\((?:[^;]|\n)*?\);/g)].map((m) => m[0]);
+  const leaking = calls.filter((c) => /\b(?:e|err|error)\??\.(?:message|stack)\b|String\(\s*(?:e|err|error)\b/.test(c));
+  assert.deepEqual(leaking, []);
+  assert.match(server, /function failed\(what, e\)/, 'the one failure path');
+  const history = fs.readFileSync(path.join(ROOT, 'lib', 'history.js'), 'utf8');
+  assert.ok(!/error: [^\n]*\be\??\.message/.test(history) && !/error: [^\n]*String\(e\b/.test(history), 'history frames served to the page carry a fixed reason');
 });
