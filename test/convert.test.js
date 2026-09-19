@@ -29,7 +29,7 @@ const outDir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-convert-out-
 
 test('convert rules: every drop-in names a real package product and every rule a note', () => {
   for (const [mod, rule] of Object.entries(SWIFT_IMPORT_RULES)) {
-    assert.ok(['dropin', 'kit', 'platform'].includes(rule.type), `${mod} type`);
+    assert.ok(['dropin', 'kit', 'platform', 'visible'].includes(rule.type), `${mod} type`);
     assert.ok(rule.note && rule.note.length > 5, `${mod} note`);
     for (const [, pkg] of rule.products ?? []) assert.ok(SWIFT_PACKAGES[pkg]?.url.startsWith('https://'), `${mod} → ${pkg}`);
     // a module Convert rewrites must be one the port check reports, or the before/after numbers lie
@@ -127,6 +127,15 @@ test('swift: Combine used without an import (SwiftUI / Foundation re-export it o
   const lines = explicit.text.split('\n');
   assert.ok(lines.some((l, i) => l === 'import CircuitPortKit' && lines[i - 1] !== '#else'), 'the bridge needs an import on every platform, not only in the os rule\'s #else branch');
   assert.equal(convertSwiftSource('import Foundation\n// ObservableObject in a comment\nstruct S {}\n').changed, false);
+});
+
+test('swift: CoreGraphics stays visible in the Mac simulation (Foundation has its geometry on Windows)', () => {
+  const r = convertSwiftSource('import CoreGraphics\n\nfunc area(_ r: CGRect) -> CGFloat { r.width * r.height }\n');
+  assert.match(r.text, /#if canImport\(CoreGraphics\)\nimport CoreGraphics\n#endif/);
+  assert.ok(!r.text.includes(`canImport(CoreGraphics) && !${SIM_FLAG}`), 'never hidden while simulating: that hides members Windows has');
+  assert.match(r.text, /^import Foundation$/m, 'Foundation brings the geometry off Apple platforms');
+  assert.deepEqual(r.guardedModules, ['CoreGraphics'], 'drawing code isolated later still reports what it waits for');
+  assert.equal(convertSwiftSource(r.text).text, r.text, 'idempotent');
 });
 
 test('swift: Darwin becomes ucrt on Windows, never WinSDK (its UUID makes Foundation\'s ambiguous)', () => {
