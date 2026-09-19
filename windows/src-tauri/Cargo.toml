@@ -1,0 +1,31 @@
+[package]
+name = "circuit-win"
+version = "1.0.0"
+description = "Circuit — grade your codebase in 3D (Windows shell)"
+# Individual Partner Center account: this is the owner's legal name, set from
+# windows/msix/partner-center.env at release time. See windows/STORE-SUBMISSION.md.
+authors = ["__PUBLISHER_DISPLAY_NAME__"]
+edition = "2021"
+rust-version = "1.77"
+
+# The binary Tauri wraps. `cargo check` in the W0 VM is the first build gate.
+[[bin]]
+name = "circuit-win"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+
+# Release profile tuned for a small, self-contained installer (artifact size is a
+# decision criterion — see docs/windows-shell-spike.md).
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

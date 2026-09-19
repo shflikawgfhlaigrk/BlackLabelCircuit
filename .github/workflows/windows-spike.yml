@@ -199,3 +199,92 @@ jobs:
             pkg-build.log
             pkg-friction.txt
             exe-sha256.txt
+
+  # ----- STRETCH: pack the STORE-FIRST MSIX with makeappx on a real Windows runner. -----
+  # Proves construction-engineer W02's named W1 dependency (the makeappx step) end-to-end on
+  # windows-latest — the one Windows rig that actually exists (the local W0 VM is founder-gated:
+  # no hypervisor on the Mac). This isolates the makeappx pack from the heavier Rust/Tauri exe
+  # bring-up via build-msix.sh --pack-layout (placeholder exe). UNSIGNED + STAGED ONLY: nothing
+  # here signs, publishes, submits to Partner Center, or ships.
+  #
+  # FAIL-CLOSED (was continue-on-error: true — removed deliberately). A job that swallows its own
+  # failure turns a run that packed NOTHING into a green check, and a green check is exactly what a
+  # human reads as "the Store package exists". This job is a stretch lane, not a required one, so a
+  # red msix job blocks no ship — it only tells the truth. The verdict step below is the terminal
+  # gate, and the uploaded artifact NAME carries PACKED / NOT-PACKED so the artifact cannot be
+  # mistaken for a package either.
+  msix:
+    name: Pack UNSIGNED Store MSIX with makeappx (staged only)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Circuit
+        uses: actions/checkout@v4
+
+      - name: Setup Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Put the Windows SDK makeappx.exe on PATH
+        shell: pwsh
+        run: |
+          $kit = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\makeappx.exe" `
+            -ErrorAction SilentlyContinue | Sort-Object FullName | Select-Object -Last 1
+          if (-not $kit) { Write-Error "makeappx.exe not found in the Windows SDK on this runner"; exit 1 }
+          $dir = Split-Path $kit.FullName
+          Write-Host "makeappx: $($kit.FullName)"
+          Add-Content -Path $env:GITHUB_PATH -Value $dir
+
+      - name: Assemble layout + makeappx pack -> UNSIGNED Store .msix
+        id: pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          makeappx /? >/dev/null 2>&1 || { command -v makeappx; }
+          bash windows/build-msix.sh --pack-layout
+          OUT="windows/dist/Circuit.msix"
+          ls -la "$OUT"
+          # makeappx writes a real APPX/MSIX zip container; prove the magic bytes, not just presence.
+          python -c "import sys;b=open(r'$OUT','rb').read(4);sys.exit(0 if b[:2]==b'PK' else 1)"
+          echo "msix_bytes=$(stat -c %s "$OUT" 2>/dev/null || wc -c < "$OUT")" | tee msix-friction.txt
+
+      - name: Compute sha256 of the staged MSIX
+        if: always()
+        shell: bash
+        run: |
+          if [ -f windows/dist/Circuit.msix ]; then
+            sha256sum windows/dist/Circuit.msix | tee msix-sha256.txt
+          else
+            echo "no msix produced" | tee msix-sha256.txt
+          fi
+
+      # Terminal gate. Runs even when the pack step died, so "no artifact" can never be silent:
+      # a run without a real .msix ends RED and says so in one word.
+      - name: VERDICT — a run only counts as a pack if the .msix exists
+        if: always()
+        shell: bash
+        run: |
+          if [ -s windows/dist/Circuit.msix ]; then
+            echo PACKED | tee msix-VERDICT.txt
+          else
+            echo NOT-PACKED | tee msix-VERDICT.txt
+            echo "::error::this run produced NO Circuit.msix — nothing was packed"
+            exit 1
+          fi
+
+      # The artifact NAME carries the outcome: a downloader who never opens the zip still cannot
+      # read a NOT-PACKED bundle of logs as a Store package.
+      - name: Upload UNSIGNED Store MSIX (staged only)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: circuit-store-msix-UNSIGNED-STAGED-ONLY-${{ steps.pack.outcome == 'success' && 'PACKED' || 'NOT-PACKED' }}
+          if-no-files-found: error
+          path: |
+            windows/dist/Circuit.msix
+            msix-friction.txt
+            msix-sha256.txt
+            msix-VERDICT.txt

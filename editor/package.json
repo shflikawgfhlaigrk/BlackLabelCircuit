@@ -1,0 +1,15 @@
+{
+  "name": "circuit-editor",
+  "displayName": "Circuit — live code grade",
+  "description": "Re-grade the current file on save and see Circuit's six-dimension review inline, plus the repo grade in the status bar. Zero dependencies, fully offline.",
+  "version": "1.0.0",
+  "publisher": "blacklabel",
+  "engines": { "vscode": "^1.75.0" },
+  "categories": ["Linters", "Programming Languages"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": []
+  },
+  "license": "ISC"
+}

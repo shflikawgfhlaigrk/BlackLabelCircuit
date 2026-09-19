@@ -2,12 +2,96 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
+// The ship build (build.command) pins Xcode's toolchain rather than CommandLineTools;
+// the compile gate must type-check under the same SDK it will actually ship through.
+const XCODE_DEVELOPER_DIR = '/Applications/Xcode.app/Contents/Developer';
+
+function swiftEnv() {
+  const env = { ...process.env };
+  if (fs.existsSync(XCODE_DEVELOPER_DIR)) env.DEVELOPER_DIR = XCODE_DEVELOPER_DIR;
+  return env;
+}
+
+// A missing toolchain is a FAILURE, never a silent pass: "we could not compile the
+// Swift" must never be reported as "the Swift compiles".
+function macosSDKPath(env) {
+  const probe = spawnSync('xcrun', ['--sdk', 'macosx', '--show-sdk-path'], { encoding: 'utf8', env });
+  if (probe.error) {
+    assert.fail(`Swift compile gate cannot run: xcrun is unavailable (${probe.error.message}). A missing toolchain is not a passing type-check — install Xcode/CommandLineTools.`);
+  }
+  if (probe.status !== 0) {
+    assert.fail(`Swift compile gate cannot run: 'xcrun --sdk macosx --show-sdk-path' exited ${probe.status}.\n${probe.stderr}`);
+  }
+  const sdk = probe.stdout.trim();
+  assert.ok(sdk && fs.existsSync(sdk), `Swift compile gate cannot run: macOS SDK path '${sdk}' does not exist.`);
+  return sdk;
+}
+
+// The compile gate must cover exactly the Swift sources the ship build compiles —
+// build.command is the source of truth. When a file joins the ship build (e.g.
+// macos/CircuitUpdater.swift in d70c75e), it joins this type-check automatically;
+// a lone-file gate would either miss cross-file breakage or fail on symbols that
+// live in the other compilation units.
+function launcherSources() {
+  const build = fs.readFileSync(path.join(ROOT, 'build.command'), 'utf8');
+  const sources = [...new Set(
+    [...build.matchAll(/\$ROOT\/(macos\/[\w.-]+\.swift)/g)].map((m) => m[1])
+  )];
+  assert.ok(
+    sources.includes('macos/CircuitLauncher.swift'),
+    `Swift compile gate cannot mirror the ship build: build.command no longer compiles macos/CircuitLauncher.swift (found: ${sources.join(', ') || 'none'}).`
+  );
+  return sources;
+}
+
+function typecheck(target) {
+  const env = swiftEnv();
+  const sdk = macosSDKPath(env);
+  const result = spawnSync('xcrun', [
+    'swiftc', '-typecheck', '-parse-as-library',
+    '-sdk', sdk,
+    '-target', target,
+    '-framework', 'AppKit',
+    ...launcherSources().map((rel) => path.join(ROOT, rel)),
+  ], { encoding: 'utf8', env, timeout: 180_000 });
+  if (result.error) {
+    assert.fail(`Swift compile gate cannot run: swiftc failed to launch (${result.error.message}).`);
+  }
+  return result;
+}
+
 function read(rel) {
   return fs.readFileSync(path.join(ROOT, rel), 'utf8');
+}
+
+// THE LOAD-BEARING CHECK. Everything below this point asserts regexes over Swift
+// SOURCE TEXT — those pin intent, but they stay green through a compile error, so on
+// their own they can only ever prove that a string is present. These two tests compile
+// the launcher for real, once per architecture the ship build produces, so a broken
+// CircuitLauncher.swift turns `npm test` red without waiting for a human to run
+// build.command. Both targets matter: requiresAppleSiliconGate() is #if arch(x86_64),
+// so an arm64-only type-check would never look inside that branch.
+//
+// Skipped off-darwin (the Windows CI lane runs this same suite and has no macOS SDK —
+// it also never builds the launcher, so there is nothing there to prove). That is a
+// SKIP, not a pass. On darwin the gate is unconditional: a mac that cannot find its
+// own toolchain fails loudly rather than reporting the Swift as compiling.
+const IS_MACOS = process.platform === 'darwin';
+for (const target of ['arm64-apple-macosx11.0', 'x86_64-apple-macosx11.0']) {
+  test(`macOS launcher Swift sources type-check against the macOS SDK (${target})`, {
+    skip: IS_MACOS ? false : 'macOS launcher is only compiled on darwin',
+  }, () => {
+    const result = typecheck(target);
+    assert.equal(
+      result.status, 0,
+      `swiftc -typecheck failed for ${target} (exit ${result.status}) — the macOS launcher does not compile:\n${result.stderr}`
+    );
+  });
 }
 
 test('macOS entry point is a native AppKit launcher with managed server lifecycle', () => {
@@ -22,6 +106,20 @@ test('macOS entry point is a native AppKit launcher with managed server lifecycl
   assert.match(src, /Application Support/, 'recents must live in user state, not the app bundle');
   assert.match(src, /requires Apple Silicon/, 'arm64-only Node runtime must be gated honestly');
   assert.doesNotMatch(src, /Google Chrome/, 'launcher must not depend on Chrome');
+});
+
+test('drag-a-folder onboarding is wired end to end (CI-19)', () => {
+  const src = read('macos/CircuitLauncher.swift');
+  // Dock-icon / "Open With" folder open.
+  assert.match(src, /func application\([^)]*openFiles/, 'launcher handles application(_:openFiles:)');
+  // In-window drag well.
+  assert.match(src, /registerForDraggedTypes/, 'a view registers for dragged file types');
+  assert.match(src, /func draggingEntered/, 'drop target implements draggingEntered');
+  assert.match(src, /func performDragOperation/, 'drop target implements performDragOperation');
+  assert.match(src, /isDirectory/, 'drop only accepts a folder, not a file');
+  const plist = read('macos/Info.plist');
+  assert.match(plist, /CFBundleDocumentTypes/, 'Info.plist declares document types so folder drops route to the app');
+  assert.match(plist, /public\.folder/, 'Info.plist accepts folders (public.folder)');
 });
 
 test('release build signs inside-out and ships no system-node fallback', () => {

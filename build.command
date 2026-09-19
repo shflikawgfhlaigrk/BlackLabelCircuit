@@ -66,9 +66,11 @@ mkdir -p "$MACOS" "$RESOURCES/app" "$RESOURCES/node" "$BUILD_DIR"
 
 "${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target arm64-apple-macosx11.0 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
+  "$ROOT/macos/CircuitUpdater.swift" \
   -o "$BUILD_DIR/launcher-arm64"
 "${SWIFTC[@]}" -sdk "$SDKROOT" -O -parse-as-library -target x86_64-apple-macosx11.0 -framework AppKit \
   "$ROOT/macos/CircuitLauncher.swift" \
+  "$ROOT/macos/CircuitUpdater.swift" \
   -o "$BUILD_DIR/launcher-x86_64"
 "${LIPO[@]}" -create "$BUILD_DIR/launcher-arm64" "$BUILD_DIR/launcher-x86_64" -output "$MACOS/Circuit"
 chmod 755 "$MACOS/Circuit"
@@ -81,11 +83,15 @@ elif [[ -f "/Applications/Circuit.app/Contents/Resources/Circuit.icns" ]]; then
 fi
 printf 'APPL????' > "$CONTENTS/PkgInfo"
 
+# editor/ must ship: server.js's `--lsp` flag does `await import('./editor/server.mjs')`,
+# so omitting it leaves the shipped app's advertised LSP mode throwing ERR_MODULE_NOT_FOUND
+# (that is exactly what build 4 as served does).
 rsync -a --delete \
   "$ROOT/server.js" \
   "$ROOT/package.json" \
   "$ROOT/lib" \
   "$ROOT/public" \
+  "$ROOT/editor" \
   "$RESOURCES/app/"
 
 NODE_SRC="$(node_source)"
