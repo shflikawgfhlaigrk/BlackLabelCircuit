@@ -5,10 +5,10 @@
   "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/uiprobe-out",
   "moduleName": "UIProbeCore",
   "source": {
-    "sha256": "d81aa387feaa2626c842fef4cd58acafb5c0b85fc25c3a93066ee660b2549f38",
+    "sha256": "a532e79f70e931126d281b24f85a5ef3ef38524edfd2dca89c96919de22e5dc0",
     "files": 2,
     "git": {
-      "head": "cd6387e3b3b8602c27fdb9a2d1ba544896674b0a",
+      "head": "4c9cdca2b4c7a97c74d3ca4cffaa9a608c507dde",
       "uncommitted": 0
     }
   },
@@ -16,12 +16,12 @@
     "from": "every app Swift file outside iOS / widget / marketing folders",
     "paths": null
   },
-  "generatedAt": 1789789780030,
-  "tookMs": 62578,
+  "generatedAt": 1789791531819,
+  "tookMs": 48509,
   "before": {
     "readyPct": 0,
     "files": 2,
-    "loc": 19
+    "loc": 20
   },
   "after": {
     "readyPct": 100,
@@ -35,10 +35,6 @@
     "passes": [
       {
         "pass": 1,
-        "isolated": 1
-      },
-      {
-        "pass": 2,
         "isolated": 0
       }
     ],
@@ -50,21 +46,21 @@
   "totals": {
     "all": {
       "files": 2,
-      "loc": 19
+      "loc": 20
     },
     "portable": {
       "files": 0,
       "loc": 0
     },
     "converted": {
-      "files": 1,
-      "loc": 15
+      "files": 2,
+      "loc": 20
     },
     "partial": {
-      "files": 1,
-      "loc": 4,
-      "isolatedLoc": 3,
-      "buildsLoc": 1
+      "files": 0,
+      "loc": 0,
+      "isolatedLoc": 0,
+      "buildsLoc": 0
     },
     "needsWindowsPart": {
       "files": 0,
@@ -79,12 +75,12 @@
       "loc": 0
     },
     "appIf": {
-      "files": 2,
-      "loc": 3
+      "files": 0,
+      "loc": 0
     },
-    "buildsLoc": 13,
-    "isolatedLoc": 3,
-    "buildsForWindowsPct": 68.4
+    "buildsLoc": 20,
+    "isolatedLoc": 0,
+    "buildsForWindowsPct": 100
   },
   "packages": [
     {
@@ -100,21 +96,13 @@
     }
   ],
   "kit": true,
-  "windowsPartsNeeded": [
-    {
-      "id": "(uses code that was isolated)",
-      "windows": null,
-      "effort": null,
-      "files": 1,
-      "loc": 3
-    }
-  ],
+  "windowsPartsNeeded": [],
   "skipped": [],
   "files": [
     {
       "id": "Sources/Counter.swift",
       "lang": "swift",
-      "loc": 15,
+      "loc": 16,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -135,7 +123,7 @@
       "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
-      "inactiveLoc": 2,
+      "inactiveLoc": 0,
       "status": "converted"
     },
     {
@@ -154,17 +142,11 @@
       ],
       "guardedModules": [],
       "kitModules": [],
-      "isolated": true,
-      "errors": [
-        "10:32 extraneous argument label 'systemName:' in call",
-        "10:45 cannot convert value of type 'String' to expected argument type 'Image<RGBA>'"
-      ],
-      "errorCount": 2,
-      "isolatedInPass": 1,
       "whole": false,
-      "isolatedLoc": 3,
-      "inactiveLoc": 1,
-      "status": "partial"
+      "isolatedLoc": 0,
+      "inactiveLoc": 0,
+      "status": "converted"
     }
-  ]
+  ],
+  "recountedAt": 1789791552444
 }

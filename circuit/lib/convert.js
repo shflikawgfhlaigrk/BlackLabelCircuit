@@ -393,6 +393,9 @@ export function windowsInactiveLoc(text) {
     const d = t.match(/^#\s*(if|elseif|else|endif)\b\s*(.*)$/);
     if (d) {
       const [, kw, cond] = d;
+      // Circuit's own per-platform import blocks carry the simulation flag: the import they
+      // replace is served on Windows by its replacement, so they are not the app's own #if.
+      if (kw === 'if' && cond.includes(SIM_FLAG)) { frames.push({ isolation: true, active: true, taken: true }); continue; }
       if (kw === 'if') { const v = evalCondition(cond); frames.push({ isolation: false, active: v, taken: v }); }
       else if (kw === 'elseif' && frames.length) {
         const f = frames[frames.length - 1];
@@ -621,6 +624,13 @@ function simCombineNames() {
     ...COMBINE_NAMES.map((nm) => `typealias ${nm} = OpenCombine.${nm}`),
     '#endif',
     '',
+    "// SwiftUI names CircuitPortKit provides where SwiftCrossUI stands in for SwiftUI (SwiftCrossUI's",
+    "// own Image draws image files only; the kit's also draws SF Symbols).",
+    `#if canImport(SwiftCrossUI) && (!canImport(SwiftUI) || ${SIM_FLAG})`,
+    'import CircuitPortKit',
+    'typealias Image = CircuitPortKit.CircuitImage',
+    '#endif',
+    '',
   ].join('\n');
 }
 
@@ -804,7 +814,11 @@ function verifySwift(outDir, swiftRels, { log, maxPasses }) {
       break;
     }
     if (!appErrs.length) {
-      failure = `build failed without a source error: ${r.output.split('\n').filter((l) => /error:/.test(l)).slice(0, 3).join(' | ') || `exit ${r.status}`}`;
+      // A dependency, the linker or a C compiler (MSVC-style "error C1083:", "LNK1181") failed: show
+      // the tail of the build, which is where that cause is, instead of only the exit code.
+      const lines = r.output.split('\n');
+      log(`the build failed outside the converted sources; last lines of the build:\n${lines.filter((l) => l.trim()).slice(-40).join('\n')}`);
+      failure = `build failed without a source error: ${lines.filter((l) => /\berror\b[^:\n]{0,24}:|\bfatal error\b/i.test(l)).slice(0, 3).join(' | ') || `exit ${r.status}`}`;
       break;
     }
     let newly = 0;

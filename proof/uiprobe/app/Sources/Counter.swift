@@ -24,6 +24,7 @@ struct CounterView: View {
             Text("Count: \(model.count)")
             Button("Add") { model.count += 1 }
             TextField("Name", text: $model.label)
+            Label("Starred", systemImage: "star.fill")
         }
     }
 }

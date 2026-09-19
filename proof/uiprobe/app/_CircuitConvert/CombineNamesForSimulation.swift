@@ -34,3 +34,10 @@ typealias TopLevelDecoder = OpenCombine.TopLevelDecoder
 typealias TopLevelEncoder = OpenCombine.TopLevelEncoder
 typealias AnySubscriber = OpenCombine.AnySubscriber
 #endif
+
+// SwiftUI names CircuitPortKit provides where SwiftCrossUI stands in for SwiftUI (SwiftCrossUI's
+// own Image draws image files only; the kit's also draws SF Symbols).
+#if canImport(SwiftCrossUI) && (!canImport(SwiftUI) || CIRCUIT_WINDOWS_SIM)
+import CircuitPortKit
+typealias Image = CircuitPortKit.CircuitImage
+#endif
