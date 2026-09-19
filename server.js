@@ -249,7 +249,7 @@ let portReport = null;
 // Convert run started from the UI. It runs as a child process of this same program
 // (`--convert … --verify`), so minutes of compiling never block the server; its
 // output lines are streamed to the page and the result is read back from its JSON.
-const convertJob = { running: false, log: [], result: null, error: null, out: null, startedAt: null };
+const convertJob = { running: false, log: [], result: null, error: null, errorId: null, out: null, startedAt: null };
 
 function convertOutDir() {
   // CIRCUIT_CONVERT_DIR moves the output root (tests, shared build machines).
@@ -261,7 +261,7 @@ function startConvert({ verify }) {
   const out = convertOutDir();
   fs.mkdirSync(out, { recursive: true });
   const resultPath = path.join(out, 'conversion.json');
-  Object.assign(convertJob, { running: true, log: [], result: null, error: null, out, startedAt: Date.now() });
+  Object.assign(convertJob, { running: true, log: [], result: null, error: null, errorId: null, out, startedAt: Date.now() });
   const childArgs = [fileURLToPath(import.meta.url), '--convert', root, '--out', out];
   if (verify) childArgs.push('--verify');
   const child = spawn(process.execPath, childArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
@@ -274,19 +274,24 @@ function startConvert({ verify }) {
       broadcast('convert', { line: text });
     }
   };
+  // Progress is stdout. The child's stderr is where its own failures go (exception text with
+  // absolute paths): kept for the server log only, never sent to a client.
   child.stdout.on('data', onData);
-  child.stderr.on('data', onData);
+  let stderr = '';
+  child.stderr.on('data', (buf) => { stderr = `${stderr}${buf}`.slice(-65536); });
   child.on('error', (e) => {
     const f = failed('starting the conversion', e);
-    convertJob.running = false;
-    convertJob.error = f.message;
+    Object.assign(convertJob, { running: false, error: f.message, errorId: f.errorId });
     broadcast('convert-done', { ok: false, error: f.message, errorId: f.errorId });
   });
   child.on('close', (code) => {
     convertJob.running = false;
     try { convertJob.result = JSON.parse(fs.readFileSync(resultPath, 'utf8')); } catch { convertJob.result = null; }
-    if (code === 2 || !convertJob.result) convertJob.error = convertJob.log[convertJob.log.length - 1] ?? `convert exited with code ${code}`;
-    broadcast('convert-done', { ok: !convertJob.error, error: convertJob.error });
+    if (code === 2 || !convertJob.result) {
+      const f = failed('conversion', stderr.trim() || `the convert process exited with code ${code}`);
+      Object.assign(convertJob, { error: f.message, errorId: f.errorId });
+    }
+    broadcast('convert-done', { ok: !convertJob.error, error: convertJob.error, errorId: convertJob.errorId });
   });
 }
 
@@ -410,7 +415,7 @@ function handle(req, res) {
     }
     return send(res, 200, {
       running: convertJob.running, out: convertJob.out ?? convertOutDir(), startedAt: convertJob.startedAt,
-      log: convertJob.log.slice(-60), error: convertJob.error, result: convertJob.result,
+      log: convertJob.log.slice(-60), error: convertJob.error, errorId: convertJob.errorId, result: convertJob.result,
     });
   }
 

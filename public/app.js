@@ -1145,10 +1145,10 @@ events.addEventListener('convert', (e) => {
   log.scrollTop = log.scrollHeight;
 });
 events.addEventListener('convert-done', async (e) => {
-  const { ok, error } = JSON.parse(e.data);
+  const { ok, error, errorId } = JSON.parse(e.data);
   setConvertRunning(false);
   await loadConvertState();
-  if (!ok) toast(`Convert failed: ${error}`);
+  if (!ok) toast(`Convert failed: ${error}${errorId ? ` [${String(errorId).slice(0, 8)}]` : ''}`);
   else toast('Converted. Open output folder to get the code.');
 });
 events.addEventListener('graph', async (e) => {

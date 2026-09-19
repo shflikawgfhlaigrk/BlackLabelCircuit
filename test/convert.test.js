@@ -404,6 +404,42 @@ test('api: POST /api/convert runs the conversion out of process and GET reports 
   assert.equal((await fetch(`${url}/api/convert/open?dir=/etc`)).status, 404, 'GET falls through to static, which has no such file');
 });
 
+test('api: a failed conversion reaches the page as a fixed message and an id, never the child\'s error text', { timeout: 60_000 }, async (t) => {
+  // The output root is inside the repo, so the convert child refuses and prints its error,
+  // which quotes the repo's path, to its stderr.
+  const { spawn } = await import('node:child_process');
+  const dir = fixture(APP);
+  const child = spawn(process.execPath, ['server.js', dir, '--port', '8965'], {
+    cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, CIRCUIT_CONVERT_DIR: path.join(dir, 'inside-the-repo') },
+  });
+  t.after(() => child.kill('SIGTERM'));
+  let serverLog = '';
+  child.stderr.on('data', (d) => { serverLog += d; });
+  const url = await new Promise((resolve, reject) => {
+    let buf = '';
+    const timer = setTimeout(() => reject(new Error(`server did not start: ${buf}`)), 15_000);
+    child.stdout.on('data', (d) => {
+      buf += d;
+      const m = buf.match(/http:\/\/localhost:(\d+)/);
+      if (m) { clearTimeout(timer); resolve(`http://localhost:${m[1]}`); }
+    });
+  });
+  assert.equal((await fetch(`${url}/api/convert?verify=0`, { method: 'POST' })).status, 202);
+  let state;
+  for (let i = 0; i < 200; i++) {
+    state = await (await fetch(`${url}/api/convert`)).json();
+    if (!state.running) break;
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  assert.equal(state.error, 'conversion failed — see the Circuit server log for details');
+  assert.match(state.errorId, /^[0-9a-f-]{36}$/);
+  // `out` is the folder the server chose and shows on purpose; the error and the streamed log
+  // must not carry the child's exception text (it quotes the repo path).
+  const told = JSON.stringify({ error: state.error, log: state.log });
+  assert.ok(!/outside the source repo/.test(told) && !told.includes(dir), 'no exception text and no repo path in what the page is told');
+  assert.ok(serverLog.includes(state.errorId) && /outside the source repo/.test(serverLog), 'the cause is in the server log under the id');
+});
+
 test('ui: the Convert button and the output button are in the page and wired', () => {
   const html = fs.readFileSync(path.join(ROOT, 'public', 'index.html'), 'utf8');
   const js = fs.readFileSync(path.join(ROOT, 'public', 'app.js'), 'utf8');
