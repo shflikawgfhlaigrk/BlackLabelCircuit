@@ -2,7 +2,7 @@
   "root": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/snap/Ace-Build85-20260913",
   "name": "Ace-Build85-20260913",
   "target": "windows",
-  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/new/ace",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/new2/ace",
   "moduleName": "Ace_Build85_20260913Core",
   "source": {
     "sha256": "852d8fa78967a736ebcfa92b07f9071a272da48002e3eca0f234a8c18be521df",
@@ -15,8 +15,8 @@
       "leanring-buddy"
     ]
   },
-  "generatedAt": 1789781286910,
-  "tookMs": 145004,
+  "generatedAt": 1789782250179,
+  "tookMs": 99728,
   "before": {
     "readyPct": 17.3,
     "files": 235,
@@ -24,7 +24,7 @@
   },
   "after": {
     "readyPct": 82.9,
-    "guardedLoc": 14137,
+    "guardedLoc": 14125,
     "needsWindowsLoc": 6751
   },
   "verification": {
@@ -38,19 +38,19 @@
       },
       {
         "pass": 2,
-        "isolated": 2
+        "isolated": 4
       },
       {
         "pass": 3,
-        "isolated": 5
+        "isolated": 1
       },
       {
         "pass": 4,
-        "isolated": 1
+        "isolated": 5
       },
       {
         "pass": 5,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 6,
@@ -66,19 +66,19 @@
       },
       {
         "pass": 9,
-        "isolated": 1
+        "isolated": 3
       },
       {
         "pass": 10,
-        "isolated": 5
+        "isolated": 1
       },
       {
         "pass": 11,
-        "isolated": 1
+        "isolated": 6
       },
       {
         "pass": 12,
-        "isolated": 1
+        "isolated": 5
       },
       {
         "pass": 13,
@@ -86,35 +86,35 @@
       },
       {
         "pass": 14,
-        "isolated": 5
-      },
-      {
-        "pass": 15,
         "isolated": 4
       },
       {
+        "pass": 15,
+        "isolated": 1
+      },
+      {
         "pass": 16,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 17,
-        "isolated": 1
+        "isolated": 4
       },
       {
         "pass": 18,
-        "isolated": 5
+        "isolated": 1
       },
       {
         "pass": 19,
-        "isolated": 1
+        "isolated": 26
       },
       {
         "pass": 20,
-        "isolated": 2
+        "isolated": 3
       },
       {
         "pass": 21,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 22,
@@ -122,19 +122,19 @@
       },
       {
         "pass": 23,
-        "isolated": 27
-      },
-      {
-        "pass": 24,
         "isolated": 2
       },
       {
-        "pass": 25,
+        "pass": 24,
         "isolated": 1
       },
       {
+        "pass": 25,
+        "isolated": 2
+      },
+      {
         "pass": 26,
-        "isolated": 5
+        "isolated": 1
       },
       {
         "pass": 27,
@@ -142,26 +142,6 @@
       },
       {
         "pass": 28,
-        "isolated": 2
-      },
-      {
-        "pass": 29,
-        "isolated": 2
-      },
-      {
-        "pass": 30,
-        "isolated": 1
-      },
-      {
-        "pass": 31,
-        "isolated": 1
-      },
-      {
-        "pass": 32,
-        "isolated": 1
-      },
-      {
-        "pass": 33,
         "isolated": 0
       }
     ],
@@ -180,18 +160,18 @@
       "loc": 20758
     },
     "converted": {
-      "files": 37,
-      "loc": 13321
+      "files": 40,
+      "loc": 13821
     },
     "partial": {
-      "files": 31,
-      "loc": 27185,
-      "isolatedLoc": 17035,
-      "buildsLoc": 10150
+      "files": 30,
+      "loc": 27345,
+      "isolatedLoc": 17167,
+      "buildsLoc": 10178
     },
     "needsWindowsPart": {
-      "files": 49,
-      "loc": 59604
+      "files": 47,
+      "loc": 58944
     },
     "macOnlySkipped": {
       "files": 0,
@@ -201,9 +181,9 @@
       "files": 0,
       "loc": 0
     },
-    "buildsLoc": 44229,
-    "isolatedLoc": 76639,
-    "buildsForWindowsPct": 36.6
+    "buildsLoc": 44757,
+    "isolatedLoc": 76111,
+    "buildsForWindowsPct": 37
   },
   "packages": [
     {
@@ -250,14 +230,14 @@
       "windows": "WinUI 3 / Win32 windows, menus and dialogs",
       "effort": "L",
       "files": 37,
-      "loc": 35450
+      "loc": 35308
     },
     {
       "id": "ApplicationServices",
       "windows": "UI Automation (reading and targeting other apps) and SendInput (typing)",
       "effort": "L",
       "files": 12,
-      "loc": 34012
+      "loc": 33870
     },
     {
       "id": "ScreenCaptureKit",
@@ -277,8 +257,8 @@
       "id": "CoreGraphics",
       "windows": "Direct2D / WIC for drawing, Win32 for displays and window lists",
       "effort": "M",
-      "files": 8,
-      "loc": 4620
+      "files": 5,
+      "loc": 4234
     },
     {
       "id": "Network",
@@ -675,7 +655,7 @@
         "6:30 cannot find type 'View' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": false,
       "isolatedLoc": 12,
       "status": "partial"
@@ -727,20 +707,20 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
-        "18:8 type 'AccessibilityVisualTargetCandidate' does not conform to protocol 'Equatable'",
-        "29:6 type 'AccessibilityVisualTargetResolution' does not conform to protocol 'Equatable'",
         "308:49 cannot find type 'AXUIElement' in scope",
         "318:21 cannot find type 'AXUIElement' in scope",
         "331:21 cannot find type 'AXUIElement' in scope",
         "365:43 cannot find type 'AXUIElement' in scope",
         "407:23 cannot find type 'AXUIElement' in scope",
-        "422:23 cannot find type 'AXUIElement' in scope"
+        "422:23 cannot find type 'AXUIElement' in scope",
+        "438:10 cannot find type 'AXUIElement' in scope",
+        "437:23 cannot find type 'AXUIElement' in scope"
       ],
-      "errorCount": 30,
-      "isolatedInPass": 23,
-      "whole": true,
-      "isolatedLoc": 435,
-      "status": "needs-windows-part"
+      "errorCount": 35,
+      "isolatedInPass": 19,
+      "whole": false,
+      "isolatedLoc": 293,
+      "status": "partial"
     },
     {
       "id": "leanring-buddy/AccessibilityWindowIdentity.swift",
@@ -757,9 +737,9 @@
         },
         {
           "line": 21,
-          "kind": "guarded-import",
+          "kind": "visible",
           "module": "CoreGraphics",
-          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+          "to": "Foundation has the geometry types off Apple platforms; drawing needs Direct2D / WIC"
         },
         {
           "line": 22,
@@ -775,11 +755,10 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
-        "88:10 cannot find type 'CGWindowID' in scope",
         "87:27 cannot find type 'AXUIElement' in scope"
       ],
-      "errorCount": 2,
-      "isolatedInPass": 15,
+      "errorCount": 1,
+      "isolatedInPass": 14,
       "whole": false,
       "isolatedLoc": 63,
       "status": "partial"
@@ -963,10 +942,10 @@
         "110:6 unknown attribute 'StateObject'",
         "117:20 cannot find type 'View' in scope",
         "103:44 cannot find type 'View' in scope",
-        "37:16 cannot find 'StealthVisibilityGate' in scope",
-        "43:17 cannot find 'NSApp' in scope"
+        "43:17 cannot find 'NSApp' in scope",
+        "44:17 cannot find 'NSApp' in scope"
       ],
-      "errorCount": 60,
+      "errorCount": 58,
       "isolatedInPass": 9,
       "whole": true,
       "isolatedLoc": 321,
@@ -1201,9 +1180,9 @@
         },
         {
           "line": 23,
-          "kind": "guarded-import",
+          "kind": "visible",
           "module": "CoreGraphics",
-          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+          "to": "Foundation has the geometry types off Apple platforms; drawing needs Direct2D / WIC"
         },
         {
           "line": 24,
@@ -1231,15 +1210,15 @@
       "errors": [
         "75:49 cannot find type 'NSWindowDelegate' in scope",
         "78:25 cannot find type 'NSWindow' in scope",
+        "106:36 cannot find type 'CompanionManager' in scope",
+        "210:43 cannot find type 'CompanionManager' in scope",
         "210:6 unknown attribute 'ObservedObject'",
         "214:48 cannot find 'BrainConnectionModel' in scope",
         "214:6 unknown attribute 'StateObject'",
-        "215:6 unknown attribute 'State'",
-        "246:20 cannot find type 'View' in scope",
-        "406:30 cannot find type 'View' in scope"
+        "215:6 unknown attribute 'State'"
       ],
-      "errorCount": 481,
-      "isolatedInPass": 22,
+      "errorCount": 488,
+      "isolatedInPass": 17,
       "whole": true,
       "isolatedLoc": 2048,
       "status": "needs-windows-part"
@@ -1277,17 +1256,17 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
+        "8:43 cannot find type 'CompanionManager' in scope",
         "8:6 unknown attribute 'ObservedObject'",
         "9:6 unknown attribute 'State'",
         "10:6 unknown attribute 'State'",
         "12:20 cannot find type 'View' in scope",
         "7:26 cannot find type 'View' in scope",
         "13:9 cannot find 'VStack' in scope",
-        "14:13 cannot find 'Text' in scope",
-        "15:13 cannot find 'Picker' in scope"
+        "14:13 cannot find 'Text' in scope"
       ],
-      "errorCount": 18,
-      "isolatedInPass": 16,
+      "errorCount": 19,
+      "isolatedInPass": 17,
       "whole": true,
       "isolatedLoc": 44,
       "status": "needs-windows-part"
@@ -1347,8 +1326,8 @@
         "874:51 cannot infer type of closure parameter 'path' without a type annotation",
         "977:13 cannot find 'FirstRunFailureReporter' in scope"
       ],
-      "errorCount": 24,
-      "isolatedInPass": 16,
+      "errorCount": 23,
+      "isolatedInPass": 17,
       "whole": false,
       "isolatedLoc": 1567,
       "status": "partial"
@@ -1400,7 +1379,7 @@
         "227:36 cannot find 'AceLocalVisionOCR' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 11,
+      "isolatedInPass": 6,
       "whole": true,
       "isolatedLoc": 735,
       "status": "needs-windows-part"
@@ -1440,9 +1419,9 @@
       "changes": [
         {
           "line": 11,
-          "kind": "guarded-import",
+          "kind": "visible",
           "module": "CoreGraphics",
-          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+          "to": "Foundation has the geometry types off Apple platforms; drawing needs Direct2D / WIC"
         },
         {
           "line": 13,
@@ -1465,17 +1444,17 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
-        "54:47 value of type 'CGRect' has no member 'width'",
-        "55:48 value of type 'CGRect' has no member 'height'",
-        "56:43 value of type 'CGRect' has no member 'minX'",
-        "59:37 value of type 'CGRect' has no member 'maxY'",
         "84:28 cannot find 'CGImageSourceCreateWithData' in scope",
         "88:29 cannot find 'CGImageSourceCreateImageAtIndex' in scope",
         "93:23 cannot find 'VNRecognizeTextRequest' in scope",
-        "94:37 cannot infer contextual base in reference to member 'accurate'"
+        "94:37 cannot infer contextual base in reference to member 'accurate'",
+        "98:17 cannot find 'VNImageRequestHandler' in scope",
+        "106:52 type '(_, _) -> _' cannot conform to 'Sequence' [#ProtocolTypeNonConformance]",
+        "106:61 cannot infer type of closure parameter 'lhs' without a type annotation",
+        "106:66 cannot infer type of closure parameter 'rhs' without a type annotation"
       ],
-      "errorCount": 12,
-      "isolatedInPass": 10,
+      "errorCount": 8,
+      "isolatedInPass": 4,
       "whole": false,
       "isolatedLoc": 100,
       "status": "partial"
@@ -1545,7 +1524,7 @@
         "114:24 cannot find type 'View' in scope"
       ],
       "errorCount": 88,
-      "isolatedInPass": 10,
+      "isolatedInPass": 4,
       "whole": true,
       "isolatedLoc": 299,
       "status": "needs-windows-part"
@@ -1559,31 +1538,18 @@
       "changes": [
         {
           "line": 2,
-          "kind": "guarded-import",
+          "kind": "visible",
           "module": "CoreGraphics",
-          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+          "to": "Foundation has the geometry types off Apple platforms; drawing needs Direct2D / WIC"
         }
       ],
       "guardedModules": [
         "CoreGraphics"
       ],
       "kitModules": [],
-      "isolated": true,
-      "errors": [
-        "32:20 type 'AceFlightFrame' does not conform to protocol 'Equatable'",
-        "113:20 type 'AceInkTarget' does not conform to protocol 'Equatable'",
-        "128:20 type 'AceInkGesture' does not conform to protocol 'Equatable'",
-        "67:27 value of type 'CGRect' has no member 'minY'",
-        "67:49 value of type 'CGRect' has no member 'maxY'",
-        "121:41 value of type 'CGRect' has no member 'minX'",
-        "121:60 value of type 'CGRect' has no member 'minY'",
-        "122:23 value of type 'CGRect' has no member 'width'"
-      ],
-      "errorCount": 43,
-      "isolatedInPass": 10,
       "whole": false,
-      "isolatedLoc": 143,
-      "status": "partial"
+      "isolatedLoc": 0,
+      "status": "converted"
     },
     {
       "id": "leanring-buddy/AceNativeUpdate.swift",
@@ -1628,13 +1594,13 @@
         "272:6 unknown attribute 'ObservedObject'",
         "273:20 cannot find type 'View' in scope",
         "271:37 cannot find type 'View' in scope",
-        "44:16 cannot find 'StealthVisibilityGate' in scope",
         "75:29 cannot find 'NSPanel' in scope",
-        "81:37 cannot find 'AceHostingView' in scope",
-        "104:22 cannot find type 'InstallLocation' in scope"
+        "121:17 cannot find 'NSApp' in scope",
+        "213:18 cannot find 'NSApp' in scope",
+        "274:9 cannot find 'VStack' in scope"
       ],
-      "errorCount": 21,
-      "isolatedInPass": 10,
+      "errorCount": 16,
+      "isolatedInPass": 4,
       "whole": true,
       "isolatedLoc": 271,
       "status": "needs-windows-part"
@@ -1795,15 +1761,15 @@
       "errors": [
         "50:22 cannot find type 'Color' in scope",
         "59:20 cannot find type 'Color' in scope",
-        "70:8 type 'AceConstellationStar' does not conform to protocol 'Equatable'",
         "257:24 cannot find type 'AVQueuePlayer' in scope",
         "259:22 cannot find 'AVQueuePlayer' in scope",
         "258:69 'nil' requires a contextual type",
         "265:32 cannot find type 'AVPlayerLooper' in scope",
-        "310:32 cannot find type 'NSWindow' in scope"
+        "310:32 cannot find type 'NSWindow' in scope",
+        "389:6 unknown attribute 'ObservedObject'"
       ],
-      "errorCount": 149,
-      "isolatedInPass": 14,
+      "errorCount": 148,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 952,
       "status": "needs-windows-part"
@@ -1863,7 +1829,7 @@
         "238:21 cannot find 'NSAlert' in scope"
       ],
       "errorCount": 11,
-      "isolatedInPass": 14,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 274,
       "status": "needs-windows-part"
@@ -1941,12 +1907,13 @@
         "247:16 cannot find 'StealthVisibilityGate' in scope",
         "264:20 cannot find 'StealthVisibilityGate' in scope",
         "324:16 cannot find 'StealthVisibilityGate' in scope",
+        "460:60 value of type 'GmailAccountStore' has no member 'loadUsableCredential'",
         "559:17 cannot find 'StealthVisibilityGate' in scope",
         "708:16 cannot find 'StealthVisibilityGate' in scope",
         "803:16 cannot find 'StealthVisibilityGate' in scope"
       ],
-      "errorCount": 6,
-      "isolatedInPass": 14,
+      "errorCount": 7,
+      "isolatedInPass": 17,
       "whole": false,
       "isolatedLoc": 833,
       "status": "partial"
@@ -2041,7 +2008,7 @@
         "278:37 cannot find type 'SFSpeechAudioBufferRecognitionRequest' in scope"
       ],
       "errorCount": 19,
-      "isolatedInPass": 3,
+      "isolatedInPass": 2,
       "whole": false,
       "isolatedLoc": 316,
       "status": "partial"
@@ -2083,7 +2050,7 @@
         "863:23 cannot find type 'NSRunningApplication' in scope"
       ],
       "errorCount": 10,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 1201,
       "status": "needs-windows-part"
@@ -2149,31 +2116,18 @@
       "changes": [
         {
           "line": 2,
-          "kind": "guarded-import",
+          "kind": "visible",
           "module": "CoreGraphics",
-          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+          "to": "Foundation has the geometry types off Apple platforms; drawing needs Direct2D / WIC"
         }
       ],
       "guardedModules": [
         "CoreGraphics"
       ],
       "kitModules": [],
-      "isolated": true,
-      "errors": [
-        "136:32 value of type 'CGRect' has no member 'minX'",
-        "137:32 value of type 'CGRect' has no member 'maxX'",
-        "140:32 value of type 'CGRect' has no member 'minY'",
-        "141:32 value of type 'CGRect' has no member 'maxY'",
-        "144:29 value of type 'CGRect' has no member 'midX'",
-        "146:29 value of type 'CGRect' has no member 'minY'",
-        "150:58 value of type 'CGRect' has no member 'minX'",
-        "154:58 value of type 'CGRect' has no member 'minY'"
-      ],
-      "errorCount": 20,
-      "isolatedInPass": 3,
-      "whole": true,
-      "isolatedLoc": 225,
-      "status": "needs-windows-part"
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
     },
     {
       "id": "leanring-buddy/AudioSessionCoordinator.swift",
@@ -2217,7 +2171,7 @@
         "849:16 argument type '_' expected to be an instance of a class or class-constrained type"
       ],
       "errorCount": 3,
-      "isolatedInPass": 5,
+      "isolatedInPass": 3,
       "whole": false,
       "isolatedLoc": 744,
       "status": "partial"
@@ -2284,8 +2238,8 @@
         "93:39 cannot find type 'NWConnection' in scope",
         "106:38 cannot find type 'NWConnection' in scope"
       ],
-      "errorCount": 57,
-      "isolatedInPass": 3,
+      "errorCount": 56,
+      "isolatedInPass": 2,
       "whole": true,
       "isolatedLoc": 261,
       "status": "needs-windows-part"
@@ -2304,7 +2258,7 @@
         "46:32 cannot find 'BrainConnectionProbe' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 13,
+      "isolatedInPass": 8,
       "whole": true,
       "isolatedLoc": 64,
       "status": "needs-windows-part"
@@ -2406,15 +2360,16 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
-        "927:17 cannot find 'StealthVisibilityGate' in scope",
-        "941:17 cannot find 'StealthVisibilityGate' in scope",
         "391:28 cannot find 'AceLocalBrain' in scope",
-        "1840:26 cannot find 'AceLocalBrain' in scope",
-        "1960:28 cannot find 'AceLocalBrain' in scope",
+        "1838:26 cannot find 'AceLocalBrain' in scope",
+        "1958:28 cannot find 'AceLocalBrain' in scope",
         "580:38 value of type 'BrainCLI' has no member 'resolveExecutablePath'",
-        "593:38 value of type 'BrainCLI' has no member 'resolveExecutablePath'"
+        "593:38 value of type 'BrainCLI' has no member 'resolveExecutablePath'",
+        "806:36 value of type 'BrainCLI' has no member 'resolveExecutablePath'",
+        "819:41 cannot infer contextual base in reference to member 'runtimeMissing'",
+        "964:38 value of type 'BrainCLI' has no member 'resolveExecutablePath'"
       ],
-      "errorCount": 7,
+      "errorCount": 27,
       "isolatedInPass": 7,
       "whole": false,
       "isolatedLoc": 1717,
@@ -2492,7 +2447,7 @@
         "26:38 cannot find type 'AVAudioConverterInputStatus' in scope"
       ],
       "errorCount": 22,
-      "isolatedInPass": 3,
+      "isolatedInPass": 2,
       "whole": false,
       "isolatedLoc": 112,
       "status": "partial"
@@ -2562,7 +2517,7 @@
         "43:20 cannot find type 'AVAudioInputNode' in scope"
       ],
       "errorCount": 13,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 85,
       "status": "needs-windows-part"
@@ -2617,7 +2572,7 @@
         "447:50 cannot find type 'BuddyStreamingTranscriptionSession' in scope"
       ],
       "errorCount": 16,
-      "isolatedInPass": 18,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 2504,
       "status": "needs-windows-part"
@@ -2652,7 +2607,7 @@
         "562:11 cannot find type 'BuddyTranscriptionProvider' in scope"
       ],
       "errorCount": 10,
-      "isolatedInPass": 3,
+      "isolatedInPass": 2,
       "whole": false,
       "isolatedLoc": 131,
       "status": "partial"
@@ -2678,7 +2633,7 @@
         "1000:35 cannot find 'AceLocalBrain' in scope"
       ],
       "errorCount": 11,
-      "isolatedInPass": 28,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 2064,
       "status": "needs-windows-part"
@@ -2788,17 +2743,10 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
-        "64:20 cannot find type 'NSView' in scope",
-        "66:18 cannot find type 'NSView' in scope",
-        "927:47 cannot find 'StealthExitOnlyCapture' in scope",
-        "1018:9 cannot find 'AppleSpeechTranscriptionProvider' in scope",
-        "1167:43 cannot find type 'AVPlayer' in scope",
-        "5361:45 cannot find 'BackgroundAgent' in scope",
-        "5362:51 cannot find 'BackgroundAgent' in scope",
-        "5365:40 cannot find 'AppActionBroker' in scope"
+        "1016:9 cannot find 'CGPreflightScreenCaptureAccess' in scope"
       ],
-      "errorCount": 37,
-      "isolatedInPass": 23,
+      "errorCount": 1,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 24445,
       "status": "needs-windows-part"
@@ -2858,15 +2806,15 @@
       "errors": [
         "32:53 cannot find type 'NSView' in scope",
         "33:48 cannot find type 'NSView' in scope",
+        "38:27 cannot find type 'CompanionManager' in scope",
         "40:42 cannot find type 'NSView' in scope",
         "40:30 cannot find type 'Context' in scope",
         "47:31 cannot find type 'NSView' in scope",
         "47:48 cannot find type 'Context' in scope",
-        "36:44 cannot find type 'NSViewRepresentable' in scope",
-        "54:59 type annotation missing in pattern"
+        "36:44 cannot find type 'NSViewRepresentable' in scope"
       ],
-      "errorCount": 148,
-      "isolatedInPass": 23,
+      "errorCount": 160,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 4283,
       "status": "needs-windows-part"
@@ -2914,7 +2862,7 @@
         "255:46 cannot find type 'View' in scope"
       ],
       "errorCount": 8,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 246,
       "status": "needs-windows-part"
@@ -2962,7 +2910,7 @@
         "739:23 cannot find type 'CGImage' in scope"
       ],
       "errorCount": 12,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 773,
       "status": "needs-windows-part"
@@ -3010,7 +2958,7 @@
         "653:24 cannot find type 'NWConnection' in scope"
       ],
       "errorCount": 10,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": false,
       "isolatedLoc": 484,
       "status": "partial"
@@ -3097,7 +3045,7 @@
         "40:26 cannot find 'DesktopActionSystemBackend' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 26,
+      "isolatedInPass": 20,
       "whole": true,
       "isolatedLoc": 70,
       "status": "needs-windows-part"
@@ -3145,7 +3093,7 @@
         "1038:10 cannot find type 'AXUIElement' in scope"
       ],
       "errorCount": 24,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 1256,
       "status": "needs-windows-part"
@@ -3318,7 +3266,7 @@
         "294:30 cannot find 'StealthVisibilityGate' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 4,
+      "isolatedInPass": 16,
       "whole": false,
       "isolatedLoc": 310,
       "status": "partial"
@@ -3372,7 +3320,7 @@
         "51:40 cannot find type 'FloatingInboxCancellation' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 26,
+      "isolatedInPass": 20,
       "whole": true,
       "isolatedLoc": 131,
       "status": "needs-windows-part"
@@ -3406,7 +3354,7 @@
         "27:34 cannot find type 'FloatingInboxPanel' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 296,
       "status": "needs-windows-part"
@@ -3428,7 +3376,7 @@
         "99:24 cannot find 'GmailNetworkWire' in scope"
       ],
       "errorCount": 4,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 94,
       "status": "needs-windows-part"
@@ -3455,31 +3403,18 @@
       "changes": [
         {
           "line": 2,
-          "kind": "guarded-import",
+          "kind": "visible",
           "module": "CoreGraphics",
-          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+          "to": "Foundation has the geometry types off Apple platforms; drawing needs Direct2D / WIC"
         }
       ],
       "guardedModules": [
         "CoreGraphics"
       ],
       "kitModules": [],
-      "isolated": true,
-      "errors": [
-        "13:36 value of type 'CGRect' has no member 'intersection'",
-        "18:28 value of type 'CGRect' has no member 'minX'",
-        "18:49 value of type 'CGRect' has no member 'maxX'",
-        "18:65 value of type 'CGRect' has no member 'width'",
-        "19:34 value of type 'CGRect' has no member 'minY'",
-        "19:47 value of type 'CGRect' has no member 'minY'",
-        "20:32 value of type 'CGRect' has no member 'minY'",
-        "20:53 value of type 'CGRect' has no member 'maxY'"
-      ],
-      "errorCount": 9,
-      "isolatedInPass": 26,
       "whole": false,
-      "isolatedLoc": 18,
-      "status": "partial"
+      "isolatedLoc": 0,
+      "status": "converted"
     },
     {
       "id": "leanring-buddy/FloatingInboxPanel.swift",
@@ -3517,8 +3452,8 @@
         "99:6 unknown attribute 'Environment'",
         "101:20 cannot find type 'View' in scope"
       ],
-      "errorCount": 122,
-      "isolatedInPass": 20,
+      "errorCount": 121,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 240,
       "status": "needs-windows-part"
@@ -3544,9 +3479,9 @@
         },
         {
           "line": 13,
-          "kind": "guarded-import",
+          "kind": "visible",
           "module": "CoreGraphics",
-          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+          "to": "Foundation has the geometry types off Apple platforms; drawing needs Direct2D / WIC"
         }
       ],
       "guardedModules": [
@@ -3556,17 +3491,11 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
-        "456:20 cannot find type 'CGEvent' in scope",
-        "454:20 cannot find type 'CGEventType' in scope",
-        "455:16 cannot find type 'CGEvent' in scope",
-        "626:18 cannot find type 'CGEventFlags' in scope",
-        "681:16 cannot find type 'CGEventFlags' in scope",
-        "226:16 cannot find 'CGEvent' in scope",
-        "236:17 cannot find 'CGEvent' in scope",
-        "237:17 cannot find 'CGEvent' in scope"
+        "92:58 cannot find type 'BuddyPushToTalkShortcut' in scope",
+        "574:34 cannot find 'BuddyPushToTalkShortcut' in scope"
       ],
-      "errorCount": 21,
-      "isolatedInPass": 18,
+      "errorCount": 2,
+      "isolatedInPass": 13,
       "whole": true,
       "isolatedLoc": 656,
       "status": "needs-windows-part"
@@ -3619,6 +3548,7 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
+        "65:53 cannot find 'GmailGoogleConnection' in scope",
         "83:16 cannot find 'StealthVisibilityGate' in scope",
         "122:16 cannot find 'StealthVisibilityGate' in scope",
         "164:16 cannot find 'StealthVisibilityGate' in scope",
@@ -3627,8 +3557,8 @@
         "207:39 cannot find 'StealthVisibilityGate' in scope",
         "219:36 cannot find 'StealthVisibilityGate' in scope"
       ],
-      "errorCount": 7,
-      "isolatedInPass": 18,
+      "errorCount": 8,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 294,
       "status": "needs-windows-part"
@@ -3661,7 +3591,7 @@
         "28:54 cannot find 'GmailNetworkWire' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 20,
+      "isolatedInPass": 13,
       "whole": true,
       "isolatedLoc": 71,
       "status": "needs-windows-part"
@@ -3691,7 +3621,7 @@
         "41:43 cannot infer type of closure parameter 'state' without a type annotation"
       ],
       "errorCount": 3,
-      "isolatedInPass": 18,
+      "isolatedInPass": 12,
       "whole": false,
       "isolatedLoc": 82,
       "status": "partial"
@@ -3761,12 +3691,12 @@
         "119:25 cannot find type 'NSWindow' in scope",
         "156:73 cannot find type 'ASPresentationAnchor' in scope",
         "156:42 cannot find type 'ASWebAuthenticationSession' in scope",
-        "124:16 cannot find 'StealthVisibilityGate' in scope",
         "125:28 cannot find 'NSApp' in scope",
-        "125:47 cannot find 'NSApp' in scope"
+        "125:47 cannot find 'NSApp' in scope",
+        "133:31 cannot find 'ASWebAuthenticationSession' in scope"
       ],
-      "errorCount": 11,
-      "isolatedInPass": 18,
+      "errorCount": 10,
+      "isolatedInPass": 5,
       "whole": false,
       "isolatedLoc": 66,
       "status": "partial"
@@ -3838,7 +3768,7 @@
         "230:27 cannot find 'AceLicense' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 17,
+      "isolatedInPass": 18,
       "whole": false,
       "isolatedLoc": 171,
       "status": "partial"
@@ -3885,16 +3815,16 @@
       "isolated": true,
       "errors": [
         "41:24 cannot find type 'NSPanel' in scope",
-        "43:20 cannot find type 'FirstRunFailureReporter' in scope",
-        "87:35 cannot find type 'FirstRunFailureReporter' in scope",
         "87:6 unknown attribute 'ObservedObject'",
         "88:6 unknown attribute 'State'",
         "90:20 cannot find type 'View' in scope",
         "86:37 cannot find type 'View' in scope",
-        "129:24 cannot find type 'NSPanel' in scope"
+        "129:24 cannot find type 'NSPanel' in scope",
+        "130:43 cannot find type 'NSApplication' in scope",
+        "44:17 cannot find 'NSPanel' in scope"
       ],
-      "errorCount": 64,
-      "isolatedInPass": 8,
+      "errorCount": 58,
+      "isolatedInPass": 5,
       "whole": false,
       "isolatedLoc": 1398,
       "status": "partial"
@@ -4003,10 +3933,12 @@
         "70:20 cannot find type 'Scene' in scope",
         "67:27 cannot find type 'App' in scope",
         "193:45 cannot find type 'NSApplicationDelegate' in scope",
-        "1210:19 cannot find type 'NSApplication' in scope"
+        "213:42 cannot find type 'CompanionManager' in scope",
+        "214:33 cannot find type 'CompanionManager' in scope",
+        "229:35 cannot find type 'CompanionManager' in scope"
       ],
-      "errorCount": 6,
-      "isolatedInPass": 23,
+      "errorCount": 9,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 1494,
       "status": "needs-windows-part"
@@ -4131,7 +4063,7 @@
         "135:44 cannot find type 'View' in scope",
         "134:6 unknown attribute 'ViewBuilder'"
       ],
-      "errorCount": 67,
+      "errorCount": 19,
       "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 291,
@@ -4207,7 +4139,7 @@
         "760:42 cannot find type 'AVAudioEngine' in scope"
       ],
       "errorCount": 35,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": false,
       "isolatedLoc": 3613,
       "status": "partial"
@@ -4248,14 +4180,14 @@
         "44:29 cannot find type 'NSPanel' in scope",
         "45:18 property does not override any property from its superclass",
         "46:18 property does not override any property from its superclass",
+        "138:28 cannot find type 'CompanionManager' in scope",
         "51:29 cannot find type 'NSStatusItem' in scope",
         "80:70 cannot find type 'NSScreen' in scope",
         "86:24 cannot find type 'NSPanel' in scope",
-        "92:49 cannot find type 'NSRunningApplication' in scope",
-        "94:59 cannot find type 'NSRunningApplication' in scope"
+        "92:49 cannot find type 'NSRunningApplication' in scope"
       ],
-      "errorCount": 15,
-      "isolatedInPass": 23,
+      "errorCount": 17,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 741,
       "status": "needs-windows-part"
@@ -4297,7 +4229,7 @@
         "565:33 cannot infer type of closure parameter '_' without a type annotation"
       ],
       "errorCount": 3,
-      "isolatedInPass": 29,
+      "isolatedInPass": 25,
       "whole": false,
       "isolatedLoc": 425,
       "status": "partial"
@@ -4364,7 +4296,7 @@
         "71:27 cannot find 'CLLocationManager' in scope"
       ],
       "errorCount": 7,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 123,
       "status": "needs-windows-part"
@@ -4428,7 +4360,7 @@
         "148:36 cannot find type 'AXUIElement' in scope"
       ],
       "errorCount": 4,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": false,
       "isolatedLoc": 69,
       "status": "partial"
@@ -4452,16 +4384,16 @@
       "isolated": true,
       "errors": [
         "985:17 cannot find 'LifecycleLog' in scope",
+        "1010:15 cannot find 'VoiceReadiness' in scope",
+        "1016:19 cannot find 'VoiceReadiness' in scope",
         "1039:9 cannot find 'LifecycleLog' in scope",
         "1068:13 cannot find 'LifecycleLog' in scope",
-        "1504:13 cannot find 'LifecycleLog' in scope",
-        "1579:13 cannot find 'LifecycleLog' in scope",
-        "1592:13 cannot find 'LifecycleLog' in scope",
-        "1731:9 cannot find 'FirstRunFailureReporter' in scope",
-        "1733:25 cannot find 'AceIntroWindowController' in scope"
+        "1232:9 cannot find 'VoiceReadiness' in scope",
+        "1285:15 cannot find 'VoiceReadiness' in scope",
+        "1332:9 cannot find 'VoiceReadiness' in scope"
       ],
-      "errorCount": 9,
-      "isolatedInPass": 24,
+      "errorCount": 28,
+      "isolatedInPass": 21,
       "whole": false,
       "isolatedLoc": 1159,
       "status": "partial"
@@ -4487,16 +4419,16 @@
       "isolated": true,
       "errors": [
         "48:53 cannot find type 'MenuBarPanelManager' in scope",
-        "37:49 value of type 'CGRect' has no member 'maxX'",
-        "38:50 value of type 'CGRect' has no member 'minX'",
-        "40:38 value of type 'CGRect' has no member 'minX'",
-        "41:38 value of type 'CGRect' has no member 'maxX'",
         "57:9 cannot find 'LifecycleLog' in scope",
         "58:9 cannot find 'FirstRunFailureReporter' in scope",
-        "68:25 cannot find 'AceIntroWindowController' in scope"
+        "68:25 cannot find 'AceIntroWindowController' in scope",
+        "37:49 property 'maxX' is not available due to missing import of defining module 'CoreGraphics' [#MemberImportVisibility]",
+        "41:38 property 'maxX' is not available due to missing import of defining module 'CoreGraphics' [#MemberImportVisibility]",
+        "38:50 property 'minX' is not available due to missing import of defining module 'CoreGraphics' [#MemberImportVisibility]",
+        "40:38 property 'minX' is not available due to missing import of defining module 'CoreGraphics' [#MemberImportVisibility]"
       ],
       "errorCount": 8,
-      "isolatedInPass": 24,
+      "isolatedInPass": 21,
       "whole": false,
       "isolatedLoc": 47,
       "status": "partial"
@@ -4557,8 +4489,8 @@
         "64:18 cannot find type 'Shape' in scope",
         "85:35 cannot find type 'Path' in scope"
       ],
-      "errorCount": 95,
-      "isolatedInPass": 14,
+      "errorCount": 96,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 1643,
       "status": "needs-windows-part"
@@ -4645,7 +4577,7 @@
         "449:32 cannot infer contextual base in reference to member 'local'"
       ],
       "errorCount": 4,
-      "isolatedInPass": 27,
+      "isolatedInPass": 25,
       "whole": true,
       "isolatedLoc": 1132,
       "status": "needs-windows-part"
@@ -4763,17 +4695,17 @@
       ],
       "isolated": true,
       "errors": [
+        "12:43 cannot find type 'CompanionManager' in scope",
         "13:59 type annotation missing in pattern",
         "12:6 unknown attribute 'ObservedObject'",
         "13:6 unknown attribute 'Environment'",
         "14:6 unknown attribute 'StateObject'",
         "16:6 unknown attribute 'State'",
         "17:6 unknown attribute 'State'",
-        "18:6 unknown attribute 'AppStorage'",
-        "20:6 unknown attribute 'State'"
+        "18:6 unknown attribute 'AppStorage'"
       ],
-      "errorCount": 23,
-      "isolatedInPass": 23,
+      "errorCount": 25,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 891,
       "status": "needs-windows-part"
@@ -4834,7 +4766,7 @@
         "218:34 value of type 'Any' has no member 'topCandidates'"
       ],
       "errorCount": 7,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": false,
       "isolatedLoc": 756,
       "status": "partial"
@@ -4983,7 +4915,7 @@
         "603:17 cannot find 'NSApp' in scope"
       ],
       "errorCount": 5,
-      "isolatedInPass": 15,
+      "isolatedInPass": 14,
       "whole": false,
       "isolatedLoc": 104,
       "status": "partial"
@@ -5031,7 +4963,7 @@
         "538:16 cannot find 'StealthVisibilityGate' in scope"
       ],
       "errorCount": 19,
-      "isolatedInPass": 15,
+      "isolatedInPass": 14,
       "whole": false,
       "isolatedLoc": 804,
       "status": "partial"
@@ -5105,7 +5037,7 @@
         "170:8 type 'PrivateModeCaptureBinding' does not conform to protocol 'Equatable'"
       ],
       "errorCount": 218,
-      "isolatedInPass": 15,
+      "isolatedInPass": 14,
       "whole": true,
       "isolatedLoc": 1976,
       "status": "needs-windows-part"
@@ -5297,8 +5229,8 @@
         "336:18 cannot find type 'CGImage' in scope",
         "366:34 cannot find type 'CGImage' in scope"
       ],
-      "errorCount": 54,
-      "isolatedInPass": 21,
+      "errorCount": 52,
+      "isolatedInPass": 11,
       "whole": false,
       "isolatedLoc": 426,
       "status": "partial"
@@ -5356,9 +5288,9 @@
         },
         {
           "line": 35,
-          "kind": "guarded-import",
+          "kind": "visible",
           "module": "CoreGraphics",
-          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+          "to": "Foundation has the geometry types off Apple platforms; drawing needs Direct2D / WIC"
         },
         {
           "line": 37,
@@ -5379,15 +5311,15 @@
       "errors": [
         "152:16 cannot find type 'NSApplication' in scope",
         "151:18 cannot find type 'NSAlert' in scope",
-        "181:17 cannot find type 'NSAlert' in scope",
-        "171:53 cannot find type 'NSWindowDelegate' in scope",
-        "172:24 cannot find type 'NSAlert' in scope",
-        "173:43 cannot find type 'NSApplication' in scope",
-        "176:29 cannot find type 'NSApplication' in scope",
-        "178:35 cannot find type 'NSApplication' in scope"
+        "179:17 cannot find type 'NSAlert' in scope",
+        "169:53 cannot find type 'NSWindowDelegate' in scope",
+        "170:24 cannot find type 'NSAlert' in scope",
+        "171:43 cannot find type 'NSApplication' in scope",
+        "174:29 cannot find type 'NSApplication' in scope",
+        "176:35 cannot find type 'NSApplication' in scope"
       ],
-      "errorCount": 17,
-      "isolatedInPass": 14,
+      "errorCount": 70,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 1367,
       "status": "needs-windows-part"
@@ -5495,7 +5427,7 @@
         "72:28 cannot find 'SFSpeechRecognizer' in scope"
       ],
       "errorCount": 16,
-      "isolatedInPass": 2,
+      "isolatedInPass": 9,
       "whole": true,
       "isolatedLoc": 336,
       "status": "needs-windows-part"
@@ -5555,7 +5487,7 @@
         "1392:13 cannot find 'NSWindow' in scope"
       ],
       "errorCount": 16,
-      "isolatedInPass": 2,
+      "isolatedInPass": 9,
       "whole": false,
       "isolatedLoc": 440,
       "status": "partial"
@@ -5677,12 +5609,10 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
-        "433:22 cannot find 'NSApplication' in scope",
-        "871:9 cannot find 'LifecycleLog' in scope",
-        "949:13 cannot find 'LifecycleLog' in scope"
+        "433:22 cannot find 'NSApplication' in scope"
       ],
-      "errorCount": 3,
-      "isolatedInPass": 30,
+      "errorCount": 1,
+      "isolatedInPass": 15,
       "whole": false,
       "isolatedLoc": 530,
       "status": "partial"
@@ -5727,12 +5657,11 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
-        "28:12 type 'WindowMoveHeadlessCommand.Request' does not conform to protocol 'Equatable'",
         "226:21 cannot find type 'AXUIElement' in scope",
         "247:21 cannot find type 'AXUIElement' in scope"
       ],
-      "errorCount": 3,
-      "isolatedInPass": 23,
+      "errorCount": 2,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 253,
       "status": "needs-windows-part"
@@ -5776,7 +5705,7 @@
         "516:11 cannot find type 'NSScreen' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 471,
       "status": "needs-windows-part"
@@ -5818,7 +5747,7 @@
         "410:71 cannot find type 'AXUIElement' in scope"
       ],
       "errorCount": 12,
-      "isolatedInPass": 23,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 428,
       "status": "needs-windows-part"
@@ -5867,15 +5796,17 @@
       "kitModules": [],
       "isolated": true,
       "errors": [
+        "1660:27 cannot find 'BrainBackend' in scope",
+        "1721:27 cannot find 'BrainBackend' in scope",
         "391:44 cannot find 'HostedBrainClient' in scope",
+        "405:27 cannot find 'BrainBackend' in scope",
         "408:39 cannot find 'AceLocalBrain' in scope",
-        "686:41 cannot find 'HostedBrainClient' in scope",
-        "870:43 cannot find 'AceLocalBrain' in scope",
-        "1651:20 cannot find 'AceLocalBrain' in scope",
-        "1712:20 cannot find 'AceLocalBrain' in scope"
+        "426:13 cannot find 'BrainBackend' in scope",
+        "647:27 cannot find 'BrainBackend' in scope",
+        "649:13 cannot find 'BrainBackend' in scope"
       ],
-      "errorCount": 6,
-      "isolatedInPass": 26,
+      "errorCount": 19,
+      "isolatedInPass": 24,
       "whole": true,
       "isolatedLoc": 1810,
       "status": "needs-windows-part"

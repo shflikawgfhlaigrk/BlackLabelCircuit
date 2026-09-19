@@ -8,7 +8,7 @@
 //  never written by this bridge and no network transport exists here.
 //
 
-#if canImport(CoreGraphics) && !CIRCUIT_WINDOWS_SIM
+#if canImport(CoreGraphics)
 import CoreGraphics
 #endif
 import Foundation

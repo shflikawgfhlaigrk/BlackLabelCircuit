@@ -1,5 +1,5 @@
 import Foundation
-#if canImport(CoreGraphics) && !CIRCUIT_WINDOWS_SIM
+#if canImport(CoreGraphics)
 import CoreGraphics
 #endif
 
@@ -29,7 +29,6 @@ nonisolated enum AceMotionActivity: Equatable, Sendable {
     }
 }
 
-#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 nonisolated struct AceFlightFrame: Equatable, Sendable {
     let position: CGPoint
     let rotation: Double
@@ -37,9 +36,7 @@ nonisolated struct AceFlightFrame: Equatable, Sendable {
     let scaleY: Double
     let trail: [CGPoint]
 }
-#endif // circuit-convert
 
-#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// One flight clock owns movement and its ribbon. No effect changes an input
 /// coordinate, moves the system pointer, or outlives its navigation generation.
 nonisolated enum AceMotionPolicy {
@@ -102,7 +99,6 @@ nonisolated enum AceMotionPolicy {
         activity.animates && !reduceMotion
     }
 }
-#endif // circuit-convert
 
 nonisolated struct AceMotionGeneration: Sendable {
     private(set) var value: UInt64 = 0
@@ -112,7 +108,6 @@ nonisolated struct AceMotionGeneration: Sendable {
     }
 }
 
-#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// A revision also distinguishes repeated requests for the exact same point.
 /// Bounds exist only when the app has read back a real control's geometry.
 nonisolated struct AceInkTarget: Equatable, Sendable {
@@ -129,9 +124,7 @@ nonisolated struct AceInkTarget: Equatable, Sendable {
             && displayFrame.contains(point)
     }
 }
-#endif // circuit-convert
 
-#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 nonisolated struct AceInkGesture: Equatable, Sendable {
     enum Kind: Equatable, Sendable { case underline, arrow }
     let kind: Kind
@@ -140,9 +133,7 @@ nonisolated struct AceInkGesture: Equatable, Sendable {
     let end: CGPoint
     let surface: CGRect?
 }
-#endif // circuit-convert
 
-#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 nonisolated enum AceInkPolicy {
     static let gestureDuration = 0.65
     static let dockDuration = 0.38
@@ -204,4 +195,3 @@ nonisolated enum AceInkPolicy {
             && !rect.isNull && !rect.isInfinite
     }
 }
-#endif // circuit-convert

@@ -35,7 +35,7 @@ import OpenCombine
 import OpenCombineFoundation
 import OpenCombineDispatch
 #endif
-#if canImport(CoreGraphics) && !CIRCUIT_WINDOWS_SIM
+#if canImport(CoreGraphics)
 import CoreGraphics
 #endif
 #if canImport(Speech) && !CIRCUIT_WINDOWS_SIM

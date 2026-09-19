@@ -19,7 +19,7 @@ import OpenCombineFoundation
 import OpenCombineDispatch
 #endif
 @preconcurrency import CoreFoundation
-#if canImport(CoreGraphics) && !CIRCUIT_WINDOWS_SIM
+#if canImport(CoreGraphics)
 @preconcurrency import CoreGraphics
 #endif
 import Foundation

@@ -1,9 +1,8 @@
 import Foundation
-#if canImport(CoreGraphics) && !CIRCUIT_WINDOWS_SIM
+#if canImport(CoreGraphics)
 import CoreGraphics
 #endif
 
-#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 nonisolated enum FloatingInboxLayout {
     /// Saved positions and drags may select a display and height, never the desktop center.
     static func edgePinnedFrame(_ proposed: CGRect, visibleFrames: [CGRect]) -> CGRect {
@@ -22,7 +21,6 @@ nonisolated enum FloatingInboxLayout {
         return CGRect(origin: CGPoint(x: x, y: y), size: proposed.size)
     }
 }
-#endif // circuit-convert
 
 nonisolated enum FloatingInboxSource: String, CaseIterable, Identifiable {
     case automatic, appleMail, gmail

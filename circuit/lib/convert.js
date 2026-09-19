@@ -83,6 +83,7 @@ export function convertSwiftSource(content) {
     const rule = SWIFT_IMPORT_RULES[module];
     if (rule) {
       out.push(...swiftImportBlock(module, rule, rawLines[i].trim(), attrs).map((l) => `${indent}${l}`));
+      if (rule.type === 'visible') guardedModules.push(module);   // still what drawing code waits for
       if (rule.kit) needsKit = true;
       if (rule.type === 'kit') { hasKitImport = true; kitModules.push(module); }
       for (const [product, pkg] of rule.products ?? []) products.set(product, pkg);

@@ -41,6 +41,13 @@ export const SWIFT_IMPORT_RULES = {
   // uses them fails to compile off the Mac and the compiler keeps it for the Mac, as before.
   Security: { type: 'kit', imports: ['CircuitPortKit'], kit: true, note: 'CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes' },
   Darwin: { type: 'platform', note: 'ucrt on Windows, Glibc on Linux' },
+  // Off Apple platforms Foundation itself has CoreGraphics' geometry: CGFloat, CGPoint, CGSize,
+  // CGRect and their members. So the import is hidden only where CoreGraphics really is missing,
+  // never in the Mac simulation: hiding it there hides members Windows does have, and with
+  // MemberImportVisibility the simulation rejected code the Windows compiler accepts (Ace,
+  // 2026-09-18). Drawing (CGContext, CGImage, CGColor) still fails on Windows and the native
+  // pass isolates it.
+  CoreGraphics: { type: 'visible', note: 'Foundation has the geometry types off Apple platforms; drawing needs Direct2D / WIC' },
 };
 
 // Keychain names a Mac file can use without importing Security: Foundation re-exports it there.
@@ -58,6 +65,7 @@ export const NETWORKING_SYMBOLS = /\b(URLSession|URLRequest|HTTPURLResponse|URLS
 // `line` is the import exactly as written (`import os.log`, `@preconcurrency import X`):
 // the Apple branch keeps it verbatim; `attrs` travel to the replacement imports.
 export function swiftImportBlock(module, rule, line = `import ${module}`, attrs = '') {
+  if (rule.type === 'visible') return [`#if canImport(${module})`, line, '#endif'];
   if (rule.type === 'platform') {
     return [
       `#if canImport(Darwin) && !${SIM_FLAG}`,

@@ -1,4 +1,3 @@
-#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 //
 //  AccessibilityVisualTargetResolver.swift
 //  Ace
@@ -33,6 +32,7 @@ enum AccessibilityVisualTargetResolution: Equatable, Sendable {
     case missing
 }
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 enum AccessibilityVisualTargetGeometry {
     static func anchorPoint(
         in bounds: CGRect,
@@ -65,6 +65,7 @@ enum AccessibilityVisualTargetGeometry {
             && bounds.width > 1 && bounds.height > 1
     }
 }
+#endif // circuit-convert
 
 enum AccessibilityVisualTargetMatcher {
     private static let roleWords: Set<String> = [
@@ -191,6 +192,7 @@ enum PointingApplicationSelectionPolicy {
     }
 }
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 @MainActor
 enum AccessibilityVisualTargetResolver {
     private static let maximumVisitedElements = 3_000

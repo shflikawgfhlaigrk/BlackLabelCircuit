@@ -21,6 +21,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { analyzeRepo } from './lib/analyze.js';
 import { LANG_BY_EXT } from './lib/walk.js';
@@ -233,7 +234,9 @@ const MIME = {
 };
 
 let graph = null;
-let lastError = null;
+// Client-safe failure record: a correlation id ONLY. Nothing derived from the
+// exception is kept here — see analyze().
+let lastFailure = null;
 const sseClients = new Set();
 // Grade-over-history "refactor movie" (CI-20). Building it materializes N commits
 // into throwaway worktrees and grades each — expensive, so compute lazily on the
@@ -246,7 +249,7 @@ let portReport = null;
 // Convert run started from the UI. It runs as a child process of this same program
 // (`--convert … --verify`), so minutes of compiling never block the server; its
 // output lines are streamed to the page and the result is read back from its JSON.
-const convertJob = { running: false, log: [], result: null, error: null, out: null, startedAt: null };
+const convertJob = { running: false, log: [], result: null, error: null, errorId: null, out: null, startedAt: null };
 
 function convertOutDir() {
   // CIRCUIT_CONVERT_DIR moves the output root (tests, shared build machines).
@@ -258,7 +261,7 @@ function startConvert({ verify }) {
   const out = convertOutDir();
   fs.mkdirSync(out, { recursive: true });
   const resultPath = path.join(out, 'conversion.json');
-  Object.assign(convertJob, { running: true, log: [], result: null, error: null, out, startedAt: Date.now() });
+  Object.assign(convertJob, { running: true, log: [], result: null, error: null, errorId: null, out, startedAt: Date.now() });
   const childArgs = [fileURLToPath(import.meta.url), '--convert', root, '--out', out];
   if (verify) childArgs.push('--verify');
   const child = spawn(process.execPath, childArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
@@ -271,15 +274,38 @@ function startConvert({ verify }) {
       broadcast('convert', { line: text });
     }
   };
+  // Progress is stdout. The child's stderr is where its own failures go (exception text with
+  // absolute paths): kept for the server log only, never sent to a client.
   child.stdout.on('data', onData);
-  child.stderr.on('data', onData);
-  child.on('error', (e) => { convertJob.running = false; convertJob.error = String(e.message ?? e); broadcast('convert-done', { ok: false, error: convertJob.error }); });
+  let stderr = '';
+  child.stderr.on('data', (buf) => { stderr = `${stderr}${buf}`.slice(-65536); });
+  child.on('error', (e) => {
+    const f = failed('starting the conversion', e);
+    Object.assign(convertJob, { running: false, error: f.message, errorId: f.errorId });
+    broadcast('convert-done', { ok: false, error: f.message, errorId: f.errorId });
+  });
   child.on('close', (code) => {
     convertJob.running = false;
     try { convertJob.result = JSON.parse(fs.readFileSync(resultPath, 'utf8')); } catch { convertJob.result = null; }
-    if (code === 2 || !convertJob.result) convertJob.error = convertJob.log[convertJob.log.length - 1] ?? `convert exited with code ${code}`;
-    broadcast('convert-done', { ok: !convertJob.error, error: convertJob.error });
+    if (code === 2 || !convertJob.result) {
+      const f = failed('conversion', stderr.trim() || `the convert process exited with code ${code}`);
+      Object.assign(convertJob, { error: f.message, errorId: f.errorId });
+    }
+    broadcast('convert-done', { ok: !convertJob.error, error: convertJob.error, errorId: convertJob.errorId });
   });
+}
+
+// The single message any client is allowed to see when a scan fails. The real
+// cause (with stack) is on the server console under the correlation id.
+const ANALYZE_FAILED_MESSAGE = 'analysis failed — see the Circuit server log for details';
+
+// Every other endpoint fails the same way: the full error goes to the server console
+// under a correlation id; the client gets a fixed message and the id, never text
+// derived from the exception (see analyze()).
+function failed(what, e) {
+  const errorId = randomUUID();
+  console.error(`[circuit] ${what} failed [${errorId}]:`, e);
+  return { message: `${what} failed — see the Circuit server log for details`, errorId };
 }
 
 // analyzeRepo is synchronous — requests queue behind it for the few hundred ms
@@ -288,16 +314,23 @@ function analyze(reason = 'startup') {
   try {
     graph = analyzeRepo(root);
     portReport = null;
-    lastError = null;
+    lastFailure = null;
     const g = graph.stats.empty
       ? `no source files to grade`
       : `grade ${graph.stats.grade} (${graph.stats.score})`;
     console.log(`[circuit] analyzed ${graph.stats.files} files, ${graph.stats.edges} edges (${graph.stats.brokenEdges} broken) — ${g} in ${graph.tookMs}ms [${reason}]`);
     broadcast('graph', { generatedAt: graph.generatedAt, reason });
   } catch (e) {
-    lastError = String(e?.message ?? e);
-    console.error('[circuit] analyze failed:', e);
-    broadcast('error', { message: lastError, reason });
+    // CodeQL js/stack-trace-exposure: NOTHING derived from the exception may reach
+    // a client — not e.stack, not e.message, not String(e). An earlier attempt kept
+    // `e instanceof Error ? e.message : String(e)`, which still leaked: analyzer
+    // messages quote absolute repo paths, and String(e) on a non-Error throw can
+    // carry a whole stack. The full error goes to the server console under a
+    // correlation id; the client gets the id and a fixed message, nothing else.
+    const errorId = randomUUID();
+    lastFailure = { errorId };
+    console.error(`[circuit] analyze failed [${errorId}] [${reason}]:`, e);
+    broadcast('error', { message: ANALYZE_FAILED_MESSAGE, errorId, reason });
   }
 }
 
@@ -345,7 +378,11 @@ function handle(req, res) {
   }
 
   if (url.pathname === '/api/graph') {
-    if (!graph) return send(res, lastError ? 500 : 503, { error: lastError ?? 'analyzing' });
+    if (!graph) {
+      return lastFailure
+        ? send(res, 500, { error: ANALYZE_FAILED_MESSAGE, errorId: lastFailure.errorId })
+        : send(res, 503, { error: 'analyzing' });
+    }
     return send(res, 200, graph);
   }
 
@@ -356,7 +393,8 @@ function handle(req, res) {
       try {
         portReport = { ...portCheck(root, { target: 'windows' }), generatedAtGraph: graph?.generatedAt ?? null };
       } catch (e) {
-        return send(res, 500, { error: String(e?.message ?? e) });
+        const f = failed('port check', e);
+        return send(res, 500, { error: f.message, errorId: f.errorId });
       }
     }
     return send(res, 200, portReport);
@@ -377,7 +415,7 @@ function handle(req, res) {
     }
     return send(res, 200, {
       running: convertJob.running, out: convertJob.out ?? convertOutDir(), startedAt: convertJob.startedAt,
-      log: convertJob.log.slice(-60), error: convertJob.error, result: convertJob.result,
+      log: convertJob.log.slice(-60), error: convertJob.error, errorId: convertJob.errorId, result: convertJob.result,
     });
   }
 
@@ -390,7 +428,8 @@ function handle(req, res) {
     try {
       spawn(opener, [dir], { detached: true, stdio: 'ignore' }).on('error', () => {}).unref();
     } catch (e) {
-      return send(res, 500, { error: String(e?.message ?? e) });
+      const f = failed('opening the output folder', e);
+      return send(res, 500, { error: f.message, errorId: f.errorId });
     }
     return send(res, 200, { ok: true, dir });
   }
@@ -419,8 +458,8 @@ function handle(req, res) {
       history = buildHistory(root, { log: (m) => console.log(m) });
       return send(res, 200, history);
     } catch (e) {
-      console.error('[circuit] history failed:', e.message);
-      return send(res, 500, { supported: false, reason: e.message, commits: [] });
+      const f = failed('history', e);
+      return send(res, 500, { supported: false, reason: f.message, errorId: f.errorId, commits: [] });
     }
   }
 

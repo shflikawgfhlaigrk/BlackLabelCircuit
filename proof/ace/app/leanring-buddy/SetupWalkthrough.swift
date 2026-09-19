@@ -39,7 +39,7 @@ import AppKit
 #if canImport(ApplicationServices) && !CIRCUIT_WINDOWS_SIM
 import ApplicationServices
 #endif
-#if canImport(CoreGraphics) && !CIRCUIT_WINDOWS_SIM
+#if canImport(CoreGraphics)
 import CoreGraphics
 #endif
 import Foundation

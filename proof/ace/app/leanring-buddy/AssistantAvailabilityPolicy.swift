@@ -1,6 +1,5 @@
-#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 import Foundation
-#if canImport(CoreGraphics) && !CIRCUIT_WINDOWS_SIM
+#if canImport(CoreGraphics)
 import CoreGraphics
 #endif
 
@@ -247,4 +246,3 @@ enum AssistantAvailabilityPolicy {
         )
     }
 }
-#endif // circuit-convert
