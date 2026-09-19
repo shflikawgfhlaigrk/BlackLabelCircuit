@@ -11,7 +11,9 @@ name: convert-proof-windows
 on:
   push:
     branches: ['convert-proof/**']
-    paths: ['proof/apps.json', '.github/workflows/convert-proof-windows.yml']
+    # a changed package re-verifies too, not only a changed list
+    paths: ['proof/**', 'circuit/**', '.github/workflows/convert-proof-windows.yml']
+  workflow_dispatch:
 
 permissions:
   contents: read
