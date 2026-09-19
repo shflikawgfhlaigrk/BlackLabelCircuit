@@ -36,8 +36,21 @@ export const SWIFT_IMPORT_RULES = {
   os: { type: 'kit', imports: ['CircuitPortKit'], kit: true, note: 'CircuitPortKit Logger / os_log' },
   OSLog: { type: 'kit', imports: ['CircuitPortKit'], kit: true, note: 'CircuitPortKit Logger / os_log' },
   UniformTypeIdentifiers: { type: 'kit', imports: ['CircuitPortKit'], kit: true, note: 'CircuitPortKit UTType (extensions + MIME types)' },
-  Darwin: { type: 'platform', note: 'ucrt + WinSDK on Windows, Glibc on Linux' },
+  // The Keychain (generic passwords, over the Windows Credential Manager), SecRandomCopyBytes and
+  // the status codes. Code signing, trust, keys and access control are not in the kit: code that
+  // uses them fails to compile off the Mac and the compiler keeps it for the Mac, as before.
+  Security: { type: 'kit', imports: ['CircuitPortKit'], kit: true, note: 'CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes' },
+  Darwin: { type: 'platform', note: 'ucrt on Windows, Glibc on Linux' },
 };
+
+// Keychain names a Mac file can use without importing Security: Foundation re-exports it there.
+// Off the Mac they come from CircuitPortKit, so a file that uses them gets the kit's import.
+export const KEYCHAIN_SYMBOLS = /\b(?:kSec[A-Z]\w*|errSec[A-Z]\w*|SecItem(?:Add|CopyMatching|Update|Delete)|SecRandomCopyBytes|SecCopyErrorMessageString|OSStatus)\b/;
+
+// Combine names a Mac file can use without importing Combine (SwiftUI and Foundation re-export
+// it there). Off the Mac such a file gets the same OpenCombine imports as one that says
+// `import Combine` (native Windows run 35373516902: "unknown attribute 'Published'").
+export const COMBINE_SYMBOLS = /@Published\b|\b(?:ObservableObject|ObservableObjectPublisher|AnyCancellable|PassthroughSubject|CurrentValueSubject|AnyPublisher)\b/;
 
 // Foundation types that live in FoundationNetworking outside Apple platforms.
 export const NETWORKING_SYMBOLS = /\b(URLSession|URLRequest|HTTPURLResponse|URLSessionConfiguration|URLSessionTask|URLSessionDataTask|URLSessionDownloadTask|URLSessionUploadTask|URLSessionWebSocketTask|URLSessionDelegate|URLSessionDataDelegate|URLSessionTaskDelegate|URLCredential|URLAuthenticationChallenge|URLProtectionSpace|HTTPCookie|HTTPCookieStorage|URLCache|CachedURLResponse)\b/;
@@ -49,9 +62,11 @@ export function swiftImportBlock(module, rule, line = `import ${module}`, attrs 
     return [
       `#if canImport(Darwin) && !${SIM_FLAG}`,
       'import Darwin',
+      // ucrt only: code written against Darwin calls the C library, never Win32, and WinSDK
+      // brings Windows' own `UUID`, which makes Foundation's ambiguous in the whole file
+      // (native Windows run 35373516902 isolated nine Ace files for exactly that).
       '#elseif canImport(ucrt)',
       'import ucrt',
-      'import WinSDK',
       '#elseif canImport(Glibc)',
       'import Glibc',
       '#endif',

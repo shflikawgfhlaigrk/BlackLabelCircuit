@@ -1,0 +1,61 @@
+name: kit-selftest-windows
+
+# CircuitPortKit's Keychain against the real Windows Credential Manager. The self-test makes the
+# Keychain calls exactly as the converted apps make them, with the kit as its own module in Swift 6
+# language mode (as in a converted package). Then a separate program, cmdkey, confirms that the one
+# item the test leaves behind really is in the Windows store and that nothing else of the test is
+# (no split-value parts left over), and that removing it through the kit really removes it.
+
+on:
+  push:
+    branches: ['convert-proof/**']
+    paths: ['circuit/lib/convert-kit/**', '.github/workflows/kit-selftest-windows.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  selftest:
+    name: CircuitPortKit Keychain (windows-latest)
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: compnerd/gha-setup-swift@main
+        with:
+          branch: swift-6.2-release
+          tag: 6.2-RELEASE
+
+      - name: Toolchain
+        run: |
+          swift --version
+          node --version
+
+      - name: Kit self-test against Windows Credential Manager
+        env:
+          CIRCUIT_KIT_SELFTEST_MARKER: '1'
+        run: node circuit/server.js --kit-selftest --out kit-selftest
+
+      - name: cmdkey sees the item the test left, and nothing else of it
+        shell: pwsh
+        run: |
+          $ours = @(cmdkey /list | Select-String 'circuit-kit-selftest')
+          $ours | ForEach-Object { Write-Host $_.Line }
+          if (-not ($ours | Where-Object { $_.Line -match 'circuit-kit-selftest/marker/visible' })) { Write-Error 'cmdkey does not list the marker credential'; exit 1 }
+          if ($ours.Count -ne 1) { Write-Error "expected exactly the marker, cmdkey lists $($ours.Count) credentials of the test"; exit 1 }
+          Write-Host 'Windows Credential Manager holds the marker and nothing else of the test.'
+
+      - name: Removing it through the kit removes it from Windows
+        shell: pwsh
+        run: |
+          node circuit/server.js --kit-selftest --out kit-selftest -- --remove-marker
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $left = @(cmdkey /list | Select-String 'circuit-kit-selftest')
+          if ($left.Count -ne 0) { $left | ForEach-Object { Write-Host $_.Line }; Write-Error 'credentials of the test are still in Windows'; exit 1 }
+          Write-Host 'Windows Credential Manager holds nothing of the test.'
