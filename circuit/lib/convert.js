@@ -165,6 +165,7 @@ export function convertSwiftSource(content) {
       [/(\.(?:debounce|throttle|delay|timeout|measureInterval)\((?:[^()]|\([^()]*\))*?scheduler:\s*)(DispatchQueue\.main|DispatchQueue\.global\((?:[^()]|\([^()]*\))*\)|RunLoop\.main|RunLoop\.current|OperationQueue\.main)(?!\.circuitScheduler)\b/g, '$1$2.circuitScheduler'],
       [/\bNotificationCenter\.default\.publisher\(/g, 'NotificationCenter.default.circuitCombine.publisher('],
       [/\bURLSession\.shared\.dataTaskPublisher\(/g, 'URLSession.shared.circuitCombine.dataTaskPublisher('],
+      [/\bTimer\.publish\(/g, 'Timer.circuitCombine.publish('],
     ]);
     if (text !== before) changes.push({ line: 0, kind: 'combine-bridge', module: 'Combine', to: 'schedulers and Foundation publishers through CircuitPortKit' });
   }
@@ -624,11 +625,16 @@ function simCombineNames() {
     ...COMBINE_NAMES.map((nm) => `typealias ${nm} = OpenCombine.${nm}`),
     '#endif',
     '',
-    "// SwiftUI names CircuitPortKit provides where SwiftCrossUI stands in for SwiftUI (SwiftCrossUI's",
-    "// own Image draws image files only; the kit's also draws SF Symbols).",
+    "// SwiftUI names CircuitPortKit provides where SwiftCrossUI stands in for SwiftUI: SwiftCrossUI's",
+    "// own Image draws image files only (the kit's also draws SF Symbols), and its gradients are views",
+    "// made on the main actor (SwiftUI's are plain values an app keeps in a `static let`).",
     `#if canImport(SwiftCrossUI) && (!canImport(SwiftUI) || ${SIM_FLAG})`,
     'import CircuitPortKit',
     'typealias Image = CircuitPortKit.CircuitImage',
+    'typealias Gradient = CircuitPortKit.CircuitGradient',
+    'typealias LinearGradient = CircuitPortKit.CircuitLinearGradient',
+    'typealias RadialGradient = CircuitPortKit.CircuitRadialGradient',
+    'typealias AngularGradient = CircuitPortKit.CircuitAngularGradient',
     '#endif',
     '',
   ].join('\n');
@@ -771,8 +777,23 @@ function runSwiftBuild(outDir, { sim, log }) {
   log(`swift ${args.join(' ')}`);
   const r = spawnSync('swift', args, { encoding: 'utf8', maxBuffer: 512 * 1024 * 1024, env: { ...process.env, NO_COLOR: '1', TERM: 'dumb' } });
   // eslint-disable-next-line no-control-regex
-  const output = `${r.stdout ?? ''}\n${r.stderr ?? ''}`.replace(/\x1b\[[0-9;]*m/g, '');
-  return { ok: r.status === 0, status: r.status, output, spawnError: r.error ? String(r.error.message ?? r.error) : null };
+  const plain = (text) => (text ?? '').replace(/\x1b\[[0-9;]*m/g, '');
+  const stdout = plain(r.stdout), stderr = plain(r.stderr);
+  return { ok: r.status === 0, status: r.status, output: `${stdout}\n${stderr}`, stdout, stderr, spawnError: r.error ? String(r.error.message ?? r.error) : null };
+}
+
+// What to show when a build fails with no error in the converted sources: the compiler, C
+// compiler, linker and package errors (wherever they were printed), then the end of each stream
+// (swift build prints compile output on stdout and package resolution on stderr).
+export function buildFailureDigest({ stdout = '', stderr = '' }, { errorLines = 30, tailLines = 25 } = {}) {
+  const lines = (text) => text.split('\n').filter((l) => l.trim());
+  const isError = (l) => /\berror\b[^:\n]{0,24}:|\bfatal error\b|\bLNK\d{4}\b|\berror [A-Z]+\d{3,5}\b|\bundefined (?:symbol|reference)\b/i.test(l);
+  const errors = [...new Set([...lines(stdout), ...lines(stderr)].filter(isError))];
+  const parts = [];
+  if (errors.length) parts.push(`errors (${errors.length}):`, ...errors.slice(0, errorLines), ...(errors.length > errorLines ? [`… ${errors.length - errorLines} more`] : []));
+  if (stdout.trim()) parts.push('end of the build output:', ...lines(stdout).slice(-tailLines));
+  if (stderr.trim()) parts.push('end of the build messages:', ...lines(stderr).slice(-tailLines));
+  return { text: parts.join('\n'), errors };
 }
 
 function errorsByFile(output, outDir) {
@@ -796,13 +817,32 @@ function errorsByFile(output, outDir) {
   return map;
 }
 
-function verifySwift(outDir, swiftRels, { log, maxPasses }) {
+// Make the next pass compile every file of the app's own module again (its dependencies stay
+// built). After a pass isolates code, a file that used it must be compiled again; an incremental
+// build that failed last time can skip that file and pass on code that no longer builds.
+function forgetModuleBuild(outDir) {
+  const now = new Date();
+  const stack = [path.join(outDir, 'app')];
+  while (stack.length) {
+    const dir = stack.pop();
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { continue; }
+    for (const e of entries) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) stack.push(full);
+      else if (e.name.endsWith('.swift')) { try { fs.utimesSync(full, now, now); } catch { /* keep going */ } }
+    }
+  }
+}
+
+function verifySwift(outDir, swiftRels, { log, maxPasses, moduleName }) {
   const isolated = new Map(); // app-relative path → { pass, errors }
   const guarded = new Map();  // app-relative path → modules whose import was hidden on this platform
   const passes = [];
   let ok = false;
   let failure = null;
   for (let pass = 1; pass <= maxPasses; pass++) {
+    if (pass > 1) forgetModuleBuild(outDir);
     const r = runSwiftBuild(outDir, { sim: process.platform === 'darwin', log });
     if (r.spawnError) { failure = `swift could not be run: ${r.spawnError}`; break; }
     if (r.ok) { ok = true; passes.push({ pass, isolated: 0 }); break; }
@@ -816,9 +856,9 @@ function verifySwift(outDir, swiftRels, { log, maxPasses }) {
     if (!appErrs.length) {
       // A dependency, the linker or a C compiler (MSVC-style "error C1083:", "LNK1181") failed: show
       // the tail of the build, which is where that cause is, instead of only the exit code.
-      const lines = r.output.split('\n');
-      log(`the build failed outside the converted sources; last lines of the build:\n${lines.filter((l) => l.trim()).slice(-40).join('\n')}`);
-      failure = `build failed without a source error: ${lines.filter((l) => /\berror\b[^:\n]{0,24}:|\bfatal error\b/i.test(l)).slice(0, 3).join(' | ') || `exit ${r.status}`}`;
+      const digest = buildFailureDigest(r);
+      log(`the build failed outside the converted sources:\n${digest.text}`);
+      failure = `build failed without a source error: ${digest.errors.slice(0, 3).join(' | ') || `exit ${r.status}`}`;
       break;
     }
     let newly = 0;
@@ -1003,7 +1043,7 @@ export function reverifyConverted(outDir, { log = () => {}, maxPasses = 120 } = 
   const prior = JSON.parse(fs.readFileSync(path.join(outDir, 'conversion.json'), 'utf8'));
   const records = new Map(prior.files.map((f) => [f.id, f]));
   const swiftRels = prior.files.filter((f) => f.lang === 'swift').map((f) => f.id);
-  const v = verifySwift(outDir, swiftRels, { log, maxPasses });
+  const v = verifySwift(outDir, swiftRels, { log, maxPasses, moduleName: prior.moduleName });
   const verification = { ...verificationRecord(v), previous: prior.verification };
   applyVerification(records, v, outDir);
   const { fileList, totals, windowsPartsNeeded } = summarize(records, verification, swiftRels.length > 0);
@@ -1191,7 +1231,7 @@ export function convertRepo(root, opts = {}) {
     fs.writeFileSync(path.join(outDir, '.gitattributes'), '* text=auto eol=lf\n');
 
     if (verify) {
-      const v = verifySwift(outDir, swiftRels, { log, maxPasses });
+      const v = verifySwift(outDir, swiftRels, { log, maxPasses, moduleName });
       verification = verificationRecord(v);
       applyVerification(records, v, outDir);
     }

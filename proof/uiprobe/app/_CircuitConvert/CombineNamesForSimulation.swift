@@ -35,9 +35,14 @@ typealias TopLevelEncoder = OpenCombine.TopLevelEncoder
 typealias AnySubscriber = OpenCombine.AnySubscriber
 #endif
 
-// SwiftUI names CircuitPortKit provides where SwiftCrossUI stands in for SwiftUI (SwiftCrossUI's
-// own Image draws image files only; the kit's also draws SF Symbols).
+// SwiftUI names CircuitPortKit provides where SwiftCrossUI stands in for SwiftUI: SwiftCrossUI's
+// own Image draws image files only (the kit's also draws SF Symbols), and its gradients are views
+// made on the main actor (SwiftUI's are plain values an app keeps in a `static let`).
 #if canImport(SwiftCrossUI) && (!canImport(SwiftUI) || CIRCUIT_WINDOWS_SIM)
 import CircuitPortKit
 typealias Image = CircuitPortKit.CircuitImage
+typealias Gradient = CircuitPortKit.CircuitGradient
+typealias LinearGradient = CircuitPortKit.CircuitLinearGradient
+typealias RadialGradient = CircuitPortKit.CircuitRadialGradient
+typealias AngularGradient = CircuitPortKit.CircuitAngularGradient
 #endif

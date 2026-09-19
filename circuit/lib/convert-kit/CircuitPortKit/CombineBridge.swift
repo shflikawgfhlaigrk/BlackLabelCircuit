@@ -1,7 +1,8 @@
 // CircuitPortKit — one spelling for Combine schedulers and Foundation publishers on
 // every platform. Apple's Combine makes DispatchQueue / RunLoop / OperationQueue
 // schedulers directly; OpenCombine (Windows, Linux) reaches them through `.ocombine`.
-// Converted code writes `DispatchQueue.main.circuitScheduler` and gets the right one.
+// Converted code writes `DispatchQueue.main.circuitScheduler` (and `Timer.circuitCombine.publish`)
+// and gets the right one.
 import Foundation
 import Dispatch
 // Off Apple platforms URLSession lives in FoundationNetworking (in Foundation itself the
@@ -18,6 +19,7 @@ extension RunLoop { public var circuitScheduler: RunLoop { self } }
 extension OperationQueue { public var circuitScheduler: OperationQueue { self } }
 extension NotificationCenter { public var circuitCombine: NotificationCenter { self } }
 extension URLSession { public var circuitCombine: URLSession { self } }
+extension Timer { public static var circuitCombine: Timer.Type { Timer.self } }
 
 #elseif canImport(OpenCombine)
 import OpenCombine
@@ -29,4 +31,19 @@ extension RunLoop { public var circuitScheduler: RunLoop.OCombine { ocombine } }
 extension OperationQueue { public var circuitScheduler: OperationQueue.OCombine { ocombine } }
 extension NotificationCenter { public var circuitCombine: NotificationCenter.OCombine { ocombine } }
 extension URLSession { public var circuitCombine: URLSession.OCombine { ocombine } }
+extension Timer { public static var circuitCombine: CircuitTimerPublishers.Type { CircuitTimerPublishers.self } }
+
+/// `Timer.publish` through OpenCombine (on a Mac simulating Windows, Foundation's own
+/// `Timer.publish` would make the plain spelling ambiguous).
+public enum CircuitTimerPublishers {
+    public static func publish(
+        every interval: TimeInterval,
+        tolerance: TimeInterval? = nil,
+        on runLoop: RunLoop,
+        in mode: RunLoop.Mode,
+        options: RunLoop.OCombine.SchedulerOptions? = nil
+    ) -> Timer.OCombine.TimerPublisher {
+        Timer.OCombine.TimerPublisher(interval: interval, tolerance: tolerance, runLoop: runLoop, mode: mode, options: options)
+    }
+}
 #endif

@@ -13,12 +13,6 @@ import Foundation
 import SwiftCrossUI
 import OpenCombine
 
-/// Internal mutability for wrappers the view graph recreates with each body pass.
-final class CircuitBox<Value> {
-    var value: Value
-    init(_ value: Value) { self.value = value }
-}
-
 /// Forwards a Combine model's objectWillChange to the publisher SwiftCrossUI observes. The same
 /// relay (and so the same publisher) is handed from one view instance to the next, because
 /// SwiftCrossUI subscribes once, when the view's node is created.
@@ -160,6 +154,40 @@ public struct EnvironmentObject<ObjectType: OpenCombine.ObservableObject>: Swift
             storage.value.object = object
             storage.value.relay.watch(object)
         }
+    }
+}
+
+/// A view's subscription to a publisher, kept while the view is shown.
+final class CircuitReceiver<Output> {
+    var subscription: OpenCombine.AnyCancellable?
+    var action: ((Output) -> Void)?
+}
+
+struct CircuitOnReceive<Content: SwiftCrossUI.View, P: OpenCombine.Publisher>: SwiftCrossUI.View where P.Failure == Never {
+    let content: Content
+    let publisher: P
+    let action: (P.Output) -> Void
+    @CircuitPersistent var receiver = CircuitReceiver<P.Output>()
+
+    var body: some SwiftCrossUI.View {
+        let receiver = self.receiver, publisher = self.publisher
+        receiver.action = action // the latest closure sees the latest view state
+        return content
+            .onAppear {
+                guard receiver.subscription == nil else { return }
+                receiver.subscription = publisher.sink { value in receiver.action?(value) }
+            }
+            .onDisappear {
+                receiver.subscription = nil
+            }
+    }
+}
+
+extension SwiftCrossUI.View {
+    /// SwiftUI's `onReceive(_:perform:)`: runs the action for each value the publisher sends while
+    /// the view is shown.
+    public func onReceive<P: OpenCombine.Publisher>(_ publisher: P, perform action: @escaping (P.Output) -> Void) -> some SwiftCrossUI.View where P.Failure == Never {
+        CircuitOnReceive(content: self, publisher: publisher, action: action)
     }
 }
 #endif

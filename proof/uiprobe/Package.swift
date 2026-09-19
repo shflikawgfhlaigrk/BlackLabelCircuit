@@ -34,6 +34,7 @@ let package = Package(
             path: "app",
             sources: [
                 "Sources/Counter.swift",
+                "Sources/Gallery.swift",
                 "Sources/Symbols.swift",
                 "_CircuitConvert/CombineNamesForSimulation.swift",
             ]

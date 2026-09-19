@@ -5,23 +5,23 @@
   "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/uiprobe-out",
   "moduleName": "UIProbeCore",
   "source": {
-    "sha256": "a532e79f70e931126d281b24f85a5ef3ef38524edfd2dca89c96919de22e5dc0",
-    "files": 2,
+    "sha256": "ccee2c47069d7b1b64dc6581f04b7823e8e37888454321e9e8528d0569a1988b",
+    "files": 3,
     "git": {
       "head": "4c9cdca2b4c7a97c74d3ca4cffaa9a608c507dde",
-      "uncommitted": 0
+      "uncommitted": 1
     }
   },
   "moduleSources": {
     "from": "every app Swift file outside iOS / widget / marketing folders",
     "paths": null
   },
-  "generatedAt": 1789791531819,
-  "tookMs": 48509,
+  "generatedAt": 1789793662081,
+  "tookMs": 19899,
   "before": {
     "readyPct": 0,
-    "files": 2,
-    "loc": 20
+    "files": 3,
+    "loc": 133
   },
   "after": {
     "readyPct": 100,
@@ -45,16 +45,16 @@
   },
   "totals": {
     "all": {
-      "files": 2,
-      "loc": 20
+      "files": 3,
+      "loc": 133
     },
     "portable": {
       "files": 0,
       "loc": 0
     },
     "converted": {
-      "files": 2,
-      "loc": 20
+      "files": 3,
+      "loc": 133
     },
     "partial": {
       "files": 0,
@@ -78,7 +78,7 @@
       "files": 0,
       "loc": 0
     },
-    "buildsLoc": 20,
+    "buildsLoc": 133,
     "isolatedLoc": 0,
     "buildsForWindowsPct": 100
   },
@@ -127,6 +127,39 @@
       "status": "converted"
     },
     {
+      "id": "Sources/Gallery.swift",
+      "lang": "swift",
+      "loc": 113,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "dropin",
+          "module": "SwiftUI",
+          "to": "SwiftCrossUI (SwiftUI-style views; WinUI 3 on Windows)"
+        },
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 0,
+          "kind": "combine-bridge",
+          "module": "Combine",
+          "to": "schedulers and Foundation publishers through CircuitPortKit"
+        }
+      ],
+      "guardedModules": [],
+      "kitModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "inactiveLoc": 0,
+      "status": "converted"
+    },
+    {
       "id": "Sources/Symbols.swift",
       "lang": "swift",
       "loc": 4,
@@ -147,6 +180,5 @@
       "inactiveLoc": 0,
       "status": "converted"
     }
-  ],
-  "recountedAt": 1789791552444
+  ]
 }
