@@ -38,17 +38,18 @@ test('convert rules: every drop-in names a real package product and every rule a
 });
 
 test('swift: drop-in imports become per-platform imports, Apple-only imports are hidden off Apple platforms', () => {
-  const src = ['// header', 'import Foundation', 'import SwiftUI', 'import Combine', '@preconcurrency import CryptoKit', 'import os.log', '',
+  const src = ['// header', 'import Foundation', 'import SwiftUI', 'import AppKit', 'import Combine', '@preconcurrency import CryptoKit', 'import os.log', '',
     'final class M: ObservableObject { @Published var n = 0 }', ''].join('\n');
   const r = convertSwiftSource(src);
   assert.ok(r.changed);
   assert.match(r.text, new RegExp(`#if canImport\\(Combine\\) && !${SIM_FLAG}\\nimport Combine\\n#else\\nimport OpenCombine\\nimport OpenCombineFoundation\\nimport OpenCombineDispatch\\n#endif`));
   assert.match(r.text, /#else\n@preconcurrency import Crypto\n#endif/, 'attributes travel with the import');
   assert.match(r.text, new RegExp(`#if canImport\\(os\\) && !${SIM_FLAG}\\nimport os\\.log\\n#else\\nimport CircuitPortKit\\n#endif`));
-  assert.match(r.text, new RegExp(`#if canImport\\(SwiftUI\\) && !${SIM_FLAG}\\nimport SwiftUI\\n#endif`));
-  assert.deepEqual(r.guardedModules, ['SwiftUI']);
+  assert.match(r.text, new RegExp(`#if canImport\\(SwiftUI\\) && !${SIM_FLAG}\\nimport SwiftUI\\n#else\\nimport SwiftCrossUI\\n#endif`), 'SwiftUI → SwiftCrossUI');
+  assert.match(r.text, new RegExp(`#if canImport\\(AppKit\\) && !${SIM_FLAG}\\nimport AppKit\\n#endif`), 'no replacement: hidden');
+  assert.deepEqual(r.guardedModules, ['AppKit']);
   assert.ok(r.needsKit);
-  assert.deepEqual([...r.products.keys()].sort(), ['Crypto', 'OpenCombine', 'OpenCombineDispatch', 'OpenCombineFoundation']);
+  assert.deepEqual([...r.products.keys()].sort(), ['Crypto', 'OpenCombine', 'OpenCombineDispatch', 'OpenCombineFoundation', 'SwiftCrossUI']);
   assert.ok(r.text.includes('final class M: ObservableObject { @Published var n = 0 }'), 'code is untouched');
 });
 
@@ -121,7 +122,7 @@ test('swift: Combine used without an import (SwiftUI / Foundation re-export it o
   assert.match(r.text, new RegExp(`#if canImport\\(Combine\\) && !${SIM_FLAG}\\nimport Combine\\n#else\\nimport OpenCombine\\nimport OpenCombineFoundation\\nimport OpenCombineDispatch\\n#endif`));
   assert.match(r.text, /^import CircuitPortKit$/m, 'the scheduler bridge');
   assert.ok(r.text.includes('.receive(on: DispatchQueue.main.circuitScheduler)'));
-  assert.deepEqual([...r.products.keys()].sort(), ['OpenCombine', 'OpenCombineDispatch', 'OpenCombineFoundation']);
+  assert.deepEqual([...r.products.keys()].sort(), ['OpenCombine', 'OpenCombineDispatch', 'OpenCombineFoundation', 'SwiftCrossUI']);
   assert.equal(convertSwiftSource(r.text).text, r.text, 'idempotent');
   const explicit = convertSwiftSource('import Combine\nimport os\nlet l = Logger()\nfunc f(p: AnyPublisher<Int, Never>) { _ = p.receive(on: RunLoop.main) }\n');
   const lines = explicit.text.split('\n');
@@ -281,7 +282,7 @@ test('swift settings are read from the Xcode project so the package is judged by
 const APP = {
   'Sources/Model.swift': 'import Foundation\nimport os\n\nstruct Model: Codable { var name: String }\n\nlet log = Logger(subsystem: "demo", category: "model")\n\nfunc describe(_ m: Model) -> String {\n    log.info("describe \\(m.name, privacy: .public)")\n    return m.name.uppercased()\n}\n',
   'Sources/Plain.swift': 'import Foundation\n\nfunc double(_ x: Int) -> Int { x * 2 }\n',
-  'Sources/Screen.swift': 'import SwiftUI\n\nfunc title(_ m: Model) -> String { describe(m) }\n\nstruct Screen: View {\n    let model: Model\n    var body: some View { Text(title(model)) }\n}\n',
+  'Sources/Screen.swift': 'import AppKit\n\nfunc title(_ m: Model) -> String { describe(m) }\n\nfinal class Screen: NSViewController {\n    let model: Model\n    init(model: Model) { self.model = model; super.init(nibName: nil, bundle: nil) }\n    required init?(coder: NSCoder) { fatalError() }\n    override func loadView() { view = NSTextField(labelWithString: title(model)) }\n}\n',
   'Sources/UsesScreen.swift': 'import Foundation\n\nfunc makeScreen(_ m: Model) -> Any { Screen(model: m) }\n',
   'ios/Phone.swift': 'import UIKit\nfinal class Phone: UIViewController {}\n',
   'engine/paths.py': 'import os\n\ndef home():\n    return os.path.expanduser("~/Library/Application Support/Demo")\n',
@@ -317,7 +318,7 @@ test('convert writes a buildable package outside the repo, never touches the sou
   assert.ok(fs.existsSync(path.join(out, 'conversion.json')) && fs.existsSync(path.join(out, 'CONVERSION.md')));
 });
 
-test('convert --verify: the compiler decides — logic builds, the SwiftUI view and what depends on it are isolated', { timeout: 600_000 }, (t) => {
+test('convert --verify: the compiler decides — logic builds, the AppKit screen and what depends on it are isolated', { timeout: 600_000 }, (t) => {
   const swift = spawnSync('swift', ['--version'], { encoding: 'utf8' });
   if (swift.error || swift.status !== 0) { t.skip('no swift toolchain on this host'); return; }
   const dir = fixture(APP);
@@ -327,18 +328,73 @@ test('convert --verify: the compiler decides — logic builds, the SwiftUI view 
   const by = Object.fromEntries(r.files.map((f) => [f.id, f]));
   assert.equal(by['Sources/Plain.swift'].status, 'portable');
   assert.equal(by['Sources/Model.swift'].status, 'converted', 'os.Logger → CircuitPortKit Logger compiles');
-  assert.equal(by['Sources/Screen.swift'].status, 'partial', 'the view is isolated, the plain function beside it builds');
+  assert.equal(by['Sources/Screen.swift'].status, 'partial', 'the screen is isolated, the plain function beside it builds');
   assert.ok(by['Sources/Screen.swift'].isolatedLoc > 0 && by['Sources/Screen.swift'].isolatedLoc < by['Sources/Screen.swift'].loc);
   assert.ok(by['Sources/UsesScreen.swift'].isolatedLoc > 0 && by['Sources/UsesScreen.swift'].isolatedInPass >= 1, 'code that needs the isolated view is isolated in a later pass');
   assert.match(fs.readFileSync(path.join(out, 'app', 'Sources', 'UsesScreen.swift'), 'utf8'), new RegExp(`${ISOLATE_OPEN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\nfunc makeScreen`));
   assert.ok(r.verification.passes.length >= 3);
   assert.ok(r.totals.buildsLoc > 0 && r.totals.buildsLoc < r.totals.all.loc);
-  assert.ok(r.windowsPartsNeeded.some((p) => p.id === 'SwiftUI'));
+  assert.ok(r.windowsPartsNeeded.some((p) => p.id === 'AppKit'));
   const screen = fs.readFileSync(path.join(out, 'app', 'Sources', 'Screen.swift'), 'utf8');
   assert.ok(screen.includes(ISOLATE_OPEN) && screen.includes('func title(_ m: Model) -> String { describe(m) }'));
   // the converted package builds again from cold with no further changes
   const again = spawnSync('swift', ['build', '--package-path', out, '-Xswiftc', `-D${SIM_FLAG}`], { encoding: 'utf8' });
   assert.equal(again.status, 0, again.stderr);
+});
+
+test('measurement: code in a branch of the app\'s own #if that Windows never compiles is not counted as building', async () => {
+  const { windowsInactiveLoc, evalCondition, recountConverted } = await import('../lib/convert.js');
+  assert.equal(evalCondition('canImport(AppKit)'), false);
+  assert.equal(evalCondition('os(macOS) || os(Windows)'), true);
+  assert.equal(evalCondition('APPSTORE'), false, 'an undefined flag is false in the package build');
+  assert.equal(evalCondition('hasFeature(Embedded)'), null, 'undecidable: counted as compiled');
+  const text = ['import Foundation', '#if os(macOS)', 'let a = 1', 'let b = 2', '#elseif os(Windows)', 'let c = 3', '#else', 'let d = 4', '#endif', '#if canImport(SwiftCrossUI)', 'let e = 5', '#endif', ''].join('\n');
+  assert.equal(windowsInactiveLoc(text), 3, 'a, b and d');
+  const iso = [ISOLATE_OPEN, '#if os(macOS)', 'let x = 1', '#endif', ISOLATE_CLOSE, ''].join('\n');
+  assert.equal(windowsInactiveLoc(iso), 0, 'isolated code is counted once, as isolated');
+  // end to end through the report
+  const out = outDir();
+  fs.mkdirSync(path.join(out, 'app', 'Sources'), { recursive: true });
+  fs.writeFileSync(path.join(out, 'app', 'Sources', 'A.swift'), text);
+  const record = { id: 'Sources/A.swift', lang: 'swift', loc: 12, rewritten: false, changes: [], guardedModules: [] };
+  fs.writeFileSync(path.join(out, 'conversion.json'), JSON.stringify({ name: 'demo', target: 'windows', root: '/x', out, generatedAt: Date.now(), windowsPartsNeeded: [], verification: { ran: true, ok: true, passes: [{ pass: 1 }], configuration: 'native Windows build' }, before: { readyPct: 0 }, packages: [], kit: false, skipped: [], files: [record] }));
+  const r = recountConverted(out);
+  assert.equal(r.totals.appIf.loc, 3);
+  assert.equal(r.totals.buildsLoc, 9, '12 lines, 3 of them never compiled for Windows');
+  assert.match(formatConvertReport(r), /left off Windows by the app's own #if/);
+});
+
+test('swift: the app\'s own `#if canImport(SwiftUI)` region is opened to SwiftCrossUI; one with an #else is left as written', () => {
+  const src = ['import Foundation', '#if canImport(SwiftUI)', 'import SwiftUI', '#endif', '', '#if canImport(SwiftUI)', 'struct P: View { var body: some View { Text("x") } }', '#endif', '',
+    '#if canImport(SwiftUI)', 'let ui = true', '#else', 'let ui = false', '#endif', '#if !canImport(SwiftUI)', 'let headless = true', '#endif', ''].join('\n');
+  const r = convertSwiftSource(src);
+  assert.match(r.text, /#if \(canImport\(SwiftUI\) \|\| canImport\(SwiftCrossUI\)\)\n#if canImport\(SwiftUI\) && !CIRCUIT_WINDOWS_SIM\nimport SwiftUI\n#else\nimport SwiftCrossUI\n#endif\n#endif/);
+  assert.match(r.text, /#if \(canImport\(SwiftUI\) \|\| canImport\(SwiftCrossUI\)\)\nstruct P: View/);
+  assert.ok(r.text.includes('#if canImport(SwiftUI)\nlet ui = true\n#else'), 'the author wrote the other path already');
+  assert.ok(r.text.includes('#if !canImport(SwiftUI)\nlet headless = true'), 'a negated condition is never opened');
+  assert.ok(r.products.has('SwiftCrossUI'));
+  assert.equal(convertSwiftSource(r.text).text, r.text, 'idempotent');
+});
+
+test('convert --verify: SwiftUI screens build against SwiftCrossUI, Combine models through the kit bridge', { timeout: 1_200_000 }, (t) => {
+  const swift = spawnSync('swift', ['--version'], { encoding: 'utf8' });
+  if (swift.error || swift.status !== 0) { t.skip('no swift toolchain on this host'); return; }
+  if (process.env.CIRCUIT_TEST_OFFLINE === '1') { t.skip('offline: SwiftCrossUI is fetched from GitHub'); return; }
+  const dir = fixture({
+    'Sources/Counter.swift': ['import SwiftUI', '', 'final class CounterModel: ObservableObject {', '    @Published var count = 0', '}', '',
+      'struct CounterView: View {', '    @StateObject private var model = CounterModel()', '    var body: some View {',
+      '        VStack {', '            Text("Count: \\(model.count)")', '            Button("Add") { model.count += 1 }', '            TextField("Name", text: $model.label)', '        }', '    }', '}', '',
+      'extension CounterModel { var label: String { get { "\\(count)" } set { count = Int(newValue) ?? count } } }', ''].join('\n'),
+    'Sources/Symbols.swift': ['import SwiftUI', '', 'struct Starred: View {', '    var body: some View { Label("Starred", systemImage: "star.fill") }', '}', ''].join('\n'),
+  });
+  const out = outDir();
+  const r = convertRepo(dir, { out, verify: true });
+  assert.equal(r.verification.ok, true, r.verification.failure ?? '');
+  const by = Object.fromEntries(r.files.map((f) => [f.id, f]));
+  assert.equal(by['Sources/Counter.swift'].status, 'converted', JSON.stringify(by['Sources/Counter.swift'].errors));
+  assert.equal(by['Sources/Symbols.swift'].status, 'converted', 'Image(systemName:) draws the Fluent counterpart through the kit');
+  assert.ok(fs.existsSync(path.join(out, 'kit', 'CircuitPortKit', 'SymbolPaths.swift')));
+  assert.ok(fs.readFileSync(path.join(out, 'Package.swift'), 'utf8').includes('swift-cross-ui'));
 });
 
 // ---- CLI + HTTP API ----
