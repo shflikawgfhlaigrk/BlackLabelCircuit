@@ -20,6 +20,9 @@ export const SWIFT_PACKAGES = {
   OpenCombine: { url: 'https://github.com/OpenCombine/OpenCombine.git', from: '0.14.0', package: 'OpenCombine' },
   'swift-crypto': { url: 'https://github.com/apple/swift-crypto.git', from: '3.0.0', package: 'swift-crypto' },
   'swift-toolchain-sqlite': { url: 'https://github.com/swiftlang/swift-toolchain-sqlite.git', from: '1.0.0', package: 'swift-toolchain-sqlite' },
+  // SwiftUI-style views with a native Windows backend (WinUI 3), GTK on Linux, AppKit on a Mac.
+  // Still 0.x, so held to the minor version it was checked against.
+  'swift-cross-ui': { url: 'https://github.com/moreSwift/swift-cross-ui.git', from: '0.9.0', package: 'swift-cross-ui', requirement: '.upToNextMinor(from: "0.9.0")' },
 };
 
 // Swift `import X` rewrites. `imports` is what the non-Apple branch imports;
@@ -32,6 +35,17 @@ export const SWIFT_IMPORT_RULES = {
     note: 'OpenCombine (same API)',
   },
   CryptoKit: { type: 'dropin', imports: ['Crypto'], products: [['Crypto', 'swift-crypto']], note: 'swift-crypto (same API)' },
+  // SwiftUI → SwiftCrossUI: the views, stacks, controls, state and environment it shares with
+  // SwiftUI build as written and render through WinUI 3 on Windows. SwiftUI's names it spells
+  // differently (StateObject, ObservedObject, EnvironmentObject over Combine models) are bridged
+  // in the kit; whatever it does not have is left to the compiler, which keeps that view for
+  // the Mac. OpenCombine comes along: on Apple platforms SwiftUI re-exports Combine.
+  SwiftUI: {
+    type: 'dropin', imports: ['SwiftCrossUI'],
+    products: [['SwiftCrossUI', 'swift-cross-ui'], ['OpenCombine', 'OpenCombine'], ['OpenCombineFoundation', 'OpenCombine'], ['OpenCombineDispatch', 'OpenCombine']],
+    kit: true,
+    note: 'SwiftCrossUI (SwiftUI-style views; WinUI 3 on Windows)',
+  },
   SQLite3: { type: 'dropin', imports: ['SwiftToolchainCSQLite'], products: [['SwiftToolchainCSQLite', 'swift-toolchain-sqlite']], note: 'swift-toolchain-sqlite (the same C API)' },
   os: { type: 'kit', imports: ['CircuitPortKit'], kit: true, note: 'CircuitPortKit Logger / os_log' },
   OSLog: { type: 'kit', imports: ['CircuitPortKit'], kit: true, note: 'CircuitPortKit Logger / os_log' },

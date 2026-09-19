@@ -1,0 +1,170 @@
+{
+  "root": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/uiprobe-src",
+  "name": "uiprobe-src",
+  "target": "windows",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/uiprobe-out",
+  "moduleName": "UIProbeCore",
+  "source": {
+    "sha256": "d81aa387feaa2626c842fef4cd58acafb5c0b85fc25c3a93066ee660b2549f38",
+    "files": 2,
+    "git": {
+      "head": "cd6387e3b3b8602c27fdb9a2d1ba544896674b0a",
+      "uncommitted": 0
+    }
+  },
+  "moduleSources": {
+    "from": "every app Swift file outside iOS / widget / marketing folders",
+    "paths": null
+  },
+  "generatedAt": 1789789780030,
+  "tookMs": 62578,
+  "before": {
+    "readyPct": 0,
+    "files": 2,
+    "loc": 19
+  },
+  "after": {
+    "readyPct": 100,
+    "guardedLoc": 0,
+    "needsWindowsLoc": 0
+  },
+  "verification": {
+    "ran": true,
+    "ok": true,
+    "failure": null,
+    "passes": [
+      {
+        "pass": 1,
+        "isolated": 1
+      },
+      {
+        "pass": 2,
+        "isolated": 0
+      }
+    ],
+    "configuration": "simulated Windows configuration on macOS (-DCIRCUIT_WINDOWS_SIM)",
+    "native": false,
+    "platform": "darwin",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.33.1 clang-2100.3.33.1)"
+  },
+  "totals": {
+    "all": {
+      "files": 2,
+      "loc": 19
+    },
+    "portable": {
+      "files": 0,
+      "loc": 0
+    },
+    "converted": {
+      "files": 1,
+      "loc": 15
+    },
+    "partial": {
+      "files": 1,
+      "loc": 4,
+      "isolatedLoc": 3,
+      "buildsLoc": 1
+    },
+    "needsWindowsPart": {
+      "files": 0,
+      "loc": 0
+    },
+    "macOnlySkipped": {
+      "files": 0,
+      "loc": 0
+    },
+    "unverified": {
+      "files": 0,
+      "loc": 0
+    },
+    "appIf": {
+      "files": 2,
+      "loc": 3
+    },
+    "buildsLoc": 13,
+    "isolatedLoc": 3,
+    "buildsForWindowsPct": 68.4
+  },
+  "packages": [
+    {
+      "package": "swift-cross-ui",
+      "url": "https://github.com/moreSwift/swift-cross-ui.git",
+      "from": "0.9.0",
+      "requirement": ".upToNextMinor(from: \"0.9.0\")"
+    },
+    {
+      "package": "OpenCombine",
+      "url": "https://github.com/OpenCombine/OpenCombine.git",
+      "from": "0.14.0"
+    }
+  ],
+  "kit": true,
+  "windowsPartsNeeded": [
+    {
+      "id": "(uses code that was isolated)",
+      "windows": null,
+      "effort": null,
+      "files": 1,
+      "loc": 3
+    }
+  ],
+  "skipped": [],
+  "files": [
+    {
+      "id": "Sources/Counter.swift",
+      "lang": "swift",
+      "loc": 15,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "dropin",
+          "module": "SwiftUI",
+          "to": "SwiftCrossUI (SwiftUI-style views; WinUI 3 on Windows)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
+      "guardedModules": [],
+      "kitModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "inactiveLoc": 2,
+      "status": "converted"
+    },
+    {
+      "id": "Sources/Symbols.swift",
+      "lang": "swift",
+      "loc": 4,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "dropin",
+          "module": "SwiftUI",
+          "to": "SwiftCrossUI (SwiftUI-style views; WinUI 3 on Windows)"
+        }
+      ],
+      "guardedModules": [],
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "10:32 extraneous argument label 'systemName:' in call",
+        "10:45 cannot convert value of type 'String' to expected argument type 'Image<RGBA>'"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 1,
+      "whole": false,
+      "isolatedLoc": 3,
+      "inactiveLoc": 1,
+      "status": "partial"
+    }
+  ]
+}
