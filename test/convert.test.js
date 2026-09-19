@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import {
   convertRepo, convertSwiftSource, convertPythonSource, convertJsSource, isolateSwiftSource,
   isolateSwiftDeclarations, swiftTopLevelChunks, isolatedLoc, xcodegenSources, detectSwiftSettings,
-  formatConvertReport, formatConvertMarkdown, guardMissingImport, runKitSelfTest, writeKitSelfTest,
+  formatConvertReport, formatConvertMarkdown, guardMissingImport, runKitSelfTest, writeKitSelfTest, buildFailureDigest,
 } from '../lib/convert.js';
 import { SWIFT_IMPORT_RULES, SWIFT_PACKAGES, SIM_FLAG, ISOLATE_OPEN, ISOLATE_CLOSE } from '../lib/convert-rules.js';
 import { portCheck } from '../lib/port.js';
@@ -85,17 +85,29 @@ test('swift: Combine schedulers and Foundation publishers go through the kit, ne
     '  // p.receive(on: DispatchQueue.main) stays a comment',
     '  let s = "x.receive(on: DispatchQueue.main)"',
     '  _ = NotificationCenter.default.publisher(for: .init("n"))',
+    '  _ = Timer.publish(every: 1, on: .main, in: .common).autoconnect()',
     '  return p.debounce(for: .seconds(1), scheduler: RunLoop.main).receive(on: DispatchQueue.main).sink { _ in _ = s }',
     '}', ''].join('\n');
   const r = convertSwiftSource(src);
   assert.ok(r.text.includes('.receive(on: DispatchQueue.main.circuitScheduler).sink'));
   assert.ok(r.text.includes('scheduler: RunLoop.main.circuitScheduler)'));
   assert.ok(r.text.includes('NotificationCenter.default.circuitCombine.publisher('));
+  assert.ok(r.text.includes('Timer.circuitCombine.publish(every: 1, on: .main, in: .common)'), 'Foundation\'s Timer.publish would be ambiguous with OpenCombine\'s in the Mac simulation');
   assert.ok(r.text.includes('// p.receive(on: DispatchQueue.main) stays a comment'));
   assert.ok(r.text.includes('"x.receive(on: DispatchQueue.main)"'));
   assert.match(r.text, /^import CircuitPortKit$/m, 'the bridge lives in the kit on every platform');
   // converting the converted text again changes nothing (idempotent)
   assert.equal(convertSwiftSource(r.text).text, r.text);
+});
+
+test('verify: a build that fails outside the converted sources shows the real errors, not the package resolution tail', () => {
+  const stdout = ['[1/9] Compiling WinUI Foo.swift', 'C:\\deps\\winui\\Bar.cpp(12): error C2065: undeclared identifier', 'LINK : fatal error LNK1181: cannot open input file \'x.lib\'', 'ninja: build stopped'].join('\n');
+  const stderr = ['Fetching https://github.com/moreSwift/swift-cross-ui.git', 'Working copy of https://github.com/OpenCombine/OpenCombine.git resolved at 0.14.0', 'warning: couldn\'t find pc file for gtk4'].join('\n');
+  const d = buildFailureDigest({ stdout, stderr });
+  assert.deepEqual(d.errors, ['C:\\deps\\winui\\Bar.cpp(12): error C2065: undeclared identifier', 'LINK : fatal error LNK1181: cannot open input file \'x.lib\'']);
+  assert.match(d.text, /^errors \(2\):/);
+  assert.ok(d.text.includes('end of the build output:\n[1/9] Compiling WinUI Foo.swift'), 'the compile stream is shown, not only the resolution messages');
+  assert.ok(d.text.includes('end of the build messages:'));
 });
 
 test('swift: Security becomes the kit Keychain; a file using Keychain names without the import gets the kit', () => {
@@ -386,6 +398,21 @@ test('convert --verify: SwiftUI screens build against SwiftCrossUI, Combine mode
       '        VStack {', '            Text("Count: \\(model.count)")', '            Button("Add") { model.count += 1 }', '            TextField("Name", text: $model.label)', '        }', '    }', '}', '',
       'extension CounterModel { var label: String { get { "\\(count)" } set { count = Int(newValue) ?? count } } }', ''].join('\n'),
     'Sources/Symbols.swift': ['import SwiftUI', '', 'struct Starred: View {', '    var body: some View { Label("Starred", systemImage: "star.fill") }', '}', ''].join('\n'),
+    'Sources/Styles.swift': ['import SwiftUI', '',
+      'enum Theme { static let accent = LinearGradient(colors: [.orange, .red], startPoint: .top, endPoint: .bottom) }',
+      'enum Size: String, CaseIterable, Hashable { case small, large }', '',
+      'struct Styles: View {', '    @State private var size = Size.small', '    @State private var on = false', '    @FocusState private var focused: Bool',
+      '    @State private var name = ""', '    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()', '    var body: some View {',
+      '        VStack(alignment: .leading, spacing: 8) {',
+      '            Text("Title").font(.custom("Avenir", size: 20)).tracking(1).foregroundStyle(Theme.accent)',
+      '            Text("Sub").foregroundStyle(.secondary)',
+      '            Picker("Size", selection: $size) { ForEach(Size.allCases, id: \\.self) { Text($0.rawValue).tag($0) } }.pickerStyle(.segmented)',
+      '            Toggle(isOn: $on) { Text("On") }',
+      '            TextField("Name", text: $name).textFieldStyle(.roundedBorder).focused($focused)',
+      '            Capsule().fill(on ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.quaternary)).frame(height: 8)',
+      '            RoundedRectangle(cornerRadius: 6).strokeBorder(Theme.accent, lineWidth: 1).frame(height: 12)',
+      '        }', '        .padding(12)', '        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))', '        .shadow(radius: 4)',
+      '        .onChange(of: on) { old, new in focused = new && !old }', '        .onReceive(timer) { _ in on.toggle() }', '    }', '}', ''].join('\n'),
   });
   const out = outDir();
   const r = convertRepo(dir, { out, verify: true });
@@ -393,6 +420,9 @@ test('convert --verify: SwiftUI screens build against SwiftCrossUI, Combine mode
   const by = Object.fromEntries(r.files.map((f) => [f.id, f]));
   assert.equal(by['Sources/Counter.swift'].status, 'converted', JSON.stringify(by['Sources/Counter.swift'].errors));
   assert.equal(by['Sources/Symbols.swift'].status, 'converted', 'Image(systemName:) draws the Fluent counterpart through the kit');
+  assert.equal(by['Sources/Styles.swift'].status, 'converted', `shape styles, tagged Picker, FocusState, onChange, onReceive: ${JSON.stringify(by['Sources/Styles.swift'].errors)}`);
+  const names = fs.readFileSync(path.join(out, 'app', '_CircuitConvert', 'CombineNamesForSimulation.swift'), 'utf8');
+  for (const alias of ['Picker = CircuitPortKit.CircuitPicker', 'LinearGradient = CircuitPortKit.CircuitLinearGradient', 'Gradient = CircuitPortKit.CircuitGradient']) assert.ok(names.includes(`typealias ${alias}`), alias);
   assert.ok(fs.existsSync(path.join(out, 'kit', 'CircuitPortKit', 'SymbolPaths.swift')));
   assert.ok(fs.readFileSync(path.join(out, 'Package.swift'), 'utf8').includes('swift-cross-ui'));
 });

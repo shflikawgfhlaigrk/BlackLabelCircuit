@@ -54,6 +54,7 @@ let convertModule = null;   // --module Name: the Swift module name of the conve
 let reverifyMode = false;   // --reverify <convertedDir>: compiler check on an existing conversion
 let recountMode = false;    // --recount <convertedDir>: rewrite the report from the files, no build
 let kitSelfTestMode = false; // --kit-selftest --out <dir> [-- args]: build + run the CircuitPortKit self-test
+let kitUISelfTestMode = false; // --kit-selftest-ui --out <dir>: the SwiftUI adapters on SwiftCrossUI, run and checked
 let kitSelfTestArgs = [];
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--port') port = Number(args[++i]);
@@ -69,6 +70,7 @@ for (let i = 0; i < args.length; i++) {
   else if (args[i] === '--reverify') reverifyMode = true;
   else if (args[i] === '--recount') recountMode = true;
   else if (args[i] === '--kit-selftest') kitSelfTestMode = true;
+  else if (args[i] === '--kit-selftest-ui') kitUISelfTestMode = true;
   else if (args[i] === '--') { kitSelfTestArgs = args.slice(i + 1); break; }
   else if (args[i] === '--out') convertOut = path.resolve(args[++i]);
   else if (args[i] === '--verify') convertVerify = true;
@@ -85,6 +87,16 @@ if (kitSelfTestMode) {
   console.log(r.output.trimEnd());
   if (r.spawnError) console.error(`[circuit] swift could not be run: ${r.spawnError}`);
   console.log(`[circuit] kit self-test ${r.ok ? 'PASSED' : 'FAILED'} — ${r.passed} passed, ${r.failed} failed (${r.store})`);
+  process.exit(r.ok ? 0 : 1);
+}
+
+if (kitUISelfTestMode) {
+  const { runKitUISelfTest } = await import('./lib/convert.js');
+  const dir = convertOut ?? fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-kit-ui-selftest-'));
+  const r = runKitUISelfTest(dir, { log: (m) => console.log(`[circuit] ${m}`) });
+  console.log(r.output.trimEnd());
+  if (r.spawnError) console.error(`[circuit] swift could not be run: ${r.spawnError}`);
+  console.log(`[circuit] kit UI self-test ${r.ok ? 'PASSED' : 'FAILED'} — ${r.passed} passed, ${r.failed} failed (${r.store})`);
   process.exit(r.ok ? 0 : 1);
 }
 
