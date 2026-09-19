@@ -13,6 +13,14 @@
 // HONESTY: file contents are read verbatim from disk. Counts (files indexed, words) are real.
 // When a folder is empty of text files or can't be read, the source reports an honest empty state.
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// A buyer-granted folder source. Persists a security-scoped bookmark so access survives relaunch.
 struct FileSource: Identifiable, Codable, Hashable {

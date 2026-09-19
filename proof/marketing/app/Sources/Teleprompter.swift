@@ -7,6 +7,14 @@
 // Scrolling is elapsed-time based (wall clock via TimelineView), not frame-step
 // based, so a dropped frame never desyncs the pace from the spoken words.
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif

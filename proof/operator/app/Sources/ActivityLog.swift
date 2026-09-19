@@ -14,6 +14,14 @@ import Foundation
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// What kind of action a receipt records. Each maps to a real execution surface.
 enum ActivityKind: String, Codable, CaseIterable, Identifiable, Hashable {

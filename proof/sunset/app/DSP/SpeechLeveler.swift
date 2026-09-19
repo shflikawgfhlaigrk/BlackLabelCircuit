@@ -16,7 +16,9 @@
 // Local DSP only; this file makes no network calls and reads no bundled audio.
 
 import Foundation
+#if canImport(Accelerate) && !CIRCUIT_WINDOWS_SIM
 import Accelerate
+#endif
 
 // MARK: - Feature flag (SS-23 is not shipped)
 

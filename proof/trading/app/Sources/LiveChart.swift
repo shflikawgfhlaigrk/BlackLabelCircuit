@@ -14,6 +14,14 @@
 // bars). Empty -> an honest "no data" frame. Nothing is downloaded, sampled, or invented; the
 // Y axis auto-fits the VISIBLE window only and is never widened to hide a move.
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif

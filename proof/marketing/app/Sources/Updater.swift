@@ -29,9 +29,11 @@
 // and build 69 was rejected twice for exactly this. DIRECT_DISTRIBUTION is defined only for the
 // Dev-ID/adhoc lane (project.yml) and is stripped by scripts/mas-package.sh, so the store slice
 // compiles none of this.
+import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import CircuitPortKit
 #if os(macOS) && DIRECT_DISTRIBUTION
 import Foundation
 import CryptoKit

@@ -33,6 +33,7 @@ enum StudioArea: String, CaseIterable, Identifiable, Codable {
 
 // MARK: - Codable for pre-existing engine types
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// Stable-key Codable for StemRole (persistence uses `key`, never the display label).
 extension MixEngine.StemRole: Codable {
     init(from decoder: Decoder) throws {
@@ -44,7 +45,9 @@ extension MixEngine.StemRole: Codable {
         try c.encode(key)
     }
 }
+#endif // circuit-convert
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// Tolerant Codable for the per-stem control: every field optional on decode, so a
 /// document written before a field existed (e.g. pre-Phase-2 `strip`) loads unchanged
 /// with that field at its bypassed default.
@@ -72,6 +75,7 @@ extension MixEngine.StemControl: Codable {
         try c.encode(strip, forKey: .strip)
     }
 }
+#endif // circuit-convert
 
 // MARK: - Insert slots (creative FX)
 
@@ -443,6 +447,7 @@ extension StemStripSettings {
 
 // MARK: - Buses
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// The three mix buses, routed by StemRole.
 enum BusRole: String, CaseIterable, Identifiable, Codable {
     case drums, instruments, vocals
@@ -465,7 +470,9 @@ enum BusRole: String, CaseIterable, Identifiable, Codable {
         }
     }
 }
+#endif // circuit-convert
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// Ducker trigger source: another stem (by name) or a whole bus.
 enum DuckSource: Equatable, Codable, Hashable {
     case stem(String)
@@ -478,7 +485,9 @@ enum DuckSource: Equatable, Codable, Hashable {
         }
     }
 }
+#endif // circuit-convert
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// User settings for one mix bus. All bypassed by default.
 struct BusSettings: Equatable, Codable {
     var compressorEnabled: Bool = false
@@ -508,6 +517,7 @@ struct BusSettings: Equatable, Codable {
         ducker = try c.decodeIfPresent(DuckerSettings.self, forKey: .ducker) ?? DuckerSettings()
     }
 }
+#endif // circuit-convert
 
 // MARK: - Sends (shared returns)
 
@@ -700,6 +710,7 @@ enum MasterChainStage: String, CaseIterable, Identifiable {
 
 // MARK: - The whole mix session
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// Everything the MIX area adds on top of the automatic engine: per-stem strips (carried on
 /// StemControl), the three buses, and the shared send returns. Neutral = the engine renders
 /// exactly as before Phase 2 (regression-locked).
@@ -738,9 +749,11 @@ struct MixSessionSettings: Equatable, Codable {
         sends = try c.decodeIfPresent(SendReturnSettings.self, forKey: .sends) ?? .neutral
     }
 }
+#endif // circuit-convert
 
 // MARK: - Versioned session document (save / load)
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// The saved project file. Versioned + tolerant: a v1 document (or any JSON missing new
 /// fields) decodes with every new setting at its bypassed default, so old saved projects
 /// load unchanged and sound identical.
@@ -782,6 +795,7 @@ struct SessionDocument: Equatable, Codable {
         try JSONDecoder().decode(SessionDocument.self, from: data)
     }
 }
+#endif // circuit-convert
 
 // MARK: - Presets (honest parameter sets only — no claims language)
 
@@ -826,6 +840,7 @@ enum StripPresets {
     ]
 }
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 enum BusPresets {
     /// Drum bus glue: the busGlue compressor at full insert.
     static let drumGlue: BusSettings = {
@@ -846,6 +861,7 @@ enum BusPresets {
         return b
     }()
 }
+#endif // circuit-convert
 
 enum MasterChainPresets {
     /// EDM master: sub + air shelves, exciter air, wider image above the mono floor.

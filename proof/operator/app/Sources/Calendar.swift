@@ -18,6 +18,14 @@ import Foundation
 #if canImport(EventKit)
 import EventKit
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// A single real calendar event, decoupled from EventKit so the formatting logic is unit-testable.
 struct CalEvent: Identifiable, Hashable {

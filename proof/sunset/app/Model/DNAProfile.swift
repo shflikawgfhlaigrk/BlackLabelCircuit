@@ -12,6 +12,7 @@
 
 import Foundation
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// One named, persistable reference-DNA profile.
 struct DNAProfile: Codable, Identifiable, Equatable {
     var id: UUID
@@ -26,7 +27,9 @@ struct DNAProfile: Codable, Identifiable, Equatable {
         self.dna = dna
     }
 }
+#endif // circuit-convert
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 /// Foundation-only persistence for the DNA library: a single local JSON file, atomically
 /// written. No audio, no network — the profiles never leave this Mac. Deterministic and
 /// headless-testable (point `fileURL` at a temp file).
@@ -65,3 +68,4 @@ final class DNAProfileStore {
         try data.write(to: fileURL, options: .atomic)
     }
 }
+#endif // circuit-convert

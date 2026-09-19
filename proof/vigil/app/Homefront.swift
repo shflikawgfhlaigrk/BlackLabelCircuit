@@ -33,7 +33,9 @@ import AVFoundation
 #if canImport(Vision) && !CIRCUIT_WINDOWS_SIM
 import Vision
 #endif
+#if canImport(simd) && !CIRCUIT_WINDOWS_SIM
 import simd
+#endif
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif

@@ -1,3 +1,4 @@
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 // ReportCard.swift — SS-16: one readable, titled per-master card that composes the chain's own
 // measured before/after numbers (integrated LUFS, true peak dBTP, loudness range, crest) plus the
 // plain-English chain notes into a single surface you can export to text or render to an image.
@@ -77,3 +78,4 @@ struct ReportCard {
 
     private static func fin(_ x: Double) -> Bool { !x.isNaN && !x.isInfinite }
 }
+#endif // circuit-convert

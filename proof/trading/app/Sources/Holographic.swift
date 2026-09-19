@@ -30,6 +30,14 @@
 //   HoloShimmerSkeleton       holographic loading shimmer (never a spinner)
 //   ParallaxLayer             depth: layers move at different rates on pointer
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif
@@ -138,8 +146,8 @@ struct HoloEnvironment: ViewModifier {
         content
             .environment(\.holoTheme, controller.theme)
             .environment(\.blMotion, controller.motionEnabled && !reduceMotion && appActive && screenAwake)
-            .onReceive(NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)) { _ in appActive = false }
-            .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in appActive = true }
+            .onReceive(NotificationCenter.default.circuitCombine.publisher(for: NSApplication.didResignActiveNotification)) { _ in appActive = false }
+            .onReceive(NotificationCenter.default.circuitCombine.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in appActive = true }
             .onReceive(NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.screensDidSleepNotification)) { _ in screenAwake = false }
             .onReceive(NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.screensDidWakeNotification)) { _ in screenAwake = true }
     }

@@ -11,6 +11,15 @@
 //  PLATFORM: macOS-only — it composes the macOS-only MarketingCameraRecorder /
 //  MarketingScreenRecorder / virtual-set stack (all themselves #if os(macOS)), and its only
 //  UI mount (ReelStudioScreen's "Record in Marketing" panel) is already macOS-gated.
+import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if os(macOS)
 
 import AVFoundation

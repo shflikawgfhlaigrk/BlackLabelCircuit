@@ -8,12 +8,16 @@ let package = Package(
     platforms: [.macOS("15.0")],
     products: [.library(name: "BlackLabelAcetateCore", targets: ["BlackLabelAcetateCore"])],
     dependencies: [
+        .package(url: "https://github.com/OpenCombine/OpenCombine.git", from: "0.14.0"),
         .package(url: "https://github.com/apple/swift-crypto.git", from: "3.0.0"),
     ],
     targets: [
         .target(
             name: "CircuitPortKit",
             dependencies: [
+                .product(name: "OpenCombine", package: "OpenCombine"),
+                .product(name: "OpenCombineFoundation", package: "OpenCombine"),
+                .product(name: "OpenCombineDispatch", package: "OpenCombine"),
             ],
             path: "kit/CircuitPortKit"
         ),
@@ -21,6 +25,9 @@ let package = Package(
             name: "BlackLabelAcetateCore",
             dependencies: [
                 "CircuitPortKit",
+                .product(name: "OpenCombine", package: "OpenCombine"),
+                .product(name: "OpenCombineFoundation", package: "OpenCombine"),
+                .product(name: "OpenCombineDispatch", package: "OpenCombine"),
                 .product(name: "Crypto", package: "swift-crypto"),
             ],
             path: "app",
@@ -89,6 +96,7 @@ let package = Package(
                 "UI/SunsetApp.swift",
                 "UI/UpdaterUI.swift",
                 "UI/WaveformView.swift",
+                "_CircuitConvert/CombineNamesForSimulation.swift",
             ]
         ),
     ]

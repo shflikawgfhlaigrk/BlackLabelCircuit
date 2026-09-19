@@ -14,6 +14,14 @@ import SwiftUI
 #if canImport(FoundationModels)
 import FoundationModels
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 enum AIAvailability: Equatable {
     case ready

@@ -24,6 +24,15 @@
 //     intro offer is configured, render it from `product.subscription?.introductoryOffer` (never a
 //     hardcoded number) so the screen can only ever state what the buyer will actually be charged.
 //     Superseded: founder rule 2026-07-21 ("no trials anywhere").
+import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if os(iOS) || MAS_BUILD
 import Foundation
 import StoreKit

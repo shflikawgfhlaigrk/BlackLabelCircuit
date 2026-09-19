@@ -24,6 +24,8 @@ import Crypto
 #endif
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
 
 // MARK: - Restricted-entitlement gate (adhoc builds must not show a dead Apple button)

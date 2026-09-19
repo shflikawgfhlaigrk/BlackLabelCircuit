@@ -2,8 +2,16 @@
   "root": "/Users/michaelbarber/BlackLabelTrading",
   "name": "BlackLabelTrading",
   "target": "windows",
-  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/trading",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/new/trading",
   "moduleName": "BlackLabelTradingCore",
+  "source": {
+    "sha256": "9e4dc732afb0b3e16b9a92b53e025f7183445b13cbc931239aa19fad80ba0195",
+    "files": 63,
+    "git": {
+      "head": "9f5ccf54990f43db64033a022a8539a9fb11c8e8",
+      "uncommitted": 30
+    }
+  },
   "moduleSources": {
     "from": "project.yml target BlackLabelTrading",
     "paths": [
@@ -11,17 +19,17 @@
       "backend"
     ]
   },
-  "generatedAt": 1789715685136,
-  "tookMs": 60538,
+  "generatedAt": 1789781563005,
+  "tookMs": 40298,
   "before": {
     "readyPct": 47.8,
     "files": 67,
     "loc": 28518
   },
   "after": {
-    "readyPct": 69.2,
-    "guardedLoc": 4106,
-    "needsWindowsLoc": 4423
+    "readyPct": 72.6,
+    "guardedLoc": 3184,
+    "needsWindowsLoc": 4426
   },
   "verification": {
     "ran": true,
@@ -34,19 +42,19 @@
       },
       {
         "pass": 2,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 3,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 4,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 5,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 6,
@@ -58,11 +66,11 @@
       },
       {
         "pass": 8,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 9,
-        "isolated": 2
+        "isolated": 3
       },
       {
         "pass": 10,
@@ -82,7 +90,7 @@
       },
       {
         "pass": 14,
-        "isolated": 3
+        "isolated": 1
       },
       {
         "pass": 15,
@@ -90,7 +98,7 @@
       },
       {
         "pass": 16,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 17,
@@ -98,7 +106,7 @@
       },
       {
         "pass": 18,
-        "isolated": 2
+        "isolated": 5
       },
       {
         "pass": 19,
@@ -106,14 +114,6 @@
       },
       {
         "pass": 20,
-        "isolated": 4
-      },
-      {
-        "pass": 21,
-        "isolated": 1
-      },
-      {
-        "pass": 22,
         "isolated": 0
       }
     ],
@@ -128,12 +128,12 @@
       "loc": 27347
     },
     "portable": {
-      "files": 33,
-      "loc": 11925
+      "files": 32,
+      "loc": 11492
     },
     "converted": {
-      "files": 4,
-      "loc": 973
+      "files": 5,
+      "loc": 1406
     },
     "partial": {
       "files": 7,
@@ -230,13 +230,6 @@
     {
       "id": "AuthenticationServices",
       "windows": "browser sign-in (OAuth) and WebAuthn through Windows Hello",
-      "effort": "M",
-      "files": 1,
-      "loc": 322
-    },
-    {
-      "id": "Security",
-      "windows": "Windows Credential Manager (CredRead/CredWrite) and DPAPI",
       "effort": "M",
       "files": 1,
       "loc": 322
@@ -617,6 +610,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -629,13 +623,14 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "24:42 cannot find type 'TradeDirection' in scope",
+        "15:20 cannot find type 'TradeDirection' in scope",
         "64:34 cannot find type 'TradeStat' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 9,
+      "isolatedInPass": 8,
       "whole": true,
       "isolatedLoc": 253,
       "status": "needs-windows-part"
@@ -673,9 +668,15 @@
         },
         {
           "line": 5,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         },
         {
           "line": 1,
@@ -687,21 +688,23 @@
       "guardedModules": [
         "SwiftUI",
         "AuthenticationServices",
-        "AppKit",
+        "AppKit"
+      ],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "42:42 type annotation missing in pattern",
-        "37:6 unknown attribute 'EnvironmentObject'",
-        "38:6 unknown attribute 'State'",
-        "39:6 unknown attribute 'State'",
-        "40:6 unknown attribute 'State'",
-        "41:6 unknown attribute 'State'",
-        "42:6 unknown attribute 'Environment'",
-        "43:6 unknown attribute 'State'"
+        "52:42 type annotation missing in pattern",
+        "47:6 unknown attribute 'EnvironmentObject'",
+        "48:6 unknown attribute 'State'",
+        "49:6 unknown attribute 'State'",
+        "50:6 unknown attribute 'State'",
+        "51:6 unknown attribute 'State'",
+        "52:6 unknown attribute 'Environment'",
+        "53:6 unknown attribute 'State'"
       ],
-      "errorCount": 99,
+      "errorCount": 104,
       "isolatedInPass": 4,
       "whole": true,
       "isolatedLoc": 322,
@@ -715,13 +718,15 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "170:96 cannot find type 'TradeStat' in scope",
-        "155:20 cannot find type 'TradeDirection' in scope"
+        "155:20 cannot find type 'TradeDirection' in scope",
+        "172:72 cannot find type 'BacktestTrade' in scope",
+        "172:96 cannot find type 'TradeStat' in scope"
       ],
-      "errorCount": 2,
-      "isolatedInPass": 14,
+      "errorCount": 3,
+      "isolatedInPass": 8,
       "whole": false,
       "isolatedLoc": 134,
       "status": "partial"
@@ -734,6 +739,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "101:31 cannot find type 'TradeStat' in scope",
@@ -743,7 +749,7 @@
         "31:38 cannot find 'PerfReport' in scope"
       ],
       "errorCount": 5,
-      "isolatedInPass": 14,
+      "isolatedInPass": 9,
       "whole": false,
       "isolatedLoc": 113,
       "status": "partial"
@@ -753,12 +759,20 @@
       "lang": "swift",
       "loc": 433,
       "before": "ready",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
-      "status": "portable"
+      "status": "converted"
     },
     {
       "id": "Sources/ChartRender.swift",
@@ -797,6 +811,9 @@
         "CoreText",
         "ImageIO"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "187:32 cannot find type 'CGContext' in scope",
@@ -809,7 +826,7 @@
         "38:28 cannot find 'CGColor' in scope"
       ],
       "errorCount": 24,
-      "isolatedInPass": 18,
+      "isolatedInPass": 16,
       "whole": true,
       "isolatedLoc": 690,
       "status": "needs-windows-part"
@@ -844,6 +861,9 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "100:34 cannot find type 'FeedClient' in scope",
@@ -856,7 +876,7 @@
         "104:6 unknown attribute 'State'"
       ],
       "errorCount": 341,
-      "isolatedInPass": 17,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 723,
       "status": "needs-windows-part"
@@ -869,6 +889,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "75:23 cannot find type 'EngineMarker' in scope",
@@ -876,7 +897,7 @@
         "151:59 cannot find type 'EngineLegendRow' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 20,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 154,
       "status": "needs-windows-part"
@@ -896,6 +917,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "494:32 cannot find type 'ApiFeedStatus' in scope",
@@ -904,7 +926,7 @@
         "518:20 cannot find 'ApiFeedStatus' in scope"
       ],
       "errorCount": 4,
-      "isolatedInPass": 12,
+      "isolatedInPass": 3,
       "whole": true,
       "isolatedLoc": 503,
       "status": "needs-windows-part"
@@ -927,25 +949,34 @@
           "kind": "guarded-import",
           "module": "AppKit",
           "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 0,
+          "kind": "kit",
+          "module": "Security",
+          "to": "CircuitPortKit Keychain names (the Mac gets them through Foundation)"
         }
       ],
       "guardedModules": [
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [
+        "Security"
+      ],
       "isolated": true,
       "errors": [
-        "114:15 cannot find type 'Color' in scope",
-        "219:6 unknown attribute 'EnvironmentObject'",
-        "220:6 unknown attribute 'State'",
+        "115:15 cannot find type 'Color' in scope",
+        "220:6 unknown attribute 'EnvironmentObject'",
         "221:6 unknown attribute 'State'",
         "222:6 unknown attribute 'State'",
         "223:6 unknown attribute 'State'",
         "224:6 unknown attribute 'State'",
-        "225:6 unknown attribute 'State'"
+        "225:6 unknown attribute 'State'",
+        "226:6 unknown attribute 'State'"
       ],
-      "errorCount": 191,
-      "isolatedInPass": 11,
+      "errorCount": 172,
+      "isolatedInPass": 2,
       "whole": false,
       "isolatedLoc": 447,
       "status": "partial"
@@ -958,6 +989,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -980,22 +1012,35 @@
           "kind": "guarded-import",
           "module": "AppKit",
           "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
+          "line": 0,
+          "kind": "combine-bridge",
+          "module": "Combine",
+          "to": "schedulers and Foundation publishers through CircuitPortKit"
         }
       ],
       "guardedModules": [
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "153:17 cannot find type 'Color' in scope",
-        "43:22 cannot find type 'Color' in scope",
-        "44:22 cannot find type 'Color' in scope",
-        "49:27 cannot find type 'Color' in scope",
-        "50:23 cannot find type 'Color' in scope",
-        "55:80 cannot find type 'Font' in scope",
-        "55:52 cannot find type 'Font' in scope",
-        "58:77 cannot find type 'Font' in scope"
+        "161:17 cannot find type 'Color' in scope",
+        "51:22 cannot find type 'Color' in scope",
+        "52:22 cannot find type 'Color' in scope",
+        "57:27 cannot find type 'Color' in scope",
+        "58:23 cannot find type 'Color' in scope",
+        "63:80 cannot find type 'Font' in scope",
+        "63:52 cannot find type 'Font' in scope",
+        "66:77 cannot find type 'Font' in scope"
       ],
       "errorCount": 219,
       "isolatedInPass": 1,
@@ -1011,6 +1056,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1023,6 +1069,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "188:35 cannot find type 'TradeStat' in scope",
@@ -1030,7 +1077,7 @@
         "235:45 cannot find type 'TradeStat' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 10,
+      "isolatedInPass": 11,
       "whole": false,
       "isolatedLoc": 76,
       "status": "partial"
@@ -1053,25 +1100,32 @@
           "kind": "guarded-import",
           "module": "AppKit",
           "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "36:28 cannot find type 'NSView' in scope",
-        "57:27 cannot find type 'NSTrackingArea' in scope",
-        "62:14 initializer does not override a designated initializer from its superclass",
-        "66:18 property does not override any property from its superclass",
-        "67:18 property does not override any property from its superclass",
-        "68:48 cannot find type 'NSEvent' in scope",
-        "181:43 cannot find type 'NSEvent' in scope",
-        "197:39 cannot find type 'NSEvent' in scope"
+        "44:28 cannot find type 'NSView' in scope",
+        "65:27 cannot find type 'NSTrackingArea' in scope",
+        "70:14 initializer does not override a designated initializer from its superclass",
+        "74:18 property does not override any property from its superclass",
+        "75:18 property does not override any property from its superclass",
+        "76:48 cannot find type 'NSEvent' in scope",
+        "189:43 cannot find type 'NSEvent' in scope",
+        "205:39 cannot find type 'NSEvent' in scope"
       ],
       "errorCount": 77,
-      "isolatedInPass": 18,
+      "isolatedInPass": 16,
       "whole": true,
       "isolatedLoc": 301,
       "status": "needs-windows-part"
@@ -1094,24 +1148,39 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
+          "line": 0,
+          "kind": "kit",
+          "module": "Security",
+          "to": "CircuitPortKit Keychain names (the Mac gets them through Foundation)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "Security"
+      ],
       "isolated": true,
       "errors": [
-        "18:15 cannot find type 'Color' in scope",
         "26:15 cannot find type 'Color' in scope",
-        "598:15 cannot find type 'Color' in scope",
-        "18:39 cannot find 'BLTheme' in scope",
-        "18:55 cannot find 'BLTheme' in scope",
-        "27:42 cannot find 'BLTheme' in scope",
-        "27:74 cannot find 'BLTheme' in scope",
-        "27:108 cannot find 'BLTheme' in scope"
+        "34:15 cannot find type 'Color' in scope",
+        "606:15 cannot find type 'Color' in scope",
+        "26:39 cannot find 'BLTheme' in scope",
+        "26:55 cannot find 'BLTheme' in scope",
+        "35:42 cannot find 'BLTheme' in scope",
+        "35:74 cannot find 'BLTheme' in scope",
+        "35:108 cannot find 'BLTheme' in scope"
       ],
       "errorCount": 20,
-      "isolatedInPass": 5,
+      "isolatedInPass": 7,
       "whole": false,
       "isolatedLoc": 270,
       "status": "partial"
@@ -1121,20 +1190,28 @@
       "lang": "swift",
       "loc": 115,
       "before": "ready",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "17:20 cannot find type 'TradeDirection' in scope",
-        "14:8 type 'PaperPosition' does not conform to protocol 'Decodable'",
-        "14:8 type 'PaperPosition' does not conform to protocol 'Encodable'",
-        "14:8 type 'PaperPosition' does not conform to protocol 'Hashable'",
-        "14:8 type 'PaperPosition' does not conform to protocol 'Equatable'",
-        "101:90 'nil' is not compatible with closure result type 'TradeStat'"
+        "25:20 cannot find type 'TradeDirection' in scope",
+        "22:8 type 'PaperPosition' does not conform to protocol 'Decodable'",
+        "22:8 type 'PaperPosition' does not conform to protocol 'Encodable'",
+        "22:8 type 'PaperPosition' does not conform to protocol 'Hashable'",
+        "22:8 type 'PaperPosition' does not conform to protocol 'Equatable'",
+        "107:22 cannot find type 'TradeStat' in scope"
       ],
       "errorCount": 6,
-      "isolatedInPass": 9,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 115,
       "status": "needs-windows-part"
@@ -1147,6 +1224,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1159,12 +1237,14 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "29:48 cannot find type 'VisualStrategy' in scope"
+        "29:48 cannot find type 'VisualStrategy' in scope",
+        "41:46 cannot find 'VisualStrategyEngine' in scope"
       ],
-      "errorCount": 1,
-      "isolatedInPass": 7,
+      "errorCount": 2,
+      "isolatedInPass": 14,
       "whole": false,
       "isolatedLoc": 36,
       "status": "partial"
@@ -1177,6 +1257,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1189,6 +1270,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1217,6 +1299,7 @@
         "SwiftUI",
         "Charts"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "15:28 cannot find type 'Color' in scope",
@@ -1228,8 +1311,8 @@
         "91:34 cannot find type 'FeedClient' in scope",
         "92:33 cannot find type 'Nav' in scope"
       ],
-      "errorCount": 194,
-      "isolatedInPass": 20,
+      "errorCount": 192,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 2140,
       "status": "needs-windows-part"
@@ -1278,6 +1361,9 @@
         "UserNotifications",
         "AppKit"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "43:33 cannot find type 'Nav' in scope",
@@ -1290,7 +1376,7 @@
         "100:26 cannot find type 'Section' in scope"
       ],
       "errorCount": 202,
-      "isolatedInPass": 20,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 1556,
       "status": "needs-windows-part"
@@ -1332,6 +1418,9 @@
         "Charts",
         "AppKit"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "22:44 cannot find type 'View' in scope",
@@ -1344,7 +1433,7 @@
         "36:78 cannot find type 'View' in scope"
       ],
       "errorCount": 527,
-      "isolatedInPass": 5,
+      "isolatedInPass": 6,
       "whole": true,
       "isolatedLoc": 729,
       "status": "needs-windows-part"
@@ -1357,6 +1446,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1369,6 +1459,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1378,21 +1469,30 @@
       "lang": "swift",
       "loc": 264,
       "before": "ready",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "88:20 cannot find type 'TradeDirection' in scope",
-        "215:47 cannot find type 'VisualStrategy' in scope",
-        "254:33 cannot find type 'VisualStrategy' in scope",
-        "262:19 cannot find type 'VisualStrategy' in scope",
-        "263:22 cannot find type 'VisualStrategy' in scope",
-        "270:88 cannot find 'VisualStrategy' in scope",
-        "270:80 failed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)"
+        "96:20 cannot find type 'TradeDirection' in scope",
+        "93:8 type 'VisualStrategy' does not conform to protocol 'Decodable'",
+        "93:8 type 'VisualStrategy' does not conform to protocol 'Encodable'",
+        "153:70 cannot find type 'BacktestTrade' in scope",
+        "153:94 cannot find type 'TradeStat' in scope",
+        "158:22 cannot find type 'BacktestTrade' in scope",
+        "207:31 cannot find 'BacktestTrade' in scope",
+        "207:62 cannot convert value of type 'Int' to expected argument type 'Range<Int>'"
       ],
-      "errorCount": 7,
-      "isolatedInPass": 6,
+      "errorCount": 17,
+      "isolatedInPass": 13,
       "whole": false,
       "isolatedLoc": 188,
       "status": "partial"
@@ -1421,6 +1521,7 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "144:23 cannot find type 'View' in scope",
@@ -1455,6 +1556,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "13:6 unknown attribute 'EnvironmentObject'",
@@ -1480,6 +1582,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1499,12 +1602,13 @@
         },
         {
           "line": 10,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -1519,6 +1623,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1538,9 +1643,9 @@
         },
         {
           "line": 28,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 26,
@@ -1549,7 +1654,8 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -1573,7 +1679,7 @@
           "line": 8,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         },
         {
           "line": 1,
@@ -1585,17 +1691,20 @@
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "57:17 cannot find 'NSAlert' in scope",
-        "58:25 cannot infer contextual base in reference to member 'informational'",
-        "70:24 cannot find 'NSAlert' in scope",
-        "463:9 cannot find 'NSApp' in scope",
-        "582:17 cannot find 'NSAlert' in scope",
-        "583:25 cannot infer contextual base in reference to member 'informational'"
+        "56:17 cannot find 'NSAlert' in scope",
+        "57:25 cannot infer contextual base in reference to member 'informational'",
+        "69:24 cannot find 'NSAlert' in scope",
+        "109:33 cannot find 'FeedClient' in scope",
+        "112:28 cannot find 'FeedClient' in scope",
+        "462:9 cannot find 'NSApp' in scope",
+        "581:17 cannot find 'NSAlert' in scope",
+        "582:25 cannot infer contextual base in reference to member 'informational'"
       ],
-      "errorCount": 6,
-      "isolatedInPass": 3,
+      "errorCount": 8,
+      "isolatedInPass": 5,
       "whole": true,
       "isolatedLoc": 539,
       "status": "needs-windows-part"
@@ -1615,6 +1724,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"

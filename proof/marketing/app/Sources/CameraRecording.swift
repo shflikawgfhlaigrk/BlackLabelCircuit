@@ -1,6 +1,15 @@
 #if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 // Black Label Marketing — native Mac camera capture + branded recording finish.
 // Camera and microphone data stay on this Mac. Nothing is uploaded by this workflow.
+import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if os(macOS)
 import SwiftUI
 import AppKit

@@ -10,6 +10,8 @@
 import Foundation
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
 #if canImport(LocalAuthentication) && !CIRCUIT_WINDOWS_SIM
 import LocalAuthentication

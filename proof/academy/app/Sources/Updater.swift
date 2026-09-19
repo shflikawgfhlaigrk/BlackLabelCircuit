@@ -21,9 +21,11 @@
 // PLATFORM: macOS-only (Developer-ID direct download + in-process code-signature inspection via
 // Security.framework's SecStaticCode* APIs; the iOS app updates through the App Store). The whole
 // file is gated to macOS so the shared iOS target still compiles.
+import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import CircuitPortKit
 #if os(macOS) && !MAS_BUILD
 import Foundation
 import CryptoKit

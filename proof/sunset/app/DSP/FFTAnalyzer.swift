@@ -8,8 +8,11 @@
 // All math is Float; Apple-Silicon vDSP handles the heavy lifting.
 
 import Foundation
+#if canImport(Accelerate) && !CIRCUIT_WINDOWS_SIM
 import Accelerate
+#endif
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 final class FFTAnalyzer {
     let size: Int          // FFT length (power of two)
     let log2n: vDSP_Length
@@ -96,6 +99,7 @@ final class FFTAnalyzer {
         Double(i) * sampleRate / Double(size)
     }
 }
+#endif // circuit-convert
 
 /// Fixed logarithmic frequency bands used for spectral fingerprints and the
 /// reference match curve. 1/3-octave-ish from 20 Hz to ~20 kHz.

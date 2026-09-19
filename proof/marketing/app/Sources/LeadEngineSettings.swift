@@ -13,7 +13,17 @@ import SwiftUI
 #endif
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - sending mailbox (the client's OWN email, used to actually send outreach)
 struct Mailbox: Codable, Hashable, Identifiable {

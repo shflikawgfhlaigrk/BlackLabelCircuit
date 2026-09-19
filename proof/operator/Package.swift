@@ -8,9 +8,9 @@ let package = Package(
     platforms: [.macOS("15.0")],
     products: [.library(name: "BlackLabelSovereignCore", targets: ["BlackLabelSovereignCore"])],
     dependencies: [
+        .package(url: "https://github.com/OpenCombine/OpenCombine.git", from: "0.14.0"),
         .package(url: "https://github.com/swiftlang/swift-toolchain-sqlite.git", from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-crypto.git", from: "3.0.0"),
-        .package(url: "https://github.com/OpenCombine/OpenCombine.git", from: "0.14.0"),
     ],
     targets: [
         .target(
@@ -26,11 +26,11 @@ let package = Package(
             name: "BlackLabelSovereignCore",
             dependencies: [
                 "CircuitPortKit",
-                .product(name: "SwiftToolchainCSQLite", package: "swift-toolchain-sqlite"),
-                .product(name: "Crypto", package: "swift-crypto"),
                 .product(name: "OpenCombine", package: "OpenCombine"),
                 .product(name: "OpenCombineFoundation", package: "OpenCombine"),
                 .product(name: "OpenCombineDispatch", package: "OpenCombine"),
+                .product(name: "SwiftToolchainCSQLite", package: "swift-toolchain-sqlite"),
+                .product(name: "Crypto", package: "swift-crypto"),
             ],
             path: "app",
             sources: [

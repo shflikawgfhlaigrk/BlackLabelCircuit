@@ -8,6 +8,7 @@ let package = Package(
     platforms: [.macOS("15.0")],
     products: [.library(name: "BlackLabelMarketingCore", targets: ["BlackLabelMarketingCore"])],
     dependencies: [
+        .package(url: "https://github.com/OpenCombine/OpenCombine.git", from: "0.14.0"),
         .package(url: "https://github.com/apple/swift-crypto.git", from: "3.0.0"),
         .package(url: "https://github.com/swiftlang/swift-toolchain-sqlite.git", from: "1.0.0"),
     ],
@@ -15,6 +16,9 @@ let package = Package(
         .target(
             name: "CircuitPortKit",
             dependencies: [
+                .product(name: "OpenCombine", package: "OpenCombine"),
+                .product(name: "OpenCombineFoundation", package: "OpenCombine"),
+                .product(name: "OpenCombineDispatch", package: "OpenCombine"),
             ],
             path: "kit/CircuitPortKit"
         ),
@@ -22,6 +26,9 @@ let package = Package(
             name: "BlackLabelMarketingCore",
             dependencies: [
                 "CircuitPortKit",
+                .product(name: "OpenCombine", package: "OpenCombine"),
+                .product(name: "OpenCombineFoundation", package: "OpenCombine"),
+                .product(name: "OpenCombineDispatch", package: "OpenCombine"),
                 .product(name: "Crypto", package: "swift-crypto"),
                 .product(name: "SwiftToolchainCSQLite", package: "swift-toolchain-sqlite"),
             ],
@@ -173,6 +180,7 @@ let package = Package(
                 "Sources/Workflows.swift",
                 "Sources/Workspace.swift",
                 "Sources/WorkspaceStore.swift",
+                "_CircuitConvert/CombineNamesForSimulation.swift",
             ]
         ),
     ]

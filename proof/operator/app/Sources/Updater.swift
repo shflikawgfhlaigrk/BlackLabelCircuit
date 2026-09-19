@@ -26,9 +26,11 @@
 // produced by `./build.command --devid` or `./build-developer-id.sh`). The pure logic here (version
 // compare, manifest decode, sha256) is always available + unit-tested; the install/relaunch path
 // (UpdaterUI.swift) only runs on the Dev-ID build. macOS-only: the iOS target omits the updater.
+import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import CircuitPortKit
 #if os(macOS)
 import Foundation
 import CryptoKit

@@ -21,6 +21,8 @@
 import Foundation
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
 #if os(macOS)
 import Darwin
@@ -28,6 +30,14 @@ import Darwin
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// Result of the buyer-credential check against Anthropic's official read-only Models endpoint.
 /// Only `.verified` may publish CONNECTED state. `.unverified` (we could not reach the provider)

@@ -16,6 +16,14 @@ import SwiftUI
 import Network
 #endif
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - Store (orchestrates the real network read + holds the user's rate)
 

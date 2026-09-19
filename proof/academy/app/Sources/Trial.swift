@@ -10,6 +10,14 @@
 // The entitlement math lives in `TrialEngine` as a PURE function so it is testable headlessly
 // (see `--selftest-trial`) and cannot drift from what the UI shows.
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // PLATFORM: macOS-only. Academy's iOS build ships the full library FREE with no trial, paywall,
 // subscription, or external checkout — a digital subscription may not be sold outside StoreKit IAP

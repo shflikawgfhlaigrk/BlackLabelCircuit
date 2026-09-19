@@ -17,6 +17,14 @@
 import SwiftUI
 #endif
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - Per-zone climate config (user-owned, persisted)
 

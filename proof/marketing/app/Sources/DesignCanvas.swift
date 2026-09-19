@@ -15,6 +15,14 @@ import CoreGraphics
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - Canvas format (the fixed pixel size a document renders at)
 

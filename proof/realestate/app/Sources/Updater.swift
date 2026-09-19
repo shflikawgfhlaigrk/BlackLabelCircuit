@@ -27,9 +27,11 @@
 // The Mac App Store build must also exclude it (Guideline 2.4.5(vii): no self-update mechanisms; the
 // App Store delivers updates), so the guard is os(macOS) && !MAS_BUILD. The only consumers are
 // UpdaterUI (same guard) and the macOS-run unit tests (built without MAS_BUILD).
+import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import CircuitPortKit
 #if os(macOS) && !MAS_BUILD
 import Foundation
 import CryptoKit

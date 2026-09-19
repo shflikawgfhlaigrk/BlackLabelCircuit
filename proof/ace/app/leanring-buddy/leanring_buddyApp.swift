@@ -19,7 +19,6 @@ import SwiftUI
 import Darwin
 #elseif canImport(ucrt)
 import ucrt
-import WinSDK
 #elseif canImport(Glibc)
 import Glibc
 #endif
@@ -74,8 +73,8 @@ struct leanring_buddyApp: App {
             .commands {
                 CommandGroup(replacing: .appSettings) {
                     AceTrackedButton("Show Ace") {
-                        MenuBarPanelManager.shared?
-                            .showPanelForSettingsCommand()
+                        (NSApp.delegate as? CompanionAppDelegate)?
+                            .showAceForExplicitOpen()
                     }
                     .keyboardShortcut(",", modifiers: .command)
                 }
@@ -432,7 +431,7 @@ final class CompanionAppDelegate: NSObject, NSApplicationDelegate {
         if lifecycleReceiptsAreSafe {
             LifecycleLog.append("MANUAL-OPEN source=apple-event-reopen")
         }
-        showManualProductSurfaceIfReady()
+        showAceForExplicitOpen()
     }
 
     private func observeDeferredEntitlementStartupIfNeeded() {
@@ -1174,6 +1173,12 @@ final class CompanionAppDelegate: NSObject, NSApplicationDelegate {
     /// Applications; it does activate the process. Handling both callbacks is
     /// what makes a closed/interrupted setup reachable again without knowing
     /// where the status icon landed on a crowded menu bar.
+    func showAceForExplicitOpen() {
+        guard let companionManager = companionManagerStorage,
+              companionManager.exitPrivateModeForManualOpen() else { return }
+        showManualProductSurfaceIfReady()
+    }
+
     private func showManualProductSurfaceIfReady() {
         guard let companionManager = companionManagerStorage,
               !companionManager.stealthActive,
@@ -1209,7 +1214,7 @@ final class CompanionAppDelegate: NSObject, NSApplicationDelegate {
         if lifecycleReceiptsAreSafe {
             LifecycleLog.append("MANUAL-OPEN source=app-delegate-reopen")
         }
-        showManualProductSurfaceIfReady()
+        showAceForExplicitOpen()
         return false
     }
 

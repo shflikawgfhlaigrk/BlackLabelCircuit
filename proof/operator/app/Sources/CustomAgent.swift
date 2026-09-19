@@ -12,6 +12,14 @@ import Foundation
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// The catalog of real, safe tools a custom agent may be granted. The id is the tool name the
 /// AgentEngine dispatches on; nothing here is aspirational — each maps to a wired implementation.

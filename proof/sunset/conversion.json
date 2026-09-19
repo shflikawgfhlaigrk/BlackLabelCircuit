@@ -2,8 +2,16 @@
   "root": "/Users/michaelbarber/BlackLabelAcetate",
   "name": "BlackLabelAcetate",
   "target": "windows",
-  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/sunset",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/new/sunset",
   "moduleName": "BlackLabelAcetateCore",
+  "source": {
+    "sha256": "7d422e4d8c277d065fff837c30e80eb29fba72d49e580abcbc509a24ebcef6cc",
+    "files": 75,
+    "git": {
+      "head": "b28bb3bdda0a54bbb36bfeea137b68b8bd5952e3",
+      "uncommitted": 19
+    }
+  },
   "moduleSources": {
     "from": "project.yml target Sunset",
     "paths": [
@@ -73,17 +81,17 @@
       "UI/MetersView.swift"
     ]
   },
-  "generatedAt": 1789715591641,
-  "tookMs": 27010,
+  "generatedAt": 1789781498623,
+  "tookMs": 41834,
   "before": {
-    "readyPct": 66.1,
+    "readyPct": 60.2,
     "files": 77,
     "loc": 21071
   },
   "after": {
-    "readyPct": 77.6,
-    "guardedLoc": 4215,
-    "needsWindowsLoc": 435
+    "readyPct": 77.3,
+    "guardedLoc": 4285,
+    "needsWindowsLoc": 437
   },
   "verification": {
     "ran": true,
@@ -92,7 +100,7 @@
     "passes": [
       {
         "pass": 1,
-        "isolated": 5
+        "isolated": 6
       },
       {
         "pass": 2,
@@ -100,11 +108,11 @@
       },
       {
         "pass": 3,
-        "isolated": 3
+        "isolated": 5
       },
       {
         "pass": 4,
-        "isolated": 3
+        "isolated": 1
       },
       {
         "pass": 5,
@@ -112,15 +120,15 @@
       },
       {
         "pass": 6,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 7,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 8,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 9,
@@ -128,6 +136,46 @@
       },
       {
         "pass": 10,
+        "isolated": 1
+      },
+      {
+        "pass": 11,
+        "isolated": 2
+      },
+      {
+        "pass": 12,
+        "isolated": 1
+      },
+      {
+        "pass": 13,
+        "isolated": 1
+      },
+      {
+        "pass": 14,
+        "isolated": 1
+      },
+      {
+        "pass": 15,
+        "isolated": 1
+      },
+      {
+        "pass": 16,
+        "isolated": 1
+      },
+      {
+        "pass": 17,
+        "isolated": 1
+      },
+      {
+        "pass": 18,
+        "isolated": 1
+      },
+      {
+        "pass": 19,
+        "isolated": 2
+      },
+      {
+        "pass": 20,
         "isolated": 0
       }
     ],
@@ -142,22 +190,22 @@
       "loc": 20581
     },
     "portable": {
-      "files": 55,
-      "loc": 13347
+      "files": 42,
+      "loc": 8752
     },
     "converted": {
-      "files": 2,
-      "loc": 519
+      "files": 4,
+      "loc": 1424
     },
     "partial": {
-      "files": 4,
-      "loc": 942,
-      "isolatedLoc": 726,
-      "buildsLoc": 216
+      "files": 9,
+      "loc": 2224,
+      "isolatedLoc": 1219,
+      "buildsLoc": 1005
     },
     "needsWindowsPart": {
-      "files": 14,
-      "loc": 5773
+      "files": 20,
+      "loc": 8181
     },
     "macOnlySkipped": {
       "files": 0,
@@ -167,11 +215,16 @@
       "files": 0,
       "loc": 0
     },
-    "buildsLoc": 14082,
-    "isolatedLoc": 6499,
-    "buildsForWindowsPct": 68.4
+    "buildsLoc": 11181,
+    "isolatedLoc": 9400,
+    "buildsForWindowsPct": 54.3
   },
   "packages": [
+    {
+      "package": "OpenCombine",
+      "url": "https://github.com/OpenCombine/OpenCombine.git",
+      "from": "0.14.0"
+    },
     {
       "package": "swift-crypto",
       "url": "https://github.com/apple/swift-crypto.git",
@@ -195,6 +248,13 @@
       "loc": 4127
     },
     {
+      "id": "(uses code that was isolated)",
+      "windows": null,
+      "effort": null,
+      "files": 9,
+      "loc": 2593
+    },
+    {
       "id": "AVFoundation",
       "windows": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)",
       "effort": "L",
@@ -207,6 +267,13 @@
       "effort": "M",
       "files": 2,
       "loc": 491
+    },
+    {
+      "id": "Accelerate",
+      "windows": "a portable DSP / linear-algebra path (vDSP and BLAS have no Windows build)",
+      "effort": "M",
+      "files": 2,
+      "loc": 308
     },
     {
       "id": "WebKit",
@@ -259,22 +326,31 @@
           "kind": "guarded-import",
           "module": "AudioToolbox",
           "to": "WASAPI / Media Foundation"
+        },
+        {
+          "line": 0,
+          "kind": "kit",
+          "module": "Security",
+          "to": "CircuitPortKit Keychain names (the Mac gets them through Foundation)"
         }
       ],
       "guardedModules": [
         "AVFoundation",
         "AudioToolbox"
       ],
+      "kitModules": [
+        "Security"
+      ],
       "isolated": true,
       "errors": [
-        "418:44 cannot find type 'AudioFormatID' in scope",
-        "191:43 cannot find type 'AVAudioFormat' in scope",
-        "191:63 cannot find type 'AVAudioFormat' in scope",
-        "198:57 cannot find type 'AVAudioFile' in scope",
-        "199:59 cannot find type 'AVAudioFormat' in scope",
-        "200:59 cannot find type 'AVAudioFrameCount' in scope",
-        "209:46 cannot find type 'AVAudioFile' in scope",
-        "210:45 cannot find type 'AVAudioFormat' in scope"
+        "419:44 cannot find type 'AudioFormatID' in scope",
+        "192:43 cannot find type 'AVAudioFormat' in scope",
+        "192:63 cannot find type 'AVAudioFormat' in scope",
+        "199:57 cannot find type 'AVAudioFile' in scope",
+        "200:59 cannot find type 'AVAudioFormat' in scope",
+        "201:59 cannot find type 'AVAudioFrameCount' in scope",
+        "210:46 cannot find type 'AVAudioFile' in scope",
+        "211:45 cannot find type 'AVAudioFormat' in scope"
       ],
       "errorCount": 12,
       "isolatedInPass": 2,
@@ -290,6 +366,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -302,9 +379,16 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
-      "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "46:29 cannot find type 'ReferenceDNA' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 7,
+      "whole": true,
+      "isolatedLoc": 333,
+      "status": "needs-windows-part"
     },
     {
       "id": "Audio/MixEngine.swift",
@@ -314,9 +398,17 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
-      "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "133:24 cannot find 'FFTAnalyzer' in scope",
+        "135:23 cannot find 'MaskingDetector' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 7,
+      "whole": true,
+      "isolatedLoc": 777,
+      "status": "needs-windows-part"
     },
     {
       "id": "Audio/PlaybackEngine.swift",
@@ -335,6 +427,7 @@
       "guardedModules": [
         "AVFoundation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "15:26 cannot find 'AVAudioEngine' in scope",
@@ -360,6 +453,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -372,6 +466,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -400,6 +495,7 @@
         "AVFoundation",
         "AudioToolbox"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "56:69 cannot find 'kAudioFormatMPEG4AAC' in scope"
@@ -418,6 +514,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -430,6 +527,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -442,6 +540,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -454,6 +553,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -466,6 +566,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -478,6 +579,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -490,6 +592,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -502,6 +605,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -514,6 +618,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -522,13 +627,36 @@
       "id": "DSP/FFTAnalyzer.swift",
       "lang": "swift",
       "loc": 119,
-      "before": "ready",
-      "rewritten": false,
-      "changes": [],
-      "guardedModules": [],
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "Accelerate",
+          "to": "a portable DSP / linear-algebra path (vDSP and BLAS have no Windows build)"
+        }
+      ],
+      "guardedModules": [
+        "Accelerate"
+      ],
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "17:16 cannot find type 'vDSP_Length' in scope",
+        "18:24 cannot find type 'FFTSetup' in scope",
+        "28:22 cannot find 'vDSP_Length' in scope",
+        "29:22 cannot find 'vDSP_create_fftsetup' in scope",
+        "29:50 cannot find 'FFTRadix' in scope",
+        "29:59 cannot find 'kFFTRadix2' in scope",
+        "31:9 cannot find 'vDSP_hann_window' in scope",
+        "31:35 cannot find 'vDSP_Length' in scope"
+      ],
+      "errorCount": 29,
+      "isolatedInPass": 3,
       "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "isolatedLoc": 79,
+      "status": "partial"
     },
     {
       "id": "DSP/FilterFX.swift",
@@ -538,6 +666,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -550,6 +679,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -562,6 +692,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -574,6 +705,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -586,6 +718,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -594,13 +727,23 @@
       "id": "DSP/LoudnessMeter.swift",
       "lang": "swift",
       "loc": 222,
-      "before": "ready",
-      "rewritten": false,
-      "changes": [],
-      "guardedModules": [],
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "Accelerate",
+          "to": "a portable DSP / linear-algebra path (vDSP and BLAS have no Windows build)"
+        }
+      ],
+      "guardedModules": [
+        "Accelerate"
+      ],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
-      "status": "portable"
+      "status": "converted"
     },
     {
       "id": "DSP/LowEndAnalyzer.swift",
@@ -610,9 +753,16 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "64:24 cannot find 'FFTAnalyzer' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 6,
       "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "isolatedLoc": 143,
+      "status": "partial"
     },
     {
       "id": "DSP/MaskingDetector.swift",
@@ -622,9 +772,16 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
-      "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "36:35 cannot find type 'FFTAnalyzer' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 6,
+      "whole": true,
+      "isolatedLoc": 171,
+      "status": "needs-windows-part"
     },
     {
       "id": "DSP/MidSide.swift",
@@ -634,6 +791,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -646,6 +804,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -658,6 +817,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -666,13 +826,31 @@
       "id": "DSP/ReferenceMatch.swift",
       "lang": "swift",
       "loc": 229,
-      "before": "ready",
-      "rewritten": false,
-      "changes": [],
-      "guardedModules": [],
-      "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "Accelerate",
+          "to": "a portable DSP / linear-algebra path (vDSP and BLAS have no Windows build)"
+        }
+      ],
+      "guardedModules": [
+        "Accelerate"
+      ],
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "46:57 cannot find type 'FFTAnalyzer' in scope",
+        "70:24 cannot find 'FFTAnalyzer' in scope",
+        "98:24 cannot find 'FFTAnalyzer' in scope"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 4,
+      "whole": true,
+      "isolatedLoc": 229,
+      "status": "needs-windows-part"
     },
     {
       "id": "DSP/Resonator.swift",
@@ -682,6 +860,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -694,6 +873,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -706,6 +886,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -718,6 +899,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -730,6 +912,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -742,6 +925,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -750,13 +934,23 @@
       "id": "DSP/SpeechLeveler.swift",
       "lang": "swift",
       "loc": 683,
-      "before": "ready",
-      "rewritten": false,
-      "changes": [],
-      "guardedModules": [],
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 19,
+          "kind": "guarded-import",
+          "module": "Accelerate",
+          "to": "a portable DSP / linear-algebra path (vDSP and BLAS have no Windows build)"
+        }
+      ],
+      "guardedModules": [
+        "Accelerate"
+      ],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
-      "status": "portable"
+      "status": "converted"
     },
     {
       "id": "DSP/TransientShaper.swift",
@@ -766,6 +960,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -778,6 +973,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -790,6 +986,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -880,9 +1077,23 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
-      "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "134:17 cannot find type 'MasterResult' in scope",
+        "146:33 cannot find type 'MasterResult' in scope",
+        "506:43 cannot find type 'MasterResult' in scope",
+        "582:43 cannot find type 'MasterResult' in scope",
+        "196:26 cannot find 'MasteringEngine' in scope",
+        "213:22 cannot find 'MaskingDetector' in scope",
+        "213:70 cannot find 'FFTAnalyzer' in scope",
+        "288:9 cannot find 'ReferenceMatcher' in scope"
+      ],
+      "errorCount": 18,
+      "isolatedInPass": 9,
+      "whole": true,
+      "isolatedLoc": 830,
+      "status": "needs-windows-part"
     },
     {
       "id": "Model/DNAProfile.swift",
@@ -892,9 +1103,23 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "20:14 cannot find type 'ReferenceDNA' in scope",
+        "16:8 type 'DNAProfile' does not conform to protocol 'Decodable'",
+        "22:74 cannot find type 'ReferenceDNA' in scope",
+        "16:8 type 'DNAProfile' does not conform to protocol 'Encodable'",
+        "16:8 type 'DNAProfile' does not conform to protocol 'Equatable'",
+        "54:21 cannot find type 'DNAProfile' in scope",
+        "61:28 cannot find type 'DNAProfile' in scope",
+        "56:51 cannot find 'DNAProfile' in scope"
+      ],
+      "errorCount": 11,
+      "isolatedInPass": 9,
       "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "isolatedLoc": 48,
+      "status": "partial"
     },
     {
       "id": "Model/InsertParams.swift",
@@ -904,6 +1129,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -923,6 +1149,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -935,9 +1162,16 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "24:33 cannot find type 'MasterResult' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 8,
       "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "isolatedLoc": 36,
+      "status": "partial"
     },
     {
       "id": "Model/Presets.swift",
@@ -947,6 +1181,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -969,25 +1204,32 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "AppKit",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "179:20 cannot find 'PlaybackEngine' in scope",
-        "81:43 cannot find 'WaveformView' in scope",
-        "86:44 cannot find 'WaveformView' in scope",
-        "87:40 cannot find 'WaveformView' in scope",
-        "291:26 cannot find 'WaveformView' in scope",
-        "654:40 cannot find 'WaveformView' in scope",
-        "663:40 cannot find 'WaveformView' in scope",
-        "696:25 type 'AudioIO' has no member 'export'"
+        "51:28 cannot find type 'MasterResult' in scope",
+        "52:31 cannot find type 'MixEngine' in scope",
+        "55:34 cannot find type 'DoctorReport' in scope",
+        "56:37 cannot find type 'MasterVariant' in scope",
+        "58:40 cannot find type 'StemConflictReport' in scope",
+        "64:43 cannot find type 'MixEngine' in scope",
+        "250:34 cannot find type 'DNAProfile' in scope",
+        "24:21 cannot find type 'MasterResult' in scope"
       ],
-      "errorCount": 15,
-      "isolatedInPass": 7,
+      "errorCount": 57,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 1190,
       "status": "needs-windows-part"
@@ -1000,9 +1242,16 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
-      "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "31:33 cannot find type 'MasterResult' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 8,
+      "whole": true,
+      "isolatedLoc": 68,
+      "status": "needs-windows-part"
     },
     {
       "id": "Model/SessionChain.swift",
@@ -1012,9 +1261,23 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
+      "isolated": true,
+      "errors": [
+        "750:32 cannot find type 'MixEngine' in scope",
+        "37:11 cannot find type 'MixEngine' in scope",
+        "51:11 cannot find type 'MixEngine' in scope",
+        "460:31 cannot find type 'MixEngine' in scope",
+        "478:14 cannot find type 'BusRole' in scope",
+        "476:6 type 'DuckSource' does not conform to protocol 'Decodable'",
+        "476:6 type 'DuckSource' does not conform to protocol 'Encodable'",
+        "476:6 type 'DuckSource' does not conform to protocol 'Hashable'"
+      ],
+      "errorCount": 19,
+      "isolatedInPass": 11,
       "whole": false,
-      "isolatedLoc": 0,
-      "status": "portable"
+      "isolatedLoc": 187,
+      "status": "partial"
     },
     {
       "id": "Shared/BLShell.swift",
@@ -1054,6 +1317,12 @@
           "to": "browser sign-in (OAuth) and WebAuthn through Windows Hello"
         },
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 1,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -1066,18 +1335,19 @@
         "AppKit",
         "AuthenticationServices"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "32:26 cannot find 'Color' in scope",
-        "207:22 cannot find type 'View' in scope",
-        "30:26 cannot find 'Color' in scope",
-        "47:32 cannot find type 'NSImage' in scope",
-        "49:16 cannot find 'NSImage' in scope",
-        "54:22 cannot find type 'NSImage' in scope",
-        "147:11 cannot find type 'View' in scope",
-        "164:6 unknown attribute 'State'"
+        "40:26 cannot find 'Color' in scope",
+        "41:26 cannot find 'Color' in scope",
+        "39:26 cannot find 'Color' in scope",
+        "42:26 cannot find 'Color' in scope",
+        "43:26 cannot find 'Color' in scope",
+        "38:26 cannot find 'Color' in scope",
+        "215:22 cannot find type 'View' in scope",
+        "45:26 cannot find 'Color' in scope"
       ],
-      "errorCount": 121,
+      "errorCount": 126,
       "isolatedInPass": 1,
       "whole": false,
       "isolatedLoc": 202,
@@ -1098,9 +1368,9 @@
         },
         {
           "line": 24,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 22,
@@ -1109,7 +1379,8 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -1146,19 +1417,22 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
+        "17:35 cannot find type 'AppState' in scope",
         "17:6 unknown attribute 'EnvironmentObject'",
         "18:6 unknown attribute 'State'",
         "20:20 cannot find type 'View' in scope",
         "35:34 cannot find type 'View' in scope",
         "94:30 cannot find type 'View' in scope",
         "108:32 cannot find type 'View' in scope",
-        "128:127 cannot find type 'View' in scope",
-        "145:60 cannot find type 'View' in scope"
+        "128:127 cannot find type 'View' in scope"
       ],
-      "errorCount": 253,
-      "isolatedInPass": 5,
+      "errorCount": 252,
+      "isolatedInPass": 14,
       "whole": true,
       "isolatedLoc": 528,
       "status": "needs-windows-part"
@@ -1180,19 +1454,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
+        "7:35 cannot find type 'AppState' in scope",
         "7:6 unknown attribute 'EnvironmentObject'",
         "9:20 cannot find type 'View' in scope",
         "34:30 cannot find type 'View' in scope",
         "54:60 cannot find type 'View' in scope",
+        "54:38 cannot find type 'DoctorReport' in scope",
         "95:60 cannot find type 'View' in scope",
-        "114:62 cannot find type 'View' in scope",
-        "150:66 cannot find type 'View' in scope",
-        "175:64 cannot find type 'View' in scope"
+        "95:38 cannot find type 'DoctorReport' in scope"
       ],
-      "errorCount": 151,
-      "isolatedInPass": 1,
+      "errorCount": 212,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 326,
       "status": "needs-windows-part"
@@ -1214,6 +1489,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "16:6 unknown attribute 'EnvironmentObject'",
@@ -1226,7 +1502,7 @@
         "118:38 cannot find type 'View' in scope"
       ],
       "errorCount": 59,
-      "isolatedInPass": 1,
+      "isolatedInPass": 3,
       "whole": true,
       "isolatedLoc": 201,
       "status": "needs-windows-part"
@@ -1248,6 +1524,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "19:20 cannot find type 'View' in scope",
@@ -1260,7 +1537,7 @@
         "31:13 cannot find 'Text' in scope"
       ],
       "errorCount": 25,
-      "isolatedInPass": 1,
+      "isolatedInPass": 3,
       "whole": true,
       "isolatedLoc": 89,
       "status": "needs-windows-part"
@@ -1282,6 +1559,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "16:6 unknown attribute 'EnvironmentObject'",
@@ -1293,8 +1571,8 @@
         "86:36 cannot find type 'View' in scope",
         "115:35 cannot find type 'View' in scope"
       ],
-      "errorCount": 310,
-      "isolatedInPass": 4,
+      "errorCount": 256,
+      "isolatedInPass": 3,
       "whole": true,
       "isolatedLoc": 834,
       "status": "needs-windows-part"
@@ -1323,6 +1601,7 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "16:6 unknown attribute 'EnvironmentObject'",
@@ -1332,10 +1611,10 @@
         "15:23 cannot find type 'View' in scope",
         "19:9 cannot find 'ScrollView' in scope",
         "20:13 cannot find 'VStack' in scope",
-        "23:17 cannot find 'Card' in scope"
+        "24:21 cannot find 'VStack' in scope"
       ],
-      "errorCount": 70,
-      "isolatedInPass": 4,
+      "errorCount": 45,
+      "isolatedInPass": 1,
       "whole": true,
       "isolatedLoc": 121,
       "status": "needs-windows-part"
@@ -1371,6 +1650,7 @@
         "SceneKit",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "22:47 cannot find type 'SCNView' in scope",
@@ -1383,7 +1663,7 @@
         "106:59 cannot find type 'NSColor' in scope"
       ],
       "errorCount": 50,
-      "isolatedInPass": 4,
+      "isolatedInPass": 1,
       "whole": true,
       "isolatedLoc": 110,
       "status": "needs-windows-part"
@@ -1405,6 +1685,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "17:20 cannot find type 'View' in scope",
@@ -1416,8 +1697,8 @@
         "10:22 cannot find type 'View' in scope",
         "18:9 cannot find 'VStack' in scope"
       ],
-      "errorCount": 42,
-      "isolatedInPass": 6,
+      "errorCount": 26,
+      "isolatedInPass": 1,
       "whole": true,
       "isolatedLoc": 106,
       "status": "needs-windows-part"
@@ -1452,6 +1733,9 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "15:35 cannot find type 'AppState' in scope",
@@ -1463,8 +1747,8 @@
         "53:35 cannot find type 'View' in scope",
         "75:34 cannot find type 'View' in scope"
       ],
-      "errorCount": 84,
-      "isolatedInPass": 9,
+      "errorCount": 90,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 1764,
       "status": "needs-windows-part"
@@ -1486,19 +1770,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "26:29 cannot find type 'View' in scope",
         "17:22 cannot find 'Color' in scope",
+        "12:28 cannot find 'Color' in scope",
+        "15:23 cannot find 'Color' in scope",
         "62:6 unknown attribute 'Binding'",
         "70:20 cannot find type 'View' in scope",
         "60:18 cannot find type 'View' in scope",
-        "89:6 unknown attribute 'Binding'",
-        "91:20 cannot find type 'View' in scope",
-        "87:18 cannot find type 'View' in scope"
+        "89:6 unknown attribute 'Binding'"
       ],
-      "errorCount": 58,
-      "isolatedInPass": 1,
+      "errorCount": 60,
+      "isolatedInPass": 3,
       "whole": true,
       "isolatedLoc": 169,
       "status": "needs-windows-part"
@@ -1527,6 +1812,7 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "11:1 'SunsetApp' is annotated with '@main' and must provide a main static function of type () -> Void, () throws -> Void, () async -> Void, or () async throws -> Void",
@@ -1536,10 +1822,10 @@
         "12:19 cannot find type 'App' in scope",
         "23:9 cannot find 'NSApplication' in scope",
         "24:9 cannot find 'NSApplication' in scope",
-        "28:19 call to main actor-isolated static method 'checkInBackgroundIfDue()' in a synchronous nonisolated context [#ActorIsolatedCall]"
+        "28:9 cannot find 'UpdaterUI' in scope"
       ],
-      "errorCount": 12,
-      "isolatedInPass": 3,
+      "errorCount": 13,
+      "isolatedInPass": 5,
       "whole": false,
       "isolatedLoc": 33,
       "status": "partial"
@@ -1561,6 +1847,7 @@
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "72:38 cannot find type 'NSPanel' in scope",
@@ -1568,12 +1855,12 @@
         "52:25 cannot infer contextual base in reference to member 'informational'",
         "64:17 cannot find 'NSWorkspace' in scope",
         "87:21 cannot find 'NSPanel' in scope",
+        "87:48 argument passed to call that takes no arguments",
         "91:21 cannot find 'NSTextField' in scope",
-        "93:23 cannot infer contextual base in reference to member 'systemFont'",
-        "96:19 cannot find 'NSProgressIndicator' in scope"
+        "93:23 cannot infer contextual base in reference to member 'systemFont'"
       ],
-      "errorCount": 14,
-      "isolatedInPass": 3,
+      "errorCount": 19,
+      "isolatedInPass": 1,
       "whole": true,
       "isolatedLoc": 179,
       "status": "needs-windows-part"
@@ -1595,19 +1882,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "16:15 cannot find type 'Color' in scope",
-        "16:23 cannot find 'Palette' in scope",
         "20:20 cannot find type 'View' in scope",
         "39:30 cannot find type 'GraphicsContext' in scope",
         "13:22 cannot find type 'View' in scope",
         "21:9 cannot find 'GeometryReader' in scope",
         "22:13 cannot find 'Canvas' in scope",
-        "24:31 cannot find 'Rectangle' in scope"
+        "24:31 cannot find 'Rectangle' in scope",
+        "26:21 cannot find 'DragGesture' in scope"
       ],
-      "errorCount": 19,
-      "isolatedInPass": 3,
+      "errorCount": 15,
+      "isolatedInPass": 1,
       "whole": true,
       "isolatedLoc": 83,
       "status": "needs-windows-part"

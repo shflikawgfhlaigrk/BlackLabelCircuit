@@ -25,6 +25,14 @@ import Foundation
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// App-wide flag for reviewer/sample mode. A single source of truth the whole app reads.
 /// `@Published` so banners and the simulated brain react live the instant it flips on.

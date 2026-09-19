@@ -29,7 +29,6 @@ import OpenCombineDispatch
 import Darwin
 #elseif canImport(ucrt)
 import ucrt
-import WinSDK
 #elseif canImport(Glibc)
 import Glibc
 #endif
@@ -55,6 +54,7 @@ nonisolated final class StealthEntryLatch: @unchecked Sendable {
 
     private let lock = NSLock()
     private var raisedStorage = false
+    private var externalAdmissionCheck: (@Sendable () -> Bool)?
     private var preparedParentDirectoryDescriptor: Int32 = -1
     private var preparedSupportDirectoryName = ""
     private var preparedDirectoryURL: URL?
@@ -64,7 +64,19 @@ nonisolated final class StealthEntryLatch: @unchecked Sendable {
         [UUID: @Sendable () -> Void] = [:]
 
     var isRaised: Bool {
-        lock.withLock { raisedStorage }
+        let state = lock.withLock { (raisedStorage, externalAdmissionCheck) }
+        return state.0 || !(state.1?() ?? true)
+    }
+
+    /// Used only by the one-request native child before starting its executor.
+    /// The file-backed parent grant is never read while the entry lock is held.
+    @discardableResult
+    func requireExternalAdmission(_ check: @escaping @Sendable () -> Bool) -> Bool {
+        lock.withLock {
+            guard externalAdmissionCheck == nil, !raisedStorage else { return false }
+            externalAdmissionCheck = check
+            return true
+        }
     }
 
     /// Atomically admits one small, non-waiting effect invocation or rejects
@@ -84,6 +96,8 @@ nonisolated final class StealthEntryLatch: @unchecked Sendable {
     func performUnlessRaised<T>(
         _ body: () throws -> T
     ) rethrows -> T? {
+        let externalCheck = lock.withLock { externalAdmissionCheck }
+        guard externalCheck?() ?? true else { return nil }
         lock.lock()
         defer { lock.unlock() }
         guard !raisedStorage else { return nil }

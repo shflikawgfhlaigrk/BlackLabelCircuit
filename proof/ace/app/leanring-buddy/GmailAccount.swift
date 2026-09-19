@@ -18,6 +18,8 @@
 import Foundation
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
 
 /// Pure validation. No I/O, so the walkthrough, the broker and the tests can

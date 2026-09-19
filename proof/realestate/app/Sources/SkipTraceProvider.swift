@@ -22,6 +22,7 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import CircuitPortKit
 
 // MARK: - Vendor (the buyer's provider). Only real, documented shapes are wired.
 // Two providers are wired so the waterfall (RE-15, SkipTraceWaterfall) can chain them under the

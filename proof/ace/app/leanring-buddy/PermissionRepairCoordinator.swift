@@ -12,7 +12,6 @@ import OpenCombineDispatch
 import Darwin
 #elseif canImport(ucrt)
 import ucrt
-import WinSDK
 #elseif canImport(Glibc)
 import Glibc
 #endif
@@ -505,6 +504,7 @@ final class LocalMailAccessController: ObservableObject {
     @Published private(set) var hasAccess: Bool
     @Published private(set) var didOpenFullDiskAccessSettings = false
     @Published private(set) var restartFailureMessage: String?
+    @Published private(set) var launchFailureMessage: String?
 
     private let probe: () -> Bool
     private let settingsOpener: (URL) -> Bool
@@ -558,13 +558,19 @@ final class LocalMailAccessController: ObservableObject {
         if opened {
             didOpenFullDiskAccessSettings = true
             restartFailureMessage = nil
+            launchFailureMessage = nil
+        } else {
+            launchFailureMessage = "Full Disk Access settings could not open. Open System Settings > Privacy & Security > Full Disk Access."
         }
         return opened
     }
 
     @discardableResult
     func openAppleMail() -> Bool {
-        appleMailOpener(NativeMailSetupDestination.appleMailApplication)
+        let opened = appleMailOpener(NativeMailSetupDestination.appleMailApplication)
+        launchFailureMessage = opened ? nil
+            : "Apple Mail could not open. Open Mail from Applications, then try again."
+        return opened
     }
 
     /// Explicit setup requests go first to macOS Internet Accounts. If that
@@ -575,6 +581,7 @@ final class LocalMailAccessController: ObservableObject {
         if settingsOpener(
             NativeMailSetupDestination.internetAccountsDeepLink
         ) {
+            launchFailureMessage = nil
             return .internetAccounts
         }
         return openAppleMail() ? .appleMail : nil

@@ -1,6 +1,14 @@
 // Sovereign — app shell: routing, the command palette (⌘K global search + navigation),
 // onboarding, and the in-app help center. Keeps main.swift lean.
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif

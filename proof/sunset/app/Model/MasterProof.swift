@@ -12,6 +12,7 @@
 
 import Foundation
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 struct MasterProof {
     var title: String
     var reportCard: ReportCard
@@ -55,3 +56,4 @@ struct MasterProof {
                            text: lines.joined(separator: "\n"))
     }
 }
+#endif // circuit-convert

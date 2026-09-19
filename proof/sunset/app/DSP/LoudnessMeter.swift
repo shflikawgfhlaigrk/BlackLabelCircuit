@@ -7,7 +7,9 @@
 // is accurate at 44.1k and 48k, not just the tabulated 48k values.
 
 import Foundation
+#if canImport(Accelerate) && !CIRCUIT_WINDOWS_SIM
 import Accelerate
+#endif
 
 struct LoudnessResult {
     var integratedLUFS: Double       // gated integrated loudness

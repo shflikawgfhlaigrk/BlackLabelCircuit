@@ -25,6 +25,14 @@ import ApplicationServices
 #if canImport(AppKit)
 import AppKit
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - Action model (pure)
 

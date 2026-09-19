@@ -11,7 +11,6 @@
 import Darwin
 #elseif canImport(ucrt)
 import ucrt
-import WinSDK
 #elseif canImport(Glibc)
 import Glibc
 #endif

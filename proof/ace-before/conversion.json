@@ -1,0 +1,5753 @@
+{
+  "root": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/snap/Ace-Build85-20260913",
+  "name": "Ace-Build85-20260913",
+  "target": "windows",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/old/ace",
+  "moduleName": "Ace_Build85_20260913Core",
+  "moduleSources": {
+    "from": "--sources",
+    "paths": [
+      "leanring-buddy"
+    ]
+  },
+  "generatedAt": 1789781427174,
+  "tookMs": 140163,
+  "before": {
+    "readyPct": 17.3,
+    "files": 235,
+    "loc": 121691
+  },
+  "after": {
+    "readyPct": 82.6,
+    "guardedLoc": 14430,
+    "needsWindowsLoc": 6757
+  },
+  "verification": {
+    "ran": true,
+    "ok": true,
+    "failure": null,
+    "passes": [
+      {
+        "pass": 1,
+        "isolated": 3
+      },
+      {
+        "pass": 2,
+        "isolated": 5
+      },
+      {
+        "pass": 3,
+        "isolated": 1
+      },
+      {
+        "pass": 4,
+        "isolated": 3
+      },
+      {
+        "pass": 5,
+        "isolated": 1
+      },
+      {
+        "pass": 6,
+        "isolated": 2
+      },
+      {
+        "pass": 7,
+        "isolated": 2
+      },
+      {
+        "pass": 8,
+        "isolated": 1
+      },
+      {
+        "pass": 9,
+        "isolated": 1
+      },
+      {
+        "pass": 10,
+        "isolated": 1
+      },
+      {
+        "pass": 11,
+        "isolated": 1
+      },
+      {
+        "pass": 12,
+        "isolated": 1
+      },
+      {
+        "pass": 13,
+        "isolated": 5
+      },
+      {
+        "pass": 14,
+        "isolated": 5
+      },
+      {
+        "pass": 15,
+        "isolated": 6
+      },
+      {
+        "pass": 16,
+        "isolated": 1
+      },
+      {
+        "pass": 17,
+        "isolated": 1
+      },
+      {
+        "pass": 18,
+        "isolated": 5
+      },
+      {
+        "pass": 19,
+        "isolated": 3
+      },
+      {
+        "pass": 20,
+        "isolated": 1
+      },
+      {
+        "pass": 21,
+        "isolated": 5
+      },
+      {
+        "pass": 22,
+        "isolated": 4
+      },
+      {
+        "pass": 23,
+        "isolated": 23
+      },
+      {
+        "pass": 24,
+        "isolated": 2
+      },
+      {
+        "pass": 25,
+        "isolated": 1
+      },
+      {
+        "pass": 26,
+        "isolated": 2
+      },
+      {
+        "pass": 27,
+        "isolated": 1
+      },
+      {
+        "pass": 28,
+        "isolated": 2
+      },
+      {
+        "pass": 29,
+        "isolated": 1
+      },
+      {
+        "pass": 30,
+        "isolated": 1
+      },
+      {
+        "pass": 31,
+        "isolated": 1
+      },
+      {
+        "pass": 32,
+        "isolated": 1
+      },
+      {
+        "pass": 33,
+        "isolated": 0
+      }
+    ],
+    "configuration": "simulated Windows configuration on macOS (-DCIRCUIT_WINDOWS_SIM)",
+    "native": false,
+    "platform": "darwin",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.33.1 clang-2100.3.33.1)"
+  },
+  "totals": {
+    "all": {
+      "files": 232,
+      "loc": 120868
+    },
+    "portable": {
+      "files": 115,
+      "loc": 20758
+    },
+    "converted": {
+      "files": 37,
+      "loc": 13321
+    },
+    "partial": {
+      "files": 31,
+      "loc": 27185,
+      "isolatedLoc": 17035,
+      "buildsLoc": 10150
+    },
+    "needsWindowsPart": {
+      "files": 49,
+      "loc": 59604
+    },
+    "macOnlySkipped": {
+      "files": 0,
+      "loc": 0
+    },
+    "unverified": {
+      "files": 0,
+      "loc": 0
+    },
+    "buildsLoc": 44229,
+    "isolatedLoc": 76639,
+    "buildsForWindowsPct": 36.6
+  },
+  "packages": [
+    {
+      "package": "swift-crypto",
+      "url": "https://github.com/apple/swift-crypto.git",
+      "from": "3.0.0"
+    },
+    {
+      "package": "OpenCombine",
+      "url": "https://github.com/OpenCombine/OpenCombine.git",
+      "from": "0.14.0"
+    },
+    {
+      "package": "swift-toolchain-sqlite",
+      "url": "https://github.com/swiftlang/swift-toolchain-sqlite.git",
+      "from": "1.0.0"
+    }
+  ],
+  "kit": true,
+  "windowsPartsNeeded": [
+    {
+      "id": "SwiftUI",
+      "windows": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)",
+      "effort": "L",
+      "files": 22,
+      "loc": 45010
+    },
+    {
+      "id": "AVFoundation",
+      "windows": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)",
+      "effort": "L",
+      "files": 14,
+      "loc": 42110
+    },
+    {
+      "id": "Speech",
+      "windows": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)",
+      "effort": "M",
+      "files": 8,
+      "loc": 38912
+    },
+    {
+      "id": "AppKit",
+      "windows": "WinUI 3 / Win32 windows, menus and dialogs",
+      "effort": "L",
+      "files": 37,
+      "loc": 35450
+    },
+    {
+      "id": "ApplicationServices",
+      "windows": "UI Automation (reading and targeting other apps) and SendInput (typing)",
+      "effort": "L",
+      "files": 12,
+      "loc": 34012
+    },
+    {
+      "id": "ScreenCaptureKit",
+      "windows": "Windows.Graphics.Capture",
+      "effort": "L",
+      "files": 5,
+      "loc": 29728
+    },
+    {
+      "id": "(uses code that was isolated)",
+      "windows": null,
+      "effort": null,
+      "files": 17,
+      "loc": 9974
+    },
+    {
+      "id": "CoreGraphics",
+      "windows": "Direct2D / WIC for drawing, Win32 for displays and window lists",
+      "effort": "M",
+      "files": 8,
+      "loc": 4620
+    },
+    {
+      "id": "Network",
+      "windows": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)",
+      "effort": "M",
+      "files": 5,
+      "loc": 2454
+    },
+    {
+      "id": "IOKit",
+      "windows": "SetupAPI / WMI",
+      "effort": "M",
+      "files": 1,
+      "loc": 1567
+    },
+    {
+      "id": "ServiceManagement",
+      "windows": "a startup task or the HKCU Run key",
+      "effort": "S",
+      "files": 1,
+      "loc": 1494
+    },
+    {
+      "id": "Security",
+      "windows": "Windows Credential Manager (CredRead/CredWrite) and DPAPI",
+      "effort": "M",
+      "files": 2,
+      "loc": 1464
+    },
+    {
+      "id": "Vision",
+      "windows": "Windows.Media.Ocr or ONNX Runtime",
+      "effort": "M",
+      "files": 2,
+      "loc": 856
+    },
+    {
+      "id": "CoreServices",
+      "windows": "Win32 file and launch APIs",
+      "effort": "M",
+      "files": 1,
+      "loc": 804
+    },
+    {
+      "id": "EventKit",
+      "windows": "Microsoft Graph calendar or Windows.ApplicationModel.Appointments",
+      "effort": "M",
+      "files": 1,
+      "loc": 756
+    },
+    {
+      "id": "PDFKit",
+      "windows": "Windows.Data.Pdf or PDFium",
+      "effort": "M",
+      "files": 1,
+      "loc": 756
+    },
+    {
+      "id": "ImageIO",
+      "windows": "Windows Imaging Component (WIC)",
+      "effort": "S",
+      "files": 2,
+      "loc": 526
+    },
+    {
+      "id": "CoreImage",
+      "windows": "Direct2D effects / WIC",
+      "effort": "M",
+      "files": 1,
+      "loc": 426
+    },
+    {
+      "id": "CoreMedia",
+      "windows": "Media Foundation",
+      "effort": "M",
+      "files": 1,
+      "loc": 426
+    },
+    {
+      "id": "WebKit",
+      "windows": "WebView2",
+      "effort": "M",
+      "files": 1,
+      "loc": 261
+    },
+    {
+      "id": "CoreLocation",
+      "windows": "Windows.Devices.Geolocation",
+      "effort": "S",
+      "files": 1,
+      "loc": 123
+    },
+    {
+      "id": "AuthenticationServices",
+      "windows": "browser sign-in (OAuth) and WebAuthn through Windows Hello",
+      "effort": "M",
+      "files": 1,
+      "loc": 66
+    }
+  ],
+  "skipped": [
+    {
+      "id": "leanring-buddyUITests/AceInstalledControlExpectations.swift",
+      "why": "outside --sources"
+    },
+    {
+      "id": "research/appserver-latency/render-word.swift",
+      "why": "outside --sources"
+    }
+  ],
+  "files": [
+    {
+      "id": "deploy/ace-build48-candidate-upload/src/upload.js",
+      "lang": "javascript",
+      "loc": 81,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build29/src/index.js",
+      "lang": "javascript",
+      "loc": 45,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build29/src/upload.js",
+      "lang": "javascript",
+      "loc": 90,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build31/src/index.js",
+      "lang": "javascript",
+      "loc": 45,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build31/src/upload.js",
+      "lang": "javascript",
+      "loc": 90,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build32/src/index.js",
+      "lang": "javascript",
+      "loc": 45,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build32/src/upload.js",
+      "lang": "javascript",
+      "loc": 90,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build33/src/index.js",
+      "lang": "javascript",
+      "loc": 45,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build33/src/upload.js",
+      "lang": "javascript",
+      "loc": 79,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build35/src/index.js",
+      "lang": "javascript",
+      "loc": 45,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build35/src/upload.js",
+      "lang": "javascript",
+      "loc": 79,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build38/src/index.js",
+      "lang": "javascript",
+      "loc": 45,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build38/src/upload.js",
+      "lang": "javascript",
+      "loc": 79,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build39/src/index.js",
+      "lang": "javascript",
+      "loc": 87,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "deploy/ace-family-build39/src/upload.js",
+      "lang": "javascript",
+      "loc": 79,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AcademicDetector.swift",
+      "lang": "swift",
+      "loc": 43,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AcademicDocument.swift",
+      "lang": "swift",
+      "loc": 135,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AcademicDocumentHeadlessCommand.swift",
+      "lang": "swift",
+      "loc": 77,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AcademicDOCX.swift",
+      "lang": "swift",
+      "loc": 150,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AcademicSettingsView.swift",
+      "lang": "swift",
+      "loc": 13,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "7:20 cannot find type 'View' in scope",
+        "6:30 cannot find type 'View' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 23,
+      "whole": false,
+      "isolatedLoc": 12,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/AcademicSourceFetcher.swift",
+      "lang": "swift",
+      "loc": 63,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AccessibilityVisualTargetResolver.swift",
+      "lang": "swift",
+      "loc": 435,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "ApplicationServices",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "18:8 type 'AccessibilityVisualTargetCandidate' does not conform to protocol 'Equatable'",
+        "29:6 type 'AccessibilityVisualTargetResolution' does not conform to protocol 'Equatable'",
+        "308:49 cannot find type 'AXUIElement' in scope",
+        "318:21 cannot find type 'AXUIElement' in scope",
+        "331:21 cannot find type 'AXUIElement' in scope",
+        "365:43 cannot find type 'AXUIElement' in scope",
+        "407:23 cannot find type 'AXUIElement' in scope",
+        "422:23 cannot find type 'AXUIElement' in scope"
+      ],
+      "errorCount": 30,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 435,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AccessibilityWindowIdentity.swift",
+      "lang": "swift",
+      "loc": 104,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 20,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        },
+        {
+          "line": 21,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        },
+        {
+          "line": 22,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [
+        "ApplicationServices",
+        "CoreGraphics"
+      ],
+      "isolated": true,
+      "errors": [
+        "89:10 cannot find type 'CGWindowID' in scope",
+        "88:27 cannot find type 'AXUIElement' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 19,
+      "whole": false,
+      "isolatedLoc": 63,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/AceActionModel.swift",
+      "lang": "swift",
+      "loc": 222,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceActionReceiptStore.swift",
+      "lang": "swift",
+      "loc": 120,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceBuyerRecovery.swift",
+      "lang": "swift",
+      "loc": 294,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 11,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceClaudeModel.swift",
+      "lang": "swift",
+      "loc": 38,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceConversationHistory.swift",
+      "lang": "swift",
+      "loc": 654,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 24,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 25,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceDeviceAuthorizationCredentialCommitter.swift",
+      "lang": "swift",
+      "loc": 68,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceDeviceAuthorizationProtocol.swift",
+      "lang": "swift",
+      "loc": 562,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceDeviceAuthorizationWindow.swift",
+      "lang": "swift",
+      "loc": 321,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "15:5 cannot find type 'NSWindowDelegate' in scope",
+        "19:25 cannot find type 'NSWindow' in scope",
+        "104:6 unknown attribute 'ObservedObject'",
+        "110:6 unknown attribute 'StateObject'",
+        "117:20 cannot find type 'View' in scope",
+        "103:44 cannot find type 'View' in scope",
+        "43:17 cannot find 'NSApp' in scope",
+        "44:17 cannot find 'NSApp' in scope"
+      ],
+      "errorCount": 59,
+      "isolatedInPass": 5,
+      "whole": true,
+      "isolatedLoc": 321,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AceEntitlementAdmissionPolicy.swift",
+      "lang": "swift",
+      "loc": 307,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceEvent.swift",
+      "lang": "swift",
+      "loc": 698,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceEventBus.swift",
+      "lang": "swift",
+      "loc": 653,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 36,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceGoldContextStore.swift",
+      "lang": "swift",
+      "loc": 1691,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceGoldToolLane.swift",
+      "lang": "swift",
+      "loc": 250,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceHQAuthorizationLifecycle.swift",
+      "lang": "swift",
+      "loc": 167,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceHQCompanionExecutionPolicy.swift",
+      "lang": "swift",
+      "loc": 197,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceHQCompanyWorkPolicy.swift",
+      "lang": "swift",
+      "loc": 422,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceHQDispatchClient.swift",
+      "lang": "swift",
+      "loc": 1071,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceHQDispatchModels.swift",
+      "lang": "swift",
+      "loc": 1076,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceHQDispatchStealthBoundary.swift",
+      "lang": "swift",
+      "loc": 360,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceHQPendingDispatchStore.swift",
+      "lang": "swift",
+      "loc": 414,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        },
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceIntroWindow.swift",
+      "lang": "swift",
+      "loc": 2048,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 19,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 20,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 21,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        },
+        {
+          "line": 22,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 23,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        },
+        {
+          "line": 24,
+          "kind": "guarded-import",
+          "module": "Speech",
+          "to": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)"
+        },
+        {
+          "line": 25,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "AppKit",
+        "ApplicationServices",
+        "CoreGraphics",
+        "Speech",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "75:49 cannot find type 'NSWindowDelegate' in scope",
+        "78:25 cannot find type 'NSWindow' in scope",
+        "210:6 unknown attribute 'ObservedObject'",
+        "214:6 unknown attribute 'StateObject'",
+        "215:6 unknown attribute 'State'",
+        "246:20 cannot find type 'View' in scope",
+        "406:30 cannot find type 'View' in scope",
+        "209:22 cannot find type 'View' in scope"
+      ],
+      "errorCount": 470,
+      "isolatedInPass": 18,
+      "whole": true,
+      "isolatedLoc": 2048,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AceLanguage.swift",
+      "lang": "swift",
+      "loc": 99,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceLanguagePanel.swift",
+      "lang": "swift",
+      "loc": 44,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "8:6 unknown attribute 'ObservedObject'",
+        "9:6 unknown attribute 'State'",
+        "10:6 unknown attribute 'State'",
+        "12:20 cannot find type 'View' in scope",
+        "7:26 cannot find type 'View' in scope",
+        "13:9 cannot find 'VStack' in scope",
+        "14:13 cannot find 'Text' in scope",
+        "15:13 cannot find 'Picker' in scope"
+      ],
+      "errorCount": 18,
+      "isolatedInPass": 18,
+      "whole": true,
+      "isolatedLoc": 44,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AceLicense.swift",
+      "lang": "swift",
+      "loc": 1932,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 32,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 33,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 35,
+          "kind": "guarded-import",
+          "module": "IOKit",
+          "to": "SetupAPI / WMI"
+        },
+        {
+          "line": 36,
+          "kind": "guarded-import",
+          "module": "Network",
+          "to": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)"
+        },
+        {
+          "line": 42,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "IOKit",
+        "Network"
+      ],
+      "isolated": true,
+      "errors": [
+        "505:37 cannot find type 'NWPathMonitor' in scope",
+        "862:22 cannot find 'NSApplication' in scope",
+        "867:33 cannot find 'NSWorkspace' in scope",
+        "868:22 cannot find 'NSWorkspace' in scope",
+        "870:25 cannot infer type of closure parameter '_' without a type annotation",
+        "873:23 cannot find 'NWPathMonitor' in scope",
+        "874:51 cannot infer type of closure parameter 'path' without a type annotation",
+        "977:13 cannot find 'FirstRunFailureReporter' in scope"
+      ],
+      "errorCount": 24,
+      "isolatedInPass": 18,
+      "whole": false,
+      "isolatedLoc": 1567,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/AceLicensePolicy.swift",
+      "lang": "swift",
+      "loc": 64,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceLocalAgentDecision.swift",
+      "lang": "swift",
+      "loc": 39,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceLocalBrain.swift",
+      "lang": "swift",
+      "loc": 735,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 15,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "228:36 cannot find 'AceLocalVisionOCR' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 18,
+      "whole": true,
+      "isolatedLoc": 735,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AceLocalBrainOutputParser.swift",
+      "lang": "swift",
+      "loc": 62,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceLocalPointingOutput.swift",
+      "lang": "swift",
+      "loc": 587,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceLocalVisionOCR.swift",
+      "lang": "swift",
+      "loc": 133,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        },
+        {
+          "line": 13,
+          "kind": "guarded-import",
+          "module": "ImageIO",
+          "to": "Windows Imaging Component (WIC)"
+        },
+        {
+          "line": 14,
+          "kind": "guarded-import",
+          "module": "Vision",
+          "to": "Windows.Media.Ocr or ONNX Runtime"
+        }
+      ],
+      "guardedModules": [
+        "CoreGraphics",
+        "ImageIO",
+        "Vision"
+      ],
+      "isolated": true,
+      "errors": [
+        "54:47 value of type 'CGRect' has no member 'width'",
+        "55:48 value of type 'CGRect' has no member 'height'",
+        "56:43 value of type 'CGRect' has no member 'minX'",
+        "59:37 value of type 'CGRect' has no member 'maxY'",
+        "84:28 cannot find 'CGImageSourceCreateWithData' in scope",
+        "88:29 cannot find 'CGImageSourceCreateImageAtIndex' in scope",
+        "93:23 cannot find 'VNRecognizeTextRequest' in scope",
+        "94:37 cannot infer contextual base in reference to member 'accurate'"
+      ],
+      "errorCount": 12,
+      "isolatedInPass": 14,
+      "whole": false,
+      "isolatedLoc": 100,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/AceManagedControls.swift",
+      "lang": "swift",
+      "loc": 423,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "22:32 cannot find type 'View' in scope",
+        "52:11 cannot find type 'AceTrackedButton' in scope",
+        "67:32 cannot find type 'View' in scope",
+        "68:6 unknown attribute 'Binding'",
+        "69:6 unknown attribute 'ViewBuilder'",
+        "70:6 unknown attribute 'State'",
+        "73:15 cannot find type 'Binding' in scope",
+        "74:10 unknown attribute 'ViewBuilder'"
+      ],
+      "errorCount": 77,
+      "isolatedInPass": 1,
+      "whole": false,
+      "isolatedLoc": 335,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/AceMotionEffects.swift",
+      "lang": "swift",
+      "loc": 299,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "12:59 type annotation missing in pattern",
+        "12:6 unknown attribute 'Environment'",
+        "14:20 cannot find type 'View' in scope",
+        "8:22 cannot find type 'View' in scope",
+        "69:20 cannot find type 'View' in scope",
+        "63:26 cannot find type 'View' in scope",
+        "118:20 cannot find type 'View' in scope",
+        "114:24 cannot find type 'View' in scope"
+      ],
+      "errorCount": 88,
+      "isolatedInPass": 14,
+      "whole": true,
+      "isolatedLoc": 299,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AceMotionPolicy.swift",
+      "lang": "swift",
+      "loc": 176,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        }
+      ],
+      "guardedModules": [
+        "CoreGraphics"
+      ],
+      "isolated": true,
+      "errors": [
+        "32:20 type 'AceFlightFrame' does not conform to protocol 'Equatable'",
+        "113:20 type 'AceInkTarget' does not conform to protocol 'Equatable'",
+        "128:20 type 'AceInkGesture' does not conform to protocol 'Equatable'",
+        "67:27 value of type 'CGRect' has no member 'minY'",
+        "67:49 value of type 'CGRect' has no member 'maxY'",
+        "121:41 value of type 'CGRect' has no member 'minX'",
+        "121:60 value of type 'CGRect' has no member 'minY'",
+        "122:23 value of type 'CGRect' has no member 'width'"
+      ],
+      "errorCount": 43,
+      "isolatedInPass": 14,
+      "whole": false,
+      "isolatedLoc": 143,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/AceNativeUpdate.swift",
+      "lang": "swift",
+      "loc": 271,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 11,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "35:24 cannot find type 'NSPanel' in scope",
+        "272:6 unknown attribute 'ObservedObject'",
+        "273:20 cannot find type 'View' in scope",
+        "271:37 cannot find type 'View' in scope",
+        "44:16 cannot find 'StealthVisibilityGate' in scope",
+        "73:13 cannot find 'SetupVisibleEffectAdmission' in scope",
+        "75:29 cannot find 'NSPanel' in scope",
+        "81:37 cannot find 'AceHostingView' in scope"
+      ],
+      "errorCount": 24,
+      "isolatedInPass": 14,
+      "whole": true,
+      "isolatedLoc": 271,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AceNativeUpdateArtifact.swift",
+      "lang": "swift",
+      "loc": 173,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        }
+      ],
+      "guardedModules": [
+        "Security"
+      ],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceNativeUpdateDownload.swift",
+      "lang": "swift",
+      "loc": 173,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AcePanelVisualTarget.swift",
+      "lang": "swift",
+      "loc": 43,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceProviderTurn.swift",
+      "lang": "swift",
+      "loc": 150,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AcePurchaseRecovery.swift",
+      "lang": "swift",
+      "loc": 106,
+      "before": "ready",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceSignedLease.swift",
+      "lang": "swift",
+      "loc": 160,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AceStageOverlay.swift",
+      "lang": "swift",
+      "loc": 952,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 22,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 23,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 24,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 25,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "AppKit",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "50:22 cannot find type 'Color' in scope",
+        "59:20 cannot find type 'Color' in scope",
+        "70:8 type 'AceConstellationStar' does not conform to protocol 'Equatable'",
+        "257:24 cannot find type 'AVQueuePlayer' in scope",
+        "259:22 cannot find 'AVQueuePlayer' in scope",
+        "258:69 'nil' requires a contextual type",
+        "265:32 cannot find type 'AVPlayerLooper' in scope",
+        "310:32 cannot find type 'NSWindow' in scope"
+      ],
+      "errorCount": 149,
+      "isolatedInPass": 13,
+      "whole": true,
+      "isolatedLoc": 952,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AceTranscript.swift",
+      "lang": "swift",
+      "loc": 144,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AceUpdateCheck.swift",
+      "lang": "swift",
+      "loc": 274,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 20,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 21,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 28,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "80:24 cannot find 'NSWorkspace' in scope",
+        "81:22 cannot find 'NSWorkspace' in scope",
+        "88:22 cannot find 'NSApplication' in scope",
+        "102:16 cannot find 'StealthVisibilityGate' in scope",
+        "203:16 cannot find 'StealthVisibilityGate' in scope",
+        "238:21 cannot find 'NSAlert' in scope",
+        "241:29 cannot infer contextual base in reference to member 'informational'",
+        "247:15 cannot find 'StealthModalActionPolicy' in scope"
+      ],
+      "errorCount": 9,
+      "isolatedInPass": 13,
+      "whole": true,
+      "isolatedLoc": 274,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AceUpdateManifestPolicy.swift",
+      "lang": "swift",
+      "loc": 274,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AgentCapabilityConsent.swift",
+      "lang": "swift",
+      "loc": 110,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AgentCapabilityConsentStore.swift",
+      "lang": "swift",
+      "loc": 133,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AppActionBroker.swift",
+      "lang": "swift",
+      "loc": 2522,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        },
+        {
+          "line": 11,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "248:16 cannot find 'StealthVisibilityGate' in scope",
+        "265:20 cannot find 'StealthVisibilityGate' in scope",
+        "325:16 cannot find 'StealthVisibilityGate' in scope",
+        "560:17 cannot find 'StealthVisibilityGate' in scope",
+        "709:16 cannot find 'StealthVisibilityGate' in scope",
+        "804:16 cannot find 'StealthVisibilityGate' in scope"
+      ],
+      "errorCount": 6,
+      "isolatedInPass": 13,
+      "whole": false,
+      "isolatedLoc": 833,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/AppBundleConfiguration.swift",
+      "lang": "swift",
+      "loc": 18,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AppleMailAccountProvider.swift",
+      "lang": "swift",
+      "loc": 252,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AppleMessagesActionProvider.swift",
+      "lang": "swift",
+      "loc": 364,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AppleSpeechTranscriptionProvider.swift",
+      "lang": "swift",
+      "loc": 382,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "Speech",
+          "to": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "Speech"
+      ],
+      "isolated": true,
+      "errors": [
+        "156:30 cannot find type 'SFSpeechRecognizerAuthorizationStatus' in scope",
+        "188:31 cannot find type 'SFSpeechRecognizer' in scope",
+        "194:31 cannot find type 'SFSpeechRecognizer' in scope",
+        "198:30 cannot find type 'SFSpeechRecognizerAuthorizationStatus' in scope",
+        "232:53 cannot find type 'SFSpeechRecognizer' in scope",
+        "255:29 cannot find type 'SFSpeechRecognizer' in scope",
+        "297:27 cannot find type 'SFSpeechRecognizer' in scope",
+        "278:37 cannot find type 'SFSpeechAudioBufferRecognitionRequest' in scope"
+      ],
+      "errorCount": 19,
+      "isolatedInPass": 2,
+      "whole": false,
+      "isolatedLoc": 316,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/AppSwitcher.swift",
+      "lang": "swift",
+      "loc": 1201,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 13,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        },
+        {
+          "line": 14,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "ApplicationServices",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "240:24 cannot find type 'AXUIElement' in scope",
+        "509:19 cannot find type 'AXUIElement' in scope",
+        "539:22 cannot find type 'NSRunningApplication' in scope",
+        "658:24 cannot find type 'NSRunningApplication' in scope",
+        "668:16 cannot find type 'NSRunningApplication' in scope",
+        "687:22 cannot find type 'NSRunningApplication' in scope",
+        "806:20 cannot find type 'AXUIElement' in scope",
+        "863:23 cannot find type 'NSRunningApplication' in scope"
+      ],
+      "errorCount": 10,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 1201,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/ArtifactReceipt.swift",
+      "lang": "swift",
+      "loc": 40,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/ArtifactReceiptStore.swift",
+      "lang": "swift",
+      "loc": 312,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 2,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/AssemblyAITransmissionPolicy.swift",
+      "lang": "swift",
+      "loc": 12,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/AssistantAvailabilityPolicy.swift",
+      "lang": "swift",
+      "loc": 225,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        }
+      ],
+      "guardedModules": [
+        "CoreGraphics"
+      ],
+      "isolated": true,
+      "errors": [
+        "136:32 value of type 'CGRect' has no member 'minX'",
+        "137:32 value of type 'CGRect' has no member 'maxX'",
+        "140:32 value of type 'CGRect' has no member 'minY'",
+        "141:32 value of type 'CGRect' has no member 'maxY'",
+        "144:29 value of type 'CGRect' has no member 'midX'",
+        "146:29 value of type 'CGRect' has no member 'minY'",
+        "150:58 value of type 'CGRect' has no member 'minX'",
+        "154:58 value of type 'CGRect' has no member 'minY'"
+      ],
+      "errorCount": 20,
+      "isolatedInPass": 2,
+      "whole": true,
+      "isolatedLoc": 225,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/AudioSessionCoordinator.swift",
+      "lang": "swift",
+      "loc": 179,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/BackgroundAgent.swift",
+      "lang": "swift",
+      "loc": 1230,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 10,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "558:33 cannot find type 'BackgroundBrowserService' in scope",
+        "838:23 cannot find 'BackgroundBrowserService' in scope",
+        "850:16 argument type '_' expected to be an instance of a class or class-constrained type"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 3,
+      "whole": false,
+      "isolatedLoc": 744,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/BackgroundAgentDeliveryPolicy.swift",
+      "lang": "swift",
+      "loc": 351,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/BackgroundBrowserService.swift",
+      "lang": "swift",
+      "loc": 261,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 3,
+          "kind": "guarded-import",
+          "module": "Network",
+          "to": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)"
+        },
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "WebKit",
+          "to": "WebView2"
+        },
+        {
+          "line": 4,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "Network",
+        "WebKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "18:49 cannot find type 'WKNavigationDelegate' in scope",
+        "18:71 cannot find type 'WKUIDelegate' in scope",
+        "23:27 cannot find type 'NWListener' in scope",
+        "24:49 cannot find type 'NWConnection' in scope",
+        "27:26 cannot find type 'WKWebView' in scope",
+        "31:25 cannot find 'WKContentWorld' in scope",
+        "93:39 cannot find type 'NWConnection' in scope",
+        "106:38 cannot find type 'NWConnection' in scope"
+      ],
+      "errorCount": 57,
+      "isolatedInPass": 2,
+      "whole": true,
+      "isolatedLoc": 261,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/BackgroundDataAdapter.swift",
+      "lang": "swift",
+      "loc": 64,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "46:32 cannot find 'BrainConnectionProbe' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 30,
+      "whole": true,
+      "isolatedLoc": 64,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/BackgroundExecutionSlotPolicy.swift",
+      "lang": "swift",
+      "loc": 44,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/BlackLabelAnalytics.swift",
+      "lang": "swift",
+      "loc": 28,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/BoundedPipeCapture.swift",
+      "lang": "swift",
+      "loc": 82,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/BrainCLI.swift",
+      "lang": "swift",
+      "loc": 81,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/BrainConnection.swift",
+      "lang": "swift",
+      "loc": 2131,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 11,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 12,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        },
+        {
+          "line": 0,
+          "kind": "combine-bridge",
+          "module": "Combine",
+          "to": "schedulers and Foundation publishers through CircuitPortKit"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "1998:27 cannot find 'BrainBackend' in scope",
+        "345:20 cannot find 'BrainBackend' in scope",
+        "350:20 cannot find 'BrainBackend' in scope",
+        "364:20 cannot find 'BrainBackend' in scope",
+        "369:20 cannot find 'BrainBackend' in scope",
+        "381:9 cannot find 'BrainBackend' in scope",
+        "389:20 cannot find 'BrainBackend' in scope",
+        "391:20 cannot find 'BrainBackend' in scope"
+      ],
+      "errorCount": 32,
+      "isolatedInPass": 28,
+      "whole": false,
+      "isolatedLoc": 1717,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/BrainConnectionStartupPolicy.swift",
+      "lang": "swift",
+      "loc": 412,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/BrowserBackendHeadlessCommand.swift",
+      "lang": "swift",
+      "loc": 80,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "Network",
+          "to": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)"
+        }
+      ],
+      "guardedModules": [
+        "Network"
+      ],
+      "isolated": true,
+      "errors": [
+        "49:26 cannot find 'NWEndpoint' in scope",
+        "56:26 cannot find 'NWConnection' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 28,
+      "whole": false,
+      "isolatedLoc": 60,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/BuddyAudioConversionSupport.swift",
+      "lang": "swift",
+      "loc": 153,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation"
+      ],
+      "isolated": true,
+      "errors": [
+        "128:51 cannot find type 'AVAudioPCMBuffer' in scope",
+        "128:30 cannot find type 'AVAudioPCMBuffer' in scope",
+        "17:30 cannot find type 'AVAudioPCMBuffer' in scope",
+        "18:33 cannot find type 'AVAudioFrameCount' in scope",
+        "20:23 cannot find type 'AVAudioPCMBuffer' in scope",
+        "27:10 cannot find type 'AVAudioBuffer' in scope",
+        "25:26 cannot find type 'AVAudioPacketCount' in scope",
+        "26:38 cannot find type 'AVAudioConverterInputStatus' in scope"
+      ],
+      "errorCount": 13,
+      "isolatedInPass": 2,
+      "whole": false,
+      "isolatedLoc": 112,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/BuddyAudioReplayBuffer.swift",
+      "lang": "swift",
+      "loc": 275,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation"
+      ],
+      "isolated": true,
+      "errors": [
+        "41:22 cannot find type 'AVAudioPCMBuffer' in scope",
+        "50:53 cannot find type 'AVAudioPCMBuffer' in scope",
+        "52:27 cannot find type 'AVAudioPCMBuffer' in scope",
+        "63:57 cannot find type 'AVAudioPCMBuffer' in scope",
+        "95:19 cannot find type 'AVAudioPCMBuffer' in scope",
+        "170:20 cannot find type 'AVAudioPCMBuffer' in scope",
+        "251:10 cannot find type 'AVAudioPCMBuffer' in scope",
+        "250:19 cannot find type 'AVAudioPCMBuffer' in scope"
+      ],
+      "errorCount": 9,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 275,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/BuddyDictationAudioCaptureLease.swift",
+      "lang": "swift",
+      "loc": 85,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation"
+      ],
+      "isolated": true,
+      "errors": [
+        "8:22 cannot find type 'AVAudioFormat' in scope",
+        "10:33 cannot find type 'AVAudioEngine' in scope",
+        "13:21 cannot find type 'AVAudioFrameCount' in scope",
+        "14:28 cannot find type 'AVAudioNodeTapBlock' in scope",
+        "14:18 '@escaping' only applies to function types",
+        "25:60 cannot find type 'AVAudioChannelCount' in scope",
+        "42:17 cannot find type 'AVAudioEngine' in scope",
+        "43:20 cannot find type 'AVAudioInputNode' in scope"
+      ],
+      "errorCount": 13,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 85,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/BuddyDictationManager.swift",
+      "lang": "swift",
+      "loc": 2504,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 12,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 14,
+          "kind": "guarded-import",
+          "module": "Speech",
+          "to": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "AVFoundation",
+        "Speech"
+      ],
+      "isolated": true,
+      "errors": [
+        "138:20 cannot find type 'NSEvent' in scope",
+        "152:24 cannot find type 'CGEventType' in scope",
+        "285:22 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "287:25 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "299:30 cannot find type 'AVAudioEngine' in scope",
+        "301:25 cannot find type 'AVAudioEngine' in scope",
+        "447:50 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "1243:27 cannot find type 'BuddyStreamingTranscriptionSession' in scope"
+      ],
+      "errorCount": 10,
+      "isolatedInPass": 15,
+      "whole": true,
+      "isolatedLoc": 2504,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/BuddyTranscriptionProvider.swift",
+      "lang": "swift",
+      "loc": 516,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation"
+      ],
+      "isolated": true,
+      "errors": [
+        "39:43 cannot find type 'AVAudioPCMBuffer' in scope",
+        "57:5 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "60:35 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "61:27 cannot find type 'AVAudioPCMBuffer' in scope",
+        "74:38 cannot find type 'AVAudioPCMBuffer' in scope",
+        "107:33 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "555:27 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "562:11 cannot find type 'BuddyTranscriptionProvider' in scope"
+      ],
+      "errorCount": 10,
+      "isolatedInPass": 2,
+      "whole": false,
+      "isolatedLoc": 131,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/ClaudeAPI.swift",
+      "lang": "swift",
+      "loc": 2064,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "168:28 cannot find 'AceLocalBrain' in scope",
+        "516:20 cannot find 'AceLocalBrain' in scope",
+        "985:36 cannot find 'HostedBrainClient' in scope",
+        "1000:35 cannot find 'AceLocalBrain' in scope",
+        "1209:40 cannot find 'HostedBrainClient' in scope",
+        "1232:35 cannot find 'AceLocalBrain' in scope",
+        "1575:30 cannot find 'AceLocalBrain' in scope"
+      ],
+      "errorCount": 7,
+      "isolatedInPass": 26,
+      "whole": true,
+      "isolatedLoc": 2064,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/CLIPrivacyPolicy.swift",
+      "lang": "swift",
+      "loc": 179,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/CodexModelResolver.swift",
+      "lang": "swift",
+      "loc": 759,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 2,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/CompanionManager.swift",
+      "lang": "swift",
+      "loc": 24445,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        },
+        {
+          "line": 12,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 13,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        },
+        {
+          "line": 15,
+          "kind": "guarded-import",
+          "module": "ScreenCaptureKit",
+          "to": "Windows.Graphics.Capture"
+        },
+        {
+          "line": 16,
+          "kind": "guarded-import",
+          "module": "Speech",
+          "to": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)"
+        },
+        {
+          "line": 17,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "combine-bridge",
+          "module": "Combine",
+          "to": "schedulers and Foundation publishers through CircuitPortKit"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "ApplicationServices",
+        "ScreenCaptureKit",
+        "Speech",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "65:20 cannot find type 'NSView' in scope",
+        "67:18 cannot find type 'NSView' in scope",
+        "928:47 cannot find 'StealthExitOnlyCapture' in scope",
+        "1019:9 cannot find 'AppleSpeechTranscriptionProvider' in scope",
+        "1168:43 cannot find type 'AVPlayer' in scope",
+        "1258:34 cannot find 'NoraVoice' in scope",
+        "5362:45 cannot find 'BackgroundAgent' in scope",
+        "5363:51 cannot find 'BackgroundAgent' in scope"
+      ],
+      "errorCount": 41,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 24445,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/CompanionPanelView.swift",
+      "lang": "swift",
+      "loc": 4283,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 12,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 13,
+          "kind": "guarded-import",
+          "module": "Speech",
+          "to": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)"
+        },
+        {
+          "line": 14,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "combine-bridge",
+          "module": "Combine",
+          "to": "schedulers and Foundation publishers through CircuitPortKit"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "AppKit",
+        "Speech",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "32:53 cannot find type 'NSView' in scope",
+        "33:48 cannot find type 'NSView' in scope",
+        "40:42 cannot find type 'NSView' in scope",
+        "40:30 cannot find type 'Context' in scope",
+        "47:31 cannot find type 'NSView' in scope",
+        "47:48 cannot find type 'Context' in scope",
+        "36:44 cannot find type 'NSViewRepresentable' in scope",
+        "54:59 type annotation missing in pattern"
+      ],
+      "errorCount": 150,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 4283,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/CompanionResponseOverlay.swift",
+      "lang": "swift",
+      "loc": 246,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 11,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 12,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "44:31 cannot find type 'NSPanel' in scope",
+        "248:61 cannot find type 'NSScreen' in scope",
+        "257:59 type annotation missing in pattern",
+        "256:6 unknown attribute 'ObservedObject'",
+        "257:6 unknown attribute 'Environment'",
+        "258:6 unknown attribute 'State'",
+        "260:20 cannot find type 'View' in scope",
+        "255:46 cannot find type 'View' in scope"
+      ],
+      "errorCount": 8,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 246,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/CompanionScreenCaptureUtility.swift",
+      "lang": "swift",
+      "loc": 773,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 11,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 12,
+          "kind": "guarded-import",
+          "module": "ScreenCaptureKit",
+          "to": "Windows.Graphics.Capture"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "ScreenCaptureKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "84:28 cannot find type 'CGDirectDisplayID' in scope",
+        "88:29 cannot find type 'PrivateModeCaptureBinding' in scope",
+        "107:32 cannot find type 'PrivateModeCaptureCapability' in scope",
+        "470:20 cannot find type 'PrivateModeDisplaySnapshot' in scope",
+        "626:23 cannot find type 'CGImage' in scope",
+        "620:20 cannot find type 'CGDirectDisplayID' in scope",
+        "686:23 cannot find type 'SCShareableContent' in scope",
+        "739:23 cannot find type 'CGImage' in scope"
+      ],
+      "errorCount": 12,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 773,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/CrossAppActionPolicy.swift",
+      "lang": "swift",
+      "loc": 504,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/DashboardHost.swift",
+      "lang": "swift",
+      "loc": 825,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "Network",
+          "to": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)"
+        }
+      ],
+      "guardedModules": [
+        "Network"
+      ],
+      "isolated": true,
+      "errors": [
+        "262:27 cannot find type 'NWListener' in scope",
+        "327:39 cannot find type 'NWConnection' in scope",
+        "332:41 cannot find type 'NWConnection' in scope",
+        "356:61 cannot find type 'NWConnection' in scope",
+        "420:61 cannot find type 'NWConnection' in scope",
+        "446:24 cannot find type 'NWConnection' in scope",
+        "638:24 cannot find type 'NWConnection' in scope",
+        "653:24 cannot find type 'NWConnection' in scope"
+      ],
+      "errorCount": 10,
+      "isolatedInPass": 23,
+      "whole": false,
+      "isolatedLoc": 484,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/DashboardOpenPolicy.swift",
+      "lang": "swift",
+      "loc": 139,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/DesignSystem.swift",
+      "lang": "swift",
+      "loc": 1018,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "253:62 cannot find type 'Color' in scope",
+        "47:37 cannot find type 'View' in scope",
+        "179:20 cannot find 'NSWorkspace' in scope",
+        "23:22 cannot find type 'ColorScheme' in scope",
+        "226:13 cannot find 'NSWorkspace' in scope",
+        "532:6 unknown attribute 'State'",
+        "536:6 unknown attribute 'State'",
+        "540:6 unknown attribute 'State'"
+      ],
+      "errorCount": 79,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 1018,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/DesktopActionExecutor.swift",
+      "lang": "swift",
+      "loc": 554,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/DesktopActionHeadlessCommand.swift",
+      "lang": "swift",
+      "loc": 70,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "40:26 cannot find 'DesktopActionSystemBackend' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 24,
+      "whole": true,
+      "isolatedLoc": 70,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/DesktopActionSystemBackend.swift",
+      "lang": "swift",
+      "loc": 1256,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 8,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        },
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 10,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [
+        "ApplicationServices",
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "26:22 cannot find type 'AXUIElement' in scope",
+        "79:20 cannot find type 'AXUIElement' in scope",
+        "81:44 cannot find type 'AXUIElement' in scope",
+        "595:19 cannot find type 'AXUIElement' in scope",
+        "967:18 cannot find type 'CGKeyCode' in scope",
+        "968:16 cannot find type 'CGEventFlags' in scope",
+        "1022:55 cannot find type 'AXUIElement' in scope",
+        "1038:10 cannot find type 'AXUIElement' in scope"
+      ],
+      "errorCount": 24,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 1256,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/DesktopWindowBinding.swift",
+      "lang": "swift",
+      "loc": 118,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/DeveloperMachine.swift",
+      "lang": "swift",
+      "loc": 21,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/DeviceLinkPublicationPolicy.swift",
+      "lang": "swift",
+      "loc": 47,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/DiagnosticReport.swift",
+      "lang": "swift",
+      "loc": 13,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/EmailReadPresentation.swift",
+      "lang": "swift",
+      "loc": 60,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/EmailReadWindow.swift",
+      "lang": "swift",
+      "loc": 58,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/ExplicitMemoryStore.swift",
+      "lang": "swift",
+      "loc": 157,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/FirstRunExperienceState.swift",
+      "lang": "swift",
+      "loc": 86,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/FirstRunFailureRecoveryView.swift",
+      "lang": "swift",
+      "loc": 131,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "10:6 unknown attribute 'ObservedObject'",
+        "13:20 cannot find type 'View' in scope",
+        "26:69 cannot find type 'View' in scope",
+        "9:37 cannot find type 'View' in scope",
+        "15:13 cannot find 'VStack' in scope",
+        "16:17 cannot find 'ForEach' in scope",
+        "33:16 cannot find 'HStack' in scope",
+        "34:13 cannot find 'Image' in scope"
+      ],
+      "errorCount": 19,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 131,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/FirstRunFailureReporter.swift",
+      "lang": "swift",
+      "loc": 454,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 25,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "258:16 cannot find 'StealthVisibilityGate' in scope",
+        "294:30 cannot find 'StealthVisibilityGate' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 8,
+      "whole": false,
+      "isolatedLoc": 310,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/FirstRunFlowPolicy.swift",
+      "lang": "swift",
+      "loc": 72,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/FirstRunRecoveryPolicy.swift",
+      "lang": "swift",
+      "loc": 50,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/FloatingInboxAppleMail.swift",
+      "lang": "swift",
+      "loc": 131,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "SQLite3",
+          "to": "swift-toolchain-sqlite (the same C API)"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "19:23 cannot find type 'FloatingInboxCancellation' in scope",
+        "21:26 cannot find type 'FloatingInboxCancellation' in scope",
+        "51:40 cannot find type 'FloatingInboxCancellation' in scope"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 11,
+      "whole": true,
+      "isolatedLoc": 131,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/FloatingInboxController.swift",
+      "lang": "swift",
+      "loc": 296,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "55:17 cannot find 'NSWorkspace' in scope",
+        "55:56 cannot find 'NSWorkspace' in scope",
+        "58:17 cannot find 'NSWorkspace' in scope",
+        "58:56 cannot find 'NSWorkspace' in scope",
+        "61:17 cannot find 'NSWorkspace' in scope",
+        "61:56 cannot find 'NSWorkspace' in scope",
+        "64:17 cannot find 'NSWorkspace' in scope",
+        "64:56 cannot find 'NSWorkspace' in scope"
+      ],
+      "errorCount": 15,
+      "isolatedInPass": 6,
+      "whole": true,
+      "isolatedLoc": 296,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/FloatingInboxGmail.swift",
+      "lang": "swift",
+      "loc": 94,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "6:23 cannot find type 'GmailNetworkWire' in scope",
+        "8:27 cannot find type 'GmailNetworkWire' in scope",
+        "97:24 cannot find 'GmailNetworkWire' in scope"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 10,
+      "whole": true,
+      "isolatedLoc": 94,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/FloatingInboxMailText.swift",
+      "lang": "swift",
+      "loc": 120,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/FloatingInboxModels.swift",
+      "lang": "swift",
+      "loc": 99,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        }
+      ],
+      "guardedModules": [
+        "CoreGraphics"
+      ],
+      "isolated": true,
+      "errors": [
+        "13:36 value of type 'CGRect' has no member 'intersection'",
+        "18:28 value of type 'CGRect' has no member 'minX'",
+        "18:49 value of type 'CGRect' has no member 'maxX'",
+        "18:65 value of type 'CGRect' has no member 'width'",
+        "19:34 value of type 'CGRect' has no member 'minY'",
+        "19:47 value of type 'CGRect' has no member 'minY'",
+        "20:32 value of type 'CGRect' has no member 'minY'",
+        "20:53 value of type 'CGRect' has no member 'maxY'"
+      ],
+      "errorCount": 9,
+      "isolatedInPass": 6,
+      "whole": false,
+      "isolatedLoc": 18,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/FloatingInboxPanel.swift",
+      "lang": "swift",
+      "loc": 240,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "10:33 cannot find type 'NSPanel' in scope",
+        "16:18 property does not override any property from its superclass",
+        "17:18 property does not override any property from its superclass",
+        "19:55 cannot find type 'FloatingInboxController' in scope",
+        "83:35 cannot find type 'Path' in scope",
+        "82:27 cannot find type 'Shape' in scope",
+        "99:65 type annotation missing in pattern",
+        "99:6 unknown attribute 'Environment'"
+      ],
+      "errorCount": 126,
+      "isolatedInPass": 15,
+      "whole": true,
+      "isolatedLoc": 240,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/GlobalPushToTalkShortcutMonitor.swift",
+      "lang": "swift",
+      "loc": 656,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 11,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 13,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "CoreGraphics"
+      ],
+      "isolated": true,
+      "errors": [
+        "456:20 cannot find type 'CGEvent' in scope",
+        "454:20 cannot find type 'CGEventType' in scope",
+        "455:16 cannot find type 'CGEvent' in scope",
+        "626:18 cannot find type 'CGEventFlags' in scope",
+        "681:16 cannot find type 'CGEventFlags' in scope",
+        "226:16 cannot find 'CGEvent' in scope",
+        "236:17 cannot find 'CGEvent' in scope",
+        "237:17 cannot find 'CGEvent' in scope"
+      ],
+      "errorCount": 21,
+      "isolatedInPass": 15,
+      "whole": true,
+      "isolatedLoc": 656,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/GmailAccount.swift",
+      "lang": "swift",
+      "loc": 291,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 19,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        }
+      ],
+      "guardedModules": [
+        "Security"
+      ],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/GmailAccountController.swift",
+      "lang": "swift",
+      "loc": 294,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 18,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 20,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "65:53 cannot find 'GmailGoogleConnection' in scope",
+        "83:16 cannot find 'StealthVisibilityGate' in scope",
+        "122:16 cannot find 'StealthVisibilityGate' in scope",
+        "164:16 cannot find 'StealthVisibilityGate' in scope",
+        "185:38 cannot find 'StealthVisibilityGate' in scope",
+        "204:39 cannot find 'StealthVisibilityGate' in scope",
+        "207:39 cannot find 'StealthVisibilityGate' in scope",
+        "219:36 cannot find 'StealthVisibilityGate' in scope"
+      ],
+      "errorCount": 8,
+      "isolatedInPass": 15,
+      "whole": true,
+      "isolatedLoc": 294,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/GmailBackend.swift",
+      "lang": "swift",
+      "loc": 214,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/GmailBackendHeadlessCommand.swift",
+      "lang": "swift",
+      "loc": 71,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "28:54 cannot find 'GmailNetworkWire' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 15,
+      "whole": true,
+      "isolatedLoc": 71,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/GmailIMAPSession.swift",
+      "lang": "swift",
+      "loc": 144,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "Network",
+          "to": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)"
+        }
+      ],
+      "guardedModules": [
+        "Network"
+      ],
+      "isolated": true,
+      "errors": [
+        "13:29 cannot find type 'NWConnection' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 9,
+      "whole": false,
+      "isolatedLoc": 82,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/GmailInboxRead.swift",
+      "lang": "swift",
+      "loc": 36,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/GmailOAuth.swift",
+      "lang": "swift",
+      "loc": 160,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "AuthenticationServices",
+          "to": "browser sign-in (OAuth) and WebAuthn through Windows Hello"
+        },
+        {
+          "line": 3,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 5,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        },
+        {
+          "line": 12,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "AuthenticationServices",
+        "Security"
+      ],
+      "isolated": true,
+      "errors": [
+        "113:80 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
+        "114:26 cannot find type 'ASWebAuthenticationSession' in scope",
+        "117:25 cannot find type 'NSWindow' in scope",
+        "154:73 cannot find type 'ASPresentationAnchor' in scope",
+        "154:42 cannot find type 'ASWebAuthenticationSession' in scope",
+        "123:28 cannot find 'NSApp' in scope",
+        "123:47 cannot find 'NSApp' in scope",
+        "131:31 cannot find 'ASWebAuthenticationSession' in scope"
+      ],
+      "errorCount": 10,
+      "isolatedInPass": 4,
+      "whole": false,
+      "isolatedLoc": 66,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/GoldDelegationContract.swift",
+      "lang": "swift",
+      "loc": 622,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/GoldDelegationPrivacyPolicy.swift",
+      "lang": "swift",
+      "loc": 31,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/HomeworkScreenEvidence.swift",
+      "lang": "swift",
+      "loc": 101,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/HostedBrainClient.swift",
+      "lang": "swift",
+      "loc": 420,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 12,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 17,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "201:13 cannot find 'AceLicense' in scope",
+        "230:27 cannot find 'AceLicense' in scope"
+      ],
+      "errorCount": 2,
+      "isolatedInPass": 20,
+      "whole": false,
+      "isolatedLoc": 171,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/InstallLocation.swift",
+      "lang": "swift",
+      "loc": 1855,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 16,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 17,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        },
+        {
+          "line": 19,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        },
+        {
+          "line": 20,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "Security",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "40:24 cannot find type 'NSPanel' in scope",
+        "86:6 unknown attribute 'ObservedObject'",
+        "87:6 unknown attribute 'State'",
+        "89:20 cannot find type 'View' in scope",
+        "85:37 cannot find type 'View' in scope",
+        "128:24 cannot find type 'NSPanel' in scope",
+        "129:43 cannot find type 'NSApplication' in scope",
+        "43:17 cannot find 'NSPanel' in scope"
+      ],
+      "errorCount": 59,
+      "isolatedInPass": 4,
+      "whole": false,
+      "isolatedLoc": 1398,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/InstallReadiness.swift",
+      "lang": "swift",
+      "loc": 347,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/InteractiveActionProgressPolicy.swift",
+      "lang": "swift",
+      "loc": 26,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/InteractiveLatencyPolicy.swift",
+      "lang": "swift",
+      "loc": 275,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/LaneManager.swift",
+      "lang": "swift",
+      "loc": 118,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 32,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/leanring_buddyApp.swift",
+      "lang": "swift",
+      "loc": 1494,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "ServiceManagement",
+          "to": "a startup task or the HKCU Run key"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 12,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [
+        "ServiceManagement",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "69:66 type annotation missing in pattern",
+        "69:6 unknown attribute 'NSApplicationDelegateAdaptor'",
+        "71:20 cannot find type 'Scene' in scope",
+        "68:27 cannot find type 'App' in scope",
+        "194:45 cannot find type 'NSApplicationDelegate' in scope",
+        "213:38 cannot find type 'MenuBarPanelManager' in scope",
+        "1211:19 cannot find type 'NSApplication' in scope"
+      ],
+      "errorCount": 7,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 1494,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/LocalIntentPolicy.swift",
+      "lang": "swift",
+      "loc": 261,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/MeetingAudioFlowPolicy.swift",
+      "lang": "swift",
+      "loc": 213,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/MeetingAudioPreflight.swift",
+      "lang": "swift",
+      "loc": 106,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/MeetingNotesGenerationPolicy.swift",
+      "lang": "swift",
+      "loc": 123,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/MeetingNotesResult.swift",
+      "lang": "swift",
+      "loc": 103,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/MeetingNotesReviewDocument.swift",
+      "lang": "swift",
+      "loc": 139,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/MeetingNotesReviewIntentPolicy.swift",
+      "lang": "swift",
+      "loc": 36,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/MeetingNotesReviewView.swift",
+      "lang": "swift",
+      "loc": 291,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 6,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "20:20 cannot find type 'View' in scope",
+        "38:39 cannot find type 'View' in scope",
+        "11:32 cannot find type 'View' in scope",
+        "83:20 cannot find type 'View' in scope",
+        "78:40 cannot find type 'View' in scope",
+        "107:20 cannot find type 'View' in scope",
+        "135:44 cannot find type 'View' in scope",
+        "134:6 unknown attribute 'ViewBuilder'"
+      ],
+      "errorCount": 67,
+      "isolatedInPass": 22,
+      "whole": true,
+      "isolatedLoc": 291,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/MeetingNotetaker.swift",
+      "lang": "swift",
+      "loc": 4407,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 21,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 22,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 23,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 24,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        },
+        {
+          "line": 26,
+          "kind": "guarded-import",
+          "module": "ScreenCaptureKit",
+          "to": "Windows.Graphics.Capture"
+        },
+        {
+          "line": 27,
+          "kind": "guarded-import",
+          "module": "Speech",
+          "to": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)"
+        },
+        {
+          "line": 28,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "AppKit",
+        "ScreenCaptureKit",
+        "Speech",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "652:30 cannot find type 'AVAudioEngine' in scope",
+        "654:25 cannot find type 'AVAudioEngine' in scope",
+        "666:25 cannot find type 'SCStream' in scope",
+        "668:20 cannot find type 'SCStream' in scope",
+        "753:36 cannot find type 'SCStream' in scope",
+        "755:35 cannot find type 'AVAudioEngine' in scope",
+        "759:43 cannot find type 'SCStream' in scope",
+        "761:42 cannot find type 'AVAudioEngine' in scope"
+      ],
+      "errorCount": 115,
+      "isolatedInPass": 22,
+      "whole": false,
+      "isolatedLoc": 3613,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/MenuBarPanelManager.swift",
+      "lang": "swift",
+      "loc": 741,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 15,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 16,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 17,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "80:70 cannot find type 'NSScreen' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 21,
+      "whole": true,
+      "isolatedLoc": 741,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/MorningBriefPolicy.swift",
+      "lang": "swift",
+      "loc": 890,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 11,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "560:28 cannot find 'NSWorkspace' in scope",
+        "562:30 cannot find 'NSWorkspace' in scope",
+        "565:33 cannot infer type of closure parameter '_' without a type annotation"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 22,
+      "whole": false,
+      "isolatedLoc": 425,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/NativeAppSwitchIntentPolicy.swift",
+      "lang": "swift",
+      "loc": 115,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/NativeHeadlessEffectAuthority.swift",
+      "lang": "swift",
+      "loc": 120,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/NativeLocationManager.swift",
+      "lang": "swift",
+      "loc": 123,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "CoreLocation",
+          "to": "Windows.Devices.Geolocation"
+        }
+      ],
+      "guardedModules": [
+        "CoreLocation"
+      ],
+      "isolated": true,
+      "errors": [
+        "14:55 cannot find type 'CLLocationManagerDelegate' in scope",
+        "20:59 cannot find type 'CLLocationManager' in scope",
+        "28:20 cannot find type 'CLLocationManager' in scope",
+        "29:40 cannot find type 'CLLocation' in scope",
+        "44:37 cannot find type 'CLLocationManager' in scope",
+        "50:18 cannot find type 'CLAuthorizationStatus' in scope",
+        "71:27 cannot find 'CLLocationManager' in scope",
+        "93:35 cannot find 'kCLLocationAccuracyHundredMeters' in scope"
+      ],
+      "errorCount": 9,
+      "isolatedInPass": 21,
+      "whole": true,
+      "isolatedLoc": 123,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/NativeLocationPolicy.swift",
+      "lang": "swift",
+      "loc": 347,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/NativeWebNavigationIntentPolicy.swift",
+      "lang": "swift",
+      "loc": 235,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/NativeWindowCloseService.swift",
+      "lang": "swift",
+      "loc": 142,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "ApplicationServices"
+      ],
+      "isolated": true,
+      "errors": [
+        "83:18 cannot find type 'AXUIElement' in scope",
+        "84:21 cannot find type 'AXUIElement' in scope",
+        "148:53 cannot find type 'AXUIElement' in scope",
+        "148:36 cannot find type 'AXUIElement' in scope",
+        "91:15 cannot find 'AXIsProcessTrusted' in scope",
+        "94:20 cannot find 'NSWorkspace' in scope",
+        "97:27 cannot find 'AXUIElementCreateApplication' in scope",
+        "98:13 cannot find 'AXUIElementSetMessagingTimeout' in scope"
+      ],
+      "errorCount": 33,
+      "isolatedInPass": 21,
+      "whole": false,
+      "isolatedLoc": 69,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/NoraVoice.swift",
+      "lang": "swift",
+      "loc": 1733,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 15,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "1011:15 cannot find 'VoiceReadiness' in scope",
+        "1017:19 cannot find 'VoiceReadiness' in scope",
+        "1233:9 cannot find 'VoiceReadiness' in scope",
+        "1286:15 cannot find 'VoiceReadiness' in scope",
+        "1333:9 cannot find 'VoiceReadiness' in scope",
+        "1336:15 cannot find 'VoiceReadiness' in scope",
+        "1376:21 cannot find 'VoiceReadiness' in scope",
+        "1377:17 cannot find 'VoiceReadiness' in scope"
+      ],
+      "errorCount": 22,
+      "isolatedInPass": 21,
+      "whole": false,
+      "isolatedLoc": 1159,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/NotchConcealment.swift",
+      "lang": "swift",
+      "loc": 63,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 16,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "37:49 value of type 'CGRect' has no member 'maxX'",
+        "38:50 value of type 'CGRect' has no member 'minX'",
+        "40:38 value of type 'CGRect' has no member 'minX'",
+        "41:38 value of type 'CGRect' has no member 'maxX'",
+        "58:9 cannot find 'FirstRunFailureReporter' in scope",
+        "68:25 cannot find 'AceIntroWindowController' in scope"
+      ],
+      "errorCount": 6,
+      "isolatedInPass": 21,
+      "whole": false,
+      "isolatedLoc": 47,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/OverlayActivityPolicy.swift",
+      "lang": "swift",
+      "loc": 65,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/OverlayWindow.swift",
+      "lang": "swift",
+      "loc": 1643,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 12,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "AVFoundation",
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "116:39 cannot find type 'Path' in scope",
+        "21:22 cannot find type 'NSWindow' in scope",
+        "22:18 cannot find type 'NSScreen' in scope",
+        "53:18 property does not override any property from its superclass",
+        "57:18 property does not override any property from its superclass",
+        "65:35 cannot find type 'Path' in scope",
+        "64:18 cannot find type 'Shape' in scope",
+        "85:35 cannot find type 'Path' in scope"
+      ],
+      "errorCount": 95,
+      "isolatedInPass": 13,
+      "whole": true,
+      "isolatedLoc": 1643,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/OwnerCapabilityResult.swift",
+      "lang": "swift",
+      "loc": 24,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/OwnerCorrectionContext.swift",
+      "lang": "swift",
+      "loc": 56,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/OwnerRequestEnvelope.swift",
+      "lang": "swift",
+      "loc": 104,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/OwnerTurnContext.swift",
+      "lang": "swift",
+      "loc": 248,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/OwnerTurnCoordinator.swift",
+      "lang": "swift",
+      "loc": 603,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/OwnerTurnLifecycleCoordinator.swift",
+      "lang": "swift",
+      "loc": 1132,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "443:17 cannot find 'AppSwitcher' in scope",
+        "447:28 cannot infer contextual base in reference to member 'local'",
+        "448:32 cannot infer contextual base in reference to member 'local'",
+        "449:32 cannot infer contextual base in reference to member 'local'"
+      ],
+      "errorCount": 4,
+      "isolatedInPass": 29,
+      "whole": true,
+      "isolatedLoc": 1132,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/PairedAgentReview.swift",
+      "lang": "swift",
+      "loc": 94,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PartnerConversationHistory.swift",
+      "lang": "swift",
+      "loc": 195,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PartnerGemPresentation.swift",
+      "lang": "swift",
+      "loc": 87,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PartnerMemoryReducer.swift",
+      "lang": "swift",
+      "loc": 481,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PartnerModeController.swift",
+      "lang": "swift",
+      "loc": 487,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/PartnerModeModels.swift",
+      "lang": "swift",
+      "loc": 574,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PartnerModePanel.swift",
+      "lang": "swift",
+      "loc": 891,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "SwiftUI",
+          "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 2,
+          "kind": "kit",
+          "module": "UniformTypeIdentifiers",
+          "to": "CircuitPortKit UTType (extensions + MIME types)"
+        }
+      ],
+      "guardedModules": [
+        "SwiftUI"
+      ],
+      "isolated": true,
+      "errors": [
+        "13:59 type annotation missing in pattern",
+        "12:6 unknown attribute 'ObservedObject'",
+        "13:6 unknown attribute 'Environment'",
+        "14:6 unknown attribute 'StateObject'",
+        "16:6 unknown attribute 'State'",
+        "17:6 unknown attribute 'State'",
+        "18:6 unknown attribute 'AppStorage'",
+        "20:6 unknown attribute 'State'"
+      ],
+      "errorCount": 23,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 891,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/PartnerModePolicy.swift",
+      "lang": "swift",
+      "loc": 1120,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 3,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "EventKit",
+          "to": "Microsoft Graph calendar or Windows.ApplicationModel.Appointments"
+        },
+        {
+          "line": 5,
+          "kind": "guarded-import",
+          "module": "PDFKit",
+          "to": "Windows.Data.Pdf or PDFium"
+        },
+        {
+          "line": 6,
+          "kind": "guarded-import",
+          "module": "Vision",
+          "to": "Windows.Media.Ocr or ONNX Runtime"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "EventKit",
+        "PDFKit",
+        "Vision"
+      ],
+      "isolated": true,
+      "errors": [
+        "280:30 cannot find 'EKEventStore' in scope",
+        "199:41 cannot find 'PDFDocument' in scope",
+        "206:24 cannot find 'NSImage' in scope",
+        "212:27 cannot find 'VNRecognizeTextRequest' in scope",
+        "213:41 cannot infer contextual base in reference to member 'accurate'",
+        "215:18 cannot find 'VNImageRequestHandler' in scope",
+        "218:34 value of type 'Any' has no member 'topCandidates'"
+      ],
+      "errorCount": 7,
+      "isolatedInPass": 23,
+      "whole": false,
+      "isolatedLoc": 756,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/PartnerProfileKeyStore.swift",
+      "lang": "swift",
+      "loc": 77,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/PartnerPromptBuilder.swift",
+      "lang": "swift",
+      "loc": 341,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PartnerResponseEnvelope.swift",
+      "lang": "swift",
+      "loc": 251,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PartnerSecureStore.swift",
+      "lang": "swift",
+      "loc": 418,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/PartnerSilentWindowPolicy.swift",
+      "lang": "swift",
+      "loc": 57,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PendingMailDraftIntent.swift",
+      "lang": "swift",
+      "loc": 98,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PermissionRefreshPolicy.swift",
+      "lang": "swift",
+      "loc": 26,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PermissionRepairCoordinator.swift",
+      "lang": "swift",
+      "loc": 875,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 3,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "527:34 cannot find type 'NSRunningApplication' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 18,
+      "whole": false,
+      "isolatedLoc": 104,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/PermissionWarmup.swift",
+      "lang": "swift",
+      "loc": 1043,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 13,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 14,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 15,
+          "kind": "guarded-import",
+          "module": "CoreServices",
+          "to": "Win32 file and launch APIs"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "CoreServices"
+      ],
+      "isolated": true,
+      "errors": [
+        "281:30 cannot find type 'NSRunningApplication' in scope",
+        "284:23 cannot find type 'NSRunningApplication' in scope",
+        "325:50 cannot find type 'NSRunningApplication' in scope",
+        "360:16 cannot find 'StealthVisibilityGate' in scope",
+        "403:13 cannot find 'StealthVisibilityGate' in scope",
+        "404:17 cannot find 'SetupVisibleEffectAdmission' in scope",
+        "405:24 cannot find 'NSWorkspace' in scope",
+        "538:16 cannot find 'StealthVisibilityGate' in scope"
+      ],
+      "errorCount": 19,
+      "isolatedInPass": 19,
+      "whole": false,
+      "isolatedLoc": 804,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/PermissionWarmupProofPolicy.swift",
+      "lang": "swift",
+      "loc": 367,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PrivateModeChordState.swift",
+      "lang": "swift",
+      "loc": 114,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/PrivateModePolicy.swift",
+      "lang": "swift",
+      "loc": 1976,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        },
+        {
+          "line": 12,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "ApplicationServices"
+      ],
+      "isolated": true,
+      "errors": [
+        "24:28 cannot find type 'CGDirectDisplayID' in scope",
+        "23:8 type 'PrivateModeDisplaySnapshot' does not conform to protocol 'Equatable'",
+        "36:27 cannot find type 'CGWindowID' in scope",
+        "35:8 type 'PrivateModeWindowCandidate' does not conform to protocol 'Equatable'",
+        "50:34 cannot find type 'CGWindowID' in scope",
+        "44:8 type 'PrivateModeContext' does not conform to protocol 'Equatable'",
+        "173:27 cannot find type 'CGWindowID' in scope",
+        "170:8 type 'PrivateModeCaptureBinding' does not conform to protocol 'Equatable'"
+      ],
+      "errorCount": 218,
+      "isolatedInPass": 19,
+      "whole": true,
+      "isolatedLoc": 1976,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/PrivateSupportDirectory.swift",
+      "lang": "swift",
+      "loc": 50,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/PromptFreeCredentialStore.swift",
+      "lang": "swift",
+      "loc": 630,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        },
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/PublicWebsiteSearchResolver.swift",
+      "lang": "swift",
+      "loc": 43,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/RecentOwnerWorkStore.swift",
+      "lang": "swift",
+      "loc": 824,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/RedExecutionService.swift",
+      "lang": "swift",
+      "loc": 184,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/RedProviderExecutionProfile.swift",
+      "lang": "swift",
+      "loc": 439,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/ResponseDeliveryTransaction.swift",
+      "lang": "swift",
+      "loc": 54,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/ScreenCaptureIdentity.swift",
+      "lang": "swift",
+      "loc": 175,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/ScreenCaptureImageProvider.swift",
+      "lang": "swift",
+      "loc": 526,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "CoreImage",
+          "to": "Direct2D effects / WIC"
+        },
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "CoreMedia",
+          "to": "Media Foundation"
+        },
+        {
+          "line": 11,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        },
+        {
+          "line": 13,
+          "kind": "guarded-import",
+          "module": "ImageIO",
+          "to": "Windows Imaging Component (WIC)"
+        },
+        {
+          "line": 14,
+          "kind": "guarded-import",
+          "module": "ScreenCaptureKit",
+          "to": "Windows.Graphics.Capture"
+        }
+      ],
+      "guardedModules": [
+        "CoreImage",
+        "CoreMedia",
+        "ImageIO",
+        "ScreenCaptureKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "147:20 cannot find type 'CGImage' in scope",
+        "158:34 cannot find type 'CGImage' in scope",
+        "278:16 cannot find type 'CGImage' in scope",
+        "308:10 cannot find type 'CGImage' in scope",
+        "305:20 cannot find type 'CGDirectDisplayID' in scope",
+        "340:10 cannot find type 'CGImage' in scope",
+        "337:18 cannot find type 'CGImage' in scope",
+        "367:34 cannot find type 'CGImage' in scope"
+      ],
+      "errorCount": 54,
+      "isolatedInPass": 16,
+      "whole": false,
+      "isolatedLoc": 426,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/ScreenContextPolicy.swift",
+      "lang": "swift",
+      "loc": 102,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/SecondDisplayMediaPolicy.swift",
+      "lang": "swift",
+      "loc": 106,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/SetupWalkthrough.swift",
+      "lang": "swift",
+      "loc": 1367,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 32,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 33,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 34,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        },
+        {
+          "line": 35,
+          "kind": "guarded-import",
+          "module": "CoreGraphics",
+          "to": "Direct2D / WIC for drawing, Win32 for displays and window lists"
+        },
+        {
+          "line": 37,
+          "kind": "guarded-import",
+          "module": "Speech",
+          "to": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "AppKit",
+        "ApplicationServices",
+        "CoreGraphics",
+        "Speech"
+      ],
+      "isolated": true,
+      "errors": [
+        "152:16 cannot find type 'NSApplication' in scope",
+        "151:18 cannot find type 'NSAlert' in scope",
+        "181:17 cannot find type 'NSAlert' in scope",
+        "171:53 cannot find type 'NSWindowDelegate' in scope",
+        "172:24 cannot find type 'NSAlert' in scope",
+        "173:43 cannot find type 'NSApplication' in scope",
+        "176:29 cannot find type 'NSApplication' in scope",
+        "178:35 cannot find type 'NSApplication' in scope"
+      ],
+      "errorCount": 17,
+      "isolatedInPass": 13,
+      "whole": true,
+      "isolatedLoc": 1367,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/SpeechRecognitionRecoveryPolicy.swift",
+      "lang": "swift",
+      "loc": 521,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/StableInstallCoordinator.swift",
+      "lang": "swift",
+      "loc": 132,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/StableInstallResumeStore.swift",
+      "lang": "swift",
+      "loc": 174,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/StandingTaskRuntime.swift",
+      "lang": "swift",
+      "loc": 1191,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 28,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/StealthExitOnlyCapture.swift",
+      "lang": "swift",
+      "loc": 336,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "AVFoundation",
+          "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 12,
+          "kind": "guarded-import",
+          "module": "Speech",
+          "to": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)"
+        }
+      ],
+      "guardedModules": [
+        "AVFoundation",
+        "Speech"
+      ],
+      "isolated": true,
+      "errors": [
+        "20:26 cannot find type 'SFSpeechAudioBufferRecognitionRequest' in scope",
+        "26:29 cannot find type 'SFSpeechAudioBufferRecognitionRequest' in scope",
+        "30:27 cannot find type 'AVAudioPCMBuffer' in scope",
+        "62:31 cannot find 'AVAudioEngine' in scope",
+        "63:35 cannot find type 'SFSpeechRecognizer' in scope",
+        "64:37 cannot find type 'SFSpeechAudioBufferRecognitionRequest' in scope",
+        "65:34 cannot find type 'SFSpeechRecognitionTask' in scope",
+        "72:28 cannot find 'SFSpeechRecognizer' in scope"
+      ],
+      "errorCount": 16,
+      "isolatedInPass": 7,
+      "whole": true,
+      "isolatedLoc": 336,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/StealthExitOnlyPolicy.swift",
+      "lang": "swift",
+      "loc": 242,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/StealthMode.swift",
+      "lang": "swift",
+      "loc": 1775,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 18,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 19,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 20,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "288:21 cannot find type 'NSApplication' in scope",
+        "289:19 cannot find type 'NSApplication' in scope",
+        "1259:11 cannot find type 'NSWindow' in scope",
+        "1389:13 cannot find 'NSWindow' in scope",
+        "1390:13 cannot find 'NSWindow' in scope",
+        "1391:13 cannot find 'NSWindow' in scope",
+        "1392:13 cannot find 'NSWindow' in scope",
+        "1393:13 cannot find 'NSWindow' in scope"
+      ],
+      "errorCount": 16,
+      "isolatedInPass": 7,
+      "whole": false,
+      "isolatedLoc": 440,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/TradingDataEvidence.swift",
+      "lang": "swift",
+      "loc": 118,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/TradingLane.swift",
+      "lang": "swift",
+      "loc": 202,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 20,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
+    },
+    {
+      "id": "leanring-buddy/TradingModeScreenScopePolicy.swift",
+      "lang": "swift",
+      "loc": 21,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/VoiceActivationRefreshPolicy.swift",
+      "lang": "swift",
+      "loc": 46,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/VoiceDaemonRecoveryPolicy.swift",
+      "lang": "swift",
+      "loc": 67,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/VoiceQueue.swift",
+      "lang": "swift",
+      "loc": 368,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/VoiceReadiness.swift",
+      "lang": "swift",
+      "loc": 859,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 14,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 15,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        },
+        {
+          "line": 16,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "434:22 cannot find 'NSApplication' in scope"
+      ],
+      "errorCount": 1,
+      "isolatedInPass": 17,
+      "whole": false,
+      "isolatedLoc": 530,
+      "status": "partial"
+    },
+    {
+      "id": "leanring-buddy/VoiceTimingPolicy.swift",
+      "lang": "swift",
+      "loc": 104,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/WindowMoveHeadlessCommand.swift",
+      "lang": "swift",
+      "loc": 253,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 17,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 18,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "ApplicationServices"
+      ],
+      "isolated": true,
+      "errors": [
+        "28:12 type 'WindowMoveHeadlessCommand.Request' does not conform to protocol 'Equatable'",
+        "226:21 cannot find type 'AXUIElement' in scope",
+        "247:21 cannot find type 'AXUIElement' in scope"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 253,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/WindowPositionManager.swift",
+      "lang": "swift",
+      "loc": 471,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 9,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 10,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        },
+        {
+          "line": 11,
+          "kind": "guarded-import",
+          "module": "ScreenCaptureKit",
+          "to": "Windows.Graphics.Capture"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "ApplicationServices",
+        "ScreenCaptureKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "393:61 cannot find type 'CGDirectDisplayID' in scope",
+        "427:65 cannot find type 'CGDirectDisplayID' in scope",
+        "516:11 cannot find type 'NSScreen' in scope"
+      ],
+      "errorCount": 3,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 471,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/WindowTiler.swift",
+      "lang": "swift",
+      "loc": 428,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 19,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 20,
+          "kind": "guarded-import",
+          "module": "ApplicationServices",
+          "to": "UI Automation (reading and targeting other apps) and SendInput (typing)"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "ApplicationServices"
+      ],
+      "isolated": true,
+      "errors": [
+        "29:57 cannot find type 'NSScreen' in scope",
+        "53:20 cannot find type 'NSScreen' in scope",
+        "121:41 cannot find type 'AXUIElement' in scope",
+        "133:41 cannot find type 'AXUIElement' in scope",
+        "151:41 cannot find type 'NSScreen' in scope",
+        "164:65 cannot find type 'NSScreen' in scope",
+        "402:51 cannot find type 'AXUIElement' in scope",
+        "410:71 cannot find type 'AXUIElement' in scope"
+      ],
+      "errorCount": 12,
+      "isolatedInPass": 23,
+      "whole": true,
+      "isolatedLoc": 428,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "leanring-buddy/WorkflowBoundary.swift",
+      "lang": "swift",
+      "loc": 336,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/WorkflowPlan.swift",
+      "lang": "swift",
+      "loc": 851,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/WorkflowRuntime.swift",
+      "lang": "swift",
+      "loc": 1810,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 42,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API)"
+        }
+      ],
+      "guardedModules": [],
+      "isolated": true,
+      "errors": [
+        "391:44 cannot find 'HostedBrainClient' in scope",
+        "408:39 cannot find 'AceLocalBrain' in scope",
+        "686:41 cannot find 'HostedBrainClient' in scope",
+        "870:43 cannot find 'AceLocalBrain' in scope",
+        "1651:20 cannot find 'AceLocalBrain' in scope",
+        "1712:20 cannot find 'AceLocalBrain' in scope"
+      ],
+      "errorCount": 6,
+      "isolatedInPass": 25,
+      "whole": true,
+      "isolatedLoc": 1810,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "relay/ace_cli_relay.py",
+      "lang": "python",
+      "loc": 436,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "/Users",
+        "Homebrew paths"
+      ],
+      "isolatedLoc": 436,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "research/appserver-latency/appserver-probe.py",
+      "lang": "python",
+      "loc": 85,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "/Applications",
+        ".app bundle paths"
+      ],
+      "isolatedLoc": 85,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "research/appserver-latency/mcp-probe.py",
+      "lang": "python",
+      "loc": 65,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "/Applications",
+        ".app bundle paths"
+      ],
+      "isolatedLoc": 65,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "update-service/native-update.mjs",
+      "lang": "javascript",
+      "loc": 165,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "update-service/prepare-worker.mjs",
+      "lang": "javascript",
+      "loc": 43,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "update-service/purchase-recovery.mjs",
+      "lang": "javascript",
+      "loc": 80,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    }
+  ]
+}

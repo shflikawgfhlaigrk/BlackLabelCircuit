@@ -6,6 +6,14 @@
 // chart screen (candles / Heikin-Ashi / Renko, MA/RSI/MACD/VWAP/Bollinger/ATR overlays,
 // and Fibonacci/level/trendline drawing tools). The SwiftUI rendering lives in ChartScreen.
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - Candle representations the chart can render.
 enum CandleStyle: String, CaseIterable, Identifiable, Codable {

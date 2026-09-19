@@ -43,6 +43,7 @@ struct LowEndReport {
         rows: [], flags: [])
 }
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 enum LowEndAnalyzer {
 
     // Neutral thresholds — chosen to flag disproportion, not to prescribe a fix.
@@ -206,3 +207,4 @@ enum LowEndAnalyzer {
         return (corr, sideMidDB)
     }
 }
+#endif // circuit-convert

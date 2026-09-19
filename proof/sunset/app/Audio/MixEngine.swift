@@ -1,3 +1,4 @@
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 // MixEngine.swift — stems -> balanced mix -> polished master. Gain-stage, corrective EQ,
 // cross-stem masking carves, constant-power placement, headroom-safe stereo sum, then hand
 // the mix to MasteringEngine.master(...) and return its MasterResult with mix-stage notes.
@@ -851,3 +852,4 @@ enum MixEngine {
         return AudioSignal(channels: out, sampleRate: toRate)
     }
 }
+#endif // circuit-convert

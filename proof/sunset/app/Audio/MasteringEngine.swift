@@ -1,3 +1,4 @@
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 // MasteringEngine: the offline mastering chain — measure, match/tonal-EQ, multiband glue, image, saturate, loudness-normalize + true-peak limit, dither.
 
 // This is the product's brain. Every number in the result traces back to real
@@ -371,3 +372,4 @@ enum MasteringEngine {
         x < lo ? lo : (x > hi ? hi : x)
     }
 }
+#endif // circuit-convert

@@ -25,6 +25,14 @@ import Foundation
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// One recorded step in an agent run — a real receipt, never a narration.
 struct AgentStep: Identifiable, Hashable {

@@ -17,6 +17,14 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// Tracks whether THIS app is the frontmost-focused application. macOS SwiftUI `scenePhase`
 /// does NOT leave `.active` when the app merely loses focus (only when its window is closed or

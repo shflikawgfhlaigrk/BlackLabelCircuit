@@ -21,6 +21,7 @@ import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import CircuitPortKit
 
 // MARK: - Vendor
 enum MailVendor: String, Codable, CaseIterable, Identifiable {

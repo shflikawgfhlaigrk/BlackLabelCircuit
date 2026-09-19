@@ -2,8 +2,16 @@
   "root": "/Users/michaelbarber/BlackLabelMarketing",
   "name": "BlackLabelMarketing",
   "target": "windows",
-  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/marketing",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/new/marketing",
   "moduleName": "BlackLabelMarketingCore",
+  "source": {
+    "sha256": "9b8f175083a1673e4caadfc5d9493a25a72f361cccea5fbf22094770460b1e3a",
+    "files": 151,
+    "git": {
+      "head": "09c95007a15fbf1e8c299348ed8e6e867fcbddd2",
+      "uncommitted": 43
+    }
+  },
   "moduleSources": {
     "from": "project.yml target BlackLabelMarketing",
     "paths": [
@@ -13,16 +21,16 @@
       "docs/guides"
     ]
   },
-  "generatedAt": 1789716126601,
-  "tookMs": 202721,
+  "generatedAt": 1789781870066,
+  "tookMs": 157133,
   "before": {
-    "readyPct": 19.1,
+    "readyPct": 18.9,
     "files": 152,
     "loc": 59558
   },
   "after": {
-    "readyPct": 60.5,
-    "guardedLoc": 20385,
+    "readyPct": 75.5,
+    "guardedLoc": 11814,
     "needsWindowsLoc": 2315
   },
   "verification": {
@@ -32,7 +40,7 @@
     "passes": [
       {
         "pass": 1,
-        "isolated": 5
+        "isolated": 4
       },
       {
         "pass": 2,
@@ -40,15 +48,15 @@
       },
       {
         "pass": 3,
-        "isolated": 3
+        "isolated": 6
       },
       {
         "pass": 4,
-        "isolated": 4
+        "isolated": 2
       },
       {
         "pass": 5,
-        "isolated": 1
+        "isolated": 5
       },
       {
         "pass": 6,
@@ -56,7 +64,7 @@
       },
       {
         "pass": 7,
-        "isolated": 3
+        "isolated": 6
       },
       {
         "pass": 8,
@@ -64,43 +72,43 @@
       },
       {
         "pass": 9,
-        "isolated": 1
+        "isolated": 11
       },
       {
         "pass": 10,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 11,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 12,
-        "isolated": 1
+        "isolated": 10
       },
       {
         "pass": 13,
-        "isolated": 3
+        "isolated": 1
       },
       {
         "pass": 14,
-        "isolated": 4
+        "isolated": 1
       },
       {
         "pass": 15,
-        "isolated": 4
+        "isolated": 8
       },
       {
         "pass": 16,
-        "isolated": 1
+        "isolated": 4
       },
       {
         "pass": 17,
-        "isolated": 1
+        "isolated": 4
       },
       {
         "pass": 18,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 19,
@@ -112,15 +120,15 @@
       },
       {
         "pass": 21,
-        "isolated": 5
+        "isolated": 3
       },
       {
         "pass": 22,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 23,
-        "isolated": 4
+        "isolated": 1
       },
       {
         "pass": 24,
@@ -128,7 +136,7 @@
       },
       {
         "pass": 25,
-        "isolated": 1
+        "isolated": 4
       },
       {
         "pass": 26,
@@ -136,7 +144,7 @@
       },
       {
         "pass": 27,
-        "isolated": 1
+        "isolated": 3
       },
       {
         "pass": 28,
@@ -144,7 +152,7 @@
       },
       {
         "pass": 29,
-        "isolated": 1
+        "isolated": 4
       },
       {
         "pass": 30,
@@ -156,31 +164,31 @@
       },
       {
         "pass": 32,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 33,
-        "isolated": 1
-      },
-      {
-        "pass": 34,
         "isolated": 2
       },
       {
-        "pass": 35,
-        "isolated": 3
-      },
-      {
-        "pass": 36,
+        "pass": 34,
         "isolated": 1
       },
       {
+        "pass": 35,
+        "isolated": 2
+      },
+      {
+        "pass": 36,
+        "isolated": 18
+      },
+      {
         "pass": 37,
-        "isolated": 3
+        "isolated": 1
       },
       {
         "pass": 38,
-        "isolated": 5
+        "isolated": 2
       },
       {
         "pass": 39,
@@ -188,19 +196,19 @@
       },
       {
         "pass": 40,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 41,
-        "isolated": 5
+        "isolated": 1
       },
       {
         "pass": 42,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 43,
-        "isolated": 1
+        "isolated": 3
       },
       {
         "pass": 44,
@@ -208,7 +216,7 @@
       },
       {
         "pass": 45,
-        "isolated": 3
+        "isolated": 1
       },
       {
         "pass": 46,
@@ -224,7 +232,7 @@
       },
       {
         "pass": 49,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 50,
@@ -232,7 +240,7 @@
       },
       {
         "pass": 51,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 52,
@@ -240,11 +248,11 @@
       },
       {
         "pass": 53,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 54,
-        "isolated": 6
+        "isolated": 1
       },
       {
         "pass": 55,
@@ -260,7 +268,7 @@
       },
       {
         "pass": 58,
-        "isolated": 4
+        "isolated": 1
       },
       {
         "pass": 59,
@@ -272,7 +280,7 @@
       },
       {
         "pass": 61,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 62,
@@ -292,30 +300,6 @@
       },
       {
         "pass": 66,
-        "isolated": 1
-      },
-      {
-        "pass": 67,
-        "isolated": 3
-      },
-      {
-        "pass": 68,
-        "isolated": 11
-      },
-      {
-        "pass": 69,
-        "isolated": 1
-      },
-      {
-        "pass": 70,
-        "isolated": 1
-      },
-      {
-        "pass": 71,
-        "isolated": 1
-      },
-      {
-        "pass": 72,
         "isolated": 0
       }
     ],
@@ -338,14 +322,14 @@
       "loc": 2339
     },
     "partial": {
-      "files": 58,
-      "loc": 18515,
-      "isolatedLoc": 10808,
-      "buildsLoc": 7707
+      "files": 59,
+      "loc": 18578,
+      "isolatedLoc": 10865,
+      "buildsLoc": 7713
     },
     "needsWindowsPart": {
-      "files": 53,
-      "loc": 31408
+      "files": 52,
+      "loc": 31345
     },
     "macOnlySkipped": {
       "files": 0,
@@ -355,11 +339,16 @@
       "files": 0,
       "loc": 0
     },
-    "buildsLoc": 14538,
-    "isolatedLoc": 42216,
+    "buildsLoc": 14544,
+    "isolatedLoc": 42210,
     "buildsForWindowsPct": 25.6
   },
   "packages": [
+    {
+      "package": "OpenCombine",
+      "url": "https://github.com/OpenCombine/OpenCombine.git",
+      "from": "0.14.0"
+    },
     {
       "package": "swift-crypto",
       "url": "https://github.com/apple/swift-crypto.git",
@@ -384,8 +373,8 @@
       "id": "(uses code that was isolated)",
       "windows": null,
       "effort": null,
-      "files": 43,
-      "loc": 11318
+      "files": 48,
+      "loc": 12685
     },
     {
       "id": "AVFoundation",
@@ -393,13 +382,6 @@
       "effort": "L",
       "files": 5,
       "loc": 3901
-    },
-    {
-      "id": "Security",
-      "windows": "Windows Credential Manager (CredRead/CredWrite) and DPAPI",
-      "effort": "M",
-      "files": 10,
-      "loc": 3270
     },
     {
       "id": "CoreGraphics",
@@ -556,6 +538,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -575,12 +558,14 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "136:43 cannot find 'ConsentedEgress' in scope"
+        "136:43 cannot find 'ConsentedEgress' in scope",
+        "183:38 cannot find 'CRMConnectorKeychain' in scope"
       ],
-      "errorCount": 1,
-      "isolatedInPass": 16,
+      "errorCount": 2,
+      "isolatedInPass": 46,
       "whole": true,
       "isolatedLoc": 171,
       "status": "needs-windows-part"
@@ -602,6 +587,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "127:11 cannot find type 'AppModel' in scope",
@@ -609,7 +595,7 @@
         "119:31 cannot find type 'AdCampaign' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 11,
+      "isolatedInPass": 9,
       "whole": false,
       "isolatedLoc": 54,
       "status": "partial"
@@ -622,13 +608,13 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "112:16 cannot find 'Studio' in scope",
-        "231:37 value of type 'String' has no member 'capitalizedFirst'"
+        "112:16 cannot find 'Studio' in scope"
       ],
-      "errorCount": 2,
-      "isolatedInPass": 49,
+      "errorCount": 1,
+      "isolatedInPass": 9,
       "whole": false,
       "isolatedLoc": 155,
       "status": "partial"
@@ -650,6 +636,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "61:6 unknown attribute 'EnvironmentObject'",
@@ -662,7 +649,7 @@
         "68:6 unknown attribute 'State'"
       ],
       "errorCount": 193,
-      "isolatedInPass": 2,
+      "isolatedInPass": 9,
       "whole": true,
       "isolatedLoc": 507,
       "status": "needs-windows-part"
@@ -675,6 +662,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -696,13 +684,15 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "38:11 cannot find type 'AppModel' in scope",
-        "301:11 cannot find type 'AppModel' in scope"
+        "301:11 cannot find type 'AppModel' in scope",
+        "56:39 cannot find type 'Lead' in scope"
       ],
-      "errorCount": 2,
-      "isolatedInPass": 11,
+      "errorCount": 3,
+      "isolatedInPass": 9,
       "whole": false,
       "isolatedLoc": 61,
       "status": "partial"
@@ -724,19 +714,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
+        "21:35 cannot find type 'AppModel' in scope",
         "21:6 unknown attribute 'EnvironmentObject'",
         "23:6 unknown attribute 'State'",
         "24:6 unknown attribute 'State'",
         "25:6 unknown attribute 'State'",
         "30:20 cannot find type 'View' in scope",
         "59:31 cannot find type 'View' in scope",
-        "108:76 cannot find type 'View' in scope",
-        "108:50 cannot find type 'Binding' in scope"
+        "108:76 cannot find type 'View' in scope"
       ],
-      "errorCount": 304,
-      "isolatedInPass": 2,
+      "errorCount": 307,
+      "isolatedInPass": 9,
       "whole": true,
       "isolatedLoc": 524,
       "status": "needs-windows-part"
@@ -758,19 +749,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
+        "7:37 cannot find type 'Session' in scope",
+        "8:35 cannot find type 'AppModel' in scope",
+        "9:35 cannot find type 'Prefs' in scope",
         "7:6 unknown attribute 'EnvironmentObject'",
         "8:6 unknown attribute 'EnvironmentObject'",
         "9:6 unknown attribute 'EnvironmentObject'",
         "10:6 unknown attribute 'State'",
-        "11:6 unknown attribute 'State'",
-        "12:6 unknown attribute 'State'",
-        "13:6 unknown attribute 'State'",
-        "14:6 unknown attribute 'State'"
+        "11:6 unknown attribute 'State'"
       ],
-      "errorCount": 106,
-      "isolatedInPass": 2,
+      "errorCount": 119,
+      "isolatedInPass": 22,
       "whole": true,
       "isolatedLoc": 232,
       "status": "needs-windows-part"
@@ -786,19 +778,20 @@
           "line": 29,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "146:21 cannot find 'AppModel' in scope",
-        "147:22 the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions",
-        "153:36 cannot find 'ScheduledSocialPublisher' in scope",
-        "161:12 cannot find 'ScheduledSocialPublisher' in scope"
+        "145:21 cannot find 'AppModel' in scope",
+        "146:22 the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions",
+        "152:36 cannot find 'ScheduledSocialPublisher' in scope",
+        "160:12 cannot find 'ScheduledSocialPublisher' in scope"
       ],
       "errorCount": 4,
-      "isolatedInPass": 71,
+      "isolatedInPass": 65,
       "whole": false,
       "isolatedLoc": 59,
       "status": "partial"
@@ -811,6 +804,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -832,19 +826,19 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
+        "13:35 cannot find type 'Prefs' in scope",
         "13:6 unknown attribute 'EnvironmentObject'",
         "14:6 unknown attribute 'State'",
         "15:6 unknown attribute 'State'",
         "16:6 unknown attribute 'State'",
         "18:20 cannot find type 'View' in scope",
-        "12:31 cannot find type 'View' in scope",
-        "19:9 cannot find 'VStack' in scope",
-        "20:13 cannot find 'Text' in scope"
+        "12:31 cannot find type 'View' in scope"
       ],
-      "errorCount": 21,
-      "isolatedInPass": 10,
+      "errorCount": 7,
+      "isolatedInPass": 36,
       "whole": false,
       "isolatedLoc": 44,
       "status": "partial"
@@ -864,17 +858,17 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "14:17 cannot find type 'Prefs' in scope",
-        "32:34 cannot find type 'Prefs' in scope",
-        "56:9 cannot find 'ConsentedEgress' in scope"
+        "58:9 cannot find 'ConsentedEgress' in scope"
       ],
-      "errorCount": 3,
-      "isolatedInPass": 61,
-      "whole": true,
-      "isolatedLoc": 63,
-      "status": "needs-windows-part"
+      "errorCount": 2,
+      "isolatedInPass": 16,
+      "whole": false,
+      "isolatedLoc": 57,
+      "status": "partial"
     },
     {
       "id": "Sources/BrandProfiler.swift",
@@ -899,12 +893,13 @@
       "guardedModules": [
         "CoreGraphics"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "32:9 cannot find 'ConsentedEgress' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 61,
+      "isolatedInPass": 38,
       "whole": true,
       "isolatedLoc": 141,
       "status": "needs-windows-part"
@@ -917,6 +912,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -938,6 +934,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "20:15 cannot find type 'Lead' in scope",
@@ -950,7 +947,7 @@
         "32:6 unknown attribute 'State'"
       ],
       "errorCount": 36,
-      "isolatedInPass": 68,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 311,
       "status": "needs-windows-part"
@@ -963,12 +960,15 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
+        "92:13 cannot find 'SpeechCaptionEngine' in scope",
+        "186:34 cannot find 'SpeechCaptionEngine' in scope",
         "187:33 cannot find 'blmCameraLog' in scope"
       ],
-      "errorCount": 1,
-      "isolatedInPass": 65,
+      "errorCount": 3,
+      "isolatedInPass": 43,
       "whole": true,
       "isolatedLoc": 334,
       "status": "needs-windows-part"
@@ -978,22 +978,26 @@
       "lang": "swift",
       "loc": 665,
       "before": "guarded",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "433:43 cannot find 'MarketingVirtualSetModel' in scope",
-        "433:6 failed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)",
-        "457:112 cannot find 'BLTheme' in scope",
-        "458:137 cannot find 'BLTheme' in scope",
-        "459:149 cannot find 'BLTheme' in scope",
-        "470:90 cannot find 'BLTheme' in scope",
-        "485:21 cannot find 'TeleprompterOverlay' in scope",
-        "492:64 cannot find 'BLTheme' in scope"
+        "432:6 generic struct 'ObservedObject' requires that 'MarketingCameraRecorder' conform to 'ObservableObject'",
+        "442:43 cannot find 'MarketingVirtualSetModel' in scope",
+        "442:6 failed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)",
+        "445:6 generic struct 'StateObject' requires that 'TeleprompterModel' conform to 'ObservableObject'"
       ],
-      "errorCount": 36,
-      "isolatedInPass": 64,
+      "errorCount": 4,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 665,
       "status": "needs-windows-part"
@@ -1006,6 +1010,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1018,14 +1023,14 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "47:83 cannot find type 'ReelProject' in scope",
-        "49:16 cannot find 'ReelProject' in scope",
-        "13:17 cannot find type 'Prefs' in scope"
+        "13:17 cannot find type 'Prefs' in scope",
+        "33:13 cannot find 'Studio' in scope"
       ],
-      "errorCount": 3,
-      "isolatedInPass": 23,
+      "errorCount": 2,
+      "isolatedInPass": 16,
       "whole": false,
       "isolatedLoc": 39,
       "status": "partial"
@@ -1039,9 +1044,9 @@
       "changes": [
         {
           "line": 20,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 19,
@@ -1050,16 +1055,17 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "271:42 cannot find 'ConsentedEgress' in scope",
-        "296:45 cannot find 'ConsentedEgress' in scope"
+        "273:42 cannot find 'ConsentedEgress' in scope",
+        "298:45 cannot find 'ConsentedEgress' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 23,
+      "isolatedInPass": 53,
       "whole": false,
       "isolatedLoc": 165,
       "status": "partial"
@@ -1073,9 +1079,9 @@
       "changes": [
         {
           "line": 14,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 13,
@@ -1084,19 +1090,20 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "301:46 cannot find 'ConsentedEgress' in scope",
-        "366:42 cannot find 'ConsentedEgress' in scope",
-        "176:35 cannot find type 'CloudflareMailer' in scope",
-        "396:65 cannot find type 'Newsletter' in scope",
-        "396:37 cannot find type 'Newsletter' in scope"
+        "303:46 cannot find 'ConsentedEgress' in scope",
+        "368:42 cannot find 'ConsentedEgress' in scope",
+        "178:35 cannot find type 'CloudflareMailer' in scope",
+        "398:65 cannot find type 'Newsletter' in scope",
+        "398:37 cannot find type 'Newsletter' in scope"
       ],
       "errorCount": 5,
-      "isolatedInPass": 23,
+      "isolatedInPass": 59,
       "whole": false,
       "isolatedLoc": 266,
       "status": "partial"
@@ -1109,6 +1116,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "36:53 cannot find type 'Activity' in scope",
@@ -1118,7 +1126,7 @@
         "37:25 cannot find type 'Activity' in scope"
       ],
       "errorCount": 5,
-      "isolatedInPass": 42,
+      "isolatedInPass": 16,
       "whole": false,
       "isolatedLoc": 89,
       "status": "partial"
@@ -1146,13 +1154,16 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "21:11 cannot find type 'View' in scope",
         "23:111 cannot find type 'View' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 23,
+      "isolatedInPass": 16,
       "whole": false,
       "isolatedLoc": 10,
       "status": "partial"
@@ -1165,6 +1176,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1186,6 +1198,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "33:35 cannot find type 'AppModel' in scope",
@@ -1193,12 +1206,12 @@
         "35:40 cannot find type 'LeadEngineStore' in scope",
         "36:37 cannot find type 'Session' in scope",
         "39:78 cannot find 'GoogleAuth' in scope",
-        "44:42 cannot find type 'LeadDBTokenValidation' in scope",
         "33:6 unknown attribute 'EnvironmentObject'",
-        "34:6 unknown attribute 'EnvironmentObject'"
+        "34:6 unknown attribute 'EnvironmentObject'",
+        "35:6 unknown attribute 'EnvironmentObject'"
       ],
-      "errorCount": 134,
-      "isolatedInPass": 68,
+      "errorCount": 133,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 2606,
       "status": "needs-windows-part"
@@ -1226,19 +1239,20 @@
       "guardedModules": [
         "Network"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "538:22 cannot find type 'DNSServiceRef' in scope",
         "541:15 cannot find type 'DNSServiceRef' in scope",
         "558:23 cannot find type 'NWConnection' in scope",
+        "421:78 cannot find type 'RawEgressStream' in scope",
+        "425:16 cannot find 'RawEgressStream' in scope",
         "460:48 cannot find 'kDNSServiceType_MX' in scope",
         "461:48 cannot find 'kDNSServiceType_A' in scope",
-        "462:48 cannot find 'kDNSServiceType_TXT' in scope",
-        "463:48 cannot find 'kDNSServiceType_CNAME' in scope",
-        "464:48 cannot find 'kDNSServiceType_PTR' in scope"
+        "462:48 cannot find 'kDNSServiceType_TXT' in scope"
       ],
-      "errorCount": 23,
-      "isolatedInPass": 14,
+      "errorCount": 22,
+      "isolatedInPass": 36,
       "whole": false,
       "isolatedLoc": 274,
       "status": "partial"
@@ -1258,9 +1272,9 @@
         },
         {
           "line": 18,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 16,
@@ -1270,22 +1284,24 @@
         }
       ],
       "guardedModules": [
-        "SwiftUI",
+        "SwiftUI"
+      ],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "94:25 cannot find type 'Lead' in scope",
-        "195:39 cannot find type 'Lead' in scope",
-        "207:36 cannot find type 'Lead' in scope",
-        "218:37 cannot find type 'Lead' in scope",
-        "282:50 cannot find type 'Lead' in scope",
-        "333:34 cannot find type 'Lead' in scope",
-        "894:15 cannot find type 'Lead' in scope",
-        "891:8 type 'CRMPlannedContactCreate' does not conform to protocol 'Hashable'"
+        "96:25 cannot find type 'Lead' in scope",
+        "197:39 cannot find type 'Lead' in scope",
+        "209:36 cannot find type 'Lead' in scope",
+        "220:37 cannot find type 'Lead' in scope",
+        "284:50 cannot find type 'Lead' in scope",
+        "335:34 cannot find type 'Lead' in scope",
+        "896:15 cannot find type 'Lead' in scope",
+        "893:8 type 'CRMPlannedContactCreate' does not conform to protocol 'Hashable'"
       ],
       "errorCount": 35,
-      "isolatedInPass": 68,
+      "isolatedInPass": 36,
       "whole": false,
       "isolatedLoc": 1036,
       "status": "partial"
@@ -1307,14 +1323,15 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "9:11 cannot find type 'AppModel' in scope",
-        "305:11 cannot find type 'AppModel' in scope",
-        "331:11 cannot find type 'AppModel' in scope"
+        "11:42 cannot find type 'Activity' in scope",
+        "307:11 cannot find type 'AppModel' in scope",
+        "333:11 cannot find type 'AppModel' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 68,
+      "isolatedInPass": 3,
       "whole": true,
       "isolatedLoc": 376,
       "status": "needs-windows-part"
@@ -1327,6 +1344,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "255:36 cannot find type 'Lead' in scope",
@@ -1338,7 +1356,7 @@
         "263:39 cannot find 'Deliverability' in scope"
       ],
       "errorCount": 7,
-      "isolatedInPass": 62,
+      "isolatedInPass": 15,
       "whole": false,
       "isolatedLoc": 141,
       "status": "partial"
@@ -1366,6 +1384,9 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "37:6 unknown attribute 'State'",
@@ -1377,8 +1398,8 @@
         "70:58 cannot find type 'Color' in scope",
         "80:49 cannot find type 'Color' in scope"
       ],
-      "errorCount": 352,
-      "isolatedInPass": 14,
+      "errorCount": 356,
+      "isolatedInPass": 15,
       "whole": true,
       "isolatedLoc": 790,
       "status": "needs-windows-part"
@@ -1391,19 +1412,20 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
+        "155:26 cannot find 'Deliverability' in scope",
         "28:47 cannot find type 'ConsentedEgress' in scope",
         "36:51 cannot find type 'ConsentedEgress' in scope",
         "30:29 cannot find 'ConsentedEgress' in scope",
-        "155:29 cannot find 'DNSResolver' in scope",
-        "156:30 cannot find 'DNSResolver' in scope",
-        "165:30 cannot find 'DNSResolver' in scope",
-        "201:15 cannot find 'DNSResolver' in scope",
-        "208:23 cannot find 'DNSResolver' in scope"
+        "203:15 cannot find 'DNSResolver' in scope",
+        "210:23 cannot find 'DNSResolver' in scope",
+        "212:25 cannot find 'DNSResolver' in scope",
+        "227:27 cannot find 'DNSResolver' in scope"
       ],
-      "errorCount": 10,
-      "isolatedInPass": 18,
+      "errorCount": 8,
+      "isolatedInPass": 15,
       "whole": false,
       "isolatedLoc": 173,
       "status": "partial"
@@ -1425,6 +1447,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "14:35 cannot find type 'AppModel' in scope",
@@ -1437,7 +1460,7 @@
         "23:21 cannot find 'VStack' in scope"
       ],
       "errorCount": 30,
-      "isolatedInPass": 14,
+      "isolatedInPass": 15,
       "whole": false,
       "isolatedLoc": 60,
       "status": "partial"
@@ -1450,12 +1473,13 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "31:35 cannot find type 'Activity' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 31,
+      "isolatedInPass": 15,
       "whole": false,
       "isolatedLoc": 56,
       "status": "partial"
@@ -1477,19 +1501,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "110:6 unknown attribute 'State'",
         "112:20 cannot find type 'View' in scope",
         "107:20 cannot find type 'View' in scope",
         "153:29 cannot find type 'AppModel' in scope",
+        "153:46 cannot find type 'Prefs' in scope",
+        "393:44 cannot find type 'Prefs' in scope",
         "113:9 cannot find 'HStack' in scope",
-        "114:13 cannot find 'Image' in scope",
-        "115:13 cannot find 'Text' in scope",
-        "117:13 cannot find 'Text' in scope"
+        "114:13 cannot find 'Image' in scope"
       ],
-      "errorCount": 23,
-      "isolatedInPass": 14,
+      "errorCount": 41,
+      "isolatedInPass": 15,
       "whole": false,
       "isolatedLoc": 290,
       "status": "partial"
@@ -1512,25 +1537,32 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "CoreGraphics",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "93:24 cannot find type 'TextAlignment' in scope",
-        "100:25 cannot find type 'Alignment' in scope",
-        "112:21 cannot find type 'Font' in scope",
-        "181:17 cannot find 'DesignPhotoEdit' in scope",
-        "150:8 type 'DesignElement' does not conform to protocol 'Encodable'",
-        "150:8 type 'DesignElement' does not conform to protocol 'Equatable'",
-        "215:39 cannot find 'DesignPhotoEdit' in scope",
-        "215:80 cannot find 'DesignPhotoEdit' in scope"
+        "101:24 cannot find type 'TextAlignment' in scope",
+        "108:25 cannot find type 'Alignment' in scope",
+        "120:21 cannot find type 'Font' in scope",
+        "175:21 cannot find type 'DesignFontWeight' in scope",
+        "177:20 cannot find type 'DesignTextAlignment' in scope",
+        "193:17 cannot find 'DesignPhotoEdit' in scope",
+        "162:8 type 'DesignElement' does not conform to protocol 'Encodable'",
+        "162:8 type 'DesignElement' does not conform to protocol 'Equatable'"
       ],
-      "errorCount": 28,
-      "isolatedInPass": 27,
+      "errorCount": 34,
+      "isolatedInPass": 15,
       "whole": false,
       "isolatedLoc": 340,
       "status": "partial"
@@ -1558,19 +1590,22 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
-        "29:38 cannot find 'DesignDocumentStore' in scope",
+        "28:35 cannot find type 'Prefs' in scope",
         "28:6 unknown attribute 'EnvironmentObject'",
         "29:6 unknown attribute 'StateObject'",
         "30:6 unknown attribute 'State'",
         "32:20 cannot find type 'View' in scope",
         "27:28 cannot find type 'View' in scope",
-        "47:32 cannot find type 'DesignDocumentStore' in scope",
-        "47:6 unknown attribute 'ObservedObject'"
+        "47:6 unknown attribute 'ObservedObject'",
+        "50:6 unknown attribute 'State'"
       ],
-      "errorCount": 616,
-      "isolatedInPass": 34,
+      "errorCount": 611,
+      "isolatedInPass": 21,
       "whole": true,
       "isolatedLoc": 1462,
       "status": "needs-windows-part"
@@ -1612,19 +1647,17 @@
         "CoreText",
         "ImageIO"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
-        "238:34 cannot find type 'DesignDocument' in scope",
-        "307:49 cannot find type 'DesignDocument' in scope",
-        "249:77 cannot find type 'DesignDocument' in scope",
-        "249:33 cannot find type 'DesignDocument' in scope",
-        "50:31 cannot find type 'DesignDocument' in scope",
-        "72:36 cannot find type 'DesignElement' in scope",
-        "93:41 cannot find type 'DesignElement' in scope",
-        "124:41 cannot find type 'DesignElement' in scope"
+        "202:63 cannot find type 'DesignFontWeight' in scope",
+        "131:27 cannot find 'DesignPhotoRenderer' in scope",
+        "132:20 cannot find 'ImageMagicEngine' in scope"
       ],
-      "errorCount": 15,
-      "isolatedInPass": 34,
+      "errorCount": 3,
+      "isolatedInPass": 21,
       "whole": true,
       "isolatedLoc": 284,
       "status": "needs-windows-part"
@@ -1653,19 +1686,20 @@
         "CoreGraphics",
         "CoreImage"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "51:17 cannot find 'ReelColorGrade' in scope",
-        "36:8 type 'DesignPhotoEdit' does not conform to protocol 'Encodable'",
-        "36:8 type 'DesignPhotoEdit' does not conform to protocol 'Hashable'",
-        "36:8 type 'DesignPhotoEdit' does not conform to protocol 'Equatable'",
         "169:33 cannot find type 'CIContext' in scope",
         "170:9 cannot find 'CIContext' in scope",
         "171:49 cannot find 'CGColorSpace' in scope",
-        "171:68 cannot find 'CGColorSpace' in scope"
+        "171:68 cannot find 'CGColorSpace' in scope",
+        "174:43 cannot find 'CGColorSpace' in scope",
+        "174:62 cannot find 'CGColorSpace' in scope",
+        "182:98 cannot find type 'CGImage' in scope",
+        "267:41 cannot find type 'CGImage' in scope"
       ],
       "errorCount": 18,
-      "isolatedInPass": 22,
+      "isolatedInPass": 17,
       "whole": true,
       "isolatedLoc": 239,
       "status": "needs-windows-part"
@@ -1679,9 +1713,9 @@
       "changes": [
         {
           "line": 22,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 21,
@@ -1690,7 +1724,8 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -1705,6 +1740,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1717,6 +1753,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1736,9 +1773,9 @@
         },
         {
           "line": 14,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 15,
@@ -1754,22 +1791,24 @@
         }
       ],
       "guardedModules": [
-        "Security",
         "AuthenticationServices"
+      ],
+      "kitModules": [
+        "Security"
       ],
       "isolated": true,
       "errors": [
-        "36:35 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
-        "38:26 cannot find type 'ASWebAuthenticationSession' in scope",
-        "175:73 cannot find type 'ASPresentationAnchor' in scope",
-        "175:42 cannot find type 'ASWebAuthenticationSession' in scope",
-        "93:17 cannot find 'ASWebAuthenticationSession' in scope",
-        "97:40 cannot find 'ASWebAuthenticationSessionError' in scope",
-        "177:88 cannot find 'ASPresentationAnchor' in scope",
-        "238:42 cannot find 'ConsentedEgress' in scope"
+        "38:35 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
+        "40:26 cannot find type 'ASWebAuthenticationSession' in scope",
+        "177:73 cannot find type 'ASPresentationAnchor' in scope",
+        "177:42 cannot find type 'ASWebAuthenticationSession' in scope",
+        "77:40 cannot find 'GoogleAuth' in scope",
+        "95:17 cannot find 'ASWebAuthenticationSession' in scope",
+        "99:40 cannot find 'ASWebAuthenticationSessionError' in scope",
+        "179:88 cannot find 'ASPresentationAnchor' in scope"
       ],
-      "errorCount": 9,
-      "isolatedInPass": 2,
+      "errorCount": 10,
+      "isolatedInPass": 17,
       "whole": true,
       "isolatedLoc": 246,
       "status": "needs-windows-part"
@@ -1782,6 +1821,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1794,12 +1834,13 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "65:37 cannot find type 'Lead' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 39,
+      "isolatedInPass": 36,
       "whole": false,
       "isolatedLoc": 36,
       "status": "partial"
@@ -1813,9 +1854,9 @@
       "changes": [
         {
           "line": 23,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 22,
@@ -1824,16 +1865,17 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "164:52 cannot find 'ConsentedEgress' in scope",
-        "272:39 cannot find 'ConsentedEgress' in scope"
+        "307:77 cannot find type 'Lead' in scope",
+        "307:61 cannot find type 'Lead' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 15,
+      "isolatedInPass": 36,
       "whole": false,
       "isolatedLoc": 156,
       "status": "partial"
@@ -1846,6 +1888,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "82:37 cannot find type 'EnrichmentProviderClient' in scope",
@@ -1853,7 +1896,7 @@
         "92:35 cannot find 'EnrichmentProviderClient' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 17,
+      "isolatedInPass": 43,
       "whole": false,
       "isolatedLoc": 69,
       "status": "partial"
@@ -1875,6 +1918,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "14:16 cannot find type 'DealStage' in scope",
@@ -1884,7 +1928,7 @@
         "51:67 cannot find type 'Lead' in scope"
       ],
       "errorCount": 5,
-      "isolatedInPass": 68,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 100,
       "status": "needs-windows-part"
@@ -1898,9 +1942,9 @@
       "changes": [
         {
           "line": 8,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 7,
@@ -1909,16 +1953,18 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "314:43 cannot find 'ConsentedEgress' in scope",
-        "476:43 cannot find 'ConsentedEgress' in scope"
+        "228:51 cannot find 'SearchConsoleAnalytics' in scope",
+        "316:43 cannot find 'ConsentedEgress' in scope",
+        "478:43 cannot find 'ConsentedEgress' in scope"
       ],
-      "errorCount": 2,
-      "isolatedInPass": 15,
+      "errorCount": 3,
+      "isolatedInPass": 43,
       "whole": false,
       "isolatedLoc": 256,
       "status": "partial"
@@ -1931,6 +1977,12 @@
       "rewritten": true,
       "changes": [
         {
+          "line": 0,
+          "kind": "kit",
+          "module": "Security",
+          "to": "CircuitPortKit Keychain names (the Mac gets them through Foundation)"
+        },
+        {
           "line": 1,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -1938,6 +1990,9 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [
+        "Security"
+      ],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1959,13 +2014,14 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "125:11 cannot find type 'AppModel' in scope",
         "413:11 cannot find type 'AppModel' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 21,
+      "isolatedInPass": 12,
       "whole": false,
       "isolatedLoc": 63,
       "status": "partial"
@@ -1987,6 +2043,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "17:35 cannot find type 'AppModel' in scope",
@@ -1998,8 +2055,8 @@
         "39:48 cannot find type 'Color' in scope",
         "43:20 cannot find type 'View' in scope"
       ],
-      "errorCount": 390,
-      "isolatedInPass": 21,
+      "errorCount": 376,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 586,
       "status": "needs-windows-part"
@@ -2021,6 +2078,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "31:35 cannot find type 'AppModel' in scope",
@@ -2032,8 +2090,8 @@
         "42:20 cannot find type 'View' in scope",
         "75:73 cannot find type 'View' in scope"
       ],
-      "errorCount": 805,
-      "isolatedInPass": 21,
+      "errorCount": 795,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 1242,
       "status": "needs-windows-part"
@@ -2046,6 +2104,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2067,6 +2126,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "25:6 unknown attribute 'State'",
@@ -2078,8 +2138,8 @@
         "76:6 unknown attribute 'ViewBuilder'",
         "150:44 cannot find type 'View' in scope"
       ],
-      "errorCount": 123,
-      "isolatedInPass": 21,
+      "errorCount": 121,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 298,
       "status": "needs-windows-part"
@@ -2101,6 +2161,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "47:22 cannot find type 'Color' in scope",
@@ -2112,8 +2173,8 @@
         "60:76 cannot find type 'Font' in scope",
         "60:49 cannot find type 'Font' in scope"
       ],
-      "errorCount": 214,
-      "isolatedInPass": 25,
+      "errorCount": 122,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 765,
       "status": "needs-windows-part"
@@ -2126,6 +2187,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2174,12 +2236,15 @@
         "ImageIO",
         "Vision"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "233:45 cannot find type 'CGImage' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 22,
+      "isolatedInPass": 17,
       "whole": false,
       "isolatedLoc": 165,
       "status": "partial"
@@ -2192,6 +2257,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "229:25 cannot find type 'RawEgressStream' in scope",
@@ -2204,7 +2270,7 @@
         "192:26 cannot find 'IMAPConnection' in scope"
       ],
       "errorCount": 12,
-      "isolatedInPass": 52,
+      "isolatedInPass": 47,
       "whole": false,
       "isolatedLoc": 188,
       "status": "partial"
@@ -2217,6 +2283,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "128:11 cannot find type 'AppModel' in scope",
@@ -2226,7 +2293,7 @@
         "251:48 cannot find type 'LeadEngineSettings' in scope"
       ],
       "errorCount": 5,
-      "isolatedInPass": 68,
+      "isolatedInPass": 36,
       "whole": false,
       "isolatedLoc": 147,
       "status": "partial"
@@ -2248,19 +2315,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
+        "146:23 cannot find type 'ProspectStatus' in scope",
+        "147:27 cannot find type 'SendStatus' in scope",
+        "264:16 cannot find type 'LeadQuery' in scope",
         "30:19 cannot find type 'Color' in scope",
         "66:26 cannot find type 'Lead' in scope",
         "93:33 cannot find type 'Lead' in scope",
         "93:52 cannot find type 'Activity' in scope",
-        "123:28 cannot find type 'Lead' in scope",
-        "123:57 cannot find type 'Activity' in scope",
-        "146:23 cannot find type 'ProspectStatus' in scope",
-        "147:27 cannot find type 'SendStatus' in scope"
+        "123:28 cannot find type 'Lead' in scope"
       ],
-      "errorCount": 23,
-      "isolatedInPass": 37,
+      "errorCount": 16,
+      "isolatedInPass": 3,
       "whole": false,
       "isolatedLoc": 217,
       "status": "partial"
@@ -2282,6 +2350,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "14:17 cannot find type 'Lead' in scope",
@@ -2289,12 +2358,12 @@
         "10:8 type 'Account' does not conform to protocol 'Hashable'",
         "10:8 type 'Account' does not conform to protocol 'Equatable'",
         "35:11 cannot find type 'AppModel' in scope",
-        "40:21 cannot find type 'Lead' in scope",
-        "48:27 cannot find type 'Lead' in scope",
-        "75:69 cannot find type 'Lead' in scope"
+        "26:49 cannot find 'Deliverability' in scope",
+        "27:49 cannot find 'Deliverability' in scope",
+        "40:21 cannot find type 'Lead' in scope"
       ],
-      "errorCount": 15,
-      "isolatedInPass": 37,
+      "errorCount": 23,
+      "isolatedInPass": 27,
       "whole": true,
       "isolatedLoc": 257,
       "status": "needs-windows-part"
@@ -2316,14 +2385,13 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "81:11 cannot find type 'AppModel' in scope",
-        "93:32 cannot find type 'Newsletter' in scope",
-        "96:32 cannot find type 'Newsletter' in scope"
+        "81:11 cannot find type 'AppModel' in scope"
       ],
-      "errorCount": 3,
-      "isolatedInPass": 37,
+      "errorCount": 1,
+      "isolatedInPass": 27,
       "whole": false,
       "isolatedLoc": 52,
       "status": "partial"
@@ -2336,12 +2404,13 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "153:27 cannot find type 'NewsletterDeliveryProgress' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 26,
+      "isolatedInPass": 61,
       "whole": false,
       "isolatedLoc": 17,
       "status": "partial"
@@ -2354,6 +2423,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2372,6 +2442,12 @@
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
         },
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 1,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -2381,19 +2457,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "239:35 cannot find type 'AppModel' in scope",
-        "239:6 unknown attribute 'EnvironmentObject'",
-        "240:6 unknown attribute 'StateObject'",
-        "240:38 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
-        "241:6 unknown attribute 'State'",
-        "242:6 unknown attribute 'State'",
-        "243:6 unknown attribute 'State'",
-        "245:20 cannot find type 'View' in scope"
+        "247:6 unknown attribute 'EnvironmentObject'",
+        "248:6 unknown attribute 'StateObject'",
+        "248:38 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "249:6 unknown attribute 'State'",
+        "250:6 unknown attribute 'State'",
+        "251:6 unknown attribute 'State'",
+        "253:20 cannot find type 'View' in scope",
+        "298:47 cannot find type 'View' in scope"
       ],
-      "errorCount": 174,
-      "isolatedInPass": 30,
+      "errorCount": 154,
+      "isolatedInPass": 2,
       "whole": true,
       "isolatedLoc": 490,
       "status": "needs-windows-part"
@@ -2407,12 +2484,13 @@
       "changes": [
         {
           "line": 27,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -2427,6 +2505,12 @@
       "rewritten": true,
       "changes": [
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 25,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -2434,19 +2518,20 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "192:54 cannot find 'LeadDB' in scope",
-        "201:46 cannot find 'ConsentedEgress' in scope",
-        "257:77 cannot find 'BLTheme' in scope",
-        "260:99 cannot find 'BLTheme' in scope",
-        "268:101 cannot find 'BLTheme' in scope",
-        "275:95 cannot find 'BLTheme' in scope",
-        "278:105 cannot find 'BLTheme' in scope",
-        "284:21 cannot find 'GoldButton' in scope"
+        "251:6 generic struct 'ObservedObject' requires that 'LeadDBSubscriptionStore' conform to 'ObservableObject'",
+        "265:77 cannot find 'BLTheme' in scope",
+        "268:99 cannot find 'BLTheme' in scope",
+        "276:101 cannot find 'BLTheme' in scope",
+        "283:95 cannot find 'BLTheme' in scope",
+        "286:105 cannot find 'BLTheme' in scope",
+        "292:21 cannot find 'GoldButton' in scope",
+        "296:21 cannot find 'GhostButton' in scope"
       ],
-      "errorCount": 15,
-      "isolatedInPass": 48,
+      "errorCount": 14,
+      "isolatedInPass": 27,
       "whole": false,
       "isolatedLoc": 262,
       "status": "partial"
@@ -2468,6 +2553,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "23:15 cannot find type 'Color' in scope",
@@ -2479,8 +2565,8 @@
         "26:27 cannot find 'BLTheme' in scope",
         "26:61 cannot find 'BLTheme' in scope"
       ],
-      "errorCount": 36,
-      "isolatedInPass": 30,
+      "errorCount": 26,
+      "isolatedInPass": 2,
       "whole": false,
       "isolatedLoc": 241,
       "status": "partial"
@@ -2493,15 +2579,17 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "124:11 cannot find type 'AppModel' in scope",
         "49:30 cannot find type 'Lead' in scope",
         "55:34 cannot find type 'Lead' in scope",
-        "75:55 cannot find type 'Lead' in scope"
+        "75:55 cannot find type 'Lead' in scope",
+        "124:11 cannot find type 'AppModel' in scope",
+        "127:49 cannot find type 'Lead' in scope"
       ],
-      "errorCount": 4,
-      "isolatedInPass": 13,
+      "errorCount": 5,
+      "isolatedInPass": 5,
       "whole": false,
       "isolatedLoc": 77,
       "status": "partial"
@@ -2521,28 +2609,36 @@
         },
         {
           "line": 12,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
-        "SwiftUI",
+        "SwiftUI"
+      ],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "147:18 cannot find type 'DealStage' in scope",
-        "147:31 cannot find 'DealStage' in scope",
-        "122:8 type 'LeadEngineSettings' does not conform to protocol 'Encodable'",
-        "207:33 cannot find 'DealStage' in scope",
-        "207:25 no exact matches in call to instance method 'decode'",
-        "207:68 binary operator '??' cannot be applied to operands of type 'Bool?' and '[Any]'",
-        "208:30 cannot find 'DealStage' in scope",
-        "236:30 cannot find type 'LeadEngineSettings' in scope"
+        "157:18 cannot find type 'DealStage' in scope",
+        "157:31 cannot find 'DealStage' in scope",
+        "132:8 type 'LeadEngineSettings' does not conform to protocol 'Encodable'",
+        "217:33 cannot find 'DealStage' in scope",
+        "217:25 no exact matches in call to instance method 'decode'",
+        "217:68 binary operator '??' cannot be applied to operands of type 'Bool?' and '[Any]'",
+        "218:30 cannot find 'DealStage' in scope",
+        "246:30 cannot find type 'LeadEngineSettings' in scope"
       ],
       "errorCount": 16,
-      "isolatedInPass": 32,
+      "isolatedInPass": 5,
       "whole": false,
       "isolatedLoc": 141,
       "status": "partial"
@@ -2562,12 +2658,13 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "147:50 cannot find 'ConsentedEgress' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 15,
+      "isolatedInPass": 51,
       "whole": false,
       "isolatedLoc": 121,
       "status": "partial"
@@ -2580,6 +2677,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "232:21 cannot find type 'Lead' in scope",
@@ -2592,7 +2690,7 @@
         "322:21 cannot find type 'Lead' in scope"
       ],
       "errorCount": 8,
-      "isolatedInPass": 38,
+      "isolatedInPass": 5,
       "whole": true,
       "isolatedLoc": 293,
       "status": "needs-windows-part"
@@ -2620,6 +2718,9 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "18:6 unknown attribute 'EnvironmentObject'",
@@ -2631,8 +2732,8 @@
         "25:6 unknown attribute 'State'",
         "26:6 unknown attribute 'State'"
       ],
-      "errorCount": 129,
-      "isolatedInPass": 5,
+      "errorCount": 115,
+      "isolatedInPass": 2,
       "whole": true,
       "isolatedLoc": 216,
       "status": "needs-windows-part"
@@ -2654,6 +2755,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "13:6 unknown attribute 'EnvironmentObject'",
@@ -2665,8 +2767,8 @@
         "70:80 cannot find type 'View' in scope",
         "70:6 unknown attribute 'ViewBuilder'"
       ],
-      "errorCount": 142,
-      "isolatedInPass": 1,
+      "errorCount": 194,
+      "isolatedInPass": 2,
       "whole": true,
       "isolatedLoc": 356,
       "status": "needs-windows-part"
@@ -2679,19 +2781,20 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "98:36 cannot find type 'AppModel' in scope",
-        "21:21 cannot find type 'Lead' in scope",
         "24:22 cannot find type 'Activity' in scope",
         "27:23 cannot find type 'Enrollment' in scope",
         "20:16 type 'LeadsAppDataBox' does not conform to protocol 'Encodable'",
-        "39:37 cannot find 'Lead' in scope",
-        "39:29 no exact matches in call to instance method 'decode'",
-        "39:70 binary operator '??' cannot be applied to operands of type 'Bool?' and '[Any]'"
+        "42:38 cannot find 'Activity' in scope",
+        "42:30 no exact matches in call to instance method 'decode'",
+        "42:76 binary operator '??' cannot be applied to operands of type 'Bool?' and '[Any]'",
+        "45:39 cannot find 'Enrollment' in scope",
+        "45:31 no exact matches in call to instance method 'decode'"
       ],
-      "errorCount": 16,
-      "isolatedInPass": 13,
+      "errorCount": 18,
+      "isolatedInPass": 3,
       "whole": false,
       "isolatedLoc": 143,
       "status": "partial"
@@ -2704,6 +2807,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2725,6 +2829,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "14:6 unknown attribute 'Binding'",
@@ -2751,12 +2856,13 @@
       "changes": [
         {
           "line": 27,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -2780,6 +2886,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "10:14 cannot find type 'Section' in scope",
@@ -2805,6 +2912,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2826,6 +2934,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "17:6 unknown attribute 'EnvironmentObject'",
@@ -2858,13 +2967,14 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "228:29 cannot find type 'AppModel' in scope",
         "341:60 cannot find type 'AppModel' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 13,
+      "isolatedInPass": 4,
       "whole": false,
       "isolatedLoc": 183,
       "status": "partial"
@@ -2877,6 +2987,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2896,12 +3007,13 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "177:50 cannot find 'ConsentedEgress' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 41,
+      "isolatedInPass": 53,
       "whole": false,
       "isolatedLoc": 126,
       "status": "partial"
@@ -2924,24 +3036,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "175:28 cannot find type 'ReelProject' in scope",
-        "796:20 cannot find type 'HoloTheme' in scope",
-        "798:23 cannot find type 'HoloPreset' in scope",
-        "779:8 type 'MarketingPrefsSnapshot' does not conform to protocol 'Decodable'",
-        "711:17 cannot find type 'ReelProject' in scope",
-        "714:24 cannot find type 'Lead' in scope",
-        "717:22 cannot find type 'Activity' in scope",
-        "720:23 cannot find type 'Enrollment' in scope"
+        "190:33 cannot find type 'Activity' in scope",
+        "722:24 cannot find type 'Lead' in scope",
+        "725:22 cannot find type 'Activity' in scope",
+        "728:23 cannot find type 'Enrollment' in scope",
+        "708:8 type 'MarketingDataSnapshot' does not conform to protocol 'Decodable'",
+        "753:17 cannot find type 'AppModel' in scope",
+        "708:8 type 'MarketingDataSnapshot' does not conform to protocol 'Encodable'",
+        "708:8 type 'MarketingDataSnapshot' does not conform to protocol 'Hashable'"
       ],
-      "errorCount": 29,
-      "isolatedInPass": 10,
+      "errorCount": 21,
+      "isolatedInPass": 3,
       "whole": true,
       "isolatedLoc": 2009,
       "status": "needs-windows-part"
@@ -2954,19 +3073,14 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "13:31 cannot find type 'AppModel' in scope",
-        "13:51 cannot find type 'LeadEngineSettings' in scope",
-        "29:35 cannot find 'CloudflareMailer' in scope",
-        "47:50 cannot find 'NewsletterDeliveryProgress' in scope",
-        "49:29 cannot find 'NewsletterDeliveryProgress' in scope",
-        "66:67 cannot find 'CloudflareMailer' in scope",
-        "67:27 cannot find 'CloudflareMailer' in scope",
-        "69:57 cannot find 'CloudflareMailer' in scope"
+        "13:51 cannot find type 'LeadEngineSettings' in scope"
       ],
-      "errorCount": 9,
-      "isolatedInPass": 41,
+      "errorCount": 2,
+      "isolatedInPass": 7,
       "whole": true,
       "isolatedLoc": 86,
       "status": "needs-windows-part"
@@ -2979,6 +3093,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2991,16 +3106,20 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
+        "26:48 cannot find type 'LeadEngineSettings' in scope",
         "41:29 cannot find type 'AppModel' in scope",
-        "141:31 cannot find type 'AppModel' in scope",
-        "141:51 cannot find type 'LeadEngineSettings' in scope",
-        "155:30 value of type 'Any' has no member 'kind'",
-        "165:27 cannot find 'OutboundMailer' in scope"
+        "41:49 cannot find type 'LeadEngineSettings' in scope",
+        "115:76 cannot find type 'AppModel' in scope",
+        "139:31 cannot find type 'AppModel' in scope",
+        "139:51 cannot find type 'LeadEngineSettings' in scope",
+        "47:72 cannot infer contextual base in reference to member 'bounced'",
+        "153:30 value of type 'Any' has no member 'kind'"
       ],
-      "errorCount": 5,
-      "isolatedInPass": 21,
+      "errorCount": 8,
+      "isolatedInPass": 7,
       "whole": true,
       "isolatedLoc": 166,
       "status": "needs-windows-part"
@@ -3013,19 +3132,20 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
+        "138:47 cannot find type 'LeadEngineSettings' in scope",
         "29:49 cannot find type 'Lead' in scope",
         "45:29 cannot find type 'Lead' in scope",
-        "140:47 cannot find type 'LeadEngineSettings' in scope",
-        "353:35 cannot find type 'Lead' in scope",
-        "353:51 cannot find type 'LeadEngineSettings' in scope",
-        "410:26 cannot find type 'RawEgressStream' in scope",
-        "134:18 cannot find 'ConsentedEgress' in scope",
-        "136:22 cannot find 'ConsentedEgress' in scope"
+        "60:32 cannot find type 'Lead' in scope",
+        "68:62 cannot find type 'Lead' in scope",
+        "351:35 cannot find type 'Lead' in scope",
+        "351:51 cannot find type 'LeadEngineSettings' in scope",
+        "46:47 cannot find 'OutreachEngine' in scope"
       ],
-      "errorCount": 14,
-      "isolatedInPass": 40,
+      "errorCount": 13,
+      "isolatedInPass": 7,
       "whole": true,
       "isolatedLoc": 540,
       "status": "needs-windows-part"
@@ -3038,12 +3158,13 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "138:28 value of type 'String' has no member 'capitalizedFirst'"
       ],
       "errorCount": 1,
-      "isolatedInPass": 51,
+      "isolatedInPass": 30,
       "whole": false,
       "isolatedLoc": 103,
       "status": "partial"
@@ -3063,12 +3184,13 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "323:11 cannot find type 'AppModel' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 51,
+      "isolatedInPass": 12,
       "whole": false,
       "isolatedLoc": 27,
       "status": "partial"
@@ -3090,6 +3212,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "19:25 unknown attribute 'Binding'",
@@ -3101,8 +3224,8 @@
         "51:35 cannot find type 'AppModel' in scope",
         "51:6 unknown attribute 'EnvironmentObject'"
       ],
-      "errorCount": 852,
-      "isolatedInPass": 60,
+      "errorCount": 804,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 1079,
       "status": "needs-windows-part"
@@ -3122,16 +3245,15 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "76:36 cannot find type 'ScheduledPost' in scope",
-        "585:33 cannot find type 'ScheduledPost' in scope",
         "82:16 cannot find 'SocialPublisher' in scope",
-        "495:42 cannot find 'ConsentedEgress' in scope",
-        "500:39 cannot find 'SocialPublishService' in scope"
+        "587:33 cannot find type 'ScheduledPost' in scope",
+        "497:42 cannot find 'ConsentedEgress' in scope"
       ],
-      "errorCount": 5,
-      "isolatedInPass": 59,
+      "errorCount": 3,
+      "isolatedInPass": 12,
       "whole": false,
       "isolatedLoc": 200,
       "status": "partial"
@@ -3153,6 +3275,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "11:35 cannot find type 'AppModel' in scope",
@@ -3164,8 +3287,8 @@
         "17:6 unknown attribute 'State'",
         "31:20 cannot find type 'View' in scope"
       ],
-      "errorCount": 120,
-      "isolatedInPass": 35,
+      "errorCount": 116,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 299,
       "status": "needs-windows-part"
@@ -3182,24 +3305,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "104:16 cannot find type 'Color' in scope",
-        "156:31 cannot find type 'HoloTheme' in scope",
-        "159:34 cannot find type 'HoloPreset' in scope",
-        "175:22 cannot find type 'Color' in scope",
-        "197:24 cannot find type 'HoloTheme' in scope",
-        "199:27 cannot find type 'HoloPreset' in scope",
-        "182:20 type 'Prefs.Box' does not conform to protocol 'Decodable'",
-        "182:20 type 'Prefs.Box' does not conform to protocol 'Encodable'"
+        "112:16 cannot find type 'Color' in scope",
+        "183:22 cannot find type 'Color' in scope",
+        "112:24 cannot find 'Color' in scope",
+        "183:53 cannot find 'Color' in scope",
+        "36:11 cannot find type 'Prefs' in scope",
+        "124:17 cannot find type 'AccentChoice' in scope",
+        "119:8 type 'BrandProfile' does not conform to protocol 'Decodable'",
+        "119:8 type 'BrandProfile' does not conform to protocol 'Encodable'"
       ],
-      "errorCount": 26,
-      "isolatedInPass": 35,
+      "errorCount": 10,
+      "isolatedInPass": 12,
       "whole": false,
       "isolatedLoc": 280,
       "status": "partial"
@@ -3228,19 +3358,20 @@
         "SwiftUI",
         "CoreText"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "53:77 cannot find type 'Font' in scope",
-        "53:50 cannot find type 'Font' in scope",
         "59:74 cannot find type 'Font' in scope",
         "59:47 cannot find type 'Font' in scope",
+        "53:77 cannot find type 'Font' in scope",
+        "53:50 cannot find type 'Font' in scope",
         "78:11 cannot find type 'BLTheme' in scope",
         "98:17 cannot find type 'Font' in scope",
         "100:42 type annotation missing in pattern",
         "100:6 unknown attribute 'Environment'"
       ],
       "errorCount": 75,
-      "isolatedInPass": 4,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 206,
       "status": "needs-windows-part"
@@ -3253,6 +3384,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3265,6 +3397,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3292,19 +3425,22 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
+        "34:31 cannot find type 'AppModel' in scope",
+        "129:35 cannot find type 'AppModel' in scope",
         "129:6 unknown attribute 'EnvironmentObject'",
         "131:20 cannot find type 'View' in scope",
         "148:38 cannot find type 'View' in scope",
+        "195:37 cannot find type 'ScheduledPost' in scope",
         "198:50 cannot find type 'Color' in scope",
-        "128:32 cannot find type 'View' in scope",
-        "209:6 unknown attribute 'EnvironmentObject'",
-        "214:6 unknown attribute 'State'",
-        "215:6 unknown attribute 'State'"
+        "128:32 cannot find type 'View' in scope"
       ],
-      "errorCount": 155,
-      "isolatedInPass": 4,
+      "errorCount": 29,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 447,
       "status": "needs-windows-part"
@@ -3327,12 +3463,19 @@
           "kind": "guarded-import",
           "module": "AVFoundation",
           "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI",
         "AVFoundation"
       ],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -3354,6 +3497,7 @@
       "guardedModules": [
         "AVFoundation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "283:81 cannot find type 'AVAssetTrack' in scope",
@@ -3366,7 +3510,7 @@
         "168:22 cannot find 'AVURLAsset' in scope"
       ],
       "errorCount": 33,
-      "isolatedInPass": 4,
+      "isolatedInPass": 25,
       "whole": false,
       "isolatedLoc": 203,
       "status": "partial"
@@ -3379,6 +3523,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "115:38 cannot find type 'ReelProject' in scope",
@@ -3386,7 +3531,7 @@
         "138:43 cannot infer contextual base in reference to member 'script'"
       ],
       "errorCount": 3,
-      "isolatedInPass": 8,
+      "isolatedInPass": 26,
       "whole": false,
       "isolatedLoc": 133,
       "status": "partial"
@@ -3408,19 +3553,14 @@
       "guardedModules": [
         "CoreImage"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "34:38 cannot find type 'CIImage' in scope",
-        "34:26 cannot find type 'CIImage' in scope",
-        "106:41 cannot find type 'CGImage' in scope",
-        "43:33 cannot find 'CIVector' in scope",
-        "44:39 cannot find 'CIVector' in scope",
-        "49:17 cannot find 'kCIInputContrastKey' in scope",
-        "50:17 cannot find 'kCIInputSaturationKey' in scope",
-        "51:17 cannot find 'kCIInputBrightnessKey' in scope"
+        "34:26 cannot find type 'CIImage' in scope"
       ],
-      "errorCount": 12,
-      "isolatedInPass": 4,
+      "errorCount": 2,
+      "isolatedInPass": 17,
       "whole": true,
       "isolatedLoc": 162,
       "status": "needs-windows-part"
@@ -3463,19 +3603,20 @@
         "CoreImage",
         "ImageIO"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "374:16 cannot find type 'ReelColorGrade' in scope",
-        "274:11 cannot find type 'ReelProject' in scope",
-        "410:11 cannot find type 'ReelProject' in scope",
-        "557:33 cannot find type 'ReelProject' in scope",
-        "776:44 cannot find type 'ReelProject' in scope",
-        "823:41 cannot find type 'ReelProject' in scope",
-        "871:37 cannot find type 'ReelColorGrade' in scope",
-        "894:42 cannot find type 'ReelColorGrade' in scope"
+        "382:17 cannot find type 'ReelColorGrade' in scope",
+        "362:8 type 'ReelProject' does not conform to protocol 'Encodable'",
+        "362:8 type 'ReelProject' does not conform to protocol 'Hashable'",
+        "362:8 type 'ReelProject' does not conform to protocol 'Equatable'",
+        "869:37 cannot find type 'ReelColorGrade' in scope",
+        "892:42 cannot find type 'ReelColorGrade' in scope",
+        "1334:46 cannot find type 'ReelColorGrade' in scope"
       ],
-      "errorCount": 41,
-      "isolatedInPass": 6,
+      "errorCount": 34,
+      "isolatedInPass": 25,
       "whole": false,
       "isolatedLoc": 915,
       "status": "partial"
@@ -3497,6 +3638,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "9:6 unknown attribute 'Binding'",
@@ -3509,7 +3651,7 @@
         "8:30 cannot find type 'View' in scope"
       ],
       "errorCount": 111,
-      "isolatedInPass": 54,
+      "isolatedInPass": 25,
       "whole": true,
       "isolatedLoc": 175,
       "status": "needs-windows-part"
@@ -3531,6 +3673,7 @@
       "guardedModules": [
         "CoreGraphics"
       ],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -3566,10 +3709,11 @@
         "CoreGraphics",
         "CoreImage"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "269:37 cannot find type 'ReelProject' in scope",
-        "298:34 cannot find type 'ReelProject' in scope",
+        "184:94 cannot find type 'CGImage' in scope",
+        "184:68 cannot find type 'ReelColorGrade' in scope",
         "102:73 cannot find type 'AVAssetTrack' in scope",
         "102:37 cannot find type 'AVURLAsset' in scope",
         "102:57 cannot find type 'AVMediaType' in scope",
@@ -3577,8 +3721,8 @@
         "109:35 cannot find type 'AVURLAsset' in scope",
         "116:45 cannot find type 'AVAssetTrack' in scope"
       ],
-      "errorCount": 22,
-      "isolatedInPass": 54,
+      "errorCount": 49,
+      "isolatedInPass": 25,
       "whole": false,
       "isolatedLoc": 289,
       "status": "partial"
@@ -3598,15 +3742,14 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "109:42 cannot find 'ConsentedEgress' in scope",
-        "164:47 cannot find 'ConsentedEgress' in scope",
         "251:22 cannot find 'ReelAudio' in scope",
         "252:45 cannot find 'ReelAudio' in scope"
       ],
-      "errorCount": 4,
-      "isolatedInPass": 67,
+      "errorCount": 2,
+      "isolatedInPass": 33,
       "whole": true,
       "isolatedLoc": 586,
       "status": "needs-windows-part"
@@ -3619,6 +3762,12 @@
       "rewritten": true,
       "changes": [
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 1,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -3626,19 +3775,20 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "294:93 cannot find 'BLTheme' in scope",
-        "300:48 cannot find 'BLTheme' in scope",
-        "308:25 cannot find 'GhostButton' in scope",
-        "311:25 cannot find 'StatusPill' in scope",
-        "312:86 cannot find 'BLTheme' in scope",
-        "312:102 cannot find 'BLTheme' in scope",
-        "320:101 cannot find 'BLTheme' in scope",
-        "330:21 cannot find 'GoldButton' in scope"
+        "78:29 cannot find type 'ReferenceReelAsset' in scope",
+        "218:61 cannot find type 'ReferenceReelAsset' in scope",
+        "286:6 generic struct 'StateObject' requires that 'ReferenceReelBuilderModel' conform to 'ObservableObject'",
+        "453:49 cannot find type 'ReferenceReelAsset' in scope",
+        "493:65 cannot find type 'ReferenceReelAsset' in scope",
+        "26:48 cannot find 'ReferenceReelError' in scope",
+        "47:48 cannot find 'InstalledMarketingAppMarks' in scope",
+        "48:42 cannot find 'ReferenceReelError' in scope"
       ],
-      "errorCount": 42,
-      "isolatedInPass": 67,
+      "errorCount": 68,
+      "isolatedInPass": 35,
       "whole": true,
       "isolatedLoc": 450,
       "status": "needs-windows-part"
@@ -3658,13 +3808,14 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "46:47 cannot find 'ConsentedEgress' in scope",
         "53:62 reference to member 'fileSizeKey' cannot be resolved without a contextual type"
       ],
       "errorCount": 2,
-      "isolatedInPass": 67,
+      "isolatedInPass": 52,
       "whole": false,
       "isolatedLoc": 38,
       "status": "partial"
@@ -3686,15 +3837,15 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "54:108 cannot find type 'ScheduledPost' in scope",
         "54:38 cannot find type 'ScheduledPost' in scope",
-        "108:11 cannot find type 'AppModel' in scope",
-        "56:25 cannot find type 'ScheduledPost' in scope"
+        "108:11 cannot find type 'AppModel' in scope"
       ],
-      "errorCount": 4,
-      "isolatedInPass": 58,
+      "errorCount": 3,
+      "isolatedInPass": 36,
       "whole": false,
       "isolatedLoc": 28,
       "status": "partial"
@@ -3704,22 +3855,23 @@
       "lang": "swift",
       "loc": 785,
       "before": "guarded",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "600:62 cannot find 'BLTheme' in scope",
-        "603:46 cannot find 'BLTheme' in scope",
-        "606:46 cannot find 'BLTheme' in scope",
-        "636:64 cannot find 'BLTheme' in scope",
-        "642:35 cannot find 'BLFonts' in scope",
-        "642:83 cannot find 'BLTheme' in scope",
-        "649:42 cannot find 'BLTheme' in scope",
-        "660:27 cannot find 'BLTheme' in scope"
+        "580:6 generic struct 'ObservedObject' requires that 'MarketingScreenRecorder' conform to 'ObservableObject'"
       ],
-      "errorCount": 31,
-      "isolatedInPass": 58,
+      "errorCount": 1,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 785,
       "status": "needs-windows-part"
@@ -3754,6 +3906,9 @@
         "SwiftUI",
         "WebKit"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "24:20 cannot find type 'View' in scope",
@@ -3765,8 +3920,8 @@
         "42:21 cannot find type 'NSViewRepresentable' in scope",
         "79:14 cannot find type 'Section' in scope"
       ],
-      "errorCount": 194,
-      "isolatedInPass": 68,
+      "errorCount": 193,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 2270,
       "status": "needs-windows-part"
@@ -3786,16 +3941,13 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "252:31 cannot find 'GA4Analytics' in scope",
-        "255:39 cannot find 'GA4Analytics' in scope",
-        "265:31 cannot find 'GA4Analytics' in scope",
-        "268:39 cannot find 'GA4Analytics' in scope",
         "314:43 cannot find 'ConsentedEgress' in scope"
       ],
-      "errorCount": 5,
-      "isolatedInPass": 43,
+      "errorCount": 1,
+      "isolatedInPass": 39,
       "whole": false,
       "isolatedLoc": 203,
       "status": "partial"
@@ -3809,9 +3961,9 @@
       "changes": [
         {
           "line": 18,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 17,
@@ -3820,7 +3972,8 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -3842,12 +3995,13 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "246:39 cannot find 'ConsentedEgress' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 58,
+      "isolatedInPass": 56,
       "whole": false,
       "isolatedLoc": 31,
       "status": "partial"
@@ -3869,6 +4023,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "15:41 cannot find type 'Color' in scope",
@@ -3881,7 +4036,7 @@
         "30:6 unknown attribute 'State'"
       ],
       "errorCount": 321,
-      "isolatedInPass": 58,
+      "isolatedInPass": 35,
       "whole": true,
       "isolatedLoc": 449,
       "status": "needs-windows-part"
@@ -3894,6 +4049,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "20:31 cannot find type 'AppModel' in scope",
@@ -3905,8 +4061,8 @@
         "40:51 cannot infer contextual base in reference to member 'stopped_manual'",
         "44:52 cannot infer contextual base in reference to member 'replied'"
       ],
-      "errorCount": 18,
-      "isolatedInPass": 40,
+      "errorCount": 20,
+      "isolatedInPass": 15,
       "whole": true,
       "isolatedLoc": 119,
       "status": "needs-windows-part"
@@ -3920,12 +4076,13 @@
       "changes": [
         {
           "line": 20,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -3941,9 +4098,9 @@
       "changes": [
         {
           "line": 22,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 21,
@@ -3952,22 +4109,23 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "415:39 cannot find 'ConsentedEgress' in scope",
-        "421:47 cannot find 'ConsentedEgress' in scope",
-        "437:42 cannot find 'ConsentedEgress' in scope",
-        "450:45 cannot find 'ConsentedEgress' in scope",
-        "459:28 cannot find 'ConsentedEgress' in scope",
-        "468:45 cannot find 'ConsentedEgress' in scope",
-        "527:42 cannot find 'ConsentedEgress' in scope",
-        "553:42 cannot find 'ConsentedEgress' in scope"
+        "417:39 cannot find 'ConsentedEgress' in scope",
+        "423:47 cannot find 'ConsentedEgress' in scope",
+        "439:42 cannot find 'ConsentedEgress' in scope",
+        "452:45 cannot find 'ConsentedEgress' in scope",
+        "461:28 cannot find 'ConsentedEgress' in scope",
+        "470:45 cannot find 'ConsentedEgress' in scope",
+        "529:42 cannot find 'ConsentedEgress' in scope",
+        "555:42 cannot find 'ConsentedEgress' in scope"
       ],
       "errorCount": 11,
-      "isolatedInPass": 18,
+      "isolatedInPass": 57,
       "whole": false,
       "isolatedLoc": 530,
       "status": "partial"
@@ -3989,6 +4147,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "26:6 unknown attribute 'State'",
@@ -4000,8 +4159,8 @@
         "36:6 unknown attribute 'State'",
         "37:6 unknown attribute 'State'"
       ],
-      "errorCount": 200,
-      "isolatedInPass": 7,
+      "errorCount": 181,
+      "isolatedInPass": 9,
       "whole": true,
       "isolatedLoc": 424,
       "status": "needs-windows-part"
@@ -4014,6 +4173,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4027,9 +4187,9 @@
       "changes": [
         {
           "line": 9,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 10,
@@ -4051,22 +4211,24 @@
         }
       ],
       "guardedModules": [
-        "Security",
         "SwiftUI"
+      ],
+      "kitModules": [
+        "Security"
       ],
       "isolated": true,
       "errors": [
-        "470:15 cannot find type 'Color' in scope",
-        "472:40 cannot find 'BLTheme' in scope",
-        "473:41 cannot find 'BLTheme' in scope",
-        "474:61 cannot find 'BLTheme' in scope",
-        "475:50 cannot find 'BLTheme' in scope",
-        "503:94 cannot find type 'SocialPublishReadiness' in scope",
-        "505:20 cannot find 'SocialPublishReadiness' in scope",
-        "514:20 cannot find 'SocialPublishReadiness' in scope"
+        "472:15 cannot find type 'Color' in scope",
+        "613:11 cannot find type 'AppModel' in scope",
+        "474:40 cannot find 'BLTheme' in scope",
+        "475:41 cannot find 'BLTheme' in scope",
+        "476:61 cannot find 'BLTheme' in scope",
+        "477:50 cannot find 'BLTheme' in scope",
+        "505:94 cannot find type 'SocialPublishReadiness' in scope",
+        "507:20 cannot find 'SocialPublishReadiness' in scope"
       ],
       "errorCount": 14,
-      "isolatedInPass": 7,
+      "isolatedInPass": 9,
       "whole": false,
       "isolatedLoc": 184,
       "status": "partial"
@@ -4098,9 +4260,9 @@
         },
         {
           "line": 13,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 1,
@@ -4111,22 +4273,24 @@
       ],
       "guardedModules": [
         "SwiftUI",
-        "AuthenticationServices",
+        "AuthenticationServices"
+      ],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "76:20 cannot find type 'View' in scope",
-        "86:36 cannot find type 'View' in scope",
-        "117:35 cannot find type 'View' in scope",
-        "70:27 cannot find type 'View' in scope",
-        "136:35 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
-        "141:26 cannot find type 'ASWebAuthenticationSession' in scope",
-        "274:73 cannot find type 'ASPresentationAnchor' in scope",
-        "274:42 cannot find type 'ASWebAuthenticationSession' in scope"
+        "78:20 cannot find type 'View' in scope",
+        "88:36 cannot find type 'View' in scope",
+        "119:35 cannot find type 'View' in scope",
+        "72:27 cannot find type 'View' in scope",
+        "138:35 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
+        "143:26 cannot find type 'ASWebAuthenticationSession' in scope",
+        "276:73 cannot find type 'ASPresentationAnchor' in scope",
+        "276:42 cannot find type 'ASWebAuthenticationSession' in scope"
       ],
       "errorCount": 27,
-      "isolatedInPass": 7,
+      "isolatedInPass": 9,
       "whole": false,
       "isolatedLoc": 290,
       "status": "partial"
@@ -4139,6 +4303,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4158,13 +4323,14 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "831:39 cannot find 'ConsentedEgress' in scope",
         "978:42 cannot find 'ConsentedEgress' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 44,
+      "isolatedInPass": 63,
       "whole": false,
       "isolatedLoc": 447,
       "status": "partial"
@@ -4199,13 +4365,22 @@
         "AVFoundation",
         "Speech"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "83:25 cannot find type 'SFSpeechRecognizer' in scope",
-        "84:19 cannot find type 'SFSpeechRecognitionTask' in scope"
+        "84:19 cannot find type 'SFSpeechRecognitionTask' in scope",
+        "101:16 cannot find 'SFSpeechRecognizer' in scope",
+        "118:16 cannot find 'SFSpeechRecognizer' in scope",
+        "122:13 cannot find 'SFSpeechRecognizer' in scope",
+        "123:66 cannot infer contextual base in reference to member 'authorized'",
+        "137:21 cannot find 'AVURLAsset' in scope",
+        "143:30 cannot find 'SFSpeechRecognizer' in scope"
       ],
-      "errorCount": 2,
-      "isolatedInPass": 68,
+      "errorCount": 11,
+      "isolatedInPass": 14,
       "whole": false,
       "isolatedLoc": 208,
       "status": "partial"
@@ -4215,22 +4390,25 @@
       "lang": "swift",
       "loc": 664,
       "before": "guarded",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "265:18 cannot find 'MarketingScreenRecorder' in scope",
-        "412:43 cannot find 'MarketingVirtualSetModel' in scope",
-        "412:6 failed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)",
-        "438:34 cannot find 'BLTheme' in scope",
-        "451:34 cannot find 'BLTheme' in scope",
-        "471:112 cannot find 'BLTheme' in scope",
-        "472:131 cannot find 'BLTheme' in scope",
-        "480:82 cannot find 'BLTheme' in scope"
+        "420:6 generic struct 'ObservedObject' requires that 'MarketingSplitRecorder' conform to 'ObservableObject'",
+        "421:43 cannot find 'MarketingVirtualSetModel' in scope",
+        "421:6 failed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)"
       ],
-      "errorCount": 21,
-      "isolatedInPass": 63,
+      "errorCount": 3,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 664,
       "status": "needs-windows-part"
@@ -4243,6 +4421,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4284,19 +4463,22 @@
         "AVKit",
         "AVFoundation"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "25:35 cannot find type 'AppModel' in scope",
         "26:35 cannot find type 'Prefs' in scope",
         "35:35 cannot find type 'ReelProject' in scope",
         "47:32 cannot find 'ReelColorGrade' in scope",
-        "66:47 cannot find 'MarketingCameraRecorder' in scope",
-        "67:47 cannot find 'MarketingScreenRecorder' in scope",
-        "68:46 cannot find 'MarketingSplitRecorder' in scope",
-        "69:37 cannot find type 'MarketingCaptureMode' in scope"
+        "25:6 unknown attribute 'EnvironmentObject'",
+        "26:6 unknown attribute 'EnvironmentObject'",
+        "28:6 unknown attribute 'State'",
+        "29:6 unknown attribute 'State'"
       ],
-      "errorCount": 1299,
-      "isolatedInPass": 68,
+      "errorCount": 180,
+      "isolatedInPass": 36,
       "whole": true,
       "isolatedLoc": 2286,
       "status": "needs-windows-part"
@@ -4309,6 +4491,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4321,6 +4504,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4333,6 +4517,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4349,24 +4534,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "132:6 unknown attribute 'ObservedObject'",
-        "135:6 unknown attribute 'State'",
-        "137:20 cannot find type 'View' in scope",
-        "156:33 cannot find type 'View' in scope",
-        "164:36 cannot find type 'View' in scope",
-        "201:32 cannot find type 'View' in scope",
-        "235:71 cannot find type 'View' in scope",
-        "131:29 cannot find type 'View' in scope"
+        "140:6 unknown attribute 'ObservedObject'",
+        "143:6 unknown attribute 'State'",
+        "145:20 cannot find type 'View' in scope",
+        "164:33 cannot find type 'View' in scope",
+        "172:36 cannot find type 'View' in scope",
+        "209:32 cannot find type 'View' in scope",
+        "243:71 cannot find type 'View' in scope",
+        "139:29 cannot find type 'View' in scope"
       ],
       "errorCount": 83,
-      "isolatedInPass": 3,
+      "isolatedInPass": 9,
       "whole": false,
       "isolatedLoc": 205,
       "status": "partial"
@@ -4388,18 +4580,19 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "12:25 cannot find 'Color' in scope",
         "16:25 cannot find 'Color' in scope",
-        "13:25 cannot find 'Color' in scope",
-        "19:25 cannot find 'Color' in scope",
-        "11:25 cannot find 'Color' in scope",
         "289:23 cannot find type 'View' in scope",
         "384:97 cannot find type 'GridItem' in scope",
-        "18:25 cannot find 'Color' in scope"
+        "18:25 cannot find 'Color' in scope",
+        "27:22 cannot find type 'Color' in scope",
+        "20:25 cannot find 'Color' in scope",
+        "19:25 cannot find 'Color' in scope"
       ],
-      "errorCount": 160,
+      "errorCount": 158,
       "isolatedInPass": 1,
       "whole": true,
       "isolatedLoc": 416,
@@ -4428,6 +4621,9 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "25:6 unknown attribute 'EnvironmentObject'",
@@ -4440,7 +4636,7 @@
         "221:112 cannot find type 'Binding' in scope"
       ],
       "errorCount": 164,
-      "isolatedInPass": 3,
+      "isolatedInPass": 9,
       "whole": true,
       "isolatedLoc": 321,
       "status": "needs-windows-part"
@@ -4453,6 +4649,12 @@
       "rewritten": true,
       "changes": [
         {
+          "line": 0,
+          "kind": "kit",
+          "module": "Security",
+          "to": "CircuitPortKit Keychain names (the Mac gets them through Foundation)"
+        },
+        {
           "line": 1,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -4460,6 +4662,9 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [
+        "Security"
+      ],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -4472,6 +4677,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4480,10 +4686,11 @@
       "id": "Sources/ViralReelAI.swift",
       "lang": "swift",
       "loc": 101,
-      "before": "ready",
+      "before": "guarded",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4496,15 +4703,15 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "187:34 cannot find type 'MarketingCameraFraming' in scope",
         "282:46 cannot find type 'MarketingCameraFraming' in scope",
-        "299:45 cannot find type 'MarketingCameraFraming' in scope",
-        "300:22 cannot find 'MarketingCameraFraming' in scope"
+        "299:45 cannot find type 'MarketingCameraFraming' in scope"
       ],
-      "errorCount": 4,
-      "isolatedInPass": 66,
+      "errorCount": 3,
+      "isolatedInPass": 64,
       "whole": true,
       "isolatedLoc": 326,
       "status": "needs-windows-part"
@@ -4530,6 +4737,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "65:29 cannot find type 'AppModel' in scope",
@@ -4541,8 +4749,8 @@
         "239:67 cannot find type 'AppModel' in scope",
         "249:53 cannot find type 'Caption' in scope"
       ],
-      "errorCount": 24,
-      "isolatedInPass": 57,
+      "errorCount": 23,
+      "isolatedInPass": 29,
       "whole": false,
       "isolatedLoc": 226,
       "status": "partial"
@@ -4555,6 +4763,12 @@
       "rewritten": true,
       "changes": [
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 1,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -4562,19 +4776,20 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "204:54 cannot find 'BLFonts' in scope",
-        "204:102 cannot find 'BLTheme' in scope",
-        "206:103 cannot find 'BLTheme' in scope",
-        "209:79 cannot find 'BLTheme' in scope",
-        "219:19 cannot find 'BLTheme' in scope",
-        "224:17 cannot find 'GoldButton' in scope",
-        "233:17 cannot find 'GhostButton' in scope",
-        "234:113 cannot find 'BLTheme' in scope"
+        "203:6 generic struct 'ObservedObject' requires that 'MarketingVirtualSetModel' conform to 'ObservableObject'",
+        "213:54 cannot find 'BLFonts' in scope",
+        "213:102 cannot find 'BLTheme' in scope",
+        "215:103 cannot find 'BLTheme' in scope",
+        "218:79 cannot find 'BLTheme' in scope",
+        "228:19 cannot find 'BLTheme' in scope",
+        "233:17 cannot find 'GoldButton' in scope",
+        "242:17 cannot find 'GhostButton' in scope"
       ],
-      "errorCount": 23,
-      "isolatedInPass": 54,
+      "errorCount": 24,
+      "isolatedInPass": 29,
       "whole": true,
       "isolatedLoc": 266,
       "status": "needs-windows-part"
@@ -4596,6 +4811,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "101:28 cannot find type 'ProspectStatus' in scope",
@@ -4608,7 +4824,7 @@
         "183:34 cannot find type 'RuleAction' in scope"
       ],
       "errorCount": 11,
-      "isolatedInPass": 38,
+      "isolatedInPass": 3,
       "whole": false,
       "isolatedLoc": 139,
       "status": "partial"
@@ -4625,24 +4841,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "48:15 cannot find type 'Color' in scope",
-        "48:57 cannot find 'BLTheme' in scope",
-        "48:118 cannot find 'BLTheme' in scope",
-        "72:15 cannot find type 'WorkspaceRole' in scope",
-        "68:8 type 'WorkspaceMember' does not conform to protocol 'Decodable'",
-        "68:8 type 'WorkspaceMember' does not conform to protocol 'Encodable'",
-        "68:8 type 'WorkspaceMember' does not conform to protocol 'Hashable'",
-        "68:8 type 'WorkspaceMember' does not conform to protocol 'Equatable'"
+        "56:15 cannot find type 'Color' in scope",
+        "56:57 cannot find 'BLTheme' in scope",
+        "56:118 cannot find 'BLTheme' in scope",
+        "80:15 cannot find type 'WorkspaceRole' in scope",
+        "76:8 type 'WorkspaceMember' does not conform to protocol 'Decodable'",
+        "76:8 type 'WorkspaceMember' does not conform to protocol 'Encodable'",
+        "76:8 type 'WorkspaceMember' does not conform to protocol 'Hashable'",
+        "76:8 type 'WorkspaceMember' does not conform to protocol 'Equatable'"
       ],
       "errorCount": 22,
-      "isolatedInPass": 54,
+      "isolatedInPass": 29,
       "whole": false,
       "isolatedLoc": 157,
       "status": "partial"
@@ -4662,6 +4885,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"

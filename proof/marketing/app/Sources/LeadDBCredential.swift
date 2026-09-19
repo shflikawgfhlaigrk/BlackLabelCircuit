@@ -26,6 +26,8 @@
 import Foundation
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
 
 enum LeadDBCredential {

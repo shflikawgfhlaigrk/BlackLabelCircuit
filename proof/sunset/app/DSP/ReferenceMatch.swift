@@ -1,3 +1,4 @@
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 // ReferenceMatch.swift — Matchering-style reference matcher: impose a reference track's tonal balance + loudness on the target.
 
 // This is the "make my track sound like the reference" brain. It is pure,
@@ -8,7 +9,9 @@
 // the reference-less path, to a hand-tuned GenreTarget preset.
 
 import Foundation
+#if canImport(Accelerate) && !CIRCUIT_WINDOWS_SIM
 import Accelerate
+#endif
 
 /// Everything the mastering chain needs to make `target` sound like `reference`.
 struct MatchResult {
@@ -256,3 +259,4 @@ enum ReferenceMatcher {
         }
     }
 }
+#endif // circuit-convert

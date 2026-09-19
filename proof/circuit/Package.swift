@@ -12,8 +12,15 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "CircuitPortKit",
+            dependencies: [
+            ],
+            path: "kit/CircuitPortKit"
+        ),
+        .target(
             name: "Circuit_PortCheck_20260918Core",
             dependencies: [
+                "CircuitPortKit",
                 .product(name: "Crypto", package: "swift-crypto"),
             ],
             path: "app",

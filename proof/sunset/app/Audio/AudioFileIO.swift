@@ -6,6 +6,7 @@ import AVFoundation
 #if canImport(AudioToolbox) && !CIRCUIT_WINDOWS_SIM
 import AudioToolbox
 #endif
+import CircuitPortKit
 
 // The shared audio container. Deinterleaved: channels[ch][sample], Float in [-1, 1].
 struct AudioSignal {

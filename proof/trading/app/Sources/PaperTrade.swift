@@ -8,6 +8,14 @@
 // uses to rehearse and to grade their own discipline. Nothing is fabricated: an empty blotter
 // is empty, an open position with no mark shows "no mark", never an invented price.
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 enum PaperStatus: String, Codable { case open, closed }
 

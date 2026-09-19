@@ -1,26 +1,31 @@
 {
-  "root": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Ace-Build85-20260913",
+  "root": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/snap/Ace-Build85-20260913",
   "name": "Ace-Build85-20260913",
   "target": "windows",
-  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/ace",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/new/ace",
   "moduleName": "Ace_Build85_20260913Core",
+  "source": {
+    "sha256": "852d8fa78967a736ebcfa92b07f9071a272da48002e3eca0f234a8c18be521df",
+    "files": 232,
+    "git": null
+  },
   "moduleSources": {
     "from": "--sources",
     "paths": [
       "leanring-buddy"
     ]
   },
-  "generatedAt": 1789716250618,
-  "tookMs": 123940,
+  "generatedAt": 1789781286910,
+  "tookMs": 145004,
   "before": {
-    "readyPct": 17.4,
-    "files": 234,
-    "loc": 121306
+    "readyPct": 17.3,
+    "files": 235,
+    "loc": 121691
   },
   "after": {
-    "readyPct": 82.7,
-    "guardedLoc": 14281,
-    "needsWindowsLoc": 6731
+    "readyPct": 82.9,
+    "guardedLoc": 14137,
+    "needsWindowsLoc": 6751
   },
   "verification": {
     "ran": true,
@@ -33,19 +38,19 @@
       },
       {
         "pass": 2,
-        "isolated": 5
-      },
-      {
-        "pass": 3,
-        "isolated": 1
-      },
-      {
-        "pass": 4,
         "isolated": 2
       },
       {
+        "pass": 3,
+        "isolated": 5
+      },
+      {
+        "pass": 4,
+        "isolated": 1
+      },
+      {
         "pass": 5,
-        "isolated": 3
+        "isolated": 1
       },
       {
         "pass": 6,
@@ -53,19 +58,19 @@
       },
       {
         "pass": 7,
-        "isolated": 2
+        "isolated": 4
       },
       {
         "pass": 8,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 9,
-        "isolated": 5
+        "isolated": 1
       },
       {
         "pass": 10,
-        "isolated": 1
+        "isolated": 5
       },
       {
         "pass": 11,
@@ -73,23 +78,23 @@
       },
       {
         "pass": 12,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 13,
-        "isolated": 5
+        "isolated": 2
       },
       {
         "pass": 14,
-        "isolated": 1
+        "isolated": 5
       },
       {
         "pass": 15,
-        "isolated": 7
+        "isolated": 4
       },
       {
         "pass": 16,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 17,
@@ -97,15 +102,15 @@
       },
       {
         "pass": 18,
-        "isolated": 1
+        "isolated": 5
       },
       {
         "pass": 19,
-        "isolated": 6
+        "isolated": 1
       },
       {
         "pass": 20,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 21,
@@ -113,27 +118,27 @@
       },
       {
         "pass": 22,
-        "isolated": 29
+        "isolated": 1
       },
       {
         "pass": 23,
-        "isolated": 1
+        "isolated": 27
       },
       {
         "pass": 24,
-        "isolated": 3
+        "isolated": 2
       },
       {
         "pass": 25,
-        "isolated": 2
-      },
-      {
-        "pass": 26,
         "isolated": 1
       },
       {
+        "pass": 26,
+        "isolated": 5
+      },
+      {
         "pass": 27,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 28,
@@ -141,7 +146,7 @@
       },
       {
         "pass": 29,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 30,
@@ -153,6 +158,10 @@
       },
       {
         "pass": 32,
+        "isolated": 1
+      },
+      {
+        "pass": 33,
         "isolated": 0
       }
     ],
@@ -163,26 +172,26 @@
   },
   "totals": {
     "all": {
-      "files": 231,
-      "loc": 120483
+      "files": 232,
+      "loc": 120868
     },
     "portable": {
       "files": 115,
-      "loc": 20725
+      "loc": 20758
     },
     "converted": {
-      "files": 36,
-      "loc": 13183
+      "files": 37,
+      "loc": 13321
     },
     "partial": {
       "files": 31,
-      "loc": 27036,
-      "isolatedLoc": 16934,
-      "buildsLoc": 10102
+      "loc": 27185,
+      "isolatedLoc": 17035,
+      "buildsLoc": 10150
     },
     "needsWindowsPart": {
       "files": 49,
-      "loc": 59539
+      "loc": 59604
     },
     "macOnlySkipped": {
       "files": 0,
@@ -192,9 +201,9 @@
       "files": 0,
       "loc": 0
     },
-    "buildsLoc": 44010,
-    "isolatedLoc": 76473,
-    "buildsForWindowsPct": 36.5
+    "buildsLoc": 44229,
+    "isolatedLoc": 76639,
+    "buildsForWindowsPct": 36.6
   },
   "packages": [
     {
@@ -220,56 +229,56 @@
       "windows": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)",
       "effort": "L",
       "files": 22,
-      "loc": 45033
+      "loc": 45010
     },
     {
       "id": "AVFoundation",
       "windows": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)",
       "effort": "L",
       "files": 14,
-      "loc": 42002
+      "loc": 42110
     },
     {
       "id": "Speech",
       "windows": "Windows.Media.SpeechRecognition or an on-device model (whisper.cpp)",
       "effort": "M",
       "files": 8,
-      "loc": 38903
+      "loc": 38912
     },
     {
       "id": "AppKit",
       "windows": "WinUI 3 / Win32 windows, menus and dialogs",
       "effort": "L",
       "files": 37,
-      "loc": 35358
+      "loc": 35450
     },
     {
       "id": "ApplicationServices",
       "windows": "UI Automation (reading and targeting other apps) and SendInput (typing)",
       "effort": "L",
       "files": 12,
-      "loc": 33993
+      "loc": 34012
     },
     {
       "id": "ScreenCaptureKit",
       "windows": "Windows.Graphics.Capture",
       "effort": "L",
       "files": 5,
-      "loc": 29763
+      "loc": 29728
     },
     {
       "id": "(uses code that was isolated)",
       "windows": null,
       "effort": null,
       "files": 17,
-      "loc": 9966
+      "loc": 9974
     },
     {
       "id": "CoreGraphics",
       "windows": "Direct2D / WIC for drawing, Win32 for displays and window lists",
       "effort": "M",
       "files": 8,
-      "loc": 4625
+      "loc": 4620
     },
     {
       "id": "Network",
@@ -290,14 +299,7 @@
       "windows": "a startup task or the HKCU Run key",
       "effort": "S",
       "files": 1,
-      "loc": 1489
-    },
-    {
-      "id": "Security",
-      "windows": "Windows Credential Manager (CredRead/CredWrite) and DPAPI",
-      "effort": "M",
-      "files": 2,
-      "loc": 1464
+      "loc": 1494
     },
     {
       "id": "Vision",
@@ -584,6 +586,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -603,6 +606,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -610,7 +614,7 @@
     {
       "id": "leanring-buddy/AcademicDocumentHeadlessCommand.swift",
       "lang": "swift",
-      "loc": 55,
+      "loc": 77,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -618,10 +622,11 @@
           "line": 2,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -637,10 +642,11 @@
           "line": 2,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -662,13 +668,14 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "7:20 cannot find type 'View' in scope",
         "6:30 cannot find type 'View' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": false,
       "isolatedLoc": 12,
       "status": "partial"
@@ -688,6 +695,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -716,6 +724,7 @@
         "ApplicationServices",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "18:8 type 'AccessibilityVisualTargetCandidate' does not conform to protocol 'Equatable'",
@@ -728,7 +737,7 @@
         "422:23 cannot find type 'AXUIElement' in scope"
       ],
       "errorCount": 30,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 435,
       "status": "needs-windows-part"
@@ -756,17 +765,18 @@
           "line": 22,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [
         "ApplicationServices",
         "CoreGraphics"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "89:10 cannot find type 'CGWindowID' in scope",
-        "88:27 cannot find type 'AXUIElement' in scope"
+        "88:10 cannot find type 'CGWindowID' in scope",
+        "87:27 cannot find type 'AXUIElement' in scope"
       ],
       "errorCount": 2,
       "isolatedInPass": 15,
@@ -789,6 +799,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -804,10 +815,11 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -841,6 +853,7 @@
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -853,6 +866,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -874,10 +888,11 @@
           "line": 25,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -890,6 +905,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -909,6 +925,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -937,6 +954,7 @@
         "AppKit",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "15:5 cannot find type 'NSWindowDelegate' in scope",
@@ -949,7 +967,7 @@
         "43:17 cannot find 'NSApp' in scope"
       ],
       "errorCount": 60,
-      "isolatedInPass": 8,
+      "isolatedInPass": 9,
       "whole": true,
       "isolatedLoc": 321,
       "status": "needs-windows-part"
@@ -962,6 +980,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -974,6 +993,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -993,6 +1013,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1012,6 +1033,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1024,6 +1046,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1036,6 +1059,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1048,6 +1072,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1060,6 +1085,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1085,6 +1111,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1097,6 +1124,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1109,6 +1137,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1124,7 +1153,7 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         },
         {
           "line": 2,
@@ -1134,6 +1163,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1141,7 +1171,7 @@
     {
       "id": "leanring-buddy/AceIntroWindow.swift",
       "lang": "swift",
-      "loc": 2041,
+      "loc": 2048,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -1196,6 +1226,7 @@
         "Speech",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "75:49 cannot find type 'NSWindowDelegate' in scope",
@@ -1207,10 +1238,10 @@
         "246:20 cannot find type 'View' in scope",
         "406:30 cannot find type 'View' in scope"
       ],
-      "errorCount": 473,
-      "isolatedInPass": 15,
+      "errorCount": 481,
+      "isolatedInPass": 22,
       "whole": true,
-      "isolatedLoc": 2041,
+      "isolatedLoc": 2048,
       "status": "needs-windows-part"
     },
     {
@@ -1221,6 +1252,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1242,6 +1274,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "8:6 unknown attribute 'ObservedObject'",
@@ -1254,7 +1287,7 @@
         "15:13 cannot find 'Picker' in scope"
       ],
       "errorCount": 18,
-      "isolatedInPass": 15,
+      "isolatedInPass": 16,
       "whole": true,
       "isolatedLoc": 44,
       "status": "needs-windows-part"
@@ -1302,6 +1335,7 @@
         "IOKit",
         "Network"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "505:37 cannot find type 'NWPathMonitor' in scope",
@@ -1311,10 +1345,10 @@
         "870:25 cannot infer type of closure parameter '_' without a type annotation",
         "873:23 cannot find 'NWPathMonitor' in scope",
         "874:51 cannot infer type of closure parameter 'path' without a type annotation",
-        "1117:13 cannot find 'AceDeviceAuthorizationWindowController' in scope"
+        "977:13 cannot find 'FirstRunFailureReporter' in scope"
       ],
-      "errorCount": 19,
-      "isolatedInPass": 15,
+      "errorCount": 24,
+      "isolatedInPass": 16,
       "whole": false,
       "isolatedLoc": 1567,
       "status": "partial"
@@ -1327,6 +1361,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1339,6 +1374,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1354,16 +1390,17 @@
           "line": 15,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "228:36 cannot find 'AceLocalVisionOCR' in scope"
+        "227:36 cannot find 'AceLocalVisionOCR' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 10,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 735,
       "status": "needs-windows-part"
@@ -1376,6 +1413,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1388,6 +1426,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1423,6 +1462,7 @@
         "ImageIO",
         "Vision"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "54:47 value of type 'CGRect' has no member 'width'",
@@ -1435,7 +1475,7 @@
         "94:37 cannot infer contextual base in reference to member 'accurate'"
       ],
       "errorCount": 12,
-      "isolatedInPass": 9,
+      "isolatedInPass": 10,
       "whole": false,
       "isolatedLoc": 100,
       "status": "partial"
@@ -1457,6 +1497,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "22:32 cannot find type 'View' in scope",
@@ -1491,6 +1532,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "12:59 type annotation missing in pattern",
@@ -1503,7 +1545,7 @@
         "114:24 cannot find type 'View' in scope"
       ],
       "errorCount": 88,
-      "isolatedInPass": 9,
+      "isolatedInPass": 10,
       "whole": true,
       "isolatedLoc": 299,
       "status": "needs-windows-part"
@@ -1525,6 +1567,7 @@
       "guardedModules": [
         "CoreGraphics"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "32:20 type 'AceFlightFrame' does not conform to protocol 'Equatable'",
@@ -1537,7 +1580,7 @@
         "122:23 value of type 'CGRect' has no member 'width'"
       ],
       "errorCount": 43,
-      "isolatedInPass": 9,
+      "isolatedInPass": 10,
       "whole": false,
       "isolatedLoc": 143,
       "status": "partial"
@@ -1545,7 +1588,7 @@
     {
       "id": "leanring-buddy/AceNativeUpdate.swift",
       "lang": "swift",
-      "loc": 275,
+      "loc": 271,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -1578,27 +1621,28 @@
         "AppKit",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "35:24 cannot find type 'NSPanel' in scope",
-        "276:6 unknown attribute 'ObservedObject'",
-        "277:20 cannot find type 'View' in scope",
-        "275:37 cannot find type 'View' in scope",
+        "272:6 unknown attribute 'ObservedObject'",
+        "273:20 cannot find type 'View' in scope",
+        "271:37 cannot find type 'View' in scope",
         "44:16 cannot find 'StealthVisibilityGate' in scope",
         "75:29 cannot find 'NSPanel' in scope",
         "81:37 cannot find 'AceHostingView' in scope",
         "104:22 cannot find type 'InstallLocation' in scope"
       ],
       "errorCount": 21,
-      "isolatedInPass": 9,
+      "isolatedInPass": 10,
       "whole": true,
-      "isolatedLoc": 275,
+      "isolatedLoc": 271,
       "status": "needs-windows-part"
     },
     {
       "id": "leanring-buddy/AceNativeUpdateArtifact.swift",
       "lang": "swift",
-      "loc": 155,
+      "loc": 173,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -1610,12 +1654,13 @@
         },
         {
           "line": 3,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -1637,6 +1682,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1649,6 +1695,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1661,6 +1708,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1680,6 +1728,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1699,6 +1748,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1740,6 +1790,7 @@
         "AppKit",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "50:22 cannot find type 'Color' in scope",
@@ -1752,7 +1803,7 @@
         "310:32 cannot find type 'NSWindow' in scope"
       ],
       "errorCount": 149,
-      "isolatedInPass": 13,
+      "isolatedInPass": 14,
       "whole": true,
       "isolatedLoc": 952,
       "status": "needs-windows-part"
@@ -1765,6 +1816,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1798,6 +1850,7 @@
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "230:23 cannot find type 'AceNativeUpdateOutcome' in scope",
@@ -1810,7 +1863,7 @@
         "238:21 cannot find 'NSAlert' in scope"
       ],
       "errorCount": 11,
-      "isolatedInPass": 13,
+      "isolatedInPass": 14,
       "whole": true,
       "isolatedLoc": 274,
       "status": "needs-windows-part"
@@ -1823,6 +1876,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1835,6 +1889,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1850,10 +1905,11 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1869,7 +1925,7 @@
           "line": 10,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         },
         {
           "line": 11,
@@ -1879,17 +1935,18 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "248:16 cannot find 'StealthVisibilityGate' in scope",
-        "265:20 cannot find 'StealthVisibilityGate' in scope",
-        "325:16 cannot find 'StealthVisibilityGate' in scope",
-        "560:17 cannot find 'StealthVisibilityGate' in scope",
-        "709:16 cannot find 'StealthVisibilityGate' in scope",
-        "804:16 cannot find 'StealthVisibilityGate' in scope"
+        "247:16 cannot find 'StealthVisibilityGate' in scope",
+        "264:20 cannot find 'StealthVisibilityGate' in scope",
+        "324:16 cannot find 'StealthVisibilityGate' in scope",
+        "559:17 cannot find 'StealthVisibilityGate' in scope",
+        "708:16 cannot find 'StealthVisibilityGate' in scope",
+        "803:16 cannot find 'StealthVisibilityGate' in scope"
       ],
       "errorCount": 6,
-      "isolatedInPass": 13,
+      "isolatedInPass": 14,
       "whole": false,
       "isolatedLoc": 833,
       "status": "partial"
@@ -1902,6 +1959,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1917,10 +1975,11 @@
           "line": 9,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1936,10 +1995,11 @@
           "line": 9,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1968,6 +2028,7 @@
         "AVFoundation",
         "Speech"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "156:30 cannot find type 'SFSpeechRecognizerAuthorizationStatus' in scope",
@@ -1980,7 +2041,7 @@
         "278:37 cannot find type 'SFSpeechAudioBufferRecognitionRequest' in scope"
       ],
       "errorCount": 19,
-      "isolatedInPass": 2,
+      "isolatedInPass": 3,
       "whole": false,
       "isolatedLoc": 316,
       "status": "partial"
@@ -2009,6 +2070,7 @@
         "ApplicationServices",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "240:24 cannot find type 'AXUIElement' in scope",
@@ -2021,7 +2083,7 @@
         "863:23 cannot find type 'NSRunningApplication' in scope"
       ],
       "errorCount": 10,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 1201,
       "status": "needs-windows-part"
@@ -2034,6 +2096,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2055,10 +2118,11 @@
           "line": 2,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -2071,6 +2135,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2092,6 +2157,7 @@
       "guardedModules": [
         "CoreGraphics"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "136:32 value of type 'CGRect' has no member 'minX'",
@@ -2104,7 +2170,7 @@
         "154:58 value of type 'CGRect' has no member 'minY'"
       ],
       "errorCount": 20,
-      "isolatedInPass": 2,
+      "isolatedInPass": 3,
       "whole": true,
       "isolatedLoc": 225,
       "status": "needs-windows-part"
@@ -2117,6 +2183,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2138,18 +2205,19 @@
           "line": 10,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "558:33 cannot find type 'BackgroundBrowserService' in scope",
-        "838:23 cannot find 'BackgroundBrowserService' in scope",
-        "850:16 argument type '_' expected to be an instance of a class or class-constrained type"
+        "557:33 cannot find type 'BackgroundBrowserService' in scope",
+        "837:23 cannot find 'BackgroundBrowserService' in scope",
+        "849:16 argument type '_' expected to be an instance of a class or class-constrained type"
       ],
       "errorCount": 3,
-      "isolatedInPass": 3,
+      "isolatedInPass": 5,
       "whole": false,
       "isolatedLoc": 744,
       "status": "partial"
@@ -2162,6 +2230,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2203,6 +2272,7 @@
         "Network",
         "WebKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "18:49 cannot find type 'WKNavigationDelegate' in scope",
@@ -2215,7 +2285,7 @@
         "106:38 cannot find type 'NWConnection' in scope"
       ],
       "errorCount": 57,
-      "isolatedInPass": 2,
+      "isolatedInPass": 3,
       "whole": true,
       "isolatedLoc": 261,
       "status": "needs-windows-part"
@@ -2228,12 +2298,13 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "46:32 cannot find 'BrainConnectionProbe' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 12,
+      "isolatedInPass": 13,
       "whole": true,
       "isolatedLoc": 64,
       "status": "needs-windows-part"
@@ -2246,6 +2317,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2258,6 +2330,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2273,10 +2346,11 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -2289,6 +2363,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2316,7 +2391,7 @@
           "line": 12,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         },
         {
           "line": 0,
@@ -2328,18 +2403,19 @@
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "928:17 cannot find 'StealthVisibilityGate' in scope",
-        "942:17 cannot find 'StealthVisibilityGate' in scope",
-        "392:28 cannot find 'AceLocalBrain' in scope",
-        "1841:26 cannot find 'AceLocalBrain' in scope",
-        "1961:28 cannot find 'AceLocalBrain' in scope",
-        "581:38 value of type 'BrainCLI' has no member 'resolveExecutablePath'",
-        "594:38 value of type 'BrainCLI' has no member 'resolveExecutablePath'"
+        "927:17 cannot find 'StealthVisibilityGate' in scope",
+        "941:17 cannot find 'StealthVisibilityGate' in scope",
+        "391:28 cannot find 'AceLocalBrain' in scope",
+        "1840:26 cannot find 'AceLocalBrain' in scope",
+        "1960:28 cannot find 'AceLocalBrain' in scope",
+        "580:38 value of type 'BrainCLI' has no member 'resolveExecutablePath'",
+        "593:38 value of type 'BrainCLI' has no member 'resolveExecutablePath'"
       ],
       "errorCount": 7,
-      "isolatedInPass": 5,
+      "isolatedInPass": 7,
       "whole": false,
       "isolatedLoc": 1717,
       "status": "partial"
@@ -2352,6 +2428,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2373,13 +2450,14 @@
       "guardedModules": [
         "Network"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "49:26 cannot find 'NWEndpoint' in scope",
         "56:26 cannot find 'NWConnection' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 5,
+      "isolatedInPass": 7,
       "whole": false,
       "isolatedLoc": 60,
       "status": "partial"
@@ -2401,6 +2479,7 @@
       "guardedModules": [
         "AVFoundation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "128:51 cannot find type 'AVAudioPCMBuffer' in scope",
@@ -2413,7 +2492,7 @@
         "26:38 cannot find type 'AVAudioConverterInputStatus' in scope"
       ],
       "errorCount": 22,
-      "isolatedInPass": 2,
+      "isolatedInPass": 3,
       "whole": false,
       "isolatedLoc": 112,
       "status": "partial"
@@ -2421,7 +2500,7 @@
     {
       "id": "leanring-buddy/BuddyAudioReplayBuffer.swift",
       "lang": "swift",
-      "loc": 269,
+      "loc": 275,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -2435,21 +2514,22 @@
       "guardedModules": [
         "AVFoundation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "41:22 cannot find type 'AVAudioPCMBuffer' in scope",
         "50:53 cannot find type 'AVAudioPCMBuffer' in scope",
         "52:27 cannot find type 'AVAudioPCMBuffer' in scope",
-        "62:57 cannot find type 'AVAudioPCMBuffer' in scope",
-        "94:19 cannot find type 'AVAudioPCMBuffer' in scope",
-        "165:20 cannot find type 'AVAudioPCMBuffer' in scope",
-        "245:10 cannot find type 'AVAudioPCMBuffer' in scope",
-        "244:19 cannot find type 'AVAudioPCMBuffer' in scope"
+        "63:57 cannot find type 'AVAudioPCMBuffer' in scope",
+        "95:19 cannot find type 'AVAudioPCMBuffer' in scope",
+        "170:20 cannot find type 'AVAudioPCMBuffer' in scope",
+        "251:10 cannot find type 'AVAudioPCMBuffer' in scope",
+        "250:19 cannot find type 'AVAudioPCMBuffer' in scope"
       ],
-      "errorCount": 9,
-      "isolatedInPass": 22,
+      "errorCount": 15,
+      "isolatedInPass": 7,
       "whole": true,
-      "isolatedLoc": 269,
+      "isolatedLoc": 275,
       "status": "needs-windows-part"
     },
     {
@@ -2469,6 +2549,7 @@
       "guardedModules": [
         "AVFoundation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "8:22 cannot find type 'AVAudioFormat' in scope",
@@ -2481,7 +2562,7 @@
         "43:20 cannot find type 'AVAudioInputNode' in scope"
       ],
       "errorCount": 13,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 85,
       "status": "needs-windows-part"
@@ -2489,7 +2570,7 @@
     {
       "id": "leanring-buddy/BuddyDictationManager.swift",
       "lang": "swift",
-      "loc": 2471,
+      "loc": 2504,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -2523,6 +2604,7 @@
         "AVFoundation",
         "Speech"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "138:20 cannot find type 'NSEvent' in scope",
@@ -2531,19 +2613,19 @@
         "287:25 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
         "299:30 cannot find type 'AVAudioEngine' in scope",
         "301:25 cannot find type 'AVAudioEngine' in scope",
-        "447:50 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
-        "1232:27 cannot find type 'BuddyStreamingTranscriptionSession' in scope"
+        "401:11 cannot find type 'BuddyAudioReplayScrubBoundary' in scope",
+        "447:50 cannot find type 'BuddyStreamingTranscriptionSession' in scope"
       ],
-      "errorCount": 10,
-      "isolatedInPass": 19,
+      "errorCount": 16,
+      "isolatedInPass": 18,
       "whole": true,
-      "isolatedLoc": 2471,
+      "isolatedLoc": 2504,
       "status": "needs-windows-part"
     },
     {
       "id": "leanring-buddy/BuddyTranscriptionProvider.swift",
       "lang": "swift",
-      "loc": 389,
+      "loc": 516,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -2557,18 +2639,22 @@
       "guardedModules": [
         "AVFoundation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "39:43 cannot find type 'AVAudioPCMBuffer' in scope",
-        "417:27 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
-        "422:11 cannot find type 'BuddyTranscriptionProvider' in scope",
-        "435:46 cannot find type 'BuddyTranscriptionProvider' in scope",
-        "436:24 cannot find 'AppleSpeechTranscriptionProvider' in scope"
+        "57:5 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "60:35 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "61:27 cannot find type 'AVAudioPCMBuffer' in scope",
+        "74:38 cannot find type 'AVAudioPCMBuffer' in scope",
+        "107:33 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "555:27 cannot find type 'BuddyStreamingTranscriptionSession' in scope",
+        "562:11 cannot find type 'BuddyTranscriptionProvider' in scope"
       ],
-      "errorCount": 5,
-      "isolatedInPass": 2,
+      "errorCount": 10,
+      "isolatedInPass": 3,
       "whole": false,
-      "isolatedLoc": 38,
+      "isolatedLoc": 131,
       "status": "partial"
     },
     {
@@ -2579,6 +2665,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "91:33 cannot find 'BrainConnectionProof' in scope",
@@ -2591,7 +2678,7 @@
         "1000:35 cannot find 'AceLocalBrain' in scope"
       ],
       "errorCount": 11,
-      "isolatedInPass": 27,
+      "isolatedInPass": 28,
       "whole": true,
       "isolatedLoc": 2064,
       "status": "needs-windows-part"
@@ -2604,6 +2691,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2625,10 +2713,11 @@
           "line": 2,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -2636,7 +2725,7 @@
     {
       "id": "leanring-buddy/CompanionManager.swift",
       "lang": "swift",
-      "loc": 24483,
+      "loc": 24445,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -2662,7 +2751,7 @@
           "line": 13,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         },
         {
           "line": 15,
@@ -2696,27 +2785,28 @@
         "Speech",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "65:20 cannot find type 'NSView' in scope",
-        "67:18 cannot find type 'NSView' in scope",
-        "928:47 cannot find 'StealthExitOnlyCapture' in scope",
-        "1019:9 cannot find 'AppleSpeechTranscriptionProvider' in scope",
-        "1168:43 cannot find type 'AVPlayer' in scope",
-        "5360:45 cannot find 'BackgroundAgent' in scope",
-        "5361:51 cannot find 'BackgroundAgent' in scope",
-        "5364:40 cannot find 'AppActionBroker' in scope"
+        "64:20 cannot find type 'NSView' in scope",
+        "66:18 cannot find type 'NSView' in scope",
+        "927:47 cannot find 'StealthExitOnlyCapture' in scope",
+        "1018:9 cannot find 'AppleSpeechTranscriptionProvider' in scope",
+        "1167:43 cannot find type 'AVPlayer' in scope",
+        "5361:45 cannot find 'BackgroundAgent' in scope",
+        "5362:51 cannot find 'BackgroundAgent' in scope",
+        "5365:40 cannot find 'AppActionBroker' in scope"
       ],
-      "errorCount": 39,
-      "isolatedInPass": 22,
+      "errorCount": 37,
+      "isolatedInPass": 23,
       "whole": true,
-      "isolatedLoc": 24483,
+      "isolatedLoc": 24445,
       "status": "needs-windows-part"
     },
     {
       "id": "leanring-buddy/CompanionPanelView.swift",
       "lang": "swift",
-      "loc": 4276,
+      "loc": 4283,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -2763,6 +2853,7 @@
         "Speech",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "32:53 cannot find type 'NSView' in scope",
@@ -2775,9 +2866,9 @@
         "54:59 type annotation missing in pattern"
       ],
       "errorCount": 148,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
-      "isolatedLoc": 4276,
+      "isolatedLoc": 4283,
       "status": "needs-windows-part"
     },
     {
@@ -2810,6 +2901,7 @@
         "AppKit",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "44:31 cannot find type 'NSPanel' in scope",
@@ -2822,7 +2914,7 @@
         "255:46 cannot find type 'View' in scope"
       ],
       "errorCount": 8,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 246,
       "status": "needs-windows-part"
@@ -2830,7 +2922,7 @@
     {
       "id": "leanring-buddy/CompanionScreenCaptureUtility.swift",
       "lang": "swift",
-      "loc": 770,
+      "loc": 773,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -2857,31 +2949,33 @@
         "AppKit",
         "ScreenCaptureKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "84:28 cannot find type 'CGDirectDisplayID' in scope",
         "88:29 cannot find type 'PrivateModeCaptureBinding' in scope",
         "107:32 cannot find type 'PrivateModeCaptureCapability' in scope",
-        "467:20 cannot find type 'PrivateModeDisplaySnapshot' in scope",
-        "623:23 cannot find type 'CGImage' in scope",
-        "617:20 cannot find type 'CGDirectDisplayID' in scope",
-        "683:23 cannot find type 'SCShareableContent' in scope",
-        "736:23 cannot find type 'CGImage' in scope"
+        "470:20 cannot find type 'PrivateModeDisplaySnapshot' in scope",
+        "626:23 cannot find type 'CGImage' in scope",
+        "620:20 cannot find type 'CGDirectDisplayID' in scope",
+        "686:23 cannot find type 'SCShareableContent' in scope",
+        "739:23 cannot find type 'CGImage' in scope"
       ],
       "errorCount": 12,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
-      "isolatedLoc": 770,
+      "isolatedLoc": 773,
       "status": "needs-windows-part"
     },
     {
       "id": "leanring-buddy/CrossAppActionPolicy.swift",
       "lang": "swift",
-      "loc": 508,
+      "loc": 504,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2903,6 +2997,7 @@
       "guardedModules": [
         "Network"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "262:27 cannot find type 'NWListener' in scope",
@@ -2915,7 +3010,7 @@
         "653:24 cannot find type 'NWConnection' in scope"
       ],
       "errorCount": 10,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": false,
       "isolatedLoc": 484,
       "status": "partial"
@@ -2928,6 +3023,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2956,6 +3052,7 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "253:62 cannot find type 'Color' in scope",
@@ -2976,11 +3073,12 @@
     {
       "id": "leanring-buddy/DesktopActionExecutor.swift",
       "lang": "swift",
-      "loc": 541,
+      "loc": 554,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2988,25 +3086,26 @@
     {
       "id": "leanring-buddy/DesktopActionHeadlessCommand.swift",
       "lang": "swift",
-      "loc": 65,
+      "loc": 70,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "36:26 cannot find 'DesktopActionSystemBackend' in scope"
+        "40:26 cannot find 'DesktopActionSystemBackend' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 24,
+      "isolatedInPass": 26,
       "whole": true,
-      "isolatedLoc": 65,
+      "isolatedLoc": 70,
       "status": "needs-windows-part"
     },
     {
       "id": "leanring-buddy/DesktopActionSystemBackend.swift",
       "lang": "swift",
-      "loc": 1246,
+      "loc": 1256,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -3033,21 +3132,22 @@
         "ApplicationServices",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "26:22 cannot find type 'AXUIElement' in scope",
         "79:20 cannot find type 'AXUIElement' in scope",
         "81:44 cannot find type 'AXUIElement' in scope",
-        "591:19 cannot find type 'AXUIElement' in scope",
-        "957:18 cannot find type 'CGKeyCode' in scope",
-        "958:16 cannot find type 'CGEventFlags' in scope",
-        "1012:55 cannot find type 'AXUIElement' in scope",
-        "1028:10 cannot find type 'AXUIElement' in scope"
+        "595:19 cannot find type 'AXUIElement' in scope",
+        "967:18 cannot find type 'CGKeyCode' in scope",
+        "968:16 cannot find type 'CGEventFlags' in scope",
+        "1022:55 cannot find type 'AXUIElement' in scope",
+        "1038:10 cannot find type 'AXUIElement' in scope"
       ],
       "errorCount": 24,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
-      "isolatedLoc": 1246,
+      "isolatedLoc": 1256,
       "status": "needs-windows-part"
     },
     {
@@ -3058,6 +3158,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3070,6 +3171,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3082,6 +3184,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3094,6 +3197,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3106,6 +3210,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3118,6 +3223,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3133,10 +3239,11 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -3149,6 +3256,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3170,6 +3278,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "10:6 unknown attribute 'ObservedObject'",
@@ -3202,13 +3311,14 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "258:16 cannot find 'StealthVisibilityGate' in scope",
         "294:30 cannot find 'StealthVisibilityGate' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 20,
+      "isolatedInPass": 4,
       "whole": false,
       "isolatedLoc": 310,
       "status": "partial"
@@ -3221,6 +3331,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3233,6 +3344,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3252,6 +3364,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "19:23 cannot find type 'FloatingInboxCancellation' in scope",
@@ -3259,7 +3372,7 @@
         "51:40 cannot find type 'FloatingInboxCancellation' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 24,
+      "isolatedInPass": 26,
       "whole": true,
       "isolatedLoc": 131,
       "status": "needs-windows-part"
@@ -3287,12 +3400,13 @@
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "27:34 cannot find type 'FloatingInboxPanel' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 296,
       "status": "needs-windows-part"
@@ -3305,6 +3419,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "6:23 cannot find type 'GmailNetworkWire' in scope",
@@ -3313,7 +3428,7 @@
         "99:24 cannot find 'GmailNetworkWire' in scope"
       ],
       "errorCount": 4,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 94,
       "status": "needs-windows-part"
@@ -3326,6 +3441,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3347,6 +3463,7 @@
       "guardedModules": [
         "CoreGraphics"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "13:36 value of type 'CGRect' has no member 'intersection'",
@@ -3359,7 +3476,7 @@
         "20:53 value of type 'CGRect' has no member 'maxY'"
       ],
       "errorCount": 9,
-      "isolatedInPass": 19,
+      "isolatedInPass": 26,
       "whole": false,
       "isolatedLoc": 18,
       "status": "partial"
@@ -3388,6 +3505,7 @@
         "AppKit",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "10:33 cannot find type 'NSPanel' in scope",
@@ -3400,7 +3518,7 @@
         "101:20 cannot find type 'View' in scope"
       ],
       "errorCount": 122,
-      "isolatedInPass": 19,
+      "isolatedInPass": 20,
       "whole": true,
       "isolatedLoc": 240,
       "status": "needs-windows-part"
@@ -3408,7 +3526,7 @@
     {
       "id": "leanring-buddy/GlobalPushToTalkShortcutMonitor.swift",
       "lang": "swift",
-      "loc": 668,
+      "loc": 656,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -3435,21 +3553,22 @@
         "AppKit",
         "CoreGraphics"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "457:20 cannot find type 'CGEvent' in scope",
-        "455:20 cannot find type 'CGEventType' in scope",
-        "456:16 cannot find type 'CGEvent' in scope",
-        "638:18 cannot find type 'CGEventFlags' in scope",
-        "693:16 cannot find type 'CGEventFlags' in scope",
-        "227:16 cannot find 'CGEvent' in scope",
-        "237:17 cannot find 'CGEvent' in scope",
-        "238:17 cannot find 'CGEvent' in scope"
+        "456:20 cannot find type 'CGEvent' in scope",
+        "454:20 cannot find type 'CGEventType' in scope",
+        "455:16 cannot find type 'CGEvent' in scope",
+        "626:18 cannot find type 'CGEventFlags' in scope",
+        "681:16 cannot find type 'CGEventFlags' in scope",
+        "226:16 cannot find 'CGEvent' in scope",
+        "236:17 cannot find 'CGEvent' in scope",
+        "237:17 cannot find 'CGEvent' in scope"
       ],
       "errorCount": 21,
-      "isolatedInPass": 19,
+      "isolatedInPass": 18,
       "whole": true,
-      "isolatedLoc": 668,
+      "isolatedLoc": 656,
       "status": "needs-windows-part"
     },
     {
@@ -3461,12 +3580,13 @@
       "changes": [
         {
           "line": 19,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -3496,9 +3616,9 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "65:53 cannot find 'GmailGoogleConnection' in scope",
         "83:16 cannot find 'StealthVisibilityGate' in scope",
         "122:16 cannot find 'StealthVisibilityGate' in scope",
         "164:16 cannot find 'StealthVisibilityGate' in scope",
@@ -3507,8 +3627,8 @@
         "207:39 cannot find 'StealthVisibilityGate' in scope",
         "219:36 cannot find 'StealthVisibilityGate' in scope"
       ],
-      "errorCount": 8,
-      "isolatedInPass": 19,
+      "errorCount": 7,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 294,
       "status": "needs-windows-part"
@@ -3521,6 +3641,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3533,13 +3654,14 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "25:52 value of type 'GmailAccountStore' has no member 'loadUsableCredential'",
         "28:54 cannot find 'GmailNetworkWire' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 19,
+      "isolatedInPass": 20,
       "whole": true,
       "isolatedLoc": 71,
       "status": "needs-windows-part"
@@ -3561,6 +3683,7 @@
       "guardedModules": [
         "Network"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "13:29 cannot find type 'NWConnection' in scope",
@@ -3568,7 +3691,7 @@
         "41:43 cannot infer type of closure parameter 'state' without a type annotation"
       ],
       "errorCount": 3,
-      "isolatedInPass": 16,
+      "isolatedInPass": 18,
       "whole": false,
       "isolatedLoc": 82,
       "status": "partial"
@@ -3581,6 +3704,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3612,9 +3736,9 @@
         },
         {
           "line": 5,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 12,
@@ -3625,22 +3749,24 @@
       ],
       "guardedModules": [
         "AppKit",
-        "AuthenticationServices",
+        "AuthenticationServices"
+      ],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "113:80 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
-        "114:26 cannot find type 'ASWebAuthenticationSession' in scope",
-        "117:25 cannot find type 'NSWindow' in scope",
-        "154:73 cannot find type 'ASPresentationAnchor' in scope",
-        "154:42 cannot find type 'ASWebAuthenticationSession' in scope",
-        "122:16 cannot find 'StealthVisibilityGate' in scope",
-        "123:28 cannot find 'NSApp' in scope",
-        "123:47 cannot find 'NSApp' in scope"
+        "115:80 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
+        "116:26 cannot find type 'ASWebAuthenticationSession' in scope",
+        "119:25 cannot find type 'NSWindow' in scope",
+        "156:73 cannot find type 'ASPresentationAnchor' in scope",
+        "156:42 cannot find type 'ASWebAuthenticationSession' in scope",
+        "124:16 cannot find 'StealthVisibilityGate' in scope",
+        "125:28 cannot find 'NSApp' in scope",
+        "125:47 cannot find 'NSApp' in scope"
       ],
       "errorCount": 11,
-      "isolatedInPass": 14,
+      "isolatedInPass": 18,
       "whole": false,
       "isolatedLoc": 66,
       "status": "partial"
@@ -3653,6 +3779,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3665,6 +3792,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3677,6 +3805,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3702,13 +3831,14 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "201:13 cannot find 'AceLicense' in scope",
         "230:27 cannot find 'AceLicense' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 21,
+      "isolatedInPass": 17,
       "whole": false,
       "isolatedLoc": 171,
       "status": "partial"
@@ -3730,13 +3860,13 @@
           "line": 17,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         },
         {
           "line": 19,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 20,
@@ -3747,22 +3877,24 @@
       ],
       "guardedModules": [
         "AppKit",
-        "Security",
         "SwiftUI"
+      ],
+      "kitModules": [
+        "Security"
       ],
       "isolated": true,
       "errors": [
-        "40:24 cannot find type 'NSPanel' in scope",
-        "86:6 unknown attribute 'ObservedObject'",
-        "87:6 unknown attribute 'State'",
-        "89:20 cannot find type 'View' in scope",
-        "85:37 cannot find type 'View' in scope",
-        "128:24 cannot find type 'NSPanel' in scope",
-        "129:43 cannot find type 'NSApplication' in scope",
-        "43:17 cannot find 'NSPanel' in scope"
+        "41:24 cannot find type 'NSPanel' in scope",
+        "43:20 cannot find type 'FirstRunFailureReporter' in scope",
+        "87:35 cannot find type 'FirstRunFailureReporter' in scope",
+        "87:6 unknown attribute 'ObservedObject'",
+        "88:6 unknown attribute 'State'",
+        "90:20 cannot find type 'View' in scope",
+        "86:37 cannot find type 'View' in scope",
+        "129:24 cannot find type 'NSPanel' in scope"
       ],
-      "errorCount": 59,
-      "isolatedInPass": 7,
+      "errorCount": 64,
+      "isolatedInPass": 8,
       "whole": false,
       "isolatedLoc": 1398,
       "status": "partial"
@@ -3778,10 +3910,11 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -3794,6 +3927,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3806,6 +3940,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3825,6 +3960,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -3832,7 +3968,7 @@
     {
       "id": "leanring-buddy/leanring_buddyApp.swift",
       "lang": "swift",
-      "loc": 1489,
+      "loc": 1494,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -3852,36 +3988,38 @@
           "line": 12,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [
         "ServiceManagement",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "69:66 type annotation missing in pattern",
-        "69:6 unknown attribute 'NSApplicationDelegateAdaptor'",
-        "71:20 cannot find type 'Scene' in scope",
-        "68:27 cannot find type 'App' in scope",
-        "194:45 cannot find type 'NSApplicationDelegate' in scope",
-        "1205:19 cannot find type 'NSApplication' in scope"
+        "68:66 type annotation missing in pattern",
+        "68:6 unknown attribute 'NSApplicationDelegateAdaptor'",
+        "70:20 cannot find type 'Scene' in scope",
+        "67:27 cannot find type 'App' in scope",
+        "193:45 cannot find type 'NSApplicationDelegate' in scope",
+        "1210:19 cannot find type 'NSApplication' in scope"
       ],
       "errorCount": 6,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
-      "isolatedLoc": 1489,
+      "isolatedLoc": 1494,
       "status": "needs-windows-part"
     },
     {
       "id": "leanring-buddy/LocalIntentPolicy.swift",
       "lang": "swift",
-      "loc": 252,
+      "loc": 261,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3894,6 +4032,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3906,6 +4045,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3913,11 +4053,12 @@
     {
       "id": "leanring-buddy/MeetingNotesGenerationPolicy.swift",
       "lang": "swift",
-      "loc": 121,
+      "loc": 123,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3930,6 +4071,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3942,6 +4084,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3954,6 +4097,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -3975,6 +4119,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "20:20 cannot find type 'View' in scope",
@@ -3986,8 +4131,8 @@
         "135:44 cannot find type 'View' in scope",
         "134:6 unknown attribute 'ViewBuilder'"
       ],
-      "errorCount": 19,
-      "isolatedInPass": 22,
+      "errorCount": 67,
+      "isolatedInPass": 19,
       "whole": true,
       "isolatedLoc": 291,
       "status": "needs-windows-part"
@@ -4021,7 +4166,7 @@
           "line": 24,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         },
         {
           "line": 26,
@@ -4049,19 +4194,20 @@
         "Speech",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "652:30 cannot find type 'AVAudioEngine' in scope",
-        "654:25 cannot find type 'AVAudioEngine' in scope",
-        "666:25 cannot find type 'SCStream' in scope",
-        "668:20 cannot find type 'SCStream' in scope",
-        "753:36 cannot find type 'SCStream' in scope",
-        "755:35 cannot find type 'AVAudioEngine' in scope",
-        "759:43 cannot find type 'SCStream' in scope",
-        "761:42 cannot find type 'AVAudioEngine' in scope"
+        "651:30 cannot find type 'AVAudioEngine' in scope",
+        "653:25 cannot find type 'AVAudioEngine' in scope",
+        "665:25 cannot find type 'SCStream' in scope",
+        "667:20 cannot find type 'SCStream' in scope",
+        "752:36 cannot find type 'SCStream' in scope",
+        "754:35 cannot find type 'AVAudioEngine' in scope",
+        "758:43 cannot find type 'SCStream' in scope",
+        "760:42 cannot find type 'AVAudioEngine' in scope"
       ],
       "errorCount": 35,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": false,
       "isolatedLoc": 3613,
       "status": "partial"
@@ -4096,6 +4242,7 @@
         "AppKit",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "44:29 cannot find type 'NSPanel' in scope",
@@ -4108,7 +4255,7 @@
         "94:59 cannot find type 'NSRunningApplication' in scope"
       ],
       "errorCount": 15,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 741,
       "status": "needs-windows-part"
@@ -4142,6 +4289,7 @@
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "560:28 cannot find 'NSWorkspace' in scope",
@@ -4149,7 +4297,7 @@
         "565:33 cannot infer type of closure parameter '_' without a type annotation"
       ],
       "errorCount": 3,
-      "isolatedInPass": 25,
+      "isolatedInPass": 29,
       "whole": false,
       "isolatedLoc": 425,
       "status": "partial"
@@ -4162,9 +4310,30 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
+    },
+    {
+      "id": "leanring-buddy/NativeHeadlessEffectAuthority.swift",
+      "lang": "swift",
+      "loc": 120,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 2,
+          "kind": "platform",
+          "module": "Darwin",
+          "to": "ucrt on Windows, Glibc on Linux"
+        }
+      ],
+      "guardedModules": [],
+      "kitModules": [],
+      "whole": false,
+      "isolatedLoc": 0,
+      "status": "converted"
     },
     {
       "id": "leanring-buddy/NativeLocationManager.swift",
@@ -4183,6 +4352,7 @@
       "guardedModules": [
         "CoreLocation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "14:55 cannot find type 'CLLocationManagerDelegate' in scope",
@@ -4194,7 +4364,7 @@
         "71:27 cannot find 'CLLocationManager' in scope"
       ],
       "errorCount": 7,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 123,
       "status": "needs-windows-part"
@@ -4207,6 +4377,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4219,6 +4390,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4247,6 +4419,7 @@
         "AppKit",
         "ApplicationServices"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "83:18 cannot find type 'AXUIElement' in scope",
@@ -4255,7 +4428,7 @@
         "148:36 cannot find type 'AXUIElement' in scope"
       ],
       "errorCount": 4,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": false,
       "isolatedLoc": 69,
       "status": "partial"
@@ -4271,23 +4444,24 @@
           "line": 15,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "986:17 cannot find 'LifecycleLog' in scope",
-        "1011:15 cannot find 'VoiceReadiness' in scope",
-        "1017:19 cannot find 'VoiceReadiness' in scope",
-        "1040:9 cannot find 'LifecycleLog' in scope",
-        "1069:13 cannot find 'LifecycleLog' in scope",
-        "1233:9 cannot find 'VoiceReadiness' in scope",
-        "1286:15 cannot find 'VoiceReadiness' in scope",
-        "1333:9 cannot find 'VoiceReadiness' in scope"
+        "985:17 cannot find 'LifecycleLog' in scope",
+        "1039:9 cannot find 'LifecycleLog' in scope",
+        "1068:13 cannot find 'LifecycleLog' in scope",
+        "1504:13 cannot find 'LifecycleLog' in scope",
+        "1579:13 cannot find 'LifecycleLog' in scope",
+        "1592:13 cannot find 'LifecycleLog' in scope",
+        "1731:9 cannot find 'FirstRunFailureReporter' in scope",
+        "1733:25 cannot find 'AceIntroWindowController' in scope"
       ],
-      "errorCount": 28,
-      "isolatedInPass": 28,
+      "errorCount": 9,
+      "isolatedInPass": 24,
       "whole": false,
       "isolatedLoc": 1159,
       "status": "partial"
@@ -4309,6 +4483,7 @@
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "48:53 cannot find type 'MenuBarPanelManager' in scope",
@@ -4321,7 +4496,7 @@
         "68:25 cannot find 'AceIntroWindowController' in scope"
       ],
       "errorCount": 8,
-      "isolatedInPass": 28,
+      "isolatedInPass": 24,
       "whole": false,
       "isolatedLoc": 47,
       "status": "partial"
@@ -4334,6 +4509,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4369,6 +4545,7 @@
         "AVFoundation",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "116:39 cannot find type 'Path' in scope",
@@ -4381,7 +4558,7 @@
         "85:35 cannot find type 'Path' in scope"
       ],
       "errorCount": 95,
-      "isolatedInPass": 13,
+      "isolatedInPass": 14,
       "whole": true,
       "isolatedLoc": 1643,
       "status": "needs-windows-part"
@@ -4394,6 +4571,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4406,6 +4584,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4418,6 +4597,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4425,11 +4605,12 @@
     {
       "id": "leanring-buddy/OwnerTurnContext.swift",
       "lang": "swift",
-      "loc": 247,
+      "loc": 248,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4437,11 +4618,12 @@
     {
       "id": "leanring-buddy/OwnerTurnCoordinator.swift",
       "lang": "swift",
-      "loc": 599,
+      "loc": 603,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4449,22 +4631,23 @@
     {
       "id": "leanring-buddy/OwnerTurnLifecycleCoordinator.swift",
       "lang": "swift",
-      "loc": 1129,
+      "loc": 1132,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "440:17 cannot find 'AppSwitcher' in scope",
-        "444:28 cannot infer contextual base in reference to member 'local'",
-        "445:32 cannot infer contextual base in reference to member 'local'",
-        "446:32 cannot infer contextual base in reference to member 'local'"
+        "443:17 cannot find 'AppSwitcher' in scope",
+        "447:28 cannot infer contextual base in reference to member 'local'",
+        "448:32 cannot infer contextual base in reference to member 'local'",
+        "449:32 cannot infer contextual base in reference to member 'local'"
       ],
       "errorCount": 4,
-      "isolatedInPass": 30,
+      "isolatedInPass": 27,
       "whole": true,
-      "isolatedLoc": 1129,
+      "isolatedLoc": 1132,
       "status": "needs-windows-part"
     },
     {
@@ -4475,6 +4658,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4487,6 +4671,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4499,6 +4684,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4511,6 +4697,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4530,6 +4717,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -4542,6 +4730,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4569,6 +4758,9 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "13:59 type annotation missing in pattern",
@@ -4581,7 +4773,7 @@
         "20:6 unknown attribute 'State'"
       ],
       "errorCount": 23,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 891,
       "status": "needs-windows-part"
@@ -4630,6 +4822,7 @@
         "PDFKit",
         "Vision"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "280:30 cannot find 'EKEventStore' in scope",
@@ -4641,7 +4834,7 @@
         "218:34 value of type 'Any' has no member 'topCandidates'"
       ],
       "errorCount": 7,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": false,
       "isolatedLoc": 756,
       "status": "partial"
@@ -4661,6 +4854,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -4673,6 +4867,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4685,6 +4880,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4704,6 +4900,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -4716,6 +4913,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4728,6 +4926,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4740,6 +4939,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4747,7 +4947,7 @@
     {
       "id": "leanring-buddy/PermissionRepairCoordinator.swift",
       "lang": "swift",
-      "loc": 867,
+      "loc": 875,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -4767,24 +4967,25 @@
           "line": 3,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "526:34 cannot find type 'NSRunningApplication' in scope",
         "513:30 cannot find type 'NSRunningApplication' in scope",
         "519:13 cannot find 'NSWorkspace' in scope",
         "522:13 cannot find 'NSWorkspace' in scope",
-        "596:17 cannot find 'NSApp' in scope"
+        "603:17 cannot find 'NSApp' in scope"
       ],
       "errorCount": 5,
       "isolatedInPass": 15,
       "whole": false,
-      "isolatedLoc": 96,
+      "isolatedLoc": 104,
       "status": "partial"
     },
     {
@@ -4817,6 +5018,7 @@
         "AppKit",
         "CoreServices"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "281:30 cannot find type 'NSRunningApplication' in scope",
@@ -4842,6 +5044,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4854,6 +5057,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4861,7 +5065,7 @@
     {
       "id": "leanring-buddy/PrivateModePolicy.swift",
       "lang": "swift",
-      "loc": 1950,
+      "loc": 1976,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -4888,6 +5092,7 @@
         "AppKit",
         "ApplicationServices"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "24:28 cannot find type 'CGDirectDisplayID' in scope",
@@ -4896,13 +5101,13 @@
         "35:8 type 'PrivateModeWindowCandidate' does not conform to protocol 'Equatable'",
         "50:34 cannot find type 'CGWindowID' in scope",
         "44:8 type 'PrivateModeContext' does not conform to protocol 'Equatable'",
-        "170:27 cannot find type 'CGWindowID' in scope",
-        "167:8 type 'PrivateModeCaptureBinding' does not conform to protocol 'Equatable'"
+        "173:27 cannot find type 'CGWindowID' in scope",
+        "170:8 type 'PrivateModeCaptureBinding' does not conform to protocol 'Equatable'"
       ],
-      "errorCount": 216,
+      "errorCount": 218,
       "isolatedInPass": 15,
       "whole": true,
-      "isolatedLoc": 1950,
+      "isolatedLoc": 1976,
       "status": "needs-windows-part"
     },
     {
@@ -4916,10 +5121,11 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -4935,7 +5141,7 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         },
         {
           "line": 2,
@@ -4945,6 +5151,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -4957,6 +5164,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4969,6 +5177,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4981,6 +5190,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -4996,10 +5206,11 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -5012,6 +5223,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5024,6 +5236,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5051,7 +5264,7 @@
           "line": 11,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         },
         {
           "line": 13,
@@ -5072,19 +5285,20 @@
         "ImageIO",
         "ScreenCaptureKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "147:20 cannot find type 'CGImage' in scope",
-        "158:34 cannot find type 'CGImage' in scope",
-        "278:16 cannot find type 'CGImage' in scope",
-        "308:10 cannot find type 'CGImage' in scope",
-        "305:20 cannot find type 'CGDirectDisplayID' in scope",
-        "340:10 cannot find type 'CGImage' in scope",
-        "337:18 cannot find type 'CGImage' in scope",
-        "367:34 cannot find type 'CGImage' in scope"
+        "146:20 cannot find type 'CGImage' in scope",
+        "157:34 cannot find type 'CGImage' in scope",
+        "277:16 cannot find type 'CGImage' in scope",
+        "307:10 cannot find type 'CGImage' in scope",
+        "304:20 cannot find type 'CGDirectDisplayID' in scope",
+        "339:10 cannot find type 'CGImage' in scope",
+        "336:18 cannot find type 'CGImage' in scope",
+        "366:34 cannot find type 'CGImage' in scope"
       ],
       "errorCount": 54,
-      "isolatedInPass": 17,
+      "isolatedInPass": 21,
       "whole": false,
       "isolatedLoc": 426,
       "status": "partial"
@@ -5097,6 +5311,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5109,6 +5324,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5158,6 +5374,7 @@
         "CoreGraphics",
         "Speech"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "152:16 cannot find type 'NSApplication' in scope",
@@ -5170,7 +5387,7 @@
         "178:35 cannot find type 'NSApplication' in scope"
       ],
       "errorCount": 17,
-      "isolatedInPass": 13,
+      "isolatedInPass": 14,
       "whole": true,
       "isolatedLoc": 1367,
       "status": "needs-windows-part"
@@ -5178,11 +5395,12 @@
     {
       "id": "leanring-buddy/SpeechRecognitionRecoveryPolicy.swift",
       "lang": "swift",
-      "loc": 520,
+      "loc": 521,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5195,6 +5413,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5210,10 +5429,11 @@
           "line": 1,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -5233,6 +5453,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -5261,6 +5482,7 @@
         "AVFoundation",
         "Speech"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "20:26 cannot find type 'SFSpeechAudioBufferRecognitionRequest' in scope",
@@ -5273,7 +5495,7 @@
         "72:28 cannot find 'SFSpeechRecognizer' in scope"
       ],
       "errorCount": 16,
-      "isolatedInPass": 4,
+      "isolatedInPass": 2,
       "whole": true,
       "isolatedLoc": 336,
       "status": "needs-windows-part"
@@ -5286,6 +5508,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5293,7 +5516,7 @@
     {
       "id": "leanring-buddy/StealthMode.swift",
       "lang": "swift",
-      "loc": 1761,
+      "loc": 1775,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -5313,25 +5536,26 @@
           "line": 20,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "273:21 cannot find type 'NSApplication' in scope",
-        "274:19 cannot find type 'NSApplication' in scope",
-        "1244:11 cannot find type 'NSWindow' in scope",
-        "1374:13 cannot find 'NSWindow' in scope",
-        "1375:13 cannot find 'NSWindow' in scope",
-        "1376:13 cannot find 'NSWindow' in scope",
-        "1377:13 cannot find 'NSWindow' in scope",
-        "1378:13 cannot find 'NSWindow' in scope"
+        "287:21 cannot find type 'NSApplication' in scope",
+        "288:19 cannot find type 'NSApplication' in scope",
+        "1258:11 cannot find type 'NSWindow' in scope",
+        "1388:13 cannot find 'NSWindow' in scope",
+        "1389:13 cannot find 'NSWindow' in scope",
+        "1390:13 cannot find 'NSWindow' in scope",
+        "1391:13 cannot find 'NSWindow' in scope",
+        "1392:13 cannot find 'NSWindow' in scope"
       ],
       "errorCount": 16,
-      "isolatedInPass": 4,
+      "isolatedInPass": 2,
       "whole": false,
       "isolatedLoc": 440,
       "status": "partial"
@@ -5339,11 +5563,12 @@
     {
       "id": "leanring-buddy/TradingDataEvidence.swift",
       "lang": "swift",
-      "loc": 111,
+      "loc": 118,
       "before": "ready",
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5351,7 +5576,7 @@
     {
       "id": "leanring-buddy/TradingLane.swift",
       "lang": "swift",
-      "loc": 224,
+      "loc": 202,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -5363,6 +5588,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -5375,6 +5601,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5387,6 +5614,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5399,6 +5627,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5411,6 +5640,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5438,18 +5668,21 @@
           "line": 16,
           "kind": "platform",
           "module": "Darwin",
-          "to": "ucrt + WinSDK on Windows, Glibc on Linux"
+          "to": "ucrt on Windows, Glibc on Linux"
         }
       ],
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "434:22 cannot find 'NSApplication' in scope"
+        "433:22 cannot find 'NSApplication' in scope",
+        "871:9 cannot find 'LifecycleLog' in scope",
+        "949:13 cannot find 'LifecycleLog' in scope"
       ],
-      "errorCount": 1,
-      "isolatedInPass": 18,
+      "errorCount": 3,
+      "isolatedInPass": 30,
       "whole": false,
       "isolatedLoc": 530,
       "status": "partial"
@@ -5462,6 +5695,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5469,7 +5703,7 @@
     {
       "id": "leanring-buddy/WindowMoveHeadlessCommand.swift",
       "lang": "swift",
-      "loc": 239,
+      "loc": 253,
       "before": "needs-windows",
       "rewritten": true,
       "changes": [
@@ -5490,16 +5724,17 @@
         "AppKit",
         "ApplicationServices"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "28:12 type 'WindowMoveHeadlessCommand.Request' does not conform to protocol 'Equatable'",
-        "212:21 cannot find type 'AXUIElement' in scope",
-        "233:21 cannot find type 'AXUIElement' in scope"
+        "226:21 cannot find type 'AXUIElement' in scope",
+        "247:21 cannot find type 'AXUIElement' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
-      "isolatedLoc": 239,
+      "isolatedLoc": 253,
       "status": "needs-windows-part"
     },
     {
@@ -5533,6 +5768,7 @@
         "ApplicationServices",
         "ScreenCaptureKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "393:61 cannot find type 'CGDirectDisplayID' in scope",
@@ -5540,7 +5776,7 @@
         "516:11 cannot find type 'NSScreen' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 471,
       "status": "needs-windows-part"
@@ -5569,6 +5805,7 @@
         "AppKit",
         "ApplicationServices"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "29:57 cannot find type 'NSScreen' in scope",
@@ -5581,7 +5818,7 @@
         "410:71 cannot find type 'AXUIElement' in scope"
       ],
       "errorCount": 12,
-      "isolatedInPass": 22,
+      "isolatedInPass": 23,
       "whole": true,
       "isolatedLoc": 428,
       "status": "needs-windows-part"
@@ -5594,6 +5831,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5606,6 +5844,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -5625,6 +5864,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "391:44 cannot find 'HostedBrainClient' in scope",
@@ -5635,7 +5875,7 @@
         "1712:20 cannot find 'AceLocalBrain' in scope"
       ],
       "errorCount": 6,
-      "isolatedInPass": 25,
+      "isolatedInPass": 26,
       "whole": true,
       "isolatedLoc": 1810,
       "status": "needs-windows-part"

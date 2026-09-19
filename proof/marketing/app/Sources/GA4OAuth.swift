@@ -6,9 +6,11 @@
 // Loopback (127.0.0.1) Google OAuth. Requires com.apple.security.network.server, which the
 // Mac App Store slice does not ship (App Review 2.4.5(i)) — so this whole flow compiles only
 // into the direct-distribution lane. The store build connects GA4 with a pasted access token.
+import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+import CircuitPortKit
 #if os(macOS) && DIRECT_DISTRIBUTION
 import AppKit
 import CryptoKit

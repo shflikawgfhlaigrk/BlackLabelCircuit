@@ -6,6 +6,14 @@
 // empty results, and a strategy that triggers nothing says so. The output is research, not a
 // track record and not advice.
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - Indicator operands a condition can reference (all computed from the user's bars).
 enum RuleIndicator: String, CaseIterable, Identifiable, Codable {

@@ -15,6 +15,14 @@ import SwiftUI
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - Domain models
 enum ChatRole: String, Codable { case user, assistant, system }

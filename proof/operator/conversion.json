@@ -2,8 +2,16 @@
   "root": "/Users/michaelbarber/BlackLabelSovereign",
   "name": "BlackLabelSovereign",
   "target": "windows",
-  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/operator",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/new/operator",
   "moduleName": "BlackLabelSovereignCore",
+  "source": {
+    "sha256": "97e0de5720f5bda859a2d5cf7b1271a455bfd854f10be66f55761346c7ca2e3f",
+    "files": 80,
+    "git": {
+      "head": "59705d49e497974bc56b53f419a8837323c3ecfd",
+      "uncommitted": 46
+    }
+  },
   "moduleSources": {
     "from": "project.yml target Sovereign",
     "paths": [
@@ -11,17 +19,17 @@
       "docs/guides"
     ]
   },
-  "generatedAt": 1789715923791,
-  "tookMs": 105491,
+  "generatedAt": 1789781712863,
+  "tookMs": 80216,
   "before": {
     "readyPct": 12.2,
     "files": 81,
     "loc": 30613
   },
   "after": {
-    "readyPct": 59.9,
-    "guardedLoc": 9801,
-    "needsWindowsLoc": 1951
+    "readyPct": 78.2,
+    "guardedLoc": 4485,
+    "needsWindowsLoc": 1961
   },
   "verification": {
     "ran": true,
@@ -30,7 +38,7 @@
     "passes": [
       {
         "pass": 1,
-        "isolated": 7
+        "isolated": 4
       },
       {
         "pass": 2,
@@ -38,11 +46,11 @@
       },
       {
         "pass": 3,
-        "isolated": 4
+        "isolated": 1
       },
       {
         "pass": 4,
-        "isolated": 2
+        "isolated": 5
       },
       {
         "pass": 5,
@@ -50,15 +58,15 @@
       },
       {
         "pass": 6,
-        "isolated": 1
+        "isolated": 3
       },
       {
         "pass": 7,
-        "isolated": 5
+        "isolated": 2
       },
       {
         "pass": 8,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 9,
@@ -82,7 +90,7 @@
       },
       {
         "pass": 14,
-        "isolated": 5
+        "isolated": 1
       },
       {
         "pass": 15,
@@ -98,7 +106,7 @@
       },
       {
         "pass": 18,
-        "isolated": 1
+        "isolated": 11
       },
       {
         "pass": 19,
@@ -106,15 +114,15 @@
       },
       {
         "pass": 20,
-        "isolated": 3
+        "isolated": 1
       },
       {
         "pass": 21,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 22,
-        "isolated": 1
+        "isolated": 4
       },
       {
         "pass": 23,
@@ -122,7 +130,7 @@
       },
       {
         "pass": 24,
-        "isolated": 5
+        "isolated": 1
       },
       {
         "pass": 25,
@@ -130,7 +138,7 @@
       },
       {
         "pass": 26,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 27,
@@ -138,19 +146,19 @@
       },
       {
         "pass": 28,
-        "isolated": 3
-      },
-      {
-        "pass": 29,
-        "isolated": 1
-      },
-      {
-        "pass": 30,
         "isolated": 2
       },
       {
+        "pass": 29,
+        "isolated": 2
+      },
+      {
+        "pass": 30,
+        "isolated": 3
+      },
+      {
         "pass": 31,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 32,
@@ -192,12 +200,12 @@
       "loc": 28897
     },
     "portable": {
-      "files": 12,
-      "loc": 2326
+      "files": 11,
+      "loc": 2273
     },
     "converted": {
-      "files": 13,
-      "loc": 3836
+      "files": 14,
+      "loc": 3889
     },
     "partial": {
       "files": 30,
@@ -223,6 +231,11 @@
   },
   "packages": [
     {
+      "package": "OpenCombine",
+      "url": "https://github.com/OpenCombine/OpenCombine.git",
+      "from": "0.14.0"
+    },
+    {
       "package": "swift-toolchain-sqlite",
       "url": "https://github.com/swiftlang/swift-toolchain-sqlite.git",
       "from": "1.0.0"
@@ -231,11 +244,6 @@
       "package": "swift-crypto",
       "url": "https://github.com/apple/swift-crypto.git",
       "from": "3.0.0"
-    },
-    {
-      "package": "OpenCombine",
-      "url": "https://github.com/OpenCombine/OpenCombine.git",
-      "from": "0.14.0"
     }
   ],
   "kit": true,
@@ -251,8 +259,8 @@
       "id": "(uses code that was isolated)",
       "windows": null,
       "effort": null,
-      "files": 7,
-      "loc": 1179
+      "files": 8,
+      "loc": 1540
     },
     {
       "id": "AuthenticationServices",
@@ -267,13 +275,6 @@
       "effort": "M",
       "files": 1,
       "loc": 494
-    },
-    {
-      "id": "Security",
-      "windows": "Windows Credential Manager (CredRead/CredWrite) and DPAPI",
-      "effort": "M",
-      "files": 2,
-      "loc": 471
     },
     {
       "id": "AVFoundation",
@@ -344,24 +345,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "54:15 cannot find type 'Color' in scope",
-        "56:31 cannot find 'BLTheme' in scope",
-        "58:31 cannot find 'BLTheme' in scope",
-        "136:19 cannot find 'DemoSeed' in scope",
-        "78:18 cannot find type 'ActivityOutcome' in scope",
-        "73:8 type 'ActivityEntry' does not conform to protocol 'Decodable'",
-        "73:8 type 'ActivityEntry' does not conform to protocol 'Encodable'",
-        "73:8 type 'ActivityEntry' does not conform to protocol 'Hashable'"
+        "62:15 cannot find type 'Color' in scope",
+        "64:31 cannot find 'BLTheme' in scope",
+        "66:31 cannot find 'BLTheme' in scope",
+        "144:19 cannot find 'DemoSeed' in scope",
+        "86:18 cannot find type 'ActivityOutcome' in scope",
+        "81:8 type 'ActivityEntry' does not conform to protocol 'Decodable'",
+        "81:8 type 'ActivityEntry' does not conform to protocol 'Encodable'",
+        "81:8 type 'ActivityEntry' does not conform to protocol 'Hashable'"
       ],
       "errorCount": 9,
-      "isolatedInPass": 21,
+      "isolatedInPass": 22,
       "whole": false,
       "isolatedLoc": 220,
       "status": "partial"
@@ -383,6 +391,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "26:33 cannot find type 'ClientStore' in scope",
@@ -394,8 +403,8 @@
         "27:6 unknown attribute 'EnvironmentObject'",
         "28:6 unknown attribute 'EnvironmentObject'"
       ],
-      "errorCount": 314,
-      "isolatedInPass": 21,
+      "errorCount": 298,
+      "isolatedInPass": 22,
       "whole": true,
       "isolatedLoc": 493,
       "status": "needs-windows-part"
@@ -412,20 +421,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "135:45 cannot find type 'Store' in scope",
-        "135:60 cannot find type 'MemoryStore' in scope",
-        "137:52 cannot find type 'MCPManager' in scope",
-        "137:76 cannot find type 'ClientStore' in scope"
+        "143:25 cannot find type 'BrainRouter' in scope",
+        "143:45 cannot find type 'Store' in scope",
+        "143:60 cannot find type 'MemoryStore' in scope",
+        "144:60 cannot find type 'FilesConnector' in scope",
+        "145:27 cannot find type 'ActivityLog' in scope",
+        "145:52 cannot find type 'MCPManager' in scope",
+        "145:76 cannot find type 'ClientStore' in scope",
+        "146:33 cannot find type 'OperatorEngine' in scope"
       ],
-      "errorCount": 4,
-      "isolatedInPass": 20,
+      "errorCount": 8,
+      "isolatedInPass": 30,
       "whole": true,
       "isolatedLoc": 840,
       "status": "needs-windows-part"
@@ -447,19 +467,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "14:35 cannot find type 'AgentEngine' in scope",
-        "16:38 cannot find type 'AppSettings' in scope",
         "14:6 unknown attribute 'EnvironmentObject'",
         "15:6 unknown attribute 'EnvironmentObject'",
         "16:6 unknown attribute 'EnvironmentObject'",
         "17:6 unknown attribute 'EnvironmentObject'",
         "18:6 unknown attribute 'EnvironmentObject'",
-        "19:6 unknown attribute 'State'"
+        "19:6 unknown attribute 'State'",
+        "20:6 unknown attribute 'FocusState'",
+        "22:20 cannot find type 'View' in scope"
       ],
-      "errorCount": 177,
-      "isolatedInPass": 24,
+      "errorCount": 158,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 229,
       "status": "needs-windows-part"
@@ -476,11 +497,18 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -506,6 +534,9 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [
+        "os"
+      ],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -534,19 +565,20 @@
         "SwiftUI",
         "AuthenticationServices"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "10:37 cannot find type 'Session' in scope",
-        "11:38 cannot find type 'AppSettings' in scope",
         "10:6 unknown attribute 'EnvironmentObject'",
         "11:6 unknown attribute 'EnvironmentObject'",
         "12:6 unknown attribute 'State'",
         "13:6 unknown attribute 'State'",
         "14:6 unknown attribute 'State'",
-        "15:6 unknown attribute 'State'"
+        "15:6 unknown attribute 'State'",
+        "16:6 unknown attribute 'State'",
+        "17:6 unknown attribute 'State'"
       ],
-      "errorCount": 134,
-      "isolatedInPass": 28,
+      "errorCount": 119,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 271,
       "status": "needs-windows-part"
@@ -568,19 +600,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "13:35 cannot find type 'Store' in scope",
-        "14:37 cannot find type 'Runtime' in scope",
-        "17:39 cannot find type 'ScheduledTaskStore' in scope",
-        "18:39 cannot find type 'TaskScheduler' in scope",
-        "23:37 cannot find type 'ScheduledTask' in scope",
-        "24:43 cannot find type 'ScheduledTask' in scope",
         "13:6 unknown attribute 'EnvironmentObject'",
-        "14:6 unknown attribute 'EnvironmentObject'"
+        "14:6 unknown attribute 'EnvironmentObject'",
+        "15:6 unknown attribute 'EnvironmentObject'",
+        "16:6 unknown attribute 'EnvironmentObject'",
+        "17:6 unknown attribute 'EnvironmentObject'",
+        "18:6 unknown attribute 'EnvironmentObject'",
+        "19:6 unknown attribute 'State'",
+        "20:6 unknown attribute 'State'"
       ],
-      "errorCount": 394,
-      "isolatedInPass": 28,
+      "errorCount": 367,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 381,
       "status": "needs-windows-part"
@@ -599,6 +632,12 @@
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
         },
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 17,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -608,19 +647,14 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "575:32 cannot find type 'AppSettings' in scope",
-        "579:24 cannot find 'ExternalAuth' in scope",
-        "592:41 cannot find type 'AppSettings' in scope",
-        "608:54 cannot find 'ExternalAuth' in scope",
-        "758:25 cannot infer contextual base in reference to member 'cli'",
-        "758:41 cannot infer contextual base in reference to member 'secondaryCLI'",
-        "758:66 cannot infer contextual base in reference to member 'customCLI'",
-        "907:30 cannot infer contextual base in reference to member 'cli'"
+        "583:32 cannot find type 'AppSettings' in scope",
+        "600:41 cannot find type 'AppSettings' in scope"
       ],
-      "errorCount": 16,
-      "isolatedInPass": 28,
+      "errorCount": 2,
+      "isolatedInPass": 21,
       "whole": false,
       "isolatedLoc": 554,
       "status": "partial"
@@ -630,15 +664,23 @@
       "lang": "swift",
       "loc": 173,
       "before": "ready",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "87:24 cannot find type 'ActivityLog' in scope"
+        "95:24 cannot find type 'ActivityLog' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 33,
+      "isolatedInPass": 34,
       "whole": false,
       "isolatedLoc": 115,
       "status": "partial"
@@ -672,6 +714,9 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "22:35 cannot find type 'Store' in scope",
@@ -697,6 +742,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "53:36 cannot find 'ExternalAuth' in scope",
@@ -709,7 +755,7 @@
         "104:9 cannot find 'ExternalAuth' in scope"
       ],
       "errorCount": 9,
-      "isolatedInPass": 34,
+      "isolatedInPass": 32,
       "whole": false,
       "isolatedLoc": 79,
       "status": "partial"
@@ -726,24 +772,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "96:15 cannot find type 'Color' in scope",
-        "98:33 cannot find 'BLTheme' in scope",
-        "99:33 cannot find 'BLTheme' in scope",
-        "100:33 cannot find 'BLTheme' in scope",
-        "101:33 cannot find 'BLTheme' in scope",
-        "102:33 cannot find 'BLTheme' in scope",
-        "111:15 cannot find type 'DealStage' in scope",
-        "112:13 cannot find type 'DealStage' in scope"
+        "104:15 cannot find type 'Color' in scope",
+        "106:33 cannot find 'BLTheme' in scope",
+        "107:33 cannot find 'BLTheme' in scope",
+        "108:33 cannot find 'BLTheme' in scope",
+        "109:33 cannot find 'BLTheme' in scope",
+        "110:33 cannot find 'BLTheme' in scope",
+        "119:15 cannot find type 'DealStage' in scope",
+        "120:13 cannot find type 'DealStage' in scope"
       ],
       "errorCount": 31,
-      "isolatedInPass": 7,
+      "isolatedInPass": 11,
       "whole": false,
       "isolatedLoc": 255,
       "status": "partial"
@@ -765,6 +818,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "14:6 unknown attribute 'EnvironmentObject'",
@@ -776,8 +830,8 @@
         "88:62 cannot find type 'View' in scope",
         "88:6 unknown attribute 'ViewBuilder'"
       ],
-      "errorCount": 226,
-      "isolatedInPass": 7,
+      "errorCount": 214,
+      "isolatedInPass": 6,
       "whole": true,
       "isolatedLoc": 283,
       "status": "needs-windows-part"
@@ -805,13 +859,16 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "47:11 cannot find type 'View' in scope",
         "50:56 cannot find type 'View' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 7,
+      "isolatedInPass": 6,
       "whole": false,
       "isolatedLoc": 11,
       "status": "partial"
@@ -839,6 +896,9 @@
       "guardedModules": [
         "CoreGraphics"
       ],
+      "kitModules": [
+        "os"
+      ],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -851,6 +911,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -872,6 +933,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "20:41 type annotation missing in pattern",
@@ -883,7 +945,7 @@
         "27:6 unknown attribute 'State'",
         "40:20 cannot find type 'View' in scope"
       ],
-      "errorCount": 51,
+      "errorCount": 49,
       "isolatedInPass": 2,
       "whole": true,
       "isolatedLoc": 119,
@@ -898,12 +960,13 @@
       "changes": [
         {
           "line": 11,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "whole": false,
@@ -927,6 +990,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "16:6 unknown attribute 'EnvironmentObject'",
@@ -938,7 +1002,7 @@
         "22:6 unknown attribute 'State'",
         "23:6 unknown attribute 'State'"
       ],
-      "errorCount": 201,
+      "errorCount": 180,
       "isolatedInPass": 2,
       "whole": true,
       "isolatedLoc": 396,
@@ -961,6 +1025,7 @@
       "guardedModules": [
         "CoreGraphics"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "41:20 cannot find type 'CGKeyCode' in scope",
@@ -973,7 +1038,7 @@
         "48:8 type 'VisualControlRequest' does not conform to protocol 'Equatable'"
       ],
       "errorCount": 10,
-      "isolatedInPass": 7,
+      "isolatedInPass": 1,
       "whole": false,
       "isolatedLoc": 453,
       "status": "partial"
@@ -990,17 +1055,24 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "158:18 cannot find 'DemoSeed' in scope"
+        "166:18 cannot find 'DemoSeed' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 12,
+      "isolatedInPass": 16,
       "whole": false,
       "isolatedLoc": 52,
       "status": "partial"
@@ -1022,6 +1094,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "16:6 unknown attribute 'EnvironmentObject'",
@@ -1033,8 +1106,8 @@
         "22:6 unknown attribute 'State'",
         "24:20 cannot find type 'View' in scope"
       ],
-      "errorCount": 250,
-      "isolatedInPass": 7,
+      "errorCount": 163,
+      "isolatedInPass": 1,
       "whole": true,
       "isolatedLoc": 285,
       "status": "needs-windows-part"
@@ -1047,6 +1120,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1059,6 +1133,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "27:19 cannot find type 'DealStage' in scope",
@@ -1067,7 +1142,7 @@
         "24:12 type 'DailyDigest.DealMove' does not conform to protocol 'Equatable'"
       ],
       "errorCount": 4,
-      "isolatedInPass": 8,
+      "isolatedInPass": 12,
       "whole": true,
       "isolatedLoc": 205,
       "status": "needs-windows-part"
@@ -1084,11 +1159,18 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1101,6 +1183,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "168:49 cannot find type 'Deal' in scope",
@@ -1113,7 +1196,7 @@
         "197:13 cannot find 'StageChange' in scope"
       ],
       "errorCount": 14,
-      "isolatedInPass": 9,
+      "isolatedInPass": 13,
       "whole": true,
       "isolatedLoc": 224,
       "status": "needs-windows-part"
@@ -1126,6 +1209,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1142,17 +1226,24 @@
           "kind": "guarded-import",
           "module": "AVFoundation",
           "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "AVFoundation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "39:24 cannot find type 'ActivityLog' in scope"
+        "47:24 cannot find type 'ActivityLog' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 23,
+      "isolatedInPass": 24,
       "whole": false,
       "isolatedLoc": 182,
       "status": "partial"
@@ -1174,13 +1265,14 @@
       "guardedModules": [
         "PDFKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "41:29 cannot find 'PDFDocument' in scope",
         "95:19 cannot find 'PDFDocument' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 1,
+      "isolatedInPass": 22,
       "whole": true,
       "isolatedLoc": 117,
       "status": "needs-windows-part"
@@ -1194,9 +1286,15 @@
       "changes": [
         {
           "line": 22,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         },
         {
           "line": 21,
@@ -1205,12 +1303,13 @@
           "to": "URLSession lives in FoundationNetworking off Apple platforms"
         }
       ],
-      "guardedModules": [
+      "guardedModules": [],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "579:24 cannot find type 'ActivityLog' in scope"
+        "589:24 cannot find type 'ActivityLog' in scope"
       ],
       "errorCount": 1,
       "isolatedInPass": 25,
@@ -1226,6 +1325,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1235,15 +1335,24 @@
       "lang": "swift",
       "loc": 250,
       "before": "ready",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "108:24 cannot find type 'ActivityLog' in scope"
+        "246:24 cannot find type 'SemanticRAG' in scope",
+        "247:23 cannot find 'SemanticRAG' in scope"
       ],
-      "errorCount": 1,
-      "isolatedInPass": 24,
+      "errorCount": 2,
+      "isolatedInPass": 10,
       "whole": false,
       "isolatedLoc": 166,
       "status": "partial"
@@ -1256,6 +1365,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1277,6 +1387,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "73:41 type annotation missing in pattern",
@@ -1289,7 +1400,7 @@
         "78:102 cannot find 'BLTheme' in scope"
       ],
       "errorCount": 27,
-      "isolatedInPass": 3,
+      "isolatedInPass": 4,
       "whole": false,
       "isolatedLoc": 45,
       "status": "partial"
@@ -1311,19 +1422,20 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "318:43 type annotation missing in pattern",
         "22:30 cannot find type 'EnvironmentKey' in scope",
         "25:11 cannot find type 'EnvironmentValues' in scope",
         "31:11 cannot find type 'View' in scope",
         "42:43 type annotation missing in pattern",
         "42:6 unknown attribute 'Environment'",
         "43:20 cannot find type 'View' in scope",
-        "57:35 cannot find type 'View' in scope"
+        "57:35 cannot find type 'View' in scope",
+        "83:32 cannot find type 'View' in scope"
       ],
-      "errorCount": 166,
-      "isolatedInPass": 1,
+      "errorCount": 180,
+      "isolatedInPass": 4,
       "whole": true,
       "isolatedLoc": 475,
       "status": "needs-windows-part"
@@ -1345,6 +1457,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1372,6 +1485,9 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "18:6 unknown attribute 'EnvironmentObject'",
@@ -1383,8 +1499,8 @@
         "24:6 unknown attribute 'State'",
         "25:6 unknown attribute 'State'"
       ],
-      "errorCount": 211,
-      "isolatedInPass": 3,
+      "errorCount": 200,
+      "isolatedInPass": 4,
       "whole": true,
       "isolatedLoc": 289,
       "status": "needs-windows-part"
@@ -1394,12 +1510,20 @@
       "lang": "swift",
       "loc": 53,
       "before": "guarded",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
-      "status": "portable"
+      "status": "converted"
     },
     {
       "id": "Sources/Markdown.swift",
@@ -1418,6 +1542,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "125:46 cannot find type 'Color' in scope",
@@ -1430,7 +1555,7 @@
         "170:22 cannot find type 'View' in scope"
       ],
       "errorCount": 57,
-      "isolatedInPass": 4,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 267,
       "status": "needs-windows-part"
@@ -1449,6 +1574,12 @@
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
         },
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 17,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -1458,14 +1589,15 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "385:22 cannot find 'OAuthConnector' in scope",
-        "512:35 cannot find 'MCPClient' in scope",
-        "602:45 cannot find 'MCPClient' in scope"
+        "393:22 cannot find 'OAuthConnector' in scope",
+        "642:19 cannot find 'DemoSeed' in scope",
+        "643:25 cannot find 'DemoSeed' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 5,
+      "isolatedInPass": 18,
       "whole": false,
       "isolatedLoc": 277,
       "status": "partial"
@@ -1482,17 +1614,24 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "64:17 cannot find 'DemoSeed' in scope"
+        "72:17 cannot find 'DemoSeed' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 14,
+      "isolatedInPass": 18,
       "whole": false,
       "isolatedLoc": 103,
       "status": "partial"
@@ -1514,9 +1653,10 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "18:35 cannot find type 'Store' in scope",
+        "17:33 cannot find type 'ClientStore' in scope",
         "16:6 unknown attribute 'EnvironmentObject'",
         "17:6 unknown attribute 'EnvironmentObject'",
         "18:6 unknown attribute 'EnvironmentObject'",
@@ -1525,8 +1665,8 @@
         "21:6 unknown attribute 'State'",
         "22:6 unknown attribute 'State'"
       ],
-      "errorCount": 257,
-      "isolatedInPass": 14,
+      "errorCount": 252,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 384,
       "status": "needs-windows-part"
@@ -1548,6 +1688,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "143:35 cannot find type 'HoloTheme' in scope",
@@ -1560,7 +1701,7 @@
         "190:20 cannot find 'NSHostingView' in scope"
       ],
       "errorCount": 24,
-      "isolatedInPass": 14,
+      "isolatedInPass": 18,
       "whole": true,
       "isolatedLoc": 209,
       "status": "needs-windows-part"
@@ -1591,6 +1732,18 @@
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
         },
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
+          "line": 0,
+          "kind": "kit",
+          "module": "Security",
+          "to": "CircuitPortKit Keychain names (the Mac gets them through Foundation)"
+        },
+        {
           "line": 3,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -1601,19 +1754,22 @@
         "CommonCrypto",
         "SwiftUI"
       ],
+      "kitModules": [
+        "Security"
+      ],
       "isolated": true,
       "errors": [
-        "98:17 cannot find 'DemoSeed' in scope",
-        "99:22 cannot find 'DemoSeed' in scope",
-        "296:17 cannot find 'CCKeyDerivationPBKDF' in scope",
-        "297:21 cannot find 'CCPBKDFAlgorithm' in scope",
-        "297:38 cannot find 'kCCPBKDF2' in scope",
-        "300:21 cannot find 'CCPseudoRandomAlgorithm' in scope",
-        "300:45 cannot find 'kCCPRFHmacAlgSHA256' in scope",
-        "305:25 cannot find 'kCCSuccess' in scope"
+        "106:17 cannot find 'DemoSeed' in scope",
+        "107:22 cannot find 'DemoSeed' in scope",
+        "304:17 cannot find 'CCKeyDerivationPBKDF' in scope",
+        "305:21 cannot find 'CCPBKDFAlgorithm' in scope",
+        "305:38 cannot find 'kCCPBKDF2' in scope",
+        "308:21 cannot find 'CCPseudoRandomAlgorithm' in scope",
+        "308:45 cannot find 'kCCPRFHmacAlgSHA256' in scope",
+        "313:25 cannot find 'kCCSuccess' in scope"
       ],
       "errorCount": 11,
-      "isolatedInPass": 15,
+      "isolatedInPass": 18,
       "whole": false,
       "isolatedLoc": 270,
       "status": "partial"
@@ -1632,6 +1788,12 @@
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
         },
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 13,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -1641,6 +1803,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1665,6 +1828,18 @@
           "to": "browser sign-in (OAuth) and WebAuthn through Windows Hello"
         },
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
+          "line": 0,
+          "kind": "kit",
+          "module": "Security",
+          "to": "CircuitPortKit Keychain names (the Mac gets them through Foundation)"
+        },
+        {
           "line": 17,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -1674,12 +1849,15 @@
       "guardedModules": [
         "AuthenticationServices"
       ],
+      "kitModules": [
+        "Security"
+      ],
       "isolated": true,
       "errors": [
-        "285:57 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope"
+        "293:57 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 4,
+      "isolatedInPass": 8,
       "whole": false,
       "isolatedLoc": 305,
       "status": "partial"
@@ -1699,6 +1877,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1718,6 +1897,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1727,16 +1907,24 @@
       "lang": "swift",
       "loc": 598,
       "before": "guarded",
-      "rewritten": false,
-      "changes": [],
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        }
+      ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "528:32 cannot find type 'ActivityLog' in scope",
-        "549:27 cannot find type 'ActivityLog' in scope"
+        "536:32 cannot find type 'ActivityLog' in scope",
+        "557:27 cannot find type 'ActivityLog' in scope"
       ],
       "errorCount": 2,
-      "isolatedInPass": 24,
+      "isolatedInPass": 27,
       "whole": false,
       "isolatedLoc": 134,
       "status": "partial"
@@ -1753,21 +1941,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "66:26 cannot find type 'AppSettings' in scope",
-        "83:26 cannot find type 'AppSettings' in scope",
-        "94:44 cannot find type 'AppSettings' in scope",
-        "111:33 cannot find type 'AppSettings' in scope",
-        "128:39 cannot infer contextual base in reference to member 'ollama'"
+        "74:26 cannot find type 'AppSettings' in scope",
+        "74:46 cannot find type 'BrainRouter' in scope",
+        "91:26 cannot find type 'AppSettings' in scope",
+        "91:46 cannot find type 'BrainRouter' in scope",
+        "102:44 cannot find type 'AppSettings' in scope",
+        "102:64 cannot find type 'BrainRouter' in scope",
+        "119:33 cannot find type 'AppSettings' in scope",
+        "119:53 cannot find type 'BrainRouter' in scope"
       ],
-      "errorCount": 5,
-      "isolatedInPass": 19,
+      "errorCount": 9,
+      "isolatedInPass": 22,
       "whole": true,
       "isolatedLoc": 122,
       "status": "needs-windows-part"
@@ -1780,6 +1978,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -1796,17 +1995,24 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "90:18 cannot find 'DemoSeed' in scope"
+        "98:18 cannot find 'DemoSeed' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 24,
+      "isolatedInPass": 15,
       "whole": false,
       "isolatedLoc": 88,
       "status": "partial"
@@ -1828,6 +2034,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "14:6 unknown attribute 'EnvironmentObject'",
@@ -1862,6 +2069,7 @@
       "guardedModules": [
         "NaturalLanguage"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "34:35 cannot find type 'NLEmbedding' in scope",
@@ -1869,7 +2077,7 @@
         "37:16 cannot find 'NLEmbedding' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 24,
+      "isolatedInPass": 9,
       "whole": false,
       "isolatedLoc": 98,
       "status": "partial"
@@ -1886,18 +2094,25 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "344:24 cannot find type 'ActivityLog' in scope",
-        "562:27 'CGWindowListCreateImage' is unavailable in macOS: Please use ScreenCaptureKit instead."
+        "352:24 cannot find type 'ActivityLog' in scope",
+        "570:27 'CGWindowListCreateImage' is unavailable in macOS: Please use ScreenCaptureKit instead."
       ],
       "errorCount": 2,
-      "isolatedInPass": 35,
+      "isolatedInPass": 36,
       "whole": false,
       "isolatedLoc": 267,
       "status": "partial"
@@ -1920,25 +2135,32 @@
           "kind": "guarded-import",
           "module": "UserNotifications",
           "to": "Windows toast notifications (AppNotificationManager)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI",
         "UserNotifications"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "19:29 cannot find type 'Store' in scope",
-        "21:32 cannot find type 'AppSettings' in scope",
-        "22:30 cannot find type 'MemoryStore' in scope",
-        "45:24 cannot find type 'Store' in scope",
-        "45:55 cannot find type 'AppSettings' in scope",
-        "45:76 cannot find type 'MemoryStore' in scope",
-        "59:9 cannot find 'UNUserNotificationCenter' in scope",
-        "59:84 reference to member 'sound' cannot be resolved without a contextual type"
+        "27:29 cannot find type 'Store' in scope",
+        "29:32 cannot find type 'AppSettings' in scope",
+        "30:30 cannot find type 'MemoryStore' in scope",
+        "31:30 cannot find type 'BrainRouter' in scope",
+        "33:29 cannot find type 'FilesConnector' in scope",
+        "34:32 cannot find type 'ActivityLog' in scope",
+        "53:24 cannot find type 'Store' in scope",
+        "53:55 cannot find type 'AppSettings' in scope"
       ],
-      "errorCount": 15,
-      "isolatedInPass": 20,
+      "errorCount": 22,
+      "isolatedInPass": 30,
       "whole": true,
       "isolatedLoc": 214,
       "status": "needs-windows-part"
@@ -1958,19 +2180,20 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "221:32 cannot find type 'AppSettings' in scope",
-        "233:99 cannot find type 'AppSettings' in scope",
-        "234:28 cannot find type 'Store' in scope",
-        "234:43 cannot find type 'MemoryStore' in scope",
-        "235:52 cannot find type 'MCPManager' in scope",
-        "235:76 cannot find type 'ClientStore' in scope",
         "120:22 cannot find type 'ActivityOutcome' in scope",
-        "189:56 cannot find type 'ActivityOutcome' in scope"
+        "189:56 cannot find type 'ActivityOutcome' in scope",
+        "219:30 cannot find type 'BrainRouter' in scope",
+        "220:32 cannot find type 'ActivityLog' in scope",
+        "221:32 cannot find type 'AppSettings' in scope",
+        "233:52 cannot find type 'BrainRouter' in scope",
+        "233:75 cannot find type 'ActivityLog' in scope",
+        "233:99 cannot find type 'AppSettings' in scope"
       ],
-      "errorCount": 9,
-      "isolatedInPass": 20,
+      "errorCount": 23,
+      "isolatedInPass": 30,
       "whole": false,
       "isolatedLoc": 256,
       "status": "partial"
@@ -1998,6 +2221,9 @@
       "guardedModules": [
         "CoreGraphics"
       ],
+      "kitModules": [
+        "os"
+      ],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -2019,6 +2245,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "44:6 unknown attribute 'State'",
@@ -2030,8 +2257,8 @@
         "70:6 unknown attribute 'Environment'",
         "71:6 unknown attribute 'State'"
       ],
-      "errorCount": 128,
-      "isolatedInPass": 36,
+      "errorCount": 631,
+      "isolatedInPass": 35,
       "whole": true,
       "isolatedLoc": 932,
       "status": "needs-windows-part"
@@ -2048,19 +2275,26 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "274:32 cannot find type 'ActivityLog' in scope",
-        "314:27 cannot find type 'ActivityLog' in scope",
-        "504:11 cannot find type 'SelfCodingEngine' in scope"
+        "282:32 cannot find type 'ActivityLog' in scope",
+        "322:27 cannot find type 'ActivityLog' in scope",
+        "512:11 cannot find type 'SelfCodingEngine' in scope"
       ],
       "errorCount": 3,
-      "isolatedInPass": 30,
+      "isolatedInPass": 26,
       "whole": false,
       "isolatedLoc": 198,
       "status": "partial"
@@ -2088,6 +2322,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "172:17 cannot find type 'Color' in scope",
@@ -2100,7 +2335,7 @@
         "211:8 type 'HoloPreset' does not conform to protocol 'Hashable'"
       ],
       "errorCount": 23,
-      "isolatedInPass": 3,
+      "isolatedInPass": 4,
       "whole": false,
       "isolatedLoc": 405,
       "status": "partial"
@@ -2122,6 +2357,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "13:37 cannot find type 'Session' in scope",
@@ -2151,24 +2387,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "115:35 cannot find type 'Store' in scope",
-        "116:36 cannot find type 'SkillStore' in scope",
-        "117:37 cannot find type 'PromptLibrary' in scope",
-        "118:38 cannot find type 'ActivityLog' in scope",
-        "119:36 cannot find type 'MemoryStore' in scope",
-        "120:33 type annotation missing in pattern",
-        "114:6 unknown attribute 'EnvironmentObject'",
-        "115:6 unknown attribute 'EnvironmentObject'"
+        "123:35 cannot find type 'Store' in scope",
+        "125:37 cannot find type 'PromptLibrary' in scope",
+        "126:38 cannot find type 'ActivityLog' in scope",
+        "127:36 cannot find type 'MemoryStore' in scope",
+        "128:33 type annotation missing in pattern",
+        "122:6 unknown attribute 'EnvironmentObject'",
+        "123:6 unknown attribute 'EnvironmentObject'",
+        "124:6 unknown attribute 'EnvironmentObject'"
       ],
-      "errorCount": 353,
-      "isolatedInPass": 27,
+      "errorCount": 354,
+      "isolatedInPass": 31,
       "whole": false,
       "isolatedLoc": 708,
       "status": "partial"
@@ -2185,17 +2428,24 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "46:18 cannot find 'DemoSeed' in scope"
+        "54:18 cannot find 'DemoSeed' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 17,
+      "isolatedInPass": 31,
       "whole": false,
       "isolatedLoc": 73,
       "status": "partial"
@@ -2208,6 +2458,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2229,6 +2480,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "13:6 unknown attribute 'EnvironmentObject'",
@@ -2240,8 +2492,8 @@
         "19:6 unknown attribute 'State'",
         "20:6 unknown attribute 'State'"
       ],
-      "errorCount": 154,
-      "isolatedInPass": 1,
+      "errorCount": 208,
+      "isolatedInPass": 7,
       "whole": true,
       "isolatedLoc": 284,
       "status": "needs-windows-part"
@@ -2273,9 +2525,15 @@
         },
         {
           "line": 9,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         },
         {
           "line": 1,
@@ -2286,22 +2544,24 @@
       ],
       "guardedModules": [
         "SwiftUI",
-        "AuthenticationServices",
+        "AuthenticationServices"
+      ],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "63:55 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
-        "66:29 cannot find type 'ASWebAuthenticationSession' in scope",
-        "178:73 cannot find type 'ASPresentationAnchor' in scope",
-        "178:42 cannot find type 'ASWebAuthenticationSession' in scope",
-        "110:23 cannot find 'ASWebAuthenticationSession' in scope",
-        "114:36 cannot find 'ASWebAuthenticationSessionError' in scope",
-        "115:34 cannot find 'ASWebAuthenticationSessionError' in scope",
-        "179:51 cannot find 'ASPresentationAnchor' in scope"
+        "73:55 cannot find type 'ASWebAuthenticationPresentationContextProviding' in scope",
+        "76:29 cannot find type 'ASWebAuthenticationSession' in scope",
+        "188:73 cannot find type 'ASPresentationAnchor' in scope",
+        "188:42 cannot find type 'ASWebAuthenticationSession' in scope",
+        "120:23 cannot find 'ASWebAuthenticationSession' in scope",
+        "124:36 cannot find 'ASWebAuthenticationSessionError' in scope",
+        "125:34 cannot find 'ASWebAuthenticationSessionError' in scope",
+        "189:51 cannot find 'ASPresentationAnchor' in scope"
       ],
       "errorCount": 8,
-      "isolatedInPass": 1,
+      "isolatedInPass": 7,
       "whole": false,
       "isolatedLoc": 110,
       "status": "partial"
@@ -2318,20 +2578,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "388:25 cannot find 'DemoSeed' in scope",
-        "389:21 cannot find 'DemoSeed' in scope",
-        "390:21 cannot find 'DemoSeed' in scope",
-        "391:23 cannot find 'DemoSeed' in scope"
+        "314:21 cannot find type 'FilesConnector' in scope",
+        "323:20 cannot find 'SemanticRAG' in scope",
+        "326:16 cannot find 'SemanticRAG' in scope",
+        "332:9 cannot find 'SemanticRAG' in scope",
+        "396:25 cannot find 'DemoSeed' in scope",
+        "397:21 cannot find 'DemoSeed' in scope",
+        "398:21 cannot find 'DemoSeed' in scope",
+        "399:23 cannot find 'DemoSeed' in scope"
       ],
-      "errorCount": 4,
-      "isolatedInPass": 11,
+      "errorCount": 8,
+      "isolatedInPass": 29,
       "whole": false,
       "isolatedLoc": 252,
       "status": "partial"
@@ -2360,18 +2631,19 @@
         "SwiftUI",
         "CoreText"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "224:26 cannot find type 'View' in scope",
         "23:25 cannot find 'Color' in scope",
-        "24:25 cannot find 'Color' in scope",
-        "25:25 cannot find 'Color' in scope",
-        "26:25 cannot find 'Color' in scope",
-        "27:26 cannot find 'Color' in scope",
-        "28:25 cannot find 'Color' in scope",
-        "29:30 cannot find 'Color' in scope"
+        "56:27 cannot find type 'LinearGradient' in scope",
+        "32:26 cannot find 'Color' in scope",
+        "43:25 cannot find 'Color' in scope",
+        "47:25 cannot find 'Color' in scope",
+        "51:25 cannot find 'Color' in scope",
+        "52:25 cannot find 'Color' in scope"
       ],
-      "errorCount": 184,
+      "errorCount": 192,
       "isolatedInPass": 1,
       "whole": true,
       "isolatedLoc": 494,
@@ -2392,6 +2664,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -2404,6 +2677,12 @@
       "rewritten": true,
       "changes": [
         {
+          "line": 0,
+          "kind": "kit",
+          "module": "Security",
+          "to": "CircuitPortKit Keychain names (the Mac gets them through Foundation)"
+        },
+        {
           "line": 1,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -2411,6 +2690,9 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [
+        "Security"
+      ],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -2423,6 +2705,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2445,25 +2728,32 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "AVFoundation",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "20:25 cannot find 'AVSpeechSynthesizer' in scope",
-        "60:47 cannot find type 'AVSpeechSynthesizerDelegate' in scope",
-        "63:33 cannot find type 'AVSpeechSynthesizer' in scope",
-        "63:66 cannot find type 'AVSpeechUtterance' in scope",
-        "64:33 cannot find type 'AVSpeechSynthesizer' in scope",
-        "64:67 cannot find type 'AVSpeechUtterance' in scope",
-        "65:33 cannot find type 'AVSpeechSynthesizer' in scope",
-        "65:67 cannot find type 'AVSpeechUtterance' in scope"
+        "28:25 cannot find 'AVSpeechSynthesizer' in scope",
+        "68:47 cannot find type 'AVSpeechSynthesizerDelegate' in scope",
+        "71:33 cannot find type 'AVSpeechSynthesizer' in scope",
+        "71:66 cannot find type 'AVSpeechUtterance' in scope",
+        "72:33 cannot find type 'AVSpeechSynthesizer' in scope",
+        "72:67 cannot find type 'AVSpeechUtterance' in scope",
+        "73:33 cannot find type 'AVSpeechSynthesizer' in scope",
+        "73:67 cannot find type 'AVSpeechUtterance' in scope"
       ],
       "errorCount": 14,
-      "isolatedInPass": 1,
+      "isolatedInPass": 5,
       "whole": false,
       "isolatedLoc": 45,
       "status": "partial"
@@ -2480,17 +2770,24 @@
           "kind": "guarded-import",
           "module": "AVFoundation",
           "to": "Media Foundation and WASAPI (audio), Windows.Media.Capture (camera)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "AVFoundation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "71:24 cannot find type 'ActivityLog' in scope"
+        "79:24 cannot find type 'ActivityLog' in scope"
       ],
       "errorCount": 1,
-      "isolatedInPass": 32,
+      "isolatedInPass": 33,
       "whole": false,
       "isolatedLoc": 238,
       "status": "partial"
@@ -2512,6 +2809,7 @@
       "guardedModules": [
         "CoreLocation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "113:31 cannot find 'CLGeocoder' in scope",
@@ -2531,6 +2829,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2550,6 +2849,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -2562,6 +2862,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2574,6 +2875,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"

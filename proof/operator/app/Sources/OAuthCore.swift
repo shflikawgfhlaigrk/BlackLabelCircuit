@@ -29,6 +29,14 @@ import AppKit
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - OAuthParams — the per-connector OAuth description carried on a ConnectorEntry
 

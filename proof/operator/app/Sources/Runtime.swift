@@ -10,6 +10,14 @@ import SwiftUI
 #if canImport(UserNotifications) && !CIRCUIT_WINDOWS_SIM
 import UserNotifications
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 @MainActor
 final class Runtime: ObservableObject {

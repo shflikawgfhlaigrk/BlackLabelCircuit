@@ -2,6 +2,14 @@
 // Black Label Real Estate — OFFERS/LOI, DISPOSITIONS (cash buyers + blast), ANALYTICS, and
 // GLOBAL SEARCH. All real data, all on the buyer's own pipeline. Nothing fabricated.
 import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif

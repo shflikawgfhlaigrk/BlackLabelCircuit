@@ -1,3 +1,4 @@
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 // AudioDoctor: deterministic mix/master diagnosis, release checks, translation previews,
 // reference DNA, master matrix rendering, and proof reports. No AI, no cloud, no training.
 
@@ -886,3 +887,4 @@ enum AudioDoctor {
         return AudioSignal(channels: out, sampleRate: lowPassed.sampleRate)
     }
 }
+#endif // circuit-convert

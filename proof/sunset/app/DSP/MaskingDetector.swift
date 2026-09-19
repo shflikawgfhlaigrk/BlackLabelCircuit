@@ -1,3 +1,4 @@
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 // MaskingDetector.swift — cross-stem frequency-masking analysis for the MIX stage.
 //
 // Two stems "mask" when they both carry strong energy in the same third-octave
@@ -198,3 +199,4 @@ enum MaskingDetector {
                    : String(format: "%.0f Hz", hz)
     }
 }
+#endif // circuit-convert

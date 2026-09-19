@@ -19,6 +19,8 @@ import SwiftUI
 #endif
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
 #if os(macOS)
 import AppKit

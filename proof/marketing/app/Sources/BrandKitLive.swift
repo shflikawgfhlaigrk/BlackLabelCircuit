@@ -1,4 +1,3 @@
-#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 // Black Label Marketing — BrandKitLive (MK-16).
 //
 // The app-target bridges for the pure BrandKit: build the locked kit from the buyer's saved Prefs,
@@ -9,6 +8,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 extension BrandKit {
     /// The locked kit built from the buyer's real saved brand identity — nothing fabricated.
     /// `city` optionally overrides the saved default market for a one-off campaign.
@@ -41,7 +41,9 @@ extension BrandKit {
         }
     }
 }
+#endif // circuit-convert
 
+#if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 extension BrandKitImporter {
     /// The live fetcher: a synchronous, buyer-initiated GET of the domain root through the egress
     /// choke point on the declared `userDirectedFetch` lane.

@@ -1,13 +1,15 @@
 # BlackLabelAcademy — converted for windows by Circuit
 
-Generated 2026-09-18T07:12:31.811Z from `/Users/michaelbarber/BlackLabelAcademy`. The source repo was not modified.
+Generated 2026-09-19T01:30:56.716Z from `/Users/michaelbarber/BlackLabelAcademy`. The source repo was not modified.
+
+Source read: 22 files, sha256 `53a5bdf0c83d44d9` (git fc888d5ff + 4 uncommitted change(s)).
 
 **Compiler check: passed** — simulated Windows configuration on macOS (-DCIRCUIT_WINDOWS_SIM); Apple Swift version 6.4 (swiftlang-6.4.0.33.1 clang-2100.3.33.1).
 
 | | Files | Lines |
 |---|---:|---:|
-| Builds for Windows unchanged | 7 | 1,789 |
-| Converted, builds for Windows | 5 | 1,663 |
+| Builds for Windows unchanged | 6 | 1,487 |
+| Converted, builds for Windows | 6 | 1,965 |
 | Builds for Windows with some declarations kept for the Mac | 4 | 742 build · 515 isolated |
 | Needs a Windows part (kept byte-for-byte for the Mac build, compiled out elsewhere) | 6 | 2,157 |
 | **Total app code considered** | **22** | **6,866** |
@@ -27,7 +29,7 @@ swift build -Xswiftc -DCIRCUIT_WINDOWS_SIM       # on a Mac: the Windows configu
 
 - `OpenCombine` — https://github.com/OpenCombine/OpenCombine.git (from 0.14.0)
 - `swift-toolchain-sqlite` — https://github.com/swiftlang/swift-toolchain-sqlite.git (from 1.0.0)
-- `CircuitPortKit` (in `kit/`) — Logger / os_log, UTType, and the Combine scheduler bridge
+- `CircuitPortKit` (in `kit/`) — Logger / os_log, UTType, the Combine scheduler bridge, and the Keychain (Windows Credential Manager) with SecRandomCopyBytes
 
 ## Windows parts still needed
 
@@ -57,4 +59,5 @@ swift build -Xswiftc -DCIRCUIT_WINDOWS_SIM       # on a Mac: the Windows configu
 - `Sources/Model.swift` — SwiftUI → WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI); Combine → OpenCombine (same API); SQLite3 → swift-toolchain-sqlite (the same C API)
 - `Sources/Recall.swift` — Combine → OpenCombine (same API); SQLite3 → swift-toolchain-sqlite (the same C API)
 - `Sources/StudyHabit.swift` — Combine → OpenCombine (same API); SQLite3 → swift-toolchain-sqlite (the same C API)
-- `Sources/Updater.swift` — FoundationNetworking → URLSession lives in FoundationNetworking off Apple platforms
+- `Sources/Trial.swift` — Combine → OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)
+- `Sources/Updater.swift` — Security → CircuitPortKit Keychain names (the Mac gets them through Foundation); FoundationNetworking → URLSession lives in FoundationNetworking off Apple platforms

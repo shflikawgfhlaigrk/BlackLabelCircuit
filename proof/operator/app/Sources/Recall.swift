@@ -31,6 +31,14 @@ import Vision
 #if canImport(CoreGraphics)
 import CoreGraphics
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - The gate (PURE — mirrors DictationPolicy)
 

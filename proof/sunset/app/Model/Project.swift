@@ -8,6 +8,14 @@ import AppKit
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// Central app state. Owns the loaded audio, the selected targets, and orchestrates the
 /// offline mix/master engines on a background task while keeping UI updates on the main actor.

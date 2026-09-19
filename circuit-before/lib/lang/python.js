@@ -1,0 +1,157 @@
+// Python: module import graph + review signals, over cleaned source
+// (docstrings and strings blanked — they can't fake imports or functions).
+import path from 'node:path';
+import { baseMetrics, indentFunctions, splitTopLevelParams } from './common.js';
+import { cleanSource, lineViews } from './clean.js';
+
+// Resolve a python module path to a repo file: pkg.mod → pkg/mod.py | pkg/mod/__init__.py
+function moduleToFile(parts, fileSet) {
+  const base = parts.join('/');
+  if (fileSet.has(base + '.py')) return base + '.py';
+  if (fileSet.has(base + '/__init__.py')) return base + '/__init__.py';
+  return null;
+}
+
+export function resolvePyImport(fromRel, stmt, fileSet, topPackages) {
+  // stmt: {module, level, names, raw} — level = leading dots on relative imports
+  const fromDirParts = path.posix.dirname(fromRel.split(path.sep).join('/')).split('/').filter((p) => p !== '.');
+  if (stmt.level > 0) {
+    // `from .` strips 0 dirs, `from ..` strips 1, etc. More dots than dirs → escapes the repo.
+    if (stmt.level - 1 > fromDirParts.length) return { external: false, resolved: null, spec: stmt.raw };
+    const baseParts = fromDirParts.slice(0, fromDirParts.length - (stmt.level - 1));
+    if (stmt.module) {
+      const resolved = moduleToFile([...baseParts, ...stmt.module.split('.')], fileSet);
+      return { external: false, resolved, spec: stmt.raw };
+    }
+    // `from . import a, b` — prefer sibling modules a.py over the package __init__.
+    for (const name of stmt.names ?? []) {
+      const hit = moduleToFile([...baseParts, name], fileSet);
+      if (hit) return { external: false, resolved: hit, spec: stmt.raw };
+    }
+    const initPath = baseParts.length ? baseParts.join('/') + '/__init__.py' : '__init__.py';
+    return { external: false, resolved: fileSet.has(initPath) ? initPath : null, spec: stmt.raw };
+  }
+  // absolute: only internal when the path exists in this repo
+  const parts = stmt.module.split('.');
+  const candidates = [parts];
+  if (fromDirParts.length) candidates.push([...fromDirParts, ...parts]);
+  for (const cand of candidates) {
+    for (let k = cand.length; k >= 1; k--) {
+      const hit = moduleToFile(cand.slice(0, k), fileSet);
+      if (hit) return { external: false, resolved: hit, spec: stmt.raw };
+    }
+  }
+  if (topPackages.has(parts[0])) {
+    return { external: false, resolved: null, spec: stmt.raw }; // local package, missing file
+  }
+  return { external: true, spec: stmt.raw };
+}
+
+// A Python default argument is the classic shared-mutable gotcha when its value
+// is a fresh container built ONCE at def-time: a `[...]` list or `{...}` dict/set
+// literal, or a mutable-container constructor call — the builtins `list()` /
+// `dict()` / `set()` / `bytearray()`, or the `collections` containers
+// `OrderedDict()` / `defaultdict()` / `Counter()` (bare or `collections.`-dotted).
+// An empty tuple `()` and the immutable constructors `tuple()` / `frozenset()` /
+// `bytes()` are IMMUTABLE and must never flag — doing so would be a fabricated
+// defect (§5.1). Only a bare builtin name or an explicit `collections.` prefix
+// matches, so an unrelated method call like `obj.set()` / `x.Counter()` stays safe.
+const PY_MUTABLE_DEFAULT =
+  /^\[|^\{|^(?:list|dict|set|bytearray)\s*\(|^(?:collections\.)?(?:OrderedDict|defaultdict|Counter)\s*\(/;
+
+// Balanced parameter-list body of the def whose signature starts at line `idx`
+// (buffers across wrapped lines to the matching ')'). Returns null when no '('
+// opens. Parsing the WHOLE signature — not just up to the first ')' — is what
+// lets a mutable default AFTER a tuple default (`def f(a=(), b=[])`) still fire;
+// the old `[^)]*` anchor stopped at the tuple's close paren and missed it.
+function pyParamBody(lines, idx) {
+  let depth = 0, started = false, buf = '';
+  for (let l = idx; l < Math.min(lines.length, idx + 60); l++) {
+    for (const ch of lines[l]) {
+      if (!started) { if (ch === '(') { started = true; depth = 1; } continue; }
+      if (ch === '(' || ch === '[' || ch === '{') depth++;
+      else if (ch === ')' || ch === ']' || ch === '}') { depth--; if (depth === 0) return buf; }
+      buf += ch;
+    }
+    if (started) buf += ' ';
+  }
+  return null;
+}
+
+// True when any top-level parameter's default value is a shared mutable. Splits
+// on top-level commas (a comma inside a default stays with its param), then reads
+// each segment's first assignment `=` (not ==/!=/<=/>=) as the name/default split.
+function pyHasMutableDefault(body) {
+  return splitTopLevelParams(body).some((seg) => {
+    const eq = seg.search(/(?<![=!<>])=(?!=)/);
+    return eq >= 0 && PY_MUTABLE_DEFAULT.test(seg.slice(eq + 1).trim());
+  });
+}
+
+export function analyzePython(rel, content, lang, fileSet, topPackages) {
+  const clean = cleanSource(content, 'python');
+  const m = baseMetrics(clean, 'python');
+  m.functions = indentFunctions(clean.cleaned);
+
+  const { rawLines, cleanedLines } = lineViews(clean);
+  const imports = [];
+  for (let i = 0; i < cleanedLines.length; i++) {
+    const line = cleanedLines[i];
+    let match;
+    if ((match = line.match(/^\s*from\s+(\.*)([\w.]*)\s+import\s+(.*)$/))) {
+      const names = match[3].replace(/[()#].*$/, '').split(',').map((s) => s.trim().split(/\s+as\s+/)[0]).filter((s) => /^\w+$/.test(s));
+      const stmt = { level: match[1].length, module: match[2], names, raw: rawLines[i].trim().slice(0, 60) };
+      imports.push({ spec: (match[1] + match[2]) || '.', line: i + 1, ...resolvePyImport(rel, stmt, fileSet, topPackages) });
+    } else if ((match = line.match(/^\s*import\s+([\w.]+(?:\s*,\s*[\w.]+)*)/))) {
+      for (const mod of match[1].split(',').map((s) => s.trim().split(/\s+as\s+/)[0])) {
+        const stmt = { level: 0, module: mod, names: [], raw: `import ${mod}` };
+        imports.push({ spec: mod, line: i + 1, ...resolvePyImport(rel, stmt, fileSet, topPackages) });
+      }
+    }
+  }
+
+  const signals = { debugLogs: [], bareExcepts: [], evals: [], mutableDefaults: [], emptyCatches: [] };
+  for (let i = 0; i < cleanedLines.length; i++) {
+    const line = cleanedLines[i];
+    if (/^\s*print\s*\(/.test(line)) signals.debugLogs.push(i + 1);
+    if (/\beval\s*\(|\bexec\s*\(/.test(line)) signals.evals.push(i + 1);
+    // Mutable default argument (the classic Python shared-state gotcha): a list
+    // `[]`/dict `{}` literal OR a mutable-container constructor default
+    // (`list()`/`dict()`/`set()`/`bytearray()`, or `collections` OrderedDict/
+    // defaultdict/Counter), anywhere in the full signature. An empty tuple `()` /
+    // `tuple()` / `frozenset()` / `bytes()` stays safe.
+    if (/^\s*(?:async\s+)?def\s+\w+\s*\(/.test(line)) {
+      const body = pyParamBody(cleanedLines, i);
+      if (body !== null && pyHasMutableDefault(body)) signals.mutableDefaults.push(i + 1);
+    }
+    if (/^\s*except\b.*:\s*$/.test(line)) {
+      // swallowed error (except ...: pass) counts once; a bare `except:` that
+      // does real work is the lesser, separate finding — never both.
+      let swallowed = false;
+      for (let j = i + 1; j < Math.min(cleanedLines.length, i + 3); j++) {
+        const nt = cleanedLines[j].trim();
+        if (!nt) continue;
+        if (nt === 'pass' || nt === '...') swallowed = true;
+        break;
+      }
+      if (swallowed) signals.emptyCatches.push(i + 1);
+      else if (/^\s*except\s*:/.test(line)) signals.bareExcepts.push(i + 1);
+    }
+  }
+
+  // Docstrings: def/class followed by a string literal (check raw — cleaner keeps delimiters)
+  let publicSymbols = 0, documented = 0;
+  for (let i = 0; i < cleanedLines.length; i++) {
+    const match = cleanedLines[i].match(/^\s*(?:async\s+)?(?:def|class)\s+(\w+)/);
+    if (!match || match[1].startsWith('_')) continue;
+    publicSymbols++;
+    for (let j = i + 1; j < Math.min(rawLines.length, i + 4); j++) {
+      const t = rawLines[j].trim();
+      if (!t) continue;
+      if (t.startsWith('"""') || t.startsWith("'''") || t.startsWith('"') || t.startsWith("'")) documented++;
+      break;
+    }
+  }
+  m.docs = { publicSymbols, documented };
+  return { metrics: m, imports, signals, decls: [] };
+}

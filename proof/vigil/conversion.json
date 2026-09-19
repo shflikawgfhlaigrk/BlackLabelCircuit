@@ -2,8 +2,16 @@
   "root": "/Users/michaelbarber/BlackLabelHome",
   "name": "BlackLabelHome",
   "target": "windows",
-  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/vigil",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/new/vigil",
   "moduleName": "BlackLabelHomeCore",
+  "source": {
+    "sha256": "793f1b348aa1e197eff7b3d5bee829e7f11c79bd7874fa41ed670a5a15d204b4",
+    "files": 114,
+    "git": {
+      "head": "af989d8c42bfcd5771f4f50ef1e711718787d005",
+      "uncommitted": 0
+    }
+  },
   "moduleSources": {
     "from": "project.yml target Homefront",
     "paths": [
@@ -32,16 +40,16 @@
       "engine"
     ]
   },
-  "generatedAt": 1789715624504,
-  "tookMs": 32787,
+  "generatedAt": 1789781522618,
+  "tookMs": 23927,
   "before": {
     "readyPct": 57.3,
     "files": 120,
     "loc": 33110
   },
   "after": {
-    "readyPct": 74.5,
-    "guardedLoc": 5648,
+    "readyPct": 82.4,
+    "guardedLoc": 3079,
     "needsWindowsLoc": 2607
   },
   "verification": {
@@ -51,11 +59,11 @@
     "passes": [
       {
         "pass": 1,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 2,
-        "isolated": 1
+        "isolated": 2
       },
       {
         "pass": 3,
@@ -63,15 +71,15 @@
       },
       {
         "pass": 4,
-        "isolated": 2
+        "isolated": 3
       },
       {
         "pass": 5,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 6,
-        "isolated": 2
+        "isolated": 1
       },
       {
         "pass": 7,
@@ -87,10 +95,14 @@
       },
       {
         "pass": 10,
-        "isolated": 3
+        "isolated": 1
       },
       {
         "pass": 11,
+        "isolated": 3
+      },
+      {
+        "pass": 12,
         "isolated": 0
       }
     ],
@@ -198,6 +210,13 @@
       "loc": 2209
     },
     {
+      "id": "simd",
+      "windows": "the standard library SIMD types; simd_* functions need a portable implementation",
+      "effort": "S",
+      "files": 1,
+      "loc": 2209
+    },
+    {
       "id": "UserNotifications",
       "windows": "Windows toast notifications (AppNotificationManager)",
       "effort": "S",
@@ -268,6 +287,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -289,6 +309,7 @@
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "21:6 unknown attribute 'EnvironmentObject'",
@@ -326,6 +347,12 @@
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
         },
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 1,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -336,19 +363,20 @@
         "AVKit",
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "71:27 cannot find type 'NSImage' in scope",
-        "98:30 cannot find type 'NSImage' in scope",
-        "177:6 unknown attribute 'EnvironmentObject'",
-        "178:6 unknown attribute 'EnvironmentObject'",
-        "180:6 unknown attribute 'State'",
-        "181:6 unknown attribute 'State'",
-        "182:6 unknown attribute 'State'",
-        "183:6 unknown attribute 'State'"
+        "79:27 cannot find type 'NSImage' in scope",
+        "106:30 cannot find type 'NSImage' in scope",
+        "185:6 unknown attribute 'EnvironmentObject'",
+        "186:6 unknown attribute 'EnvironmentObject'",
+        "188:6 unknown attribute 'State'",
+        "189:6 unknown attribute 'State'",
+        "190:6 unknown attribute 'State'",
+        "191:6 unknown attribute 'State'"
       ],
       "errorCount": 175,
-      "isolatedInPass": 7,
+      "isolatedInPass": 8,
       "whole": true,
       "isolatedLoc": 513,
       "status": "needs-windows-part"
@@ -368,6 +396,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -384,24 +413,31 @@
           "kind": "guarded-import",
           "module": "SwiftUI",
           "to": "WinUI 3 through swift-winrt, or SwiftCrossUI (SwiftUI-style views on WinUI)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "96:6 unknown attribute 'EnvironmentObject'",
-        "97:6 unknown attribute 'EnvironmentObject'",
-        "98:6 unknown attribute 'EnvironmentObject'",
-        "99:6 unknown attribute 'StateObject'",
-        "99:40 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
-        "111:20 cannot find type 'View' in scope",
-        "127:30 cannot find type 'View' in scope",
-        "161:34 cannot find type 'View' in scope"
+        "104:6 unknown attribute 'EnvironmentObject'",
+        "105:6 unknown attribute 'EnvironmentObject'",
+        "106:6 unknown attribute 'EnvironmentObject'",
+        "107:6 unknown attribute 'StateObject'",
+        "107:40 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "119:20 cannot find type 'View' in scope",
+        "135:30 cannot find type 'View' in scope",
+        "169:34 cannot find type 'View' in scope"
       ],
       "errorCount": 126,
-      "isolatedInPass": 6,
+      "isolatedInPass": 7,
       "whole": false,
       "isolatedLoc": 205,
       "status": "partial"
@@ -435,6 +471,7 @@
       "guardedModules": [
         "Network"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "32:28 cannot find type 'NWBrowser' in scope",
@@ -460,6 +497,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -479,6 +517,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -501,22 +540,29 @@
           "kind": "guarded-import",
           "module": "Network",
           "to": "Winsock / Windows.Networking (NWConnection, NWPathMonitor, Bonjour browsing)"
+        },
+        {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
         }
       ],
       "guardedModules": [
         "SwiftUI",
         "Network"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "100:6 unknown attribute 'EnvironmentObject'",
-        "101:6 unknown attribute 'StateObject'",
-        "101:39 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
-        "102:6 unknown attribute 'State'",
-        "105:6 unknown attribute 'State'",
-        "106:30 ambiguous use of 'publish(every:tolerance:on:in:options:)'",
-        "111:20 cannot find type 'View' in scope",
-        "131:30 cannot find type 'View' in scope"
+        "108:6 unknown attribute 'EnvironmentObject'",
+        "109:6 unknown attribute 'StateObject'",
+        "109:39 call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]",
+        "110:6 unknown attribute 'State'",
+        "113:6 unknown attribute 'State'",
+        "114:30 ambiguous use of 'publish(every:tolerance:on:in:options:)'",
+        "119:20 cannot find type 'View' in scope",
+        "139:30 cannot find type 'View' in scope"
       ],
       "errorCount": 101,
       "isolatedInPass": 4,
@@ -1753,6 +1799,7 @@
       "guardedModules": [
         "CoreLocation"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "17:57 cannot find type 'CLLocationManagerDelegate' in scope",
@@ -1785,6 +1832,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1804,6 +1852,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -1858,6 +1907,12 @@
           "to": "Windows.Media.Ocr or ONNX Runtime"
         },
         {
+          "line": 17,
+          "kind": "guarded-import",
+          "module": "simd",
+          "to": "the standard library SIMD types; simd_* functions need a portable implementation"
+        },
+        {
           "line": 12,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -1870,21 +1925,23 @@
         "AppKit",
         "CoreWLAN",
         "AVFoundation",
-        "Vision"
+        "Vision",
+        "simd"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "244:29 cannot find type 'HomeStore' in scope",
-        "289:23 cannot find type 'HomeStore' in scope",
-        "664:26 cannot find 'CWWiFiClient' in scope",
-        "776:34 cannot find type 'SCNVector3' in scope",
-        "775:53 cannot find type 'AVCaptureVideoDataOutputSampleBufferDelegate' in scope",
-        "793:24 cannot find type 'VNHumanBodyPose3DObservation' in scope",
-        "808:27 cannot find 'AVCaptureSession' in scope",
-        "816:27 cannot find 'VNDetectHumanBodyPoseRequest' in scope"
+        "246:29 cannot find type 'HomeStore' in scope",
+        "291:23 cannot find type 'HomeStore' in scope",
+        "666:26 cannot find 'CWWiFiClient' in scope",
+        "778:34 cannot find type 'SCNVector3' in scope",
+        "777:53 cannot find type 'AVCaptureVideoDataOutputSampleBufferDelegate' in scope",
+        "795:24 cannot find type 'VNHumanBodyPose3DObservation' in scope",
+        "810:27 cannot find 'AVCaptureSession' in scope",
+        "818:27 cannot find 'VNDetectHumanBodyPoseRequest' in scope"
       ],
       "errorCount": 96,
-      "isolatedInPass": 10,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 2209,
       "status": "needs-windows-part"
@@ -1919,6 +1976,7 @@
         "SwiftUI",
         "UserNotifications"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "27:50 cannot find type 'UNUserNotificationCenterDelegate' in scope",
@@ -1931,7 +1989,7 @@
         "32:45 reference to member 'sound' cannot be resolved without a contextual type"
       ],
       "errorCount": 29,
-      "isolatedInPass": 9,
+      "isolatedInPass": 10,
       "whole": true,
       "isolatedLoc": 848,
       "status": "needs-windows-part"
@@ -1966,6 +2024,9 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [
+        "UniformTypeIdentifiers"
+      ],
       "isolated": true,
       "errors": [
         "45:35 cannot find type 'HomeStore' in scope",
@@ -1978,7 +2039,7 @@
         "84:31 cannot find type 'View' in scope"
       ],
       "errorCount": 160,
-      "isolatedInPass": 10,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 1728,
       "status": "needs-windows-part"
@@ -1991,6 +2052,7 @@
       "rewritten": false,
       "changes": [],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "portable"
@@ -2019,6 +2081,7 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "23:44 type annotation missing in pattern",
@@ -2030,8 +2093,8 @@
         "47:30 cannot find type 'View' in scope",
         "60:31 cannot find type 'View' in scope"
       ],
-      "errorCount": 53,
-      "isolatedInPass": 1,
+      "errorCount": 74,
+      "isolatedInPass": 2,
       "whole": true,
       "isolatedLoc": 116,
       "status": "needs-windows-part"
@@ -2060,6 +2123,7 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "19:6 unknown attribute 'State'",
@@ -2072,7 +2136,7 @@
         "104:6 unknown attribute 'State'"
       ],
       "errorCount": 383,
-      "isolatedInPass": 8,
+      "isolatedInPass": 9,
       "whole": true,
       "isolatedLoc": 703,
       "status": "needs-windows-part"
@@ -2108,6 +2172,7 @@
         "WebKit",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "24:26 cannot find 'Color' in scope",
@@ -2140,6 +2205,7 @@
         }
       ],
       "guardedModules": [],
+      "kitModules": [],
       "whole": false,
       "isolatedLoc": 0,
       "status": "converted"
@@ -2175,6 +2241,7 @@
         "SceneKit",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "44:42 cannot find type 'SCNView' in scope",
@@ -2187,7 +2254,7 @@
         "102:24 cannot find 'NSColor' in scope"
       ],
       "errorCount": 82,
-      "isolatedInPass": 6,
+      "isolatedInPass": 4,
       "whole": true,
       "isolatedLoc": 344,
       "status": "needs-windows-part"
@@ -2212,6 +2279,12 @@
           "to": "WinUI 3 / Win32 windows, menus and dialogs"
         },
         {
+          "line": 0,
+          "kind": "dropin",
+          "module": "Combine",
+          "to": "OpenCombine (same API); the file used Combine without importing it (SwiftUI and Foundation re-export it on the Mac)"
+        },
+        {
           "line": 15,
           "kind": "networking",
           "module": "FoundationNetworking",
@@ -2222,19 +2295,20 @@
         "SwiftUI",
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
-        "28:37 cannot find 'NSApplication' in scope",
-        "187:44 type annotation missing in pattern",
-        "186:6 unknown attribute 'EnvironmentObject'",
-        "187:6 unknown attribute 'Environment'",
-        "188:6 unknown attribute 'StateObject'",
-        "220:20 cannot find type 'View' in scope",
-        "244:30 cannot find type 'View' in scope",
-        "283:6 unknown attribute 'State'"
+        "36:37 cannot find 'NSApplication' in scope",
+        "195:44 type annotation missing in pattern",
+        "194:6 unknown attribute 'EnvironmentObject'",
+        "195:6 unknown attribute 'Environment'",
+        "196:6 unknown attribute 'StateObject'",
+        "228:20 cannot find type 'View' in scope",
+        "252:30 cannot find type 'View' in scope",
+        "291:6 unknown attribute 'State'"
       ],
       "errorCount": 35,
-      "isolatedInPass": 10,
+      "isolatedInPass": 11,
       "whole": true,
       "isolatedLoc": 1471,
       "status": "needs-windows-part"

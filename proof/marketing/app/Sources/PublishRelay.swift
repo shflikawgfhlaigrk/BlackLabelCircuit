@@ -23,6 +23,14 @@ import TikTokOpenShareSDK   // present only after the app-level TikTok OpenSDK d
 #if os(macOS)
 import AppKit
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 // MARK: - macOS: advertise the reel over Handoff + vend its bytes over the continuation stream
 #if os(macOS)

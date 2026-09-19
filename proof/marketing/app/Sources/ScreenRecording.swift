@@ -1,6 +1,15 @@
 #if canImport(Darwin) && !CIRCUIT_WINDOWS_SIM // circuit-convert: Apple platforms only — see CONVERSION.md
 // Black Label Marketing — native ScreenCaptureKit recording for Reel Studio.
 // Captured pixels and audio stay on this Mac until the buyer exports or publishes.
+import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if os(macOS)
 import SwiftUI
 import AppKit

@@ -20,13 +20,14 @@ import AppKit
 import Darwin
 #elseif canImport(ucrt)
 import ucrt
-import WinSDK
 #elseif canImport(Glibc)
 import Glibc
 #endif
 import Foundation
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI

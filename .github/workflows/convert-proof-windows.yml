@@ -4,7 +4,9 @@ name: convert-proof-windows
 # Mac (compiler-checked in the simulated Windows configuration). This lane runs the same
 # compiler loop NATIVELY on a Windows runner: whatever the real Windows compiler rejects
 # is isolated the same way, then the final package is built once more from clean.
-# proof/apps.json lists which packages this push verifies.
+# proof/apps.json lists which packages this push verifies. A package named `<app>-before`
+# was converted by the earlier Circuit (circuit-before/) and is re-verified by that same
+# Circuit, so a before/after pair differs only in the Circuit that converted it.
 
 on:
   push:
@@ -51,7 +53,7 @@ jobs:
           node --version
 
       - name: Native Windows compiler check (Circuit --reverify)
-        run: node circuit/server.js --reverify proof/${{ matrix.app }} --json proof-${{ matrix.app }}.json
+        run: node ${{ endsWith(matrix.app, '-before') && 'circuit-before' || 'circuit' }}/server.js --reverify proof/${{ matrix.app }} --json proof-${{ matrix.app }}.json
 
       - name: Build the final package once more, from clean
         shell: pwsh

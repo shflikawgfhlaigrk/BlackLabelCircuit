@@ -1,26 +1,34 @@
 {
-  "root": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918",
-  "name": "Circuit-PortCheck-20260918",
+  "root": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/circuit-698",
+  "name": "circuit-698",
   "target": "windows",
-  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-jimmy-browser-video-issue-56dc60/dce82a7e-4855-4272-ba1c-0873ac90be7d/scratchpad/final/circuit",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/new/circuit",
   "moduleName": "Circuit_PortCheck_20260918Core",
+  "source": {
+    "sha256": "f86aee7e22b8569907b5685c0952ebe0e871a3f08210f51a339eead4c5724210",
+    "files": 37,
+    "git": {
+      "head": "698fa1c9700e7cbeb102e61e6b238dcf471e224d",
+      "uncommitted": 0
+    }
+  },
   "moduleSources": {
     "from": "--sources",
     "paths": [
       "macos"
     ]
   },
-  "generatedAt": 1789715564558,
-  "tookMs": 12659,
+  "generatedAt": 1789781126256,
+  "tookMs": 16588,
   "before": {
-    "readyPct": 85.9,
-    "files": 41,
-    "loc": 8673
+    "readyPct": 86.3,
+    "files": 42,
+    "loc": 8981
   },
   "after": {
-    "readyPct": 85.1,
+    "readyPct": 85.6,
     "guardedLoc": 375,
-    "needsWindowsLoc": 840
+    "needsWindowsLoc": 842
   },
   "verification": {
     "ran": true,
@@ -47,12 +55,12 @@
   },
   "totals": {
     "all": {
-      "files": 36,
-      "loc": 8127
+      "files": 37,
+      "loc": 8426
     },
     "portable": {
-      "files": 31,
-      "loc": 6929
+      "files": 32,
+      "loc": 7228
     },
     "converted": {
       "files": 0,
@@ -76,9 +84,9 @@
       "files": 0,
       "loc": 0
     },
-    "buildsLoc": 7182,
+    "buildsLoc": 7481,
     "isolatedLoc": 945,
-    "buildsForWindowsPct": 88.4
+    "buildsForWindowsPct": 88.8
   },
   "packages": [
     {
@@ -87,7 +95,7 @@
       "from": "3.0.0"
     }
   ],
-  "kit": false,
+  "kit": true,
   "windowsPartsNeeded": [
     {
       "id": "AppKit",
@@ -102,13 +110,6 @@
       "effort": null,
       "files": 3,
       "loc": 455
-    },
-    {
-      "id": "Security",
-      "windows": "Windows Credential Manager (CredRead/CredWrite) and DPAPI",
-      "effort": "M",
-      "files": 1,
-      "loc": 119
     }
   ],
   "skipped": [
@@ -250,7 +251,7 @@
     {
       "id": "lib/convert.js",
       "lang": "javascript",
-      "loc": 892,
+      "loc": 919,
       "before": "ready",
       "rewritten": false,
       "changes": [],
@@ -565,6 +566,7 @@
       "guardedModules": [
         "AppKit"
       ],
+      "kitModules": [],
       "isolated": true,
       "errors": [
         "9:23 cannot find type 'NSView' in scope",
@@ -603,9 +605,9 @@
         },
         {
           "line": 4,
-          "kind": "guarded-import",
+          "kind": "kit",
           "module": "Security",
-          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+          "to": "CircuitPortKit Keychain (Windows Credential Manager) + SecRandomCopyBytes"
         },
         {
           "line": 9,
@@ -615,18 +617,20 @@
         }
       ],
       "guardedModules": [
-        "AppKit",
+        "AppKit"
+      ],
+      "kitModules": [
         "Security"
       ],
       "isolated": true,
       "errors": [
-        "338:17 cannot find 'NSAlert' in scope",
-        "339:25 cannot infer contextual base in reference to member 'informational'",
-        "351:17 cannot find 'NSWorkspace' in scope",
-        "360:24 cannot find 'NSAlert' in scope",
-        "421:9 cannot find 'NSApp' in scope",
-        "427:17 cannot find 'NSAlert' in scope",
-        "428:25 cannot infer contextual base in reference to member 'informational'"
+        "340:17 cannot find 'NSAlert' in scope",
+        "341:25 cannot infer contextual base in reference to member 'informational'",
+        "353:17 cannot find 'NSWorkspace' in scope",
+        "362:24 cannot find 'NSAlert' in scope",
+        "423:9 cannot find 'NSApp' in scope",
+        "429:17 cannot find 'NSAlert' in scope",
+        "430:25 cannot infer contextual base in reference to member 'informational'"
       ],
       "errorCount": 7,
       "isolatedInPass": 2,
@@ -663,7 +667,7 @@
     {
       "id": "public/app.js",
       "lang": "javascript",
-      "loc": 1057,
+      "loc": 1123,
       "before": "ready",
       "rewritten": false,
       "changes": [],
@@ -676,7 +680,7 @@
     {
       "id": "server.js",
       "lang": "javascript",
-      "loc": 390,
+      "loc": 439,
       "before": "ready",
       "rewritten": false,
       "changes": [],
@@ -701,6 +705,19 @@
     },
     {
       "id": "windows/msix/gen-assets.mjs",
+      "lang": "javascript",
+      "loc": 157,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows/msix/gen-icon.mjs",
       "lang": "javascript",
       "loc": 157,
       "before": "ready",

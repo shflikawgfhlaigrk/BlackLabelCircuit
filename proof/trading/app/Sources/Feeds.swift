@@ -12,6 +12,7 @@ import Foundation
 #if canImport(AppKit) && !CIRCUIT_WINDOWS_SIM
 import AppKit
 #endif
+import CircuitPortKit
 
 // MARK: - Prerequisite sentinel (written by launch-backend.sh when a host dependency is missing,
 // e.g. no working python3). The app reads it to show an honest, actionable state instead of a

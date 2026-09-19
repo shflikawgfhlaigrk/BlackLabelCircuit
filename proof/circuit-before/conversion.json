@@ -1,0 +1,729 @@
+{
+  "root": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/circuit-698",
+  "name": "circuit-698",
+  "target": "windows",
+  "out": "/private/tmp/claude-501/-Users-michaelbarber-Desktop-Black-Label-B-ots-BlackLabel-Team-black-label-city-spec-d2180e/5435c4da-dbf5-4ec9-af9b-866272aed8e6/scratchpad/conv/old/circuit",
+  "moduleName": "Circuit_PortCheck_20260918Core",
+  "moduleSources": {
+    "from": "--sources",
+    "paths": [
+      "macos"
+    ]
+  },
+  "generatedAt": 1789781141809,
+  "tookMs": 15469,
+  "before": {
+    "readyPct": 86.3,
+    "files": 42,
+    "loc": 8981
+  },
+  "after": {
+    "readyPct": 85.6,
+    "guardedLoc": 375,
+    "needsWindowsLoc": 840
+  },
+  "verification": {
+    "ran": true,
+    "ok": true,
+    "failure": null,
+    "passes": [
+      {
+        "pass": 1,
+        "isolated": 1
+      },
+      {
+        "pass": 2,
+        "isolated": 1
+      },
+      {
+        "pass": 3,
+        "isolated": 0
+      }
+    ],
+    "configuration": "simulated Windows configuration on macOS (-DCIRCUIT_WINDOWS_SIM)",
+    "native": false,
+    "platform": "darwin",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.33.1 clang-2100.3.33.1)"
+  },
+  "totals": {
+    "all": {
+      "files": 37,
+      "loc": 8426
+    },
+    "portable": {
+      "files": 32,
+      "loc": 7228
+    },
+    "converted": {
+      "files": 0,
+      "loc": 0
+    },
+    "partial": {
+      "files": 1,
+      "loc": 372,
+      "isolatedLoc": 119,
+      "buildsLoc": 253
+    },
+    "needsWindowsPart": {
+      "files": 4,
+      "loc": 826
+    },
+    "macOnlySkipped": {
+      "files": 0,
+      "loc": 0
+    },
+    "unverified": {
+      "files": 0,
+      "loc": 0
+    },
+    "buildsLoc": 7481,
+    "isolatedLoc": 945,
+    "buildsForWindowsPct": 88.8
+  },
+  "packages": [
+    {
+      "package": "swift-crypto",
+      "url": "https://github.com/apple/swift-crypto.git",
+      "from": "3.0.0"
+    }
+  ],
+  "kit": false,
+  "windowsPartsNeeded": [
+    {
+      "id": "AppKit",
+      "windows": "WinUI 3 / Win32 windows, menus and dialogs",
+      "effort": "L",
+      "files": 2,
+      "loc": 490
+    },
+    {
+      "id": "(uses code that was isolated)",
+      "windows": null,
+      "effort": null,
+      "files": 3,
+      "loc": 455
+    },
+    {
+      "id": "Security",
+      "windows": "Windows Credential Manager (CredRead/CredWrite) and DPAPI",
+      "effort": "M",
+      "files": 1,
+      "loc": 119
+    }
+  ],
+  "skipped": [
+    {
+      "id": "lib/convert-kit/CircuitPortKit/CombineBridge.swift",
+      "why": "outside --sources"
+    },
+    {
+      "id": "lib/convert-kit/CircuitPortKit/Logging.swift",
+      "why": "outside --sources"
+    },
+    {
+      "id": "lib/convert-kit/CircuitPortKit/UTType.swift",
+      "why": "outside --sources"
+    }
+  ],
+  "files": [
+    {
+      "id": "editor/diagnostics.mjs",
+      "lang": "javascript",
+      "loc": 47,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "editor/extension.js",
+      "lang": "javascript",
+      "loc": 86,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "editor/server.mjs",
+      "lang": "javascript",
+      "loc": 142,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/analyze.js",
+      "lang": "javascript",
+      "loc": 276,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/convert-kit/circuit_port.py",
+      "lang": "python",
+      "loc": 101,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "kind": "python-helper",
+          "hit": "say",
+          "to": "circuit_port.say"
+        },
+        {
+          "kind": "python-helper",
+          "hit": "afplay",
+          "to": "circuit_port.play_sound"
+        }
+      ],
+      "guardedModules": [],
+      "parses": true,
+      "after": "needs-windows",
+      "remaining": [
+        "fcntl",
+        "~/Library",
+        "~/Library",
+        "~/Library",
+        "~/Library",
+        "afplay"
+      ],
+      "isolatedLoc": 101,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "lib/convert-kit/circuit-port.mjs",
+      "lang": "javascript",
+      "loc": 28,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/convert-rules.js",
+      "lang": "javascript",
+      "loc": 137,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "~/Library",
+        "~/Library",
+        "~/Library",
+        "say",
+        "afplay",
+        "afplay",
+        "~/Library",
+        "~/Library",
+        "~/Library",
+        "~/Library"
+      ],
+      "isolatedLoc": 137,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "lib/convert.js",
+      "lang": "javascript",
+      "loc": 919,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/grade.js",
+      "lang": "javascript",
+      "loc": 219,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/history.js",
+      "lang": "javascript",
+      "loc": 134,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/c.js",
+      "lang": "javascript",
+      "loc": 81,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/clean.js",
+      "lang": "javascript",
+      "loc": 141,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/common.js",
+      "lang": "javascript",
+      "loc": 273,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/generic.js",
+      "lang": "javascript",
+      "loc": 58,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/go.js",
+      "lang": "javascript",
+      "loc": 127,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/java.js",
+      "lang": "javascript",
+      "loc": 82,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/javascript.js",
+      "lang": "javascript",
+      "loc": 180,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/kotlin.js",
+      "lang": "javascript",
+      "loc": 105,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/python.js",
+      "lang": "javascript",
+      "loc": 148,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/ruby.js",
+      "lang": "javascript",
+      "loc": 128,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/rust.js",
+      "lang": "javascript",
+      "loc": 138,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/lang/swift.js",
+      "lang": "javascript",
+      "loc": 104,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/license.js",
+      "lang": "javascript",
+      "loc": 48,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/port-map.js",
+      "lang": "javascript",
+      "loc": 217,
+      "before": "needs-windows",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "needs-windows",
+      "remaining": [
+        "osascript",
+        "osascript",
+        "launchctl",
+        "pbcopy/pbpaste",
+        "screencapture",
+        "afplay",
+        "say",
+        "networksetup",
+        "system_profiler",
+        "sw_vers",
+        "mdfind/mdls",
+        "pmset/caffeinate",
+        "scutil",
+        "diskutil/hdiutil",
+        "tccutil",
+        "sips",
+        "textutil",
+        "plutil",
+        "ditto",
+        "xattr",
+        "killall",
+        "ioreg",
+        "dscl",
+        "lsregister",
+        "codesign/notarytool",
+        "xcodebuild/xcrun",
+        "~/Library"
+      ],
+      "isolatedLoc": 217,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "lib/port.js",
+      "lang": "javascript",
+      "loc": 335,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/report.js",
+      "lang": "javascript",
+      "loc": 97,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/rules.js",
+      "lang": "javascript",
+      "loc": 95,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "lib/walk.js",
+      "lang": "javascript",
+      "loc": 107,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "macos/CircuitLauncher.swift",
+      "lang": "swift",
+      "loc": 371,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        }
+      ],
+      "guardedModules": [
+        "AppKit"
+      ],
+      "isolated": true,
+      "errors": [
+        "9:23 cannot find type 'NSView' in scope",
+        "13:14 initializer does not override a designated initializer from its superclass",
+        "19:64 cannot find type 'NSDragOperation' in scope",
+        "19:45 cannot find type 'NSDraggingInfo' in scope",
+        "25:44 cannot find type 'NSDraggingInfo' in scope",
+        "29:50 cannot find type 'NSDraggingInfo' in scope",
+        "38:41 cannot find type 'NSDraggingInfo' in scope",
+        "44:19 method does not override any method from its superclass"
+      ],
+      "errorCount": 16,
+      "isolatedInPass": 1,
+      "whole": true,
+      "isolatedLoc": 371,
+      "status": "needs-windows-part"
+    },
+    {
+      "id": "macos/CircuitUpdater.swift",
+      "lang": "swift",
+      "loc": 372,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "line": 1,
+          "kind": "guarded-import",
+          "module": "AppKit",
+          "to": "WinUI 3 / Win32 windows, menus and dialogs"
+        },
+        {
+          "line": 2,
+          "kind": "dropin",
+          "module": "CryptoKit",
+          "to": "swift-crypto (same API)"
+        },
+        {
+          "line": 4,
+          "kind": "guarded-import",
+          "module": "Security",
+          "to": "Windows Credential Manager (CredRead/CredWrite) and DPAPI"
+        },
+        {
+          "line": 9,
+          "kind": "networking",
+          "module": "FoundationNetworking",
+          "to": "URLSession lives in FoundationNetworking off Apple platforms"
+        }
+      ],
+      "guardedModules": [
+        "AppKit",
+        "Security"
+      ],
+      "isolated": true,
+      "errors": [
+        "338:17 cannot find 'NSAlert' in scope",
+        "339:25 cannot infer contextual base in reference to member 'informational'",
+        "351:17 cannot find 'NSWorkspace' in scope",
+        "360:24 cannot find 'NSAlert' in scope",
+        "421:9 cannot find 'NSApp' in scope",
+        "427:17 cannot find 'NSAlert' in scope",
+        "428:25 cannot infer contextual base in reference to member 'informational'"
+      ],
+      "errorCount": 7,
+      "isolatedInPass": 2,
+      "whole": false,
+      "isolatedLoc": 119,
+      "status": "partial"
+    },
+    {
+      "id": "mcp/mcp-kit.mjs",
+      "lang": "javascript",
+      "loc": 844,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "mcp/server.mjs",
+      "lang": "javascript",
+      "loc": 359,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "public/app.js",
+      "lang": "javascript",
+      "loc": 1123,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "server.js",
+      "lang": "javascript",
+      "loc": 439,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows/fetch-node-runtime.mjs",
+      "lang": "javascript",
+      "loc": 51,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows/msix/gen-assets.mjs",
+      "lang": "javascript",
+      "loc": 157,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    },
+    {
+      "id": "windows/msix/gen-icon.mjs",
+      "lang": "javascript",
+      "loc": 157,
+      "before": "ready",
+      "rewritten": false,
+      "changes": [],
+      "guardedModules": [],
+      "after": "ready",
+      "remaining": [],
+      "isolatedLoc": 0,
+      "status": "portable"
+    }
+  ]
+}

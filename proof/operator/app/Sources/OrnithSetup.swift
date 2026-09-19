@@ -3,6 +3,14 @@ import Foundation
 #if canImport(SwiftUI) && !CIRCUIT_WINDOWS_SIM
 import SwiftUI
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// First-run brain AUTO-SETUP — the one place that turns a fresh install into a working local brain
 /// WITHOUT sending a non-technical buyer into Settings. It drives the honest flow

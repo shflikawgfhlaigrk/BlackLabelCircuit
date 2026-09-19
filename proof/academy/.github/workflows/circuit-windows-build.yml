@@ -15,5 +15,6 @@ jobs:
         with:
           branch: swift-6.2-release
           tag: 6.2-RELEASE
+      # The -D switch lets a Visual Studio newer than the toolchain's clang compile C++ dependencies (STL1000).
       - name: swift build (BlackLabelAcademyCore)
-        run: swift build -c debug
+        run: swift build -c debug -Xcxx -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH -Xcc -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH

@@ -25,7 +25,6 @@ import OpenCombineDispatch
 import Darwin
 #elseif canImport(ucrt)
 import ucrt
-import WinSDK
 #elseif canImport(Glibc)
 import Glibc
 #endif
@@ -5261,14 +5260,16 @@ final class CompanionManager: ObservableObject {
                 appendRouteReceipt("STEALTH exit-only PTT released")
                 return
             }
-            // Cancel the pending start task in case the user released the shortcut
-            // before the async startPushToTalk had a chance to begin recording.
-            // Without this, a quick press-and-release drops the release event and
-            // leaves the waveform overlay stuck on screen indefinitely.
+            // Cancel only while capture has not begun. Once microphone audio
+            // is buffered, allow the recognizer to finish starting and consume
+            // that quick utterance; stopPushToTalk retains its release boundary.
             BlackLabelAnalytics.trackPushToTalkReleased()
             let rehearsalAttemptIdentifier =
                 activeFirstRunRehearsalAttemptIdentifier
-            pendingKeyboardShortcutStartTask?.cancel()
+            if buddyDictationManager.isPreparingToRecord
+                || !buddyDictationManager.isRecordingFromKeyboardShortcut {
+                pendingKeyboardShortcutStartTask?.cancel()
+            }
             pendingKeyboardShortcutStartTask = nil
             waveformShortcutState = .released
             buddyDictationManager.stopPushToTalkFromKeyboardShortcut()
@@ -8914,11 +8915,17 @@ final class CompanionManager: ObservableObject {
             guard let self, self.directEffectsAreAllowed,
                   self.ownerTurnLifecycle.activeBinding?.context == context
             else { return }
+            let backend = DesktopActionSystemBackend(isAllowed: { [weak self] in
+                self?.directEffectsAreAllowed == true
+                    && self?.ownerTurnLifecycle.activeBinding?.context == context
+            })
+            backend.textDeliveryDiagnostic = { [weak self] diagnostic in
+                guard let self, self.directEffectsAreAllowed,
+                      self.ownerTurnLifecycle.activeBinding?.context == context else { return }
+                self.appendRouteReceipt("TYPE delivery " + diagnostic)
+            }
             let receipt = await DesktopActionExecutor(
-                backend: DesktopActionSystemBackend(isAllowed: { [weak self] in
-                    self?.directEffectsAreAllowed == true
-                        && self?.ownerTurnLifecycle.activeBinding?.context == context
-                }),
+                backend: backend,
                 isAllowed: { [weak self] in
                     self?.directEffectsAreAllowed == true
                         && self?.ownerTurnLifecycle.activeBinding?.context == context
@@ -9491,7 +9498,9 @@ final class CompanionManager: ObservableObject {
         AceLanguage.canChange(
             partnerActive: partnerModeIsActive,
             workActive: backgroundTaskActive || currentResponseTask != nil
-                || ownerTurnLifecycle.activeBinding != nil
+                || appActionPlanningTask != nil || aceHQDispatchTask != nil
+                || morningBriefTask != nil || emailReadTask != nil || testEmailTask != nil
+                || ownerTurnLifecycle.hasPendingAsynchronousManagerDispatch
                 || buddyDictationManager.isDictationInProgress,
             notesUnsaved: meetingNotetaker.hasUnsavedNotes,
             privacyActive: StealthEntryLatch.shared.isRaised
@@ -13555,12 +13564,6 @@ final class CompanionManager: ObservableObject {
             handleLocateAsk(context.routingInput)
             return
         }
-        if routeTradingModeControlIfPresent(
-            utterance,
-            context: context
-        ) {
-            return
-        }
         if routeMorningLinkBriefIfPresent(
             utterance,
             context: context
@@ -14462,6 +14465,10 @@ final class CompanionManager: ObservableObject {
                     transcript: utterance,
                     context: context
                 )
+
+            case "native.trading-mode":
+                _ = routeTradingModeControlIfPresent(context.routingInput, context: context)
+                return
 
             case "native.notes-start":
                 guard startMeetingNotes() else {
@@ -15786,18 +15793,18 @@ final class CompanionManager: ObservableObject {
             """
         case .codex:
             return """
-            You are looking at the user's screen during a practice test. Select the first fully visible unanswered single-answer multiple-choice question from top to bottom. Ignore any partial neighboring question. Reconstruct the selected question, determine the correct answer, compare every option directly beneath it, and double-check the governing definition, calculation, or fact. If one complete question and its full option set are readable, do not reject it merely because part of another question is visible. If the question says select all, choose all, multiple answers, or otherwise requires more than one selection, set has_point false; one gesture may never silently reduce it to one answer. Return the one JSON object required by the native output schema. Set spoken_response to an empty string and label to "answer"; neither field is displayed in Private Mode. For a supported answer, set has_point true and put x/y at the clickable center of that answer control in the attached image's pixel space; copy the exact capture UUID and display ID from the image label. The point must be inside an answer box, never on question text. Use has_point false when there is no complete readable single-answer question with a determinable answer. App code owns every input event.
+            Inspect every attached display for a visible single-answer multiple-choice question, regardless of browser, app or focused window. Select the first fully visible unanswered question in display order, then top to bottom. Ignore any partial neighboring question. Reconstruct the selected question, determine the correct answer, compare every option directly beneath it, and double-check the governing definition, calculation, or fact. If one complete question and its full option set are readable, do not reject it merely because part of another question is visible. If the question says select all, choose all, multiple answers, or otherwise requires more than one selection, set has_point false; one gesture may never silently reduce it to one answer. Return the one JSON object required by the native output schema. Set spoken_response to an empty string and label to "answer"; neither field is displayed in Private Mode. For a supported answer, set has_point true and put x/y at the clickable center of that answer control in the attached image's pixel space; copy the exact capture UUID and display ID from the image label. The point must be inside an answer box, never on question text. Use has_point false when there is no complete readable single-answer question with a determinable answer. App code owns every input event.
             """
         case .claude:
             return """
-            You are looking at the user's screen during a practice test. Select the first fully visible unanswered single-answer multiple-choice question from top to bottom. Ignore any partial neighboring question. Reconstruct the selected question, determine the correct answer, compare every option directly beneath it, and double-check the governing definition, calculation, or fact. If one complete question and its full option set are readable, do not reject it merely because part of another question is visible. If the question says select all, choose all, multiple answers, or otherwise requires more than one selection, output exactly [POINT:none]; one gesture may never silently reduce it to one answer. Then output ONLY one tag at the CLICKABLE center of that answer control: [POINT:capture=<exact capture_id from the image label>;display=<exact display_id from the image label>;x=<pixel x>;y=<pixel y>;confidence=<0 to 1>;label=answer]. Coordinates use that exact image's pixel space. The point must be inside one of the answer boxes, never on question text or a neighboring question. Never omit or alter either identity. If no complete readable single-answer question has a determinable answer, output exactly [POINT:none]. Output nothing else. App code owns every input event.
+            Inspect every attached display for a visible single-answer multiple-choice question, regardless of browser, app or focused window. Select the first fully visible unanswered question in display order, then top to bottom. Ignore any partial neighboring question. Reconstruct the selected question, determine the correct answer, compare every option directly beneath it, and double-check the governing definition, calculation, or fact. If one complete question and its full option set are readable, do not reject it merely because part of another question is visible. If the question says select all, choose all, multiple answers, or otherwise requires more than one selection, output exactly [POINT:none]; one gesture may never silently reduce it to one answer. Then output ONLY one tag at the CLICKABLE center of that answer control: [POINT:capture=<exact capture_id from the image label>;display=<exact display_id from the image label>;x=<pixel x>;y=<pixel y>;confidence=<0 to 1>;label=answer]. Coordinates use that exact image's pixel space. The point must be inside one of the answer boxes, never on question text or a neighboring question. Never omit or alter either identity. If no complete readable single-answer question has a determinable answer, output exactly [POINT:none]. Output nothing else. App code owns every input event.
             """
         }
     }
 
 
     /// Stealth: one Caps-on Shift+Z reads one multiple-choice question and
-    /// completes one exact target-bound answer click after revalidation.
+    /// completes one display-coordinate answer click without an AX target gate.
     private func stealthAnswerVisibleQuestion() {
         guard stealthMode.isActive else { return }
         // A press that lands while the previous read is still thinking is
@@ -15851,51 +15858,22 @@ final class CompanionManager: ObservableObject {
                 self.stealthAnswerTask?.cancel()
             }
 
-            // Fail closed before ScreenCaptureKit sees any pixels. The
-            // foreground application and focused field are checked again just
-            // before clicking to close the capture→click time-of-check gap.
             let capturedContext = PrivateModePolicy.currentContext()
-            let captureDecision = PrivateModePolicy.decision(
-                for: capturedContext
-            )
-            guard captureDecision.isAllowed else {
-                self.privateModeActivityStatus = captureDecision.userFacingReason
-                // Content-free classification: a support log has to separate a
-                // revoked permission, a windowless or hung app, and two
-                // same-frame windows without recording what was on screen.
-                self.appendRouteReceipt(
-                    "PRIVATE-MODE refused before capture: \(captureDecision.userFacingReason) "
-                        + "window-verification="
-                        + (capturedContext.windowVerificationFailure?.rawValue
-                            ?? "not-applicable")
-                        + " exact-window-lookup="
-                        + String(
-                            AccessibilityWindowIdentity
-                                .windowServerLookupIsAvailable
-                        )
-                )
-                return
-            }
-            guard let captureCapability =
-                PrivateModePolicy.makeCaptureCapability(
-                    sessionIdentifier: sessionIdentifier,
-                    context: capturedContext
-                ) else {
-                self.privateModeActivityStatus =
-                    "Capture blocked because the exact foreground window could not be verified."
-                self.appendRouteReceipt(
-                    "PRIVATE-MODE refused before capture: focused window could not be verified "
-                        + "bundle=\(capturedContext.bundleIdentifier != nil) "
-                        + "pid=\(capturedContext.processIdentifier ?? 0) "
-                        + "window=\(capturedContext.focusedWindowIdentifier ?? 0) "
-                        + "frame=\(capturedContext.focusedWindowFrame != nil)")
+            guard let captureCapability = PrivateModePolicy.makeVisibleDisplaysCapability(
+                sessionIdentifier: sessionIdentifier,
+                context: capturedContext
+            ) else {
+                self.privateModeActivityStatus = PrivateModePolicy.decision(
+                    for: capturedContext, requireFocusedWindow: false
+                ).userFacingReason
+                self.appendRouteReceipt("PRIVATE-MODE refused before capture: protected app or field")
                 return
             }
 
             let captures: [CompanionScreenCapture]
             do {
                 captures = try await CompanionScreenCaptureUtility.captureAllScreensAsJPEG(
-                    onlyCursorScreen: true,
+                    onlyCursorScreen: false,
                     excludingSensitiveApplications: true,
                     privateModeCapability: captureCapability
                 )
@@ -15910,21 +15888,18 @@ final class CompanionManager: ObservableObject {
                 )
                 return
             }
-            guard captures.count == 1,
-                  let capturedScreen = captures.first,
-                  let captureBinding = capturedScreen.privateModeBinding,
-                  captureBinding.sessionIdentifier == sessionIdentifier else {
+            guard !captures.isEmpty,
+                  captures.allSatisfy({ $0.privateModeBinding?.sessionIdentifier == sessionIdentifier }) else {
                 self.privateModeActivityStatus = PrivateModeCaptureFailure.invalidBinding.userFacingReason
                 self.appendRouteReceipt("PRIVATE-MODE capture failed reason=invalid-binding — no click sent")
                 return
             }
-            self.appendRouteReceipt(
-                "PRIVATE-MODE capture ready image="
-                    + "\(capturedScreen.screenshotWidthInPixels)x"
-                    + "\(capturedScreen.screenshotHeightInPixels) cropPoints="
-                    + "\(Int(captureBinding.captureFrame.width))x"
-                    + "\(Int(captureBinding.captureFrame.height))"
-            )
+            for capture in captures {
+                self.appendRouteReceipt(
+                    "PRIVATE-MODE capture ready image="
+                        + "\(capture.screenshotWidthInPixels)x\(capture.screenshotHeightInPixels)"
+                        + " display=\(capture.displayIdentifier) scope=visible-displays")
+            }
             self.lastPrivateModeCaptureAt = Date()
             guard !Task.isCancelled, self.stealthMode.isActive else { return }
             let labeledImages = captures.map { capture in
@@ -15935,7 +15910,7 @@ final class CompanionManager: ObservableObject {
             let userPrompt = "identify the correct answer location."
             self.lastPrivateModeRemoteProcessingAt = Date()
             self.privateModeActivityStatus =
-                "Processing one exact-window image remotely. No prompt or "
+                "Processing the visible displays remotely. No prompt or "
                 + "answer is logged; its private temporary image is deleted "
                 + "when this request finishes and purged on the next launch "
                 + "after a hard kill."
@@ -15981,8 +15956,9 @@ final class CompanionManager: ObservableObject {
                 captures: captures
             )
             guard let coordinate = parseResult.coordinate,
-                  parseResult.captureIdentity
-                    == capturedScreen.identity else {
+                  let captureIdentity = parseResult.captureIdentity,
+                  let capturedScreen = captures.first(where: { $0.identity == captureIdentity }),
+                  let captureBinding = capturedScreen.privateModeBinding else {
                 self.privateModeActivityStatus = "No answer could be identified; nothing was clicked."
                 let outcome: String
                 if parseResult.rejectionReason != nil {
@@ -16004,16 +15980,16 @@ final class CompanionManager: ObservableObject {
                       binding: captureBinding
                   ) else {
                 self.privateModeActivityStatus =
-                    "The proposed point was outside the exact focused window; nothing was clicked."
+                    "The proposed point was outside the captured display; nothing was clicked."
                 self.appendRouteReceipt(
-                    "PRIVATE-MODE candidate rejected — outside exact focused window")
+                    "PRIVATE-MODE candidate rejected — outside captured display")
                 return
             }
             guard !Task.isCancelled, self.stealthMode.isActive else { return }
 
             let currentContext = PrivateModePolicy.currentContext()
             let clickDecision = PrivateModePolicy.decision(
-                for: currentContext
+                for: currentContext, requireFocusedWindow: false
             )
             guard clickDecision.isAllowed else {
                 self.privateModeActivityStatus = clickDecision.userFacingReason
@@ -16028,20 +16004,9 @@ final class CompanionManager: ObservableObject {
                 displayTopology: currentDisplayTopology
             ) else {
                 self.privateModeActivityStatus =
-                    "The exact foreground window or display changed after capture; no click was sent."
+                    "The display layout changed after capture; no click was sent."
                 self.appendRouteReceipt(
-                    "PRIVATE-MODE refused before staging: exact window/display changed")
-                return
-            }
-            guard let targetElementBinding =
-                PrivateModePolicy.makeTargetElementBinding(
-                    at: cg,
-                    captureBinding: captureBinding
-                ) else {
-                self.privateModeActivityStatus =
-                    "The exact answer control could not be bound after capture; no click was sent."
-                self.appendRouteReceipt(
-                    "PRIVATE-MODE refused before staging: pressable target unavailable at (\(Int(cg.x)),\(Int(cg.y)))")
+                    "PRIVATE-MODE refused before staging: display layout changed")
                 return
             }
             guard let pointerAtStaging = currentPrivateModePointerSnapshot() else {
@@ -16054,12 +16019,11 @@ final class CompanionManager: ObservableObject {
             guard let pointerAfterAim = self.movePointerAtCG(
                 cg,
                 captureBinding: captureBinding,
-                targetElementBinding: targetElementBinding,
                 expectedPointerState: pointerAtStaging,
                 sessionIdentifier: sessionIdentifier
             ) else {
                 self.privateModeActivityStatus =
-                    "The exact answer control, pointer, window, or display changed before aim; nothing was clicked."
+                    "The pointer, display, or Private Mode session changed before aim; nothing was clicked."
                 self.appendRouteReceipt(
                     "PRIVATE-MODE answer blocked at aim boundary (\(Int(cg.x)),\(Int(cg.y)))")
                 return
@@ -16067,12 +16031,11 @@ final class CompanionManager: ObservableObject {
             guard await self.clickAtCG(
                 cg,
                 captureBinding: captureBinding,
-                targetElementBinding: targetElementBinding,
                 expectedPointerState: pointerAfterAim,
                 sessionIdentifier: sessionIdentifier
             ) else {
                 self.privateModeActivityStatus =
-                    "The exact answer control, pointer, window, or display changed at the click boundary; nothing was clicked."
+                    "The click could not finish because the pointer, display, or Private Mode session changed. It was not retried."
                 self.appendRouteReceipt(
                     "PRIVATE-MODE answer blocked at click boundary")
                 return
@@ -16082,7 +16045,7 @@ final class CompanionManager: ObservableObject {
                     + "(\(Int(cg.x)),\(Int(cg.y)))")
             self.lastPrivateModeSyntheticClickAt = Date()
             self.privateModeActivityStatus =
-                "Answer click delivered. Temporary image and request files were deleted."
+                "Mouse click sent to the captured screen coordinates. This does not verify the app's response."
         }
     }
 
@@ -16328,6 +16291,17 @@ final class CompanionManager: ObservableObject {
     /// and let the menu-bar icon reappear. Exit is deliberately silent: even a
     /// short acknowledgement would publish an Ace speech event and leave a
     /// durable timestamped trace of an otherwise private session.
+    /// Opening Ace is an explicit owner request to restore its visible UI.
+    /// Use the same exit transaction as speech so recovery also works when
+    /// recognition failed. A recovered minimal runtime relaunches itself.
+    @discardableResult
+    func exitPrivateModeForManualOpen() -> Bool {
+        if stealthMode.isActive { exitStealthMode() }
+        return !stealthMode.isActive && !stealthActive
+            && !StealthEntryLatch.shared.isRaised
+            && !StealthVisibilityGate.shared.isActive
+    }
+
     private func exitStealthMode() {
         // Past the guard, not before it: a stray exit trigger while not stealthed
         // used to clear the lane manager's stealth flag on its own, leaving the
@@ -23865,7 +23839,7 @@ final class CompanionManager: ObservableObject {
         }
         let currentContext = PrivateModePolicy.currentContext()
         let decision = PrivateModePolicy.decision(
-            for: currentContext
+            for: currentContext, requireFocusedWindow: !captureBinding.includesAllDisplays
         )
         guard decision.isAllowed,
               PrivateModePolicy.captureBindingIsCurrent(
@@ -23887,12 +23861,12 @@ final class CompanionManager: ObservableObject {
         )
     }
 
-    /// Moves only the pointer while the exact target element, private session,
-    /// and window still match. The same answer task owns the immediate click.
+    /// The model supplies a point on a captured display, not an AX control.
+    /// Canvas/custom-rendered apps therefore use the same mouse path as native
+    /// controls. The session, display and owner-pointer checks remain.
     private func movePointerAtCG(
         _ point: CGPoint,
         captureBinding: PrivateModeCaptureBinding,
-        targetElementBinding: PrivateModeTargetElementBinding,
         expectedPointerState: PrivateModePointerSnapshot,
         sessionIdentifier: UUID
     ) -> PrivateModePointerSnapshot? {
@@ -23908,15 +23882,10 @@ final class CompanionManager: ObservableObject {
             to: currentPointerState,
             expectedLocation: expectedPointerState.location
         ),
-        // Last check before the imperative aim boundary: the exact topmost AX
-        // object and all salted semantic fields must still match staging.
-        PrivateModePolicy.targetElementBindingIsCurrent(
-            targetElementBinding
-        ),
         // `CGEvent.post(.mouseMoved)` is delivered asynchronously. Reading the
         // pointer immediately afterward can therefore observe its old location
         // and reject a valid Quizlet target. The cursor warp is synchronous;
-        // the same exact window, element, session, and physical-movement gates
+        // the same display, session, and physical-movement gates
         // still run immediately before it and before mouse-down.
         CGWarpMouseCursorPosition(point) == .success else {
             return nil
@@ -23937,14 +23906,14 @@ final class CompanionManager: ObservableObject {
         return pointerAfterAim
     }
 
-    /// Posts a tightly bounded click only while the exact target element,
-    /// Private Mode session, process, and focused window still match. There is no
+    /// Posts a coordinate click while the Private Mode session, display
+    /// and pointer still match. There is no control-level AX
+    /// requirement and no browser-specific route. There is no
     /// cursor-move dwell: the former 120 ms sleep let an external focus change
     /// receive a click intended for the old window and blocked the exit chord.
     private func clickAtCG(
         _ point: CGPoint,
         captureBinding: PrivateModeCaptureBinding,
-        targetElementBinding: PrivateModeTargetElementBinding,
         expectedPointerState: PrivateModePointerSnapshot,
         sessionIdentifier: UUID
     ) async -> Bool {
@@ -23966,12 +23935,6 @@ final class CompanionManager: ObservableObject {
                   point: point,
                   sessionIdentifier: sessionIdentifier,
                   expectedPointerState: expectedPointerState
-              ),
-              // This must be the final authorization check immediately before
-              // mouse-down. It re-hit-tests the original coordinate, requires
-              // the same AX object, and compares every salted semantic field.
-              PrivateModePolicy.targetElementBindingIsCurrent(
-                  targetElementBinding
               ) else {
             return false
         }

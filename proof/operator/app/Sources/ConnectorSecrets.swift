@@ -10,6 +10,8 @@
 import Foundation
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
 
 /// Private file store for connector tokens, keyed by connector id. Pure of any

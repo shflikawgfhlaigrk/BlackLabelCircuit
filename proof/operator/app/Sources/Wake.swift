@@ -19,6 +19,14 @@ import AVFoundation
 #if canImport(Speech)
 import Speech
 #endif
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 
 /// Posted when the wake phrase is heard — ChatScreen answers by starting dictation hands-free.
 extension Notification.Name {

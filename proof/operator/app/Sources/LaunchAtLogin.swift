@@ -11,6 +11,15 @@
 // persist a login-item registration) the UI shows the honest limitation and routes the buyer to
 // the Mac download — the same honest pattern the CLI-subscription brains use. Real login-item
 // registration is verified only in the signed Developer-ID build on a real login.
+import Foundation
+#if canImport(Combine) && !CIRCUIT_WINDOWS_SIM
+import Combine
+#else
+import OpenCombine
+import OpenCombineFoundation
+import OpenCombineDispatch
+#endif
+import CircuitPortKit
 #if os(macOS)
 import Foundation
 import ServiceManagement

@@ -6,9 +6,30 @@ import Crypto
 #endif
 #if canImport(Security) && !CIRCUIT_WINDOWS_SIM
 import Security
+#else
+import CircuitPortKit
 #endif
 
 nonisolated enum AceNativeUpdateArtifact {
+    static func verifyMount(_ data: Data, expectedURL: URL) throws {
+        guard let plist = try PropertyListSerialization.propertyList(
+            from: data, format: nil) as? [String: Any],
+              let entities = plist["system-entities"] as? [[String: Any]] else {
+            throw AceNativeUpdateError.rejected("macOS returned an invalid update mount receipt.")
+        }
+        let mountedPaths = entities.compactMap { $0["mount-point"] as? String }
+        // Foundation and hdiutil spell the system temporary directory as /var
+        // and /private/var respectively. Compare filesystem destinations, not
+        // spellings; still require exactly one mount at this transaction's URL.
+        guard mountedPaths.count == 1,
+              mountedPaths[0].hasPrefix("/"),
+              URL(fileURLWithPath: mountedPaths[0], isDirectory: true)
+                .resolvingSymlinksInPath().standardizedFileURL
+                == expectedURL.resolvingSymlinksInPath().standardizedFileURL else {
+            throw AceNativeUpdateError.rejected("The update disk image did not mount at its private destination.")
+        }
+    }
+
     static let signingRequirement =
         "identifier \"com.blacklabel.assistant\" and anchor apple generic "
         + "and certificate 1[field.1.2.840.113635.100.6.2.6] exists "
