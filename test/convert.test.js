@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import {
   convertRepo, convertSwiftSource, convertPythonSource, convertJsSource, isolateSwiftSource,
   isolateSwiftDeclarations, swiftTopLevelChunks, isolatedLoc, xcodegenSources, detectSwiftSettings,
-  formatConvertReport,
+  formatConvertReport, formatConvertMarkdown, guardMissingImport, runKitSelfTest, writeKitSelfTest,
 } from '../lib/convert.js';
 import { SWIFT_IMPORT_RULES, SWIFT_PACKAGES, SIM_FLAG, ISOLATE_OPEN, ISOLATE_CLOSE } from '../lib/convert-rules.js';
 import { portCheck } from '../lib/port.js';
@@ -95,6 +95,94 @@ test('swift: Combine schedulers and Foundation publishers go through the kit, ne
   assert.match(r.text, /^import CircuitPortKit$/m, 'the bridge lives in the kit on every platform');
   // converting the converted text again changes nothing (idempotent)
   assert.equal(convertSwiftSource(r.text).text, r.text);
+});
+
+test('swift: Security becomes the kit Keychain; a file using Keychain names without the import gets the kit', () => {
+  const explicit = convertSwiftSource('import Foundation\nimport Security\n\nfunc wipe() -> OSStatus { SecItemDelete([kSecClass as String: kSecClassGenericPassword] as CFDictionary) }\n');
+  assert.match(explicit.text, new RegExp(`#if canImport\\(Security\\) && !${SIM_FLAG}\\nimport Security\\n#else\\nimport CircuitPortKit\\n#endif`));
+  assert.deepEqual(explicit.kitModules, ['Security']);
+  assert.deepEqual(explicit.guardedModules, [], 'Security is converted, not hidden');
+  assert.ok(explicit.needsKit);
+  // On the Mac, Foundation re-exports Security, so a file can use the names without importing it.
+  const names = convertSwiftSource('import Foundation\n\nlet key = kSecAttrAccount as String\n');
+  assert.match(names.text, /^import CircuitPortKit$/m);
+  assert.deepEqual(names.kitModules, ['Security']);
+  assert.equal(convertSwiftSource(names.text).text, names.text, 'idempotent');
+  // Already importing the kit off Apple platforms (here through the os rule) is enough.
+  const viaOs = convertSwiftSource('import Foundation\nimport os\n\nlet key = kSecAttrAccount as String\n');
+  assert.equal(viaOs.text.match(/import CircuitPortKit/g).length, 1);
+  const comment = convertSwiftSource('import Foundation\n// kSecAttrAccount only in a comment\nstruct S {}\n');
+  assert.equal(comment.changed, false, 'a name inside a comment is not a use');
+});
+
+test('swift: Combine used without an import (SwiftUI / Foundation re-export it on the Mac) gets OpenCombine', () => {
+  const src = 'import SwiftUI\n\nfinal class Model: ObservableObject { @Published var n = 0 }\nfunc f(p: PassthroughSubject<Int, Never>) { _ = p.receive(on: DispatchQueue.main) }\n';
+  const r = convertSwiftSource(src);
+  assert.match(r.text, new RegExp(`#if canImport\\(Combine\\) && !${SIM_FLAG}\\nimport Combine\\n#else\\nimport OpenCombine\\nimport OpenCombineFoundation\\nimport OpenCombineDispatch\\n#endif`));
+  assert.match(r.text, /^import CircuitPortKit$/m, 'the scheduler bridge');
+  assert.ok(r.text.includes('.receive(on: DispatchQueue.main.circuitScheduler)'));
+  assert.deepEqual([...r.products.keys()].sort(), ['OpenCombine', 'OpenCombineDispatch', 'OpenCombineFoundation']);
+  assert.equal(convertSwiftSource(r.text).text, r.text, 'idempotent');
+  const explicit = convertSwiftSource('import Combine\nimport os\nlet l = Logger()\nfunc f(p: AnyPublisher<Int, Never>) { _ = p.receive(on: RunLoop.main) }\n');
+  const lines = explicit.text.split('\n');
+  assert.ok(lines.some((l, i) => l === 'import CircuitPortKit' && lines[i - 1] !== '#else'), 'the bridge needs an import on every platform, not only in the os rule\'s #else branch');
+  assert.equal(convertSwiftSource('import Foundation\n// ObservableObject in a comment\nstruct S {}\n').changed, false);
+});
+
+test('swift: Darwin becomes ucrt on Windows, never WinSDK (its UUID makes Foundation\'s ambiguous)', () => {
+  const r = convertSwiftSource('import Foundation\nimport Darwin\nlet id = UUID()\n');
+  assert.match(r.text, /#elseif canImport\(ucrt\)\nimport ucrt\n#elseif canImport\(Glibc\)/);
+  assert.ok(!/WinSDK/.test(r.text));
+});
+
+test('verify: an import of a module the platform lacks is hidden, never the whole file', () => {
+  const src = ['import Foundation', '@preconcurrency import Accelerate.vecLib', '', 'func fft() { vDSP_create_fftsetup(4, 2) }', 'func keep() -> Int { 1 }', ''].join('\n');
+  const next = guardMissingImport(src, 2, 'Accelerate.vecLib');
+  assert.equal(next, ['import Foundation', `#if canImport(Accelerate) && !${SIM_FLAG}`, '@preconcurrency import Accelerate.vecLib', '#endif', '', 'func fft() { vDSP_create_fftsetup(4, 2) }', 'func keep() -> Int { 1 }', ''].join('\n'));
+  assert.equal(guardMissingImport(src, 4, 'Accelerate'), null, 'only an import line of that module is touched');
+  for (const mod of ['Accelerate', 'FoundationModels', 'simd', 'ImagePlayground']) assert.ok(APPLE_MODULES[mod] && APPLE_MODULES[mod].kind !== 'portable', `${mod} is in the port map`);
+});
+
+test('verify: the compiler loop hides a missing module, then isolates only what uses it; Keychain code converts', { timeout: 600_000 }, (t) => {
+  const swift = spawnSync('swift', ['--version'], { encoding: 'utf8' });
+  if (swift.error || swift.status !== 0) { t.skip('no swift toolchain on this host'); return; }
+  const dir = fixture({
+    'Sources/Engine.swift': 'import Foundation\nimport CircuitNoSuchModule\n\nfunc engine() -> Int { CircuitNoSuchModule.value }\nfunc plain() -> Int { 2 }\n',
+    'Sources/Secrets.swift': 'import Foundation\nimport Security\n\nfunc token(_ account: String) -> Data? {\n    var q: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: "demo", kSecAttrAccount as String: account]\n    q[kSecReturnData as String] = true\n    var out: AnyObject?\n    guard SecItemCopyMatching(q as CFDictionary, &out) == errSecSuccess else { return nil }\n    return out as? Data\n}\n',
+  });
+  const out = outDir();
+  const r = convertRepo(dir, { out, verify: true });
+  assert.equal(r.verification.ok, true, r.verification.failure ?? '');
+  const by = Object.fromEntries(r.files.map((f) => [f.id, f]));
+  assert.equal(by['Sources/Engine.swift'].status, 'partial', 'plain() still builds');
+  assert.ok(by['Sources/Engine.swift'].guardedModules.includes('CircuitNoSuchModule'));
+  assert.ok(r.verification.passes.some((p) => p.hiddenImports), 'the pass that hid the import is on record');
+  assert.equal(by['Sources/Secrets.swift'].status, 'converted', 'Keychain code builds in the Windows configuration (Apple\'s names on a Mac, the kit on Windows)');
+  assert.ok(fs.existsSync(path.join(out, 'kit', 'CircuitPortKit', 'Keychain.swift')));
+  assert.match(r.source.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(r.source.files, 2);
+  assert.match(formatConvertMarkdown(r), /Source read: 2 files, sha256 `[0-9a-f]{16}`/);
+});
+
+test('kit self-test: the Keychain calls exactly as converted apps make them', { timeout: 600_000 }, (t) => {
+  const swift = spawnSync('swift', ['--version'], { encoding: 'utf8' });
+  if (swift.error || swift.status !== 0) { t.skip('no swift toolchain on this host'); return; }
+  const r = runKitSelfTest(outDir());
+  assert.equal(r.ok, true, r.output);
+  assert.ok(r.passed >= 30, `${r.passed} checks passed`);
+  assert.equal(r.failed, 0);
+});
+
+test('kit: the Security parts stay empty wherever Apple\'s Security exists (no ambiguity in the Mac simulation)', () => {
+  const kit = path.join(ROOT, 'lib', 'convert-kit', 'CircuitPortKit');
+  assert.match(fs.readFileSync(path.join(kit, 'Security.swift'), 'utf8'), /^#if !canImport\(Security\) \|\| CIRCUIT_KIT_SELFTEST$/m);
+  assert.match(fs.readFileSync(path.join(kit, 'Keychain.swift'), 'utf8'), /^#if os\(Windows\) \|\| CIRCUIT_KIT_SELFTEST$/m);
+  // on Windows the self-test uses the kit as its own module, exactly as a converted package does
+  const win = outDir();
+  writeKitSelfTest(win, { platform: 'win32' });
+  const manifest = fs.readFileSync(path.join(win, 'Package.swift'), 'utf8');
+  assert.ok(manifest.includes('.target(name: "CircuitPortKit", path: "kit/CircuitPortKit")') && manifest.includes('dependencies: ["CircuitPortKit"]'));
+  assert.ok(!manifest.includes('CIRCUIT_KIT_SELFTEST'), 'the real store, not the in-memory one');
 });
 
 test('swift: top-level declarations are found with their attributes and doc comments', () => {

@@ -52,6 +52,8 @@ let convertExclude = [];    // --exclude a,b: paths to leave out of the module
 let convertModule = null;   // --module Name: the Swift module name of the converted package
 let reverifyMode = false;   // --reverify <convertedDir>: compiler check on an existing conversion
 let recountMode = false;    // --recount <convertedDir>: rewrite the report from the files, no build
+let kitSelfTestMode = false; // --kit-selftest --out <dir> [-- args]: build + run the CircuitPortKit self-test
+let kitSelfTestArgs = [];
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--port') port = Number(args[++i]);
   else if (args[i] === '--check') checkMode = true;
@@ -65,6 +67,8 @@ for (let i = 0; i < args.length; i++) {
   else if (args[i] === '--convert') convertMode = true;
   else if (args[i] === '--reverify') reverifyMode = true;
   else if (args[i] === '--recount') recountMode = true;
+  else if (args[i] === '--kit-selftest') kitSelfTestMode = true;
+  else if (args[i] === '--') { kitSelfTestArgs = args.slice(i + 1); break; }
   else if (args[i] === '--out') convertOut = path.resolve(args[++i]);
   else if (args[i] === '--verify') convertVerify = true;
   else if (args[i] === '--sources') convertSources = args[++i].split(',').map((x) => x.trim()).filter(Boolean);
@@ -72,6 +76,17 @@ for (let i = 0; i < args.length; i++) {
   else if (args[i] === '--module') convertModule = args[++i];
   else if (!args[i].startsWith('-')) root = path.resolve(args[i]);
 }
+// ---- The kit's own test: the Keychain calls as converted apps make them, on this platform. ----
+if (kitSelfTestMode) {
+  const { runKitSelfTest } = await import('./lib/convert.js');
+  const dir = convertOut ?? fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-kit-selftest-'));
+  const r = runKitSelfTest(dir, { args: kitSelfTestArgs, log: (m) => console.log(`[circuit] ${m}`) });
+  console.log(r.output.trimEnd());
+  if (r.spawnError) console.error(`[circuit] swift could not be run: ${r.spawnError}`);
+  console.log(`[circuit] kit self-test ${r.ok ? 'PASSED' : 'FAILED'} — ${r.passed} passed, ${r.failed} failed (${r.store})`);
+  process.exit(r.ok ? 0 : 1);
+}
+
 // --min-grade / --sarif imply the headless check — you never want a long-lived
 // HTTP server in a CI gate.
 if (minGrade != null || sarifPath != null) checkMode = true;
