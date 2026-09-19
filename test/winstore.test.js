@@ -200,7 +200,7 @@ test('PORTABILITY: nothing in the Windows lane depends on this machine or a sibl
   for (const f of files) {
     const body = read(...f);
     assert.ok(!/\/Users\//.test(body), `${f.join('/')} contains an absolute /Users/ path`);
-    assert.ok(!/\.\.\/\.\.\/[A-Za-z]/.test(body.replace(/\.\.\/\.\.\/\.\./g, '')),
+    assert.ok(!/(?<!\.\.\/)\.\.\/\.\.\/[A-Za-z]/.test(body),
       `${f.join('/')} reaches outside the repo into a sibling directory`);
   }
   // The workflow must check out only this repo.

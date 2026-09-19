@@ -41,9 +41,10 @@ const certPass = process.env.CIRCUIT_WIN_CERT_PASSWORD;
 
 // Fail closed on every way the cert can be absent or fake.
 if (!certPath) hold('CIRCUIT_WIN_CERT is not set (no signing certificate).');
-if (!fs.existsSync(certPath)) hold(`certificate not found at ${certPath}.`);
+// The certificate's location is not echoed: the log only names the variable that holds it.
+if (!fs.existsSync(certPath)) hold('the certificate named by CIRCUIT_WIN_CERT does not exist.');
 const certStat = fs.statSync(certPath);
-if (!certStat.isFile() || certStat.size === 0) hold(`certificate at ${certPath} is empty or not a file.`);
+if (!certStat.isFile() || certStat.size === 0) hold('the certificate named by CIRCUIT_WIN_CERT is empty or not a file.');
 if (!certPass) hold('CIRCUIT_WIN_CERT_PASSWORD is not set.');
 if (!fs.existsSync(artifact)) {
   console.error(`[sign] artifact not found: ${artifact}`);
@@ -56,7 +57,7 @@ if (os.platform() !== 'win32') {
 }
 
 // --- Post-cert path (reachable only in the VM, with a real cert) ---------------
-console.log(`[sign] signing ${artifact} with ${certPath} …`);
+console.log(`[sign] signing ${artifact} with the certificate named by CIRCUIT_WIN_CERT …`);
 const sign = spawnSync('signtool', [
   'sign', '/fd', 'sha256', '/tr', 'http://timestamp.digicert.com', '/td', 'sha256',
   '/f', certPath, '/p', certPass, artifact,

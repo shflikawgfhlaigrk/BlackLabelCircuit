@@ -119,7 +119,7 @@ test('no response carries text derived from an exception: a fixed message and a 
   // CodeQL js/stack-trace-exposure (main 6c23f3a): exception text quotes absolute paths and
   // stacks. Every send()/broadcast() that reports a failure goes through a fixed message.
   const server = fs.readFileSync(path.join(ROOT, 'server.js'), 'utf8');
-  const calls = [...server.matchAll(/\b(?:send|broadcast)\((?:[^;]|\n)*?\);/g)].map((m) => m[0]);
+  const calls = [...server.matchAll(/\b(?:send|broadcast)\([^;]*?\);/g)].map((m) => m[0]);
   const leaking = calls.filter((c) => /\b(?:e|err|error)\??\.(?:message|stack)\b|String\(\s*(?:e|err|error)\b/.test(c));
   assert.deepEqual(leaking, []);
   assert.match(server, /function failed\(what, e\)/, 'the one failure path');
