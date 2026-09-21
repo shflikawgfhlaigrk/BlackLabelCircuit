@@ -132,6 +132,18 @@ struct SelfTest {
         check(SecItemDelete([kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: "circuit.selftest.tokens"] as CFDictionary) == errSecSuccess, "deleting by service removes all its accounts")
         check(SecItemDelete(alice as CFDictionary) == errSecItemNotFound, "deleting again is errSecItemNotFound")
 
+        let child = CircuitProcess()
+        child.executableURL = Bundle.main.executableURL
+        child.arguments = ["--process-child"]
+        do {
+            try child.run()
+            check(child.isRunning || child.processIdentifier != 0, "CircuitProcess launches a child and exposes its process id")
+            child.waitUntilExit()
+            check(child.terminationStatus == 7 && !child.isRunning, "CircuitProcess waits and reports the child exit status")
+        } catch {
+            check(false, "CircuitProcess launch failed: \(error)")
+        }
+
         if ProcessInfo.processInfo.environment["CIRCUIT_KIT_SELFTEST_MARKER"] == "1" {
             var marker = Self.item("marker", "visible")
             marker[kSecValueData as String] = Data("seen from outside".utf8)
@@ -143,6 +155,7 @@ struct SelfTest {
 }
 
 CircuitKeychain.namespace = "circuit-kit-selftest"
+if CommandLine.arguments.contains("--process-child") { exit(7) }
 if CommandLine.arguments.contains("--remove-marker") {
     let status = SecItemDelete(SelfTest.item("marker", "visible") as CFDictionary)
     print(status == errSecSuccess ? "PASS marker removed" : "FAIL marker not removed (\(status))")
