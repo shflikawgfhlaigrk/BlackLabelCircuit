@@ -1,0 +1,87 @@
+{
+  "schema": "circuit.mac-first-windows-converter-plan.v1",
+  "planVersion": "2026-09-21.1",
+  "product": "Circuit",
+  "primaryPlatform": "macos",
+  "conversionTarget": "windows",
+  "inputScope": "source-available-mac-apps",
+  "sourceMutation": "forbidden",
+  "completionAuthority": "real-windows",
+  "requirements": [
+    "MAC-FIRST-001",
+    "SOURCE-PRESERVING-001",
+    "APP-IR-001",
+    "COMPATIBILITY-PACKS-001",
+    "UI-COMPILER-001",
+    "COMPILER-TRUTH-001",
+    "WINDOWS-PROOF-001",
+    "PACKAGING-001",
+    "REPRODUCTION-001"
+  ],
+  "targetProfiles": [
+    "winui3",
+    "tauri2-webview2",
+    "electron",
+    "flutter-windows",
+    "qt6-windows",
+    "native-cli"
+  ],
+  "compatibilityPacks": [
+    "ui",
+    "foundation",
+    "posix",
+    "security",
+    "crypto",
+    "database",
+    "logging",
+    "types-assets",
+    "networking",
+    "ipc-services",
+    "notifications",
+    "browser-auth",
+    "clipboard-share",
+    "media",
+    "devices",
+    "accessibility",
+    "updates"
+  ],
+  "phases": [
+    { "id": "P0", "name": "truth-baseline-and-corpus" },
+    { "id": "P1", "name": "mac-first-product-shell" },
+    { "id": "P2", "name": "project-and-semantic-ir" },
+    { "id": "P3", "name": "runtime-compatibility-packs" },
+    { "id": "P4", "name": "swiftui-appkit-to-winui-compiler" },
+    { "id": "P5", "name": "services-helpers-and-extensions" },
+    { "id": "P6", "name": "proof-repair-and-packaging" },
+    { "id": "P7", "name": "portfolio-acceptance" }
+  ],
+  "requiredWindowsGates": [
+    "compile",
+    "unit",
+    "install",
+    "launch",
+    "lifecycle",
+    "features",
+    "ui",
+    "accessibility",
+    "data",
+    "security",
+    "package",
+    "reproduction"
+  ],
+  "terminalVerdicts": {
+    "complete": { "shippable": true },
+    "complete-with-approved-differences": { "shippable": true },
+    "partial": { "shippable": false },
+    "held": { "shippable": false },
+    "failed": { "shippable": false }
+  },
+  "forbiddenSuccessShortcuts": [
+    "mac-simulation-only",
+    "generated-source-only",
+    "whole-file-apple-only-isolation",
+    "silent-feature-omission",
+    "unsigned-artifact-called-shippable",
+    "builder-authored-proof-only"
+  ]
+}

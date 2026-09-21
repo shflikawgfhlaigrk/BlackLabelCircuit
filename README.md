@@ -2,6 +2,11 @@
 
 **Grade your codebase like a senior engineer. See the wiring in 3D.**
 
+Circuit is also the Mac-first conversion workbench for producing verified Windows
+versions of source-available Mac apps. The complete architecture, compatibility
+surface, UI compiler, Windows proof gates, and portfolio acceptance criteria are in
+[`docs/MAC-FIRST-WINDOWS-CONVERTER-PLAN.md`](docs/MAC-FIRST-WINDOWS-CONVERTER-PLAN.md).
+
 Point Circuit at any repo. It parses every file, maps what's wired to what
 (imports, type references), grades each file across six dimensions the way a
 senior reviewer would, and renders the whole thing as a live 3D force graph —
