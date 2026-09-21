@@ -30,6 +30,10 @@ import { runCheck } from './lib/report.js';
 import { buildHistory, headSha } from './lib/history.js';
 import { portCheck, formatPortReport } from './lib/port.js';
 import { convertRepo, reverifyConverted, recountConverted, formatConvertReport } from './lib/convert.js';
+import {
+  createConversionSession, defaultConversionBase, discoverMacProject,
+  loadCurrentConversionSession, previewConversionOutput, updateConversionSession,
+} from './lib/conversion-session.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, 'public');
@@ -250,20 +254,70 @@ let portReport = null;
 // (`--convert … --verify`), so minutes of compiling never block the server; its
 // output lines are streamed to the page and the result is read back from its JSON.
 const convertJob = { running: false, log: [], result: null, error: null, errorId: null, out: null, startedAt: null };
+const conversionBase = defaultConversionBase();
+let conversionIntake = null;
+let conversionSession = loadCurrentConversionSession(conversionBase);
+if (conversionSession?.source?.root !== realRoot) conversionSession = null;
+
+function currentIntake() {
+  if (!conversionIntake) conversionIntake = discoverMacProject(root);
+  return conversionIntake;
+}
+
+function conversionSetupPayload() {
+  const intake = currentIntake();
+  const outputPreviews = {};
+  for (const target of intake.targets) {
+    outputPreviews[target.id] = {};
+    for (const profileId of target.profiles) {
+      outputPreviews[target.id][profileId] = previewConversionOutput({ appName: intake.app.name, targetName: target.name, profileId, base: conversionBase });
+    }
+  }
+  return { intake, session: conversionSession, outputPreviews };
+}
+
+function createDefaultConversionSession() {
+  const intake = currentIntake();
+  const target = intake.targets[0];
+  conversionSession = createConversionSession({
+    root,
+    base: conversionBase,
+    targetId: target.id,
+    profileId: target.recommendedProfile,
+  });
+  return conversionSession;
+}
 
 function convertOutDir() {
-  // CIRCUIT_CONVERT_DIR moves the output root (tests, shared build machines).
-  const base = process.env.CIRCUIT_CONVERT_DIR || path.join(os.homedir(), 'Circuit Converted');
-  return path.join(base, `${path.basename(root)}-windows`);
+  // Sessions own their immutable output. The legacy default preserves CLI/API
+  // compatibility until the Mac intake has created the first session.
+  if (conversionSession?.output?.path) return conversionSession.output.path;
+  return path.join(conversionBase, `${path.basename(root)}-windows`);
 }
 
 function startConvert({ verify }) {
+  // Old API clients can still POST /api/convert without first creating a session.
+  // Prefer a durable default session, but retain the legacy child-process failure
+  // path when an invalid CIRCUIT_CONVERT_DIR points inside the source: the child
+  // reports a fixed client-safe failure instead of this request leaking details.
+  if (!conversionSession) {
+    try { createDefaultConversionSession(); }
+    catch { conversionSession = null; }
+  }
   const out = convertOutDir();
   fs.mkdirSync(out, { recursive: true });
   const resultPath = path.join(out, 'conversion.json');
   Object.assign(convertJob, { running: true, log: [], result: null, error: null, errorId: null, out, startedAt: Date.now() });
   const childArgs = [fileURLToPath(import.meta.url), '--convert', root, '--out', out];
+  if (conversionSession?.target?.sources?.length) childArgs.push('--sources', conversionSession.target.sources.join(','));
   if (verify) childArgs.push('--verify');
+  if (conversionSession) {
+    conversionSession = updateConversionSession(conversionBase, conversionSession.id, {
+      status: 'running', startedAt: new Date().toISOString(), finishedAt: null,
+      error: null, errorId: null,
+      progress: { stage: 'convert', completed: 0, total: 1, message: 'Converting and compiling' },
+    });
+  }
   const child = spawn(process.execPath, childArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
   const onData = (buf) => {
     for (const line of String(buf).split('\n')) {
@@ -272,6 +326,11 @@ function startConvert({ verify }) {
       convertJob.log.push(text);
       if (convertJob.log.length > 400) convertJob.log.shift();
       broadcast('convert', { line: text });
+      if (conversionSession) {
+        conversionSession = updateConversionSession(conversionBase, conversionSession.id, {
+          progress: { stage: 'convert', completed: 0, total: 1, message: text.slice(0, 240) },
+        });
+      }
     }
   };
   // Progress is stdout. The child's stderr is where its own failures go (exception text with
@@ -282,6 +341,10 @@ function startConvert({ verify }) {
   child.on('error', (e) => {
     const f = failed('starting the conversion', e);
     Object.assign(convertJob, { running: false, error: f.message, errorId: f.errorId });
+    if (conversionSession) conversionSession = updateConversionSession(conversionBase, conversionSession.id, {
+      status: 'failed', error: f.message, errorId: f.errorId, finishedAt: new Date().toISOString(),
+      progress: { stage: 'failed', completed: 0, total: 1, message: 'Conversion could not start' },
+    });
     broadcast('convert-done', { ok: false, error: f.message, errorId: f.errorId });
   });
   child.on('close', (code) => {
@@ -291,6 +354,11 @@ function startConvert({ verify }) {
       const f = failed('conversion', stderr.trim() || `the convert process exited with code ${code}`);
       Object.assign(convertJob, { error: f.message, errorId: f.errorId });
     }
+    if (conversionSession) conversionSession = updateConversionSession(conversionBase, conversionSession.id, {
+      status: convertJob.error ? 'failed' : 'complete', result: convertJob.result,
+      error: convertJob.error, errorId: convertJob.errorId, finishedAt: new Date().toISOString(),
+      progress: { stage: convertJob.error ? 'failed' : 'complete', completed: convertJob.error ? 0 : 1, total: 1, message: convertJob.error ? 'Conversion failed' : 'Conversion complete' },
+    });
     broadcast('convert-done', { ok: !convertJob.error, error: convertJob.error, errorId: convertJob.errorId });
   });
 }
@@ -359,6 +427,23 @@ function send(res, status, body, type = 'application/json') {
   res.end(buf);
 }
 
+function readJson(req, limit = 32 * 1024) {
+  return new Promise((resolve, reject) => {
+    let size = 0;
+    const chunks = [];
+    req.on('data', (chunk) => {
+      size += chunk.length;
+      if (size > limit) { reject(new Error('request body is too large')); req.destroy(); return; }
+      chunks.push(chunk);
+    });
+    req.on('end', () => {
+      try { resolve(JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}')); }
+      catch { reject(new Error('request body is not valid JSON')); }
+    });
+    req.on('error', reject);
+  });
+}
+
 const server = http.createServer((req, res) => {
   try {
     handle(req, res);
@@ -400,11 +485,42 @@ function handle(req, res) {
     return send(res, 200, portReport);
   }
 
+  // Mac-first intake and crash-safe session identity. The source is the folder
+  // already selected by the native Circuit shell; clients choose only from the
+  // server-discovered target/profile IDs and cannot supply filesystem paths.
+  if (url.pathname === '/api/conversion/session') {
+    if (req.method === 'POST') {
+      if (convertJob.running) return send(res, 409, { error: 'a conversion is already running' });
+      readJson(req).then((body) => {
+        conversionIntake = discoverMacProject(root);
+        conversionSession = createConversionSession({
+          root,
+          base: conversionBase,
+          targetId: body.targetId,
+          profileId: body.profileId,
+        });
+        Object.assign(convertJob, { running: false, log: [], result: null, error: null, errorId: null, out: conversionSession.output.path, startedAt: null });
+        return send(res, 201, conversionSetupPayload());
+      }).catch((e) => {
+        const f = failed('creating the conversion session', e);
+        if (!res.headersSent) send(res, 400, { error: f.message, errorId: f.errorId });
+      });
+      return;
+    }
+    conversionIntake = discoverMacProject(root);
+    return send(res, 200, conversionSetupPayload());
+  }
+
   // Convert for Windows. POST starts a run (one at a time); GET reports it. The
   // converted copy is written under ~/Circuit Converted — never into the repo.
   if (url.pathname === '/api/convert') {
     if (req.method === 'POST') {
       if (convertJob.running) return send(res, 409, { error: 'a conversion is already running' });
+      const liveIntake = discoverMacProject(root);
+      conversionIntake = liveIntake;
+      if (conversionSession && liveIntake.source.sha256 !== conversionSession.source.sha256) {
+        return send(res, 409, { error: 'the source project changed — review it and create a new conversion session' });
+      }
       const verify = url.searchParams.get('verify') !== '0';
       startConvert({ verify });
       return send(res, 202, { started: true, out: convertJob.out, verify });
@@ -416,6 +532,7 @@ function handle(req, res) {
     return send(res, 200, {
       running: convertJob.running, out: convertJob.out ?? convertOutDir(), startedAt: convertJob.startedAt,
       log: convertJob.log.slice(-60), error: convertJob.error, errorId: convertJob.errorId, result: convertJob.result,
+      session: conversionSession,
     });
   }
 

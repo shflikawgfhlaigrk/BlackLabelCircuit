@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node --test test/analyze.test.js test/regressions.test.js test/lang-deep.test.js test/rules.test.js test/airgap.test.js test/params.test.js test/flags.test.js test/mutable.test.js test/server.test.js test/launcher.test.js test/license.test.js test/report.test.js test/history.test.js test/editor.test.js test/winshell.test.js test/winmsix.test.js test/winstore.test.js test/testlane.test.js test/port.test.js test/convert.test.js test/converter-plan.test.js",
+    "test": "node --test test/analyze.test.js test/regressions.test.js test/lang-deep.test.js test/rules.test.js test/airgap.test.js test/params.test.js test/flags.test.js test/mutable.test.js test/server.test.js test/launcher.test.js test/license.test.js test/report.test.js test/history.test.js test/editor.test.js test/winshell.test.js test/winmsix.test.js test/winstore.test.js test/testlane.test.js test/port.test.js test/convert.test.js test/converter-plan.test.js test/conversion-session.test.js",
     "start": "node server.js"
   },
   "keywords": [],

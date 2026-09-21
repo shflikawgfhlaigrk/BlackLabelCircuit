@@ -184,7 +184,55 @@
       <button class="btn ghost" id="convertClose" aria-label="Close">✕</button>
     </div>
     <div class="convert-body">
-      <p class="convert-intro">Writes a converted copy of this codebase that builds for Windows. Apple-only imports are swapped for the same-API Windows packages, then <b>your Swift compiler checks every file</b>: what it rejects is kept for the Mac build and listed with the Windows part it needs. Your repo is never changed.</p>
+      <p class="convert-intro">Circuit runs on your Mac first. Review the Mac app, select its desktop target and Windows profile, then create an immutable conversion session. The generated workspace is separate; <b>your source project is never changed</b>.</p>
+      <nav class="convert-steps" aria-label="Conversion setup progress">
+        <ol>
+          <li id="convertStepMarker1" aria-current="step"><span>1</span>Mac app</li>
+          <li id="convertStepMarker2"><span>2</span>Windows target</li>
+          <li id="convertStepMarker3"><span>3</span>Review &amp; convert</li>
+        </ol>
+      </nav>
+      <form id="convertSetup" action="/api/conversion/session" method="post" novalidate>
+        <div id="convertAnnouncement" class="visually-hidden" aria-live="polite"></div>
+        <section id="convertStep1" class="convert-step" aria-labelledby="convertStep1Title">
+          <h4 id="convertStep1Title">Selected Mac app</h4>
+          <dl class="convert-source-summary">
+            <div><dt>Project</dt><dd id="convertSourceName">Loading…</dd></div>
+            <div><dt>Source identity</dt><dd id="convertSourceIdentity" class="mono">—</dd></div>
+            <div><dt>Working changes</dt><dd id="convertSourceDirty">—</dd></div>
+          </dl>
+          <p class="convert-hint">This is the folder selected in Circuit’s native Mac window. Conversion reads it and writes somewhere else.</p>
+          <div class="convert-step-actions"><button class="btn primary" id="convertNext1" type="button">Choose Windows target</button></div>
+        </section>
+        <section id="convertStep2" class="convert-step hidden" aria-labelledby="convertStep2Title">
+          <h4 id="convertStep2Title">Choose what Circuit will build</h4>
+          <fieldset class="convert-fieldset">
+            <legend>Mac application target</legend>
+            <div id="convertTargetChoices" class="convert-choice-list"></div>
+          </fieldset>
+          <fieldset class="convert-fieldset">
+            <legend>Windows application profile</legend>
+            <div id="convertProfileChoices" class="convert-choice-list"></div>
+          </fieldset>
+          <div class="convert-step-actions">
+            <button class="btn" id="convertBack2" type="button">Back</button>
+            <button class="btn primary" id="convertNext2" type="button">Review conversion</button>
+          </div>
+        </section>
+        <section id="convertStep3" class="convert-step hidden" aria-labelledby="convertStep3Title">
+          <h4 id="convertStep3Title">Review conversion workspace</h4>
+          <dl class="convert-source-summary">
+            <div><dt>Target</dt><dd id="convertReviewTarget">—</dd></div>
+            <div><dt>Windows profile</dt><dd id="convertReviewProfile">—</dd></div>
+            <div><dt>Output</dt><dd id="convertOutputPreview" class="mono">—</dd></div>
+          </dl>
+          <p class="convert-hint">Creating the session locks this source identity, target, profile, and output together. If the source changes, Circuit requires a new session.</p>
+          <div class="convert-step-actions">
+            <button class="btn" id="convertBack3" type="button">Back</button>
+            <button class="btn primary" id="convertPrepare" type="submit">Create conversion session</button>
+          </div>
+        </section>
+      </form>
       <div id="convertResult" class="hidden">
         <div class="convert-hero"><span id="convertPct" class="convert-pct">–</span><span id="convertPctLabel" class="convert-pct-label"></span></div>
         <table class="convert-table" id="convertTable"></table>
@@ -194,7 +242,7 @@
       <pre id="convertLog" class="convert-log hidden"></pre>
     </div>
     <div class="convert-actions">
-      <button class="btn primary" id="convertRun">Convert for Windows</button>
+      <button class="btn primary" id="convertRun" disabled>Convert for Windows</button>
       <button class="btn" id="convertOpenOut" disabled title="Open the converted code in your file manager">Open output folder</button>
       <button class="btn" id="convertReport" disabled title="Read the full conversion report">View report</button>
       <button class="btn" id="convertShow" disabled title="Color every file in the 3D view by what the conversion did with it">Show on graph</button>

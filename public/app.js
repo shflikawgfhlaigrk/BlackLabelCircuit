@@ -58,7 +58,7 @@ const state = {
   // Windows port overlay: when `on`, nodes recolor by whether the file runs on Windows as-is.
   port: { on: false, loading: false, data: null, byId: new Map() },
   // Convert: the last conversion result; when `on`, nodes recolor by its per-file verdict.
-  convert: { on: false, running: false, result: null, byId: new Map() },
+  convert: { on: false, running: false, result: null, byId: new Map(), intake: null, session: null, outputPreviews: {}, step: 1 },
 };
 
 // ---------- graph setup ----------
@@ -757,6 +757,88 @@ const CONVERT_ROWS = [
   ['needs-windows-part', 'Needs a Windows part (kept for the Mac build)'],
 ];
 
+function selectedConversionTarget() {
+  const id = document.querySelector('input[name="conversion_target"]:checked')?.value;
+  return state.convert.intake?.targets.find((item) => item.id === id) ?? null;
+}
+
+function selectedConversionProfile() {
+  return document.querySelector('input[name="conversion_profile"]:checked')?.value ?? null;
+}
+
+function setConvertStep(step, announce = true) {
+  state.convert.step = step;
+  for (let i = 1; i <= 3; i++) {
+    $(`convertStep${i}`).classList.toggle('hidden', i !== step);
+    const marker = $(`convertStepMarker${i}`);
+    marker.classList.toggle('done', i < step);
+    marker.classList.toggle('active', i === step);
+    if (i === step) marker.setAttribute('aria-current', 'step');
+    else marker.removeAttribute('aria-current');
+  }
+  if (announce) $('convertAnnouncement').textContent = `Conversion setup step ${step} of 3`;
+}
+
+function renderProfileChoices(target, selectedId = null) {
+  const box = $('convertProfileChoices');
+  const profiles = target?.profiles ?? [];
+  box.innerHTML = profiles.map((id, index) => {
+    const profile = state.convert.intake.profiles[id];
+    const checked = id === (selectedId ?? target.recommendedProfile);
+    return `<label class="convert-choice" for="convertProfile-${esc(id)}"><input id="convertProfile-${esc(id)}" name="conversion_profile" type="radio" value="${esc(id)}" ${checked ? 'checked' : ''} ${index === 0 ? 'required' : ''}><span><b>${esc(profile.label)}</b><small>${esc(profile.description)}</small></span></label>`;
+  }).join('');
+  updateConversionReview();
+}
+
+function updateConversionReview() {
+  const target = selectedConversionTarget();
+  const profileId = selectedConversionProfile();
+  const profile = state.convert.intake?.profiles?.[profileId];
+  $('convertReviewTarget').textContent = target?.name ?? 'Choose a target';
+  $('convertReviewProfile').textContent = profile?.label ?? 'Choose a profile';
+  $('convertOutputPreview').textContent = target && profileId
+    ? state.convert.outputPreviews?.[target.id]?.[profileId] ?? 'Generated after session creation'
+    : 'Choose a target and profile';
+}
+
+function renderConversionSetup(payload) {
+  state.convert.intake = payload.intake;
+  state.convert.session = payload.session;
+  state.convert.outputPreviews = payload.outputPreviews ?? {};
+  const intake = payload.intake;
+  $('convertSourceName').textContent = intake.app.name;
+  $('convertSourceIdentity').textContent = intake.source.sha256.slice(0, 16);
+  $('convertSourceDirty').textContent = intake.source.dirty.length
+    ? `${intake.source.dirty.length} changed file${intake.source.dirty.length === 1 ? '' : 's'} included in this identity`
+    : 'Clean source revision';
+  const selectedTargetId = payload.session?.target?.id ?? intake.targets[0]?.id;
+  $('convertTargetChoices').innerHTML = intake.targets.map((target, index) => {
+    const checked = target.id === selectedTargetId;
+    return `<label class="convert-choice" for="convertTarget-${esc(target.id)}"><input id="convertTarget-${esc(target.id)}" name="conversion_target" type="radio" value="${esc(target.id)}" ${checked ? 'checked' : ''} ${index === 0 ? 'required' : ''}><span><b>${esc(target.name)}</b><small>${esc(target.detail)} · ${esc(target.descriptor)}</small></span></label>`;
+  }).join('');
+  const target = intake.targets.find((item) => item.id === selectedTargetId) ?? intake.targets[0];
+  renderProfileChoices(target, payload.session?.profile?.id ?? null);
+  if (payload.session) {
+    $('convertOutputPreview').textContent = payload.session.output.path;
+    $('convertReviewTarget').textContent = payload.session.target.name;
+    $('convertReviewProfile').textContent = payload.session.profile.label;
+    $('convertPrepare').textContent = 'Create a new session';
+    $('convertAnnouncement').textContent = `Resumed conversion session ${payload.session.id.slice(0, 8)}`;
+    setConvertStep(3, false);
+  } else {
+    $('convertPrepare').textContent = 'Create conversion session';
+    setConvertStep(1, false);
+  }
+  $('convertRun').disabled = state.convert.running || !payload.session;
+}
+
+async function loadConversionSetup() {
+  const res = await fetch('/api/conversion/session');
+  const payload = await res.json();
+  if (!res.ok) throw new Error(payload.error ?? `HTTP ${res.status}`);
+  renderConversionSetup(payload);
+}
+
 function showConvertResult(r) {
   state.convert.result = r;
   state.convert.byId = new Map((r?.files ?? []).map((f) => [f.id, f]));
@@ -803,18 +885,55 @@ function showConvertResult(r) {
 function setConvertRunning(on) {
   state.convert.running = on;
   $('convertRun').textContent = on ? 'Converting…' : (state.convert.result ? 'Convert again' : 'Convert for Windows');
-  $('convertRun').disabled = on;
+  $('convertRun').disabled = on || !state.convert.session;
   $('convertOpenBtn').textContent = on ? 'Converting…' : 'Convert';
 }
 
-function openConvertPanel() {
+async function openConvertPanel() {
   $('convertRepo').textContent = state.data?.name ? `— ${state.data.name}` : '';
   $('convertModal').classList.remove('hidden');
+  try { await loadConversionSetup(); }
+  catch (err) { toast(`Could not load conversion setup: ${err.message}`); }
 }
 $('convertOpenBtn').onclick = openConvertPanel;
 $('convertBtn').onclick = openConvertPanel;
 $('convertClose').onclick = () => $('convertModal').classList.add('hidden');
 $('convertModal').addEventListener('click', (e) => { if (e.target === $('convertModal')) $('convertModal').classList.add('hidden'); });
+
+$('convertNext1').onclick = () => setConvertStep(2);
+$('convertBack2').onclick = () => setConvertStep(1);
+$('convertNext2').onclick = () => {
+  const form = $('convertSetup');
+  if (!form.reportValidity()) return;
+  updateConversionReview();
+  setConvertStep(3);
+};
+$('convertBack3').onclick = () => setConvertStep(2);
+$('convertTargetChoices').addEventListener('change', () => renderProfileChoices(selectedConversionTarget()));
+$('convertProfileChoices').addEventListener('change', updateConversionReview);
+$('convertSetup').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!$('convertSetup').reportValidity()) return;
+  const target = selectedConversionTarget();
+  const profileId = selectedConversionProfile();
+  if (!target || !profileId) return;
+  $('convertPrepare').disabled = true;
+  $('convertAnnouncement').textContent = 'Creating conversion session';
+  try {
+    const res = await fetch('/api/conversion/session', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ targetId: target.id, profileId }),
+    });
+    const payload = await res.json();
+    if (!res.ok) throw new Error(payload.error ?? `HTTP ${res.status}`);
+    renderConversionSetup(payload);
+    $('convertAnnouncement').textContent = 'Conversion session created. Ready to convert.';
+    toast('Conversion session created.');
+  } catch (err) {
+    $('convertAnnouncement').textContent = 'Conversion session could not be created.';
+    toast(`Could not create conversion session: ${err.message}`);
+  } finally { $('convertPrepare').disabled = false; }
+});
 
 $('convertRun').onclick = async () => {
   if (state.convert.running) return;
@@ -869,6 +988,7 @@ $('convertShow').onclick = () => { setConvertOverlay(!state.convert.on); if (sta
 async function loadConvertState() {
   try {
     const data = await (await fetch('/api/convert')).json();
+    if (data.session) state.convert.session = data.session;
     if (data.running) { setConvertRunning(true); $('convertLog').classList.remove('hidden'); $('convertLog').textContent = data.log.join('\n'); }
     showConvertResult(data.result ?? null);
     if (!data.running) setConvertRunning(false);
