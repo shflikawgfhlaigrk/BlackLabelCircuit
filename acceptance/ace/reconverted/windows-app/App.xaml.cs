@@ -1,0 +1,1 @@
+using System.Text.Json;using System.Linq;using System.Windows;namespace BlackLabel.Ace;public partial class App:Application{protected override void OnStartup(StartupEventArgs e){if(e.Args.Contains("--self-test")){Console.WriteLine(JsonSerializer.Serialize(AceCore.SelfTest()));Shutdown(0);return;}base.OnStartup(e);}}

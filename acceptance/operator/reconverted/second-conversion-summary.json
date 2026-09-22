@@ -2,7 +2,7 @@
   "root": "/Users/michaelbarber/BlackLabel-Team/worktrees/black-label-operator/operator",
   "name": "operator",
   "target": "windows",
-  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/operator/generated",
+  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/operator/reconverted",
   "moduleName": "operatorCore",
   "source": {
     "sha256": "8ae21b814c37ef5f82dc48ec9b555ae2f80232d0063a851a5d65f8cda76e1214",
@@ -13,8 +13,8 @@
     "from": "every app Swift file outside iOS / widget / marketing folders",
     "paths": null
   },
-  "generatedAt": 1790055309143,
-  "tookMs": 2476,
+  "generatedAt": 1790055311652,
+  "tookMs": 2311,
   "before": {
     "readyPct": 49.4,
     "files": 218,

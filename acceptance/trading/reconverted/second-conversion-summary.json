@@ -2,7 +2,7 @@
   "root": "/Users/michaelbarber/BlackLabelTrading",
   "name": "BlackLabelTrading",
   "target": "windows",
-  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/trading/generated",
+  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/trading/reconverted",
   "moduleName": "BlackLabelTradingCore",
   "source": {
     "sha256": "f0b089879909166d392b47daf5186159da87350f0c84dd0cc352570b7bd1ac0c",
@@ -19,8 +19,8 @@
       "backend"
     ]
   },
-  "generatedAt": 1790055302917,
-  "tookMs": 1004,
+  "generatedAt": 1790055304087,
+  "tookMs": 952,
   "before": {
     "readyPct": 47.8,
     "files": 67,

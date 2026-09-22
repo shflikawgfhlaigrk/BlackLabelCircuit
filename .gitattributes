@@ -1,7 +1,14 @@
 acceptance/academy/generated/windows-app/** -text
 acceptance/academy/reconverted/windows-app/** -text
 acceptance/ace/generated/windows-app/** -text
+acceptance/ace/reconverted/windows-app/** -text
 acceptance/marketing/generated/windows-app/** -text
+acceptance/marketing/reconverted/windows-app/** -text
 acceptance/operator/generated/windows-app/** -text
+acceptance/operator/reconverted/windows-app/** -text
 acceptance/realestate/generated/windows-app/** -text
+acceptance/realestate/reconverted/windows-app/** -text
+acceptance/realestate/generated/windows-app/windows/ui/vendor/leaflet/leaflet.css binary
+acceptance/realestate/reconverted/windows-app/windows/ui/vendor/leaflet/leaflet.css binary
 acceptance/trading/generated/windows-app/** -text
+acceptance/trading/reconverted/windows-app/** -text

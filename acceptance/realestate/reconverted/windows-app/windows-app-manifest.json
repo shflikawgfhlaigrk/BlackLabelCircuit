@@ -1,0 +1,225 @@
+{
+  "schema": "circuit.windows-app.v1",
+  "generated": true,
+  "kind": "real-estate",
+  "verification": {
+    "realWindows": false,
+    "status": "generated-awaiting-real-windows"
+  },
+  "sourceFiles": [
+    "Sources/AICopy.swift",
+    "Sources/APIConfig.swift",
+    "Sources/AdaptiveLayout.swift",
+    "Sources/Auth.swift",
+    "Sources/CSVImport.swift",
+    "Sources/Compat.swift",
+    "Sources/ComplianceEngine.swift",
+    "Sources/Comps.swift",
+    "Sources/CoverageScreen.swift",
+    "Sources/DatabaseListEngine.swift",
+    "Sources/DealAccounting.swift",
+    "Sources/DealScorecard.swift",
+    "Sources/DealScreens.swift",
+    "Sources/DemoData.swift",
+    "Sources/Dispositions.swift",
+    "Sources/FieldMode.swift",
+    "Sources/FieldModeScreen.swift",
+    "Sources/FileExport.swift",
+    "Sources/FloodOverlay.swift",
+    "Sources/Holographic.swift",
+    "Sources/Keychain.swift",
+    "Sources/LeadScoring.swift",
+    "Sources/LeadScreens.swift",
+    "Sources/ListBuilderScreen.swift",
+    "Sources/ListEngine.swift",
+    "Sources/LocalDatabase.swift",
+    "Sources/LotFlipScout.swift",
+    "Sources/LotFlipScoutScreen.swift",
+    "Sources/MailSend.swift",
+    "Sources/MarketIntelligence.swift",
+    "Sources/Model.swift",
+    "Sources/MoreScreens.swift",
+    "Sources/NationalPropertyAuditReport.swift",
+    "Sources/NationalPropertyBulkImport.swift",
+    "Sources/NationalPropertyIndex.swift",
+    "Sources/Onboarding.swift",
+    "Sources/OutreachEngine.swift",
+    "Sources/OutreachScreens.swift",
+    "Sources/ParcelLookup.swift",
+    "Sources/PipelineScreen.swift",
+    "Sources/PowerScreens.swift",
+    "Sources/Premium.swift",
+    "Sources/PropertyDossier.swift",
+    "Sources/PropertyIndexScreen.swift",
+    "Sources/PropertyMapScreen.swift",
+    "Sources/REStore.swift",
+    "Sources/RealEstateAPI.swift",
+    "Sources/Route.swift",
+    "Sources/RouteScreen.swift",
+    "Sources/SavedSearchMonitor.swift",
+    "Sources/SavedSearchMonitorScreen.swift",
+    "Sources/Screens.swift",
+    "Sources/Settings.swift",
+    "Sources/SkipTrace.swift",
+    "Sources/SkipTraceProvider.swift",
+    "Sources/SkipTraceWaterfall.swift",
+    "Sources/SkipTraceYield.swift",
+    "Sources/SocialAuth.swift",
+    "Sources/SourceFinder.swift",
+    "Sources/TeardownScout.swift",
+    "Sources/Theme.swift",
+    "Sources/TitleChain.swift",
+    "Sources/TitleChainScreen.swift",
+    "Sources/Trial.swift",
+    "Sources/TrialGate.swift",
+    "Sources/USStates.swift",
+    "Sources/Updater.swift",
+    "Sources/UpdaterUI.swift",
+    "Sources/main.swift"
+  ],
+  "payload": [
+    {
+      "path": "windows-electron/main.js",
+      "bytes": 2237,
+      "sha256": "9d748ba72d9e45701d0af16152de8199e9114b1d5f74d24ffa81a0d73bb462e2"
+    },
+    {
+      "path": "windows-electron/serve.js",
+      "bytes": 2057,
+      "sha256": "8792e34f80c63f6a8e8ef7583d912bff50b32d16e84f55fd4153aa629780c285"
+    },
+    {
+      "path": "windows-electron/package.json",
+      "bytes": 781,
+      "sha256": "5353ba12150008706332f3b0791659497e50dcb0c3b6bb474bb32a20505ffc32"
+    },
+    {
+      "path": "windows-electron/package-lock.json",
+      "bytes": 127510,
+      "sha256": "b594f80fccb9d418184770aebbfc0291fb14667c8a070fd1a6c66be414c580dc"
+    },
+    {
+      "path": "windows-electron/electron-builder.config.js",
+      "bytes": 3016,
+      "sha256": "86deab127d3f0ab8fa983d84124d8a5021381e4b43533d3cf83a07e8070f248d"
+    },
+    {
+      "path": "windows-electron/scripts/stage.mjs",
+      "bytes": 3428,
+      "sha256": "a1b0a10a572e403916ab4fa61764492deea2a69cf8b2b35d9c31443e0efdd508"
+    },
+    {
+      "path": "windows-electron/scripts/smoke.js",
+      "bytes": 4496,
+      "sha256": "8e34479342b44766497e7a05ef9cf694962a222c713a360afafcae53eb42eebe"
+    },
+    {
+      "path": "windows/src-tauri/icons/icon.ico",
+      "bytes": 47649,
+      "sha256": "83d556de980f6171797e0891fcc6ad6367ce2bc62c715fcf8940e52d77587576"
+    },
+    {
+      "path": "windows/ui/api.js",
+      "bytes": 9121,
+      "sha256": "adda64a7d961db19dcf527da5827ae9a1e2979ea0a1c0212215b30246b235dec"
+    },
+    {
+      "path": "windows/ui/app.js",
+      "bytes": 28046,
+      "sha256": "cc51784c8abc8ec7f0af0abbbbeeea025b6179cc3fd40b5d99c4343094bb5a02"
+    },
+    {
+      "path": "windows/ui/index.html",
+      "bytes": 603,
+      "sha256": "033d8a5aa7b492383d7fa733ebf374206fea53cd51ad16fa618d77b1b9a419a8"
+    },
+    {
+      "path": "windows/ui/styles.css",
+      "bytes": 6185,
+      "sha256": "a72b977dd484f0772110d4634c4ed2f0f768194c944646edb9d076359de61d82"
+    },
+    {
+      "path": "windows/ui/vendor/leaflet/images/marker-icon-2x.png",
+      "bytes": 2464,
+      "sha256": "00179c4c1ee830d3a108412ae0d294f55776cfeb085c60129a39aa6fc4ae2528"
+    },
+    {
+      "path": "windows/ui/vendor/leaflet/images/marker-icon.png",
+      "bytes": 1466,
+      "sha256": "574c3a5cca85f4114085b6841596d62f00d7c892c7b03f28cbfa301deb1dc437"
+    },
+    {
+      "path": "windows/ui/vendor/leaflet/images/marker-shadow.png",
+      "bytes": 618,
+      "sha256": "264f5c640339f042dd729062cfc04c17f8ea0f29882b538e3848ed8f10edb4da"
+    },
+    {
+      "path": "windows/ui/vendor/leaflet/leaflet.css",
+      "bytes": 14806,
+      "sha256": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6"
+    },
+    {
+      "path": "windows/ui/vendor/leaflet/leaflet.js",
+      "bytes": 147552,
+      "sha256": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "acceptance.ps1",
+      "bytes": 2077,
+      "sha256": "374facf20927fe2279b2dd5f629ab2c9d0647daa41a396530b992c5d111b91be"
+    }
+  ],
+  "featureMatrix": [
+    {
+      "feature": "property_index",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "nationwide_search",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "property_detail_audit",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "interactive_map",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "list_builder",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "coverage_truth",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "subscriber_settings",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "ship_no_data",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    }
+  ],
+  "requiredResiduals": 0
+}

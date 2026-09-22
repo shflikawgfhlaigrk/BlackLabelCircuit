@@ -1,0 +1,54 @@
+{
+  "schema": "circuit.feature-parity.v1",
+  "requiredResiduals": 0,
+  "features": [
+    {
+      "feature": "property_index",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "nationwide_search",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "property_detail_audit",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "interactive_map",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "list_builder",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "coverage_truth",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "subscriber_settings",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "ship_no_data",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    }
+  ]
+}

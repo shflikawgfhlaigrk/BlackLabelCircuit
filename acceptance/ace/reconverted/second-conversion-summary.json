@@ -2,7 +2,7 @@
   "root": "/Users/michaelbarber/BlackLabel-Team/ace-cli",
   "name": "ace-cli",
   "target": "windows",
-  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/ace/generated",
+  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/ace/reconverted",
   "moduleName": "ace_cliCore",
   "source": {
     "sha256": "4be0f729e2778eef505f5feacb779482979253a13de2bdc7365cd5418eb00f95",
@@ -16,8 +16,8 @@
     "from": "every app Swift file outside iOS / widget / marketing folders",
     "paths": null
   },
-  "generatedAt": 1790055313589,
-  "tookMs": 1745,
+  "generatedAt": 1790055315289,
+  "tookMs": 1549,
   "before": {
     "readyPct": 17.1,
     "files": 245,

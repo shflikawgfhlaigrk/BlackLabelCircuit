@@ -2,7 +2,7 @@
   "root": "/Users/michaelbarber/BlackLabelRealEstate",
   "name": "BlackLabelRealEstate",
   "target": "windows",
-  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/realestate/generated",
+  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/realestate/reconverted",
   "moduleName": "BlackLabelRealEstateCore",
   "source": {
     "sha256": "36f016391a46b7a86557fccb9acca9b154329c91776a1cb2bf5166ab279163c4",
@@ -20,8 +20,8 @@
       "mcp"
     ]
   },
-  "generatedAt": 1790055305222,
-  "tookMs": 912,
+  "generatedAt": 1790055306402,
+  "tookMs": 959,
   "before": {
     "readyPct": 43.7,
     "files": 81,

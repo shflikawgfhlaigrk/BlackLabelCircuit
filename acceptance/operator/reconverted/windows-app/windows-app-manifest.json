@@ -1,0 +1,479 @@
+{
+  "schema": "circuit.windows-app.v1",
+  "generated": true,
+  "kind": "operator",
+  "verification": {
+    "realWindows": false,
+    "status": "generated-awaiting-real-windows"
+  },
+  "sourceFiles": [
+    "MCP/MCPProtocol.swift",
+    "MCP/OperatorIPCClient.swift",
+    "MCP/main.swift",
+    "Sources/AccountWorkspace.swift",
+    "Sources/AgentRuntime.swift",
+    "Sources/ApprovalPolicy.swift",
+    "Sources/AssistantAutomationJournal.swift",
+    "Sources/AssistantConnectors.swift",
+    "Sources/AssistantGrounding.swift",
+    "Sources/AssistantWorkspace.swift",
+    "Sources/AssistantWorkspaceViews.swift",
+    "Sources/BundledEngineBootstrap.swift",
+    "Sources/CLIConversationBrain.swift",
+    "Sources/CommercialController.swift",
+    "Sources/CommercialModels.swift",
+    "Sources/CommercialViews.swift",
+    "Sources/ComposerView.swift",
+    "Sources/ConversationAttachments.swift",
+    "Sources/ConversationBrain.swift",
+    "Sources/ConversationComposerView.swift",
+    "Sources/ConversationModels.swift",
+    "Sources/ConversationProviderRouter.swift",
+    "Sources/ConversationView.swift",
+    "Sources/DeviceRequestSigner.swift",
+    "Sources/EngineMCPRuntime.swift",
+    "Sources/EvidenceStore.swift",
+    "Sources/LicenseIdentityStore.swift",
+    "Sources/LicenseService.swift",
+    "Sources/MissionAuthorizer.swift",
+    "Sources/MissionView.swift",
+    "Sources/OllamaConversationBrain.swift",
+    "Sources/OperatorActPreflight.swift",
+    "Sources/OperatorAudioCapture.swift",
+    "Sources/OperatorCLIVoice.swift",
+    "Sources/OperatorCLIVoiceView.swift",
+    "Sources/OperatorCapabilitiesCenter.swift",
+    "Sources/OperatorCapabilitiesView.swift",
+    "Sources/OperatorCommandPalette.swift",
+    "Sources/OperatorController.swift",
+    "Sources/OperatorCustomAgents.swift",
+    "Sources/OperatorCustomAgentsView.swift",
+    "Sources/OperatorDailyDigest.swift",
+    "Sources/OperatorDashboardView.swift",
+    "Sources/OperatorDictation.swift",
+    "Sources/OperatorIPCProtocol.swift",
+    "Sources/OperatorIPCServer.swift",
+    "Sources/OperatorImageStudio.swift",
+    "Sources/OperatorInProcessUIAudit.swift",
+    "Sources/OperatorLaunchAtLogin.swift",
+    "Sources/OperatorLaunchPlan.swift",
+    "Sources/OperatorLocalModelRuntime.swift",
+    "Sources/OperatorMCPModels.swift",
+    "Sources/OperatorMCPService.swift",
+    "Sources/OperatorModels.swift",
+    "Sources/OperatorNativeConnectors.swift",
+    "Sources/OperatorOAuth.swift",
+    "Sources/OperatorOAuthConnectionsModel.swift",
+    "Sources/OperatorOAuthConnectionsView.swift",
+    "Sources/OperatorPersonalWorkspace.swift",
+    "Sources/OperatorPersonalWorkspaceCenter.swift",
+    "Sources/OperatorPersonalWorkspaceView.swift",
+    "Sources/OperatorQuickAsk.swift",
+    "Sources/OperatorRecall.swift",
+    "Sources/OperatorRecallLegacyMigration.swift",
+    "Sources/OperatorRefinedDesign.swift",
+    "Sources/OperatorReliabilityView.swift",
+    "Sources/OperatorReminderScheduler.swift",
+    "Sources/OperatorStore.swift",
+    "Sources/OperatorStudioProcess.swift",
+    "Sources/OperatorTerminal.swift",
+    "Sources/OperatorVisualControl.swift",
+    "Sources/OperatorVoice.swift",
+    "Sources/OperatorVoiceTranscriber.swift",
+    "Sources/OperatorWebResearch.swift",
+    "Sources/PresentationState.swift",
+    "Sources/PrimeRPCProcess.swift",
+    "Sources/ProviderCLI/ProviderCLIBridge.swift",
+    "Sources/ProviderCLI/main.swift",
+    "Sources/ProviderCredentialStore.swift",
+    "Sources/ProviderRegistry.swift",
+    "Sources/QwenModelIdentity.swift",
+    "Sources/QwenSetupModel.swift",
+    "Sources/RPCLineDecoder.swift",
+    "Sources/RemoteConversationBrains.swift",
+    "Sources/ReviewRailView.swift",
+    "Sources/RootView.swift",
+    "Sources/SidebarView.swift",
+    "Sources/SovereignLegacyImporter.swift",
+    "Sources/Theme.swift",
+    "Sources/main.swift",
+    "UIAudit/Host/OperatorUIAuditHost.swift",
+    "proof/cli-voice-20260906/voices.swift",
+    "proof/continuation-20260909/before/OperatorCLIVoice.swift",
+    "proof/continuation-20260909/before/OperatorCLIVoiceView.swift",
+    "proof/continuation-20260909/before/OperatorVoiceTranscriber.swift",
+    "proof/continuation-20260909/temporary-audio-output.swift",
+    "proof/final-acceptance-20260909/before/BundledEngineBootstrap.swift",
+    "proof/native-apply-recovery-20260909/before/Sources/AgentRuntime.swift",
+    "proof/native-apply-recovery-20260909/before/Sources/ConversationComposerView.swift",
+    "proof/native-apply-recovery-20260909/before/Sources/ConversationView.swift",
+    "proof/native-apply-recovery-20260909/before/Sources/EngineMCPRuntime.swift",
+    "proof/native-apply-recovery-20260909/before/Sources/OperatorCLIVoice.swift",
+    "proof/native-apply-recovery-20260909/before/Sources/OperatorCLIVoiceView.swift",
+    "proof/native-apply-recovery-20260909/before/Sources/OperatorController.swift",
+    "proof/native-apply-recovery-20260909/before/Sources/OperatorModels.swift",
+    "proof/native-apply-recovery-20260909/before/Sources/OperatorVoiceTranscriber.swift",
+    "proof/startup-completion-20260909/before/BundledEngineBootstrap.swift"
+  ],
+  "payload": [
+    {
+      "path": "Engine/blacklabel_operator/__init__.py",
+      "bytes": 83,
+      "sha256": "ece28b814e982b00ccac8ff22b84db3a6bf84a7502f7b92a43cde1d15d6cc6a2"
+    },
+    {
+      "path": "Engine/blacklabel_operator/__main__.py",
+      "bytes": 62,
+      "sha256": "c2ee4ddb093c9af060cafaf68219907f8a6b7b301ed3f8bea75db7555adec987"
+    },
+    {
+      "path": "Engine/blacklabel_operator/adaptive_execution.py",
+      "bytes": 33790,
+      "sha256": "1f3569ea18e53c21555e4f08f535cd160b4843590825ac365852cabc1db047cf"
+    },
+    {
+      "path": "Engine/blacklabel_operator/adaptive_runtime.py",
+      "bytes": 64471,
+      "sha256": "27d9eadb4c6b8e5d4ffe1f1d97ed6263203f4e161594fc4060ae3a707daa0e27"
+    },
+    {
+      "path": "Engine/blacklabel_operator/arc_agi3_benchmark.py",
+      "bytes": 29255,
+      "sha256": "ea8517ef7c9ee9af92ef3a1136e5b57d1b90788536c66e1ebfaa71ee1352760b"
+    },
+    {
+      "path": "Engine/blacklabel_operator/arc_epistemic.py",
+      "bytes": 33277,
+      "sha256": "f4186b24f1d1fd1151e5fcfd9767bc23d8f63f10aa6c3b50e6e855e08415944b"
+    },
+    {
+      "path": "Engine/blacklabel_operator/arc_plan_contract.py",
+      "bytes": 15729,
+      "sha256": "0bf37a7b89d86578636abfc31669d876faaf812beecf93cd7a955b1dd0344687"
+    },
+    {
+      "path": "Engine/blacklabel_operator/arc_planner.py",
+      "bytes": 107055,
+      "sha256": "2501c1bc11e2472be647fd3866b6d4d37a79e94eec2b238662fa63670dcd472a"
+    },
+    {
+      "path": "Engine/blacklabel_operator/arc_world_model_runtime.py",
+      "bytes": 52757,
+      "sha256": "bbfd81742bf48af05684336562e7718f1b3f14f4b39b91b1ba498cd73c6635b4"
+    },
+    {
+      "path": "Engine/blacklabel_operator/arc_world_model.py",
+      "bytes": 40169,
+      "sha256": "4d2aff83c8f1fc7ad1dd6e50f8c7cda8a83eb1d9087161458be856920ba2b308"
+    },
+    {
+      "path": "Engine/blacklabel_operator/benchmark_adaptive.py",
+      "bytes": 64250,
+      "sha256": "27b5a213612cf30d117df2bad4a9a26aa3d182ab625c90c1160dee8b971854d1"
+    },
+    {
+      "path": "Engine/blacklabel_operator/benchmark_campaign.py",
+      "bytes": 107653,
+      "sha256": "dcbd1b013bf29f9c9a0bd2f2dfdcc8c130676c822e9097ebbb91d11284868590"
+    },
+    {
+      "path": "Engine/blacklabel_operator/benchmark_pipeline.py",
+      "bytes": 18869,
+      "sha256": "8b916bbfc192866eb08f4d2d746f93591a8f6c2c0a36a3dc266c951d24d9348c"
+    },
+    {
+      "path": "Engine/blacklabel_operator/benchmark_receipt.py",
+      "bytes": 7879,
+      "sha256": "b3aecd8d74c82b79043729f1a738692809c9c0f44600f3ab0e29275a84082f60"
+    },
+    {
+      "path": "Engine/blacklabel_operator/benchmark_service.py",
+      "bytes": 4449,
+      "sha256": "53f79bb444d6890ff8b75d865c9d6c2902abbb263bca96656c723872d852848c"
+    },
+    {
+      "path": "Engine/blacklabel_operator/benchmark_status.py",
+      "bytes": 14211,
+      "sha256": "7e134d337f10e258a12ab9aa43e250b1d099779bb185d5bfaf97abcde53d1ad3"
+    },
+    {
+      "path": "Engine/blacklabel_operator/benchmark.py",
+      "bytes": 39617,
+      "sha256": "11ab8eaa5cb185e54abc84f9c14ac74b19fdcc85674916e207d7923036d41e0d"
+    },
+    {
+      "path": "Engine/blacklabel_operator/bridge.py",
+      "bytes": 30380,
+      "sha256": "07dc597c8537ef0b74c4a8589afcd2145859d1853db8632a17711f767ffdabcb"
+    },
+    {
+      "path": "Engine/blacklabel_operator/cli.py",
+      "bytes": 39790,
+      "sha256": "0fbb5b776727b6a8c5bb91ed13109829232d8dfea9db52f40e07bb421cc21525"
+    },
+    {
+      "path": "Engine/blacklabel_operator/codex_runner.py",
+      "bytes": 98646,
+      "sha256": "9f42215f57d5341178dc2b60f7c902c02efea6efa5bf3fdd3c72f40c252bb7ef"
+    },
+    {
+      "path": "Engine/blacklabel_operator/comparable_benchmark.py",
+      "bytes": 220015,
+      "sha256": "fed4f4887006e7a8b8dc5eeab81ce529207c6bf157a853c8d53d9d6a36a625c2"
+    },
+    {
+      "path": "Engine/blacklabel_operator/daemon.py",
+      "bytes": 56236,
+      "sha256": "bba13b09c08057f8457d49991539792e11d7a6d0392e6d9235e9ac65118a2cd5"
+    },
+    {
+      "path": "Engine/blacklabel_operator/grok_adapter.py",
+      "bytes": 2647,
+      "sha256": "750888805dec5c70e609499ddde19a1e44cff5eeab1c5dfdf202a2a74332ab09"
+    },
+    {
+      "path": "Engine/blacklabel_operator/harbor_agent.py",
+      "bytes": 22073,
+      "sha256": "c8a7d6c479da49d4901a1fb54c54db5d262047e03d6bb3431aa3fd35df36e5ee"
+    },
+    {
+      "path": "Engine/blacklabel_operator/hooks.py",
+      "bytes": 8172,
+      "sha256": "f2ee1797ba29b0b3c4143cb1089f638d42890f08e2615c96335a734cfd7eceae"
+    },
+    {
+      "path": "Engine/blacklabel_operator/ide.py",
+      "bytes": 4209,
+      "sha256": "a3643823f4b5e87fdac1399e2f2ff4b498857a15d293ff6526c35ff8a54ab5aa"
+    },
+    {
+      "path": "Engine/blacklabel_operator/mcp_server.py",
+      "bytes": 17098,
+      "sha256": "dedeba5cd2ffe7f3c5ab7710c7e938eb27e6834dfbc00f16b447502db30fcd61"
+    },
+    {
+      "path": "Engine/blacklabel_operator/profiles.py",
+      "bytes": 4628,
+      "sha256": "1b5557f4dcf73f6b8444742b5562f799211a50569f958419df1029967a08e512"
+    },
+    {
+      "path": "Engine/blacklabel_operator/providers.py",
+      "bytes": 35096,
+      "sha256": "0fd038ed39977fcb392a20bb9598414f7bbe0462575fbe8270d834de0af62fc1"
+    },
+    {
+      "path": "Engine/blacklabel_operator/quota.py",
+      "bytes": 6078,
+      "sha256": "94de1f691725ed0a49c8002dd253ef678e20000dd20b6fc1edfdf1b324c38182"
+    },
+    {
+      "path": "Engine/blacklabel_operator/release.py",
+      "bytes": 40631,
+      "sha256": "ec401b28532e42206c4582e076d471cb78222d23cadeb370a3125cdcfd09316b"
+    },
+    {
+      "path": "Engine/blacklabel_operator/reliability.py",
+      "bytes": 30166,
+      "sha256": "d982e5a7cb5cb79f6571e03d29cb456682561faa287981924e16372e47471682"
+    },
+    {
+      "path": "Engine/blacklabel_operator/service.py",
+      "bytes": 17429,
+      "sha256": "b61528eb9a451fa8968c112f369d90e7f7b15af3ece1b0dfc5e32c5ae41db908"
+    },
+    {
+      "path": "Engine/blacklabel_operator/settings.py",
+      "bytes": 5610,
+      "sha256": "d8b6a6be66a9efb85d01a1963049f8b1f334009c3df82499362a2306ec3c0b46"
+    },
+    {
+      "path": "Engine/blacklabel_operator/standard_benchmark.py",
+      "bytes": 55145,
+      "sha256": "6f2ed48e13cfb3ce3e7766e6b7e51b42a39c3de8a596c17773200e0b80494eb3"
+    },
+    {
+      "path": "Engine/blacklabel_operator/store.py",
+      "bytes": 101939,
+      "sha256": "7ab1136650746190103b757eab403788420cbf10f862cd7d2f25dc49c0d1c889"
+    },
+    {
+      "path": "Engine/blacklabel_operator/upgrade_lock.py",
+      "bytes": 1850,
+      "sha256": "20f56643377100a6934992fa7e5ab17332e9369521006d22fbe3490bd1fac68b"
+    },
+    {
+      "path": "Engine/blacklabel_operator/verification.py",
+      "bytes": 39450,
+      "sha256": "8e3dc53bc7241b0a13fef2ce6a26956eed63f7bd348cd1c851ee865a42cf2239"
+    },
+    {
+      "path": "Engine/blacklabel_operator/workspace.py",
+      "bytes": 81035,
+      "sha256": "2be010165de0bb51a44936c47396e2eae546905961f84f6ce41807da446b434d"
+    },
+    {
+      "path": "Engine/pyproject.toml",
+      "bytes": 1277,
+      "sha256": "77b13c0a9901592c6e25bbbf54c003035a918b8fb10c862c39f68710d8c93972"
+    },
+    {
+      "path": "Engine/README.md",
+      "bytes": 16750,
+      "sha256": "ba3fa8c84846cdb8591e3d2ed23c5f7344cd1b5f3e0ebae0e63230e87fad6cea"
+    },
+    {
+      "path": "python-embed.sha256",
+      "bytes": 180,
+      "sha256": "ceae13ff4ebdd34629274e4213e5fe34a68e12b11b80e8a2bd0e38985f4b557a"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "BlackLabelOperator.csproj",
+      "bytes": 634,
+      "sha256": "7c2e1e11ef4ae2a5ce568b082a6bf12ac143b73611d4041d31199370460c6ee0"
+    },
+    {
+      "path": "App.xaml",
+      "bytes": 199,
+      "sha256": "340db7ce1f00d1af3263e23fd4dbdd59a55ce1d999dbc0643a7c0c21aa45b796"
+    },
+    {
+      "path": "App.xaml.cs",
+      "bytes": 885,
+      "sha256": "11fdebc81155adf08b692cecdc253d001bf5e100420e5119a1078b2368e57e4d"
+    },
+    {
+      "path": "MainWindow.xaml",
+      "bytes": 3387,
+      "sha256": "140dae77433be83698d7f7d6cb12418a9c9a06ea028fa48ddb5f40f8242e7f24"
+    },
+    {
+      "path": "MainWindow.xaml.cs",
+      "bytes": 1132,
+      "sha256": "68158e0cbb832a6e1a80e5a5ce9aa4b9849dd89270468005753dcd1287f25b2d"
+    },
+    {
+      "path": "acceptance.ps1",
+      "bytes": 3084,
+      "sha256": "612b03155ae0f27cb9dde9948f343d4d4fa24ef7be2e3977adc9f5e6b74a6094"
+    }
+  ],
+  "featureMatrix": [
+    {
+      "feature": "today_command_center",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "conversation_sessions",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "custom_agents",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "personal_workspace",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "business_workspace",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "knowledge_grounding",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "durable_memory",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "prompt_library",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "skills_runtime",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "automations_and_reminders",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "approval_review",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "evidence_receipts",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "reliability_center",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "provider_connections",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "settings_and_privacy",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "bundled_python_engine",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "local_persistence",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "ship_no_data",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    }
+  ],
+  "requiredResiduals": 0,
+  "identity": {
+    "canonical": "operator",
+    "legacyAliases": [
+      "sovereign"
+    ]
+  }
+}

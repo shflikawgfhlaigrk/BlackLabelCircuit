@@ -2,7 +2,7 @@
   "root": "/Users/michaelbarber/BlackLabelMarketing",
   "name": "BlackLabelMarketing",
   "target": "windows",
-  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/marketing/generated",
+  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/marketing/reconverted",
   "moduleName": "BlackLabelMarketingCore",
   "source": {
     "sha256": "4858bee61da15160cdec92ba59d362e1e081fd6590badf7932ce49c2313ce513",
@@ -21,8 +21,8 @@
       "docs/guides"
     ]
   },
-  "generatedAt": 1790055299857,
-  "tookMs": 1802,
+  "generatedAt": 1790055301625,
+  "tookMs": 1468,
   "before": {
     "readyPct": 18.8,
     "files": 152,
