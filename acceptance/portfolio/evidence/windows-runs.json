@@ -1,0 +1,48 @@
+{
+  "schema": "circuit.portfolio-windows-runs.v1",
+  "commit": "84e6d19b2c6084e337bf6532272f499c72c350c7",
+  "apps": [
+    {
+      "app": "ace",
+      "runs": [
+        {"runId":35691365500,"artifactId":10679355431,"artifactName":"ace-windows-acceptance-35691365500","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"shipsEmpty":true,"reviewGate":true,"privateBoundary":true,"signalsOnly":true,"build":87,"featureCount":12,"requiredResiduals":0,"package":{"bytes":67651463,"sha256":"6f02cfeba620d4a4d401c05ca0984440ed36480492327785e66439f7415c506d"},"uninstalled":true}},
+        {"runId":35691365515,"artifactId":10677654954,"artifactName":"ace-windows-reconversion-35691365515","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"shipsEmpty":true,"reviewGate":true,"privateBoundary":true,"signalsOnly":true,"build":87,"featureCount":12,"requiredResiduals":0,"package":{"bytes":67651463,"sha256":"6f02cfeba620d4a4d401c05ca0984440ed36480492327785e66439f7415c506d"},"uninstalled":true}}
+      ]
+    },
+    {
+      "app": "academy",
+      "runs": [
+        {"runId":35691365491,"artifactId":10679115220,"artifactName":"academy-windows-acceptance-35691365491","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"smoke":"ACADEMY_SMOKE|loaded=true|payload=true","package":{"bytes":69881288,"sha256":"94240a69f85a920bc37032c968f404f9c97e04a225b2b21d43fe560b7b4e8543"},"requiredResiduals":0,"uninstalled":true}},
+        {"runId":35691365487,"artifactId":10677724780,"artifactName":"academy-windows-reconversion-acceptance-35691365487","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"smoke":"ACADEMY_SMOKE|loaded=true|payload=true","package":{"bytes":69881287,"sha256":"d8416a0fbe6b712ba99ba2fa01667310c8b9dd2a5171458441b03b217205244e"},"requiredResiduals":0,"uninstalled":true}}
+      ]
+    },
+    {
+      "app": "marketing",
+      "runs": [
+        {"runId":35691365460,"artifactId":10679675043,"artifactName":"marketing-windows-acceptance-35691365460","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"shipsEmpty":true,"surfaceCount":49,"featureCount":16,"requiredResiduals":0,"package":{"bytes":68150628,"sha256":"ed07ddd520606ac6376c4c6983fa0fa5a95bb4f4a16916c6dfcdfc8de2707911"},"uninstalled":true}},
+        {"runId":35691365515,"artifactId":10677714775,"artifactName":"marketing-windows-reconversion-35691365515","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"shipsEmpty":true,"surfaceCount":49,"featureCount":16,"requiredResiduals":0,"package":{"bytes":68150631,"sha256":"22a35e3732a145e2f10482af98fe63e816b88bef13a7a8098b4458a93946d3bd"},"uninstalled":true}}
+      ]
+    },
+    {
+      "app": "operator",
+      "runs": [
+        {"runId":35691365454,"artifactId":10678641042,"artifactName":"operator-windows-acceptance-35691365454","receipt":{"compiled":true,"installed":true,"launched":true,"engineSmoke":true,"selfTestPassed":true,"shipsEmpty":true,"canonicalIdentity":"operator","legacyAlias":"sovereign","destinationCount":15,"featureCount":18,"requiredResiduals":0,"package":{"bytes":79356176,"sha256":"8f33f152d22afc69e2452b4c98e59f00b8d80259a49b18c9daa57a0834249d8a"},"uninstalled":true}},
+        {"runId":35691365515,"artifactId":10678910371,"artifactName":"operator-windows-reconversion-35691365515","receipt":{"compiled":true,"installed":true,"launched":true,"engineSmoke":true,"selfTestPassed":true,"shipsEmpty":true,"canonicalIdentity":"operator","legacyAlias":"sovereign","destinationCount":15,"featureCount":18,"requiredResiduals":0,"package":{"bytes":79356176,"sha256":"2cf94d175fa8d8eddbaf8863c7d486b7c120c8802a5e8e30f228312150bde54d"},"uninstalled":true}}
+      ]
+    },
+    {
+      "app": "realestate",
+      "runs": [
+        {"runId":35691365451,"artifactId":10679320186,"artifactName":"realestate-windows-acceptance-35691365451","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"shipsEmpty":true,"smokeVerdict":"passed","featureCount":8,"requiredResiduals":0,"package":{"bytes":162557507,"sha256":"40393ec75db737209ccbe6420d40fdf8873aa4a73c0d3bca54bc880d32aaff55"},"uninstalled":true}},
+        {"runId":35691365515,"artifactId":10678741162,"artifactName":"realestate-windows-reconversion-35691365515","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"shipsEmpty":true,"smokeVerdict":"passed","featureCount":8,"requiredResiduals":0,"package":{"bytes":162557509,"sha256":"62685510022b8735ceaeeef13a435e5775a700c03c3632839e81ad5addebf5cc"},"uninstalled":true}}
+      ]
+    },
+    {
+      "app": "trading",
+      "runs": [
+        {"runId":35691365510,"artifactId":10678511548,"artifactName":"trading-windows-acceptance-35691365510","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"shipsEmpty":true,"signalsOnly":true,"featureCount":10,"requiredResiduals":0,"package":{"bytes":42088412,"sha256":"7e3faceda0868abeff1b9f3d073d564bb982359d2c9becf022b8e6eebd7a72d3"},"uninstalled":true}},
+        {"runId":35691365515,"artifactId":10679220107,"artifactName":"trading-windows-reconversion-35691365515","receipt":{"compiled":true,"installed":true,"launched":true,"selfTestPassed":true,"shipsEmpty":true,"signalsOnly":true,"featureCount":10,"requiredResiduals":0,"package":{"bytes":42088412,"sha256":"5b5c562818a66d5cc8268cdd6fe099b406d81f2c1d238dfff6dbe465603664fd"},"uninstalled":true}}
+      ]
+    }
+  ]
+}

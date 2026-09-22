@@ -1,0 +1,42 @@
+{
+  "schema": "circuit.portfolio-generated.v1",
+  "apps": [
+    {
+      "app": "ace",
+      "featureCount": 12,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "academy",
+      "featureCount": 9,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "marketing",
+      "featureCount": 16,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "operator",
+      "featureCount": 18,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "realestate",
+      "featureCount": 8,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "trading",
+      "featureCount": 10,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    }
+  ],
+  "verdict": "pass"
+}

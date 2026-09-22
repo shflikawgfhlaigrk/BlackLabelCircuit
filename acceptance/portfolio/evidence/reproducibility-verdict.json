@@ -1,0 +1,54 @@
+{
+  "schema": "circuit.portfolio-reproducibility.v1",
+  "apps": [
+    {
+      "app": "ace",
+      "sourceSha256": "4be0f729e2778eef505f5feacb779482979253a13de2bdc7365cd5418eb00f95",
+      "files": 9,
+      "byteIdentical": true,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "academy",
+      "sourceSha256": "e57b254f2ea01db92fc3dd62f7a5e3692875330ccf65dc4d91695c108f7154f2",
+      "files": 12,
+      "byteIdentical": true,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "marketing",
+      "sourceSha256": "4858bee61da15160cdec92ba59d362e1e081fd6590badf7932ce49c2313ce513",
+      "files": 11,
+      "byteIdentical": true,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "operator",
+      "sourceSha256": "8ae21b814c37ef5f82dc48ec9b555ae2f80232d0063a851a5d65f8cda76e1214",
+      "files": 50,
+      "byteIdentical": true,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "realestate",
+      "sourceSha256": "36f016391a46b7a86557fccb9acca9b154329c91776a1cb2bf5166ab279163c4",
+      "files": 20,
+      "byteIdentical": true,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    },
+    {
+      "app": "trading",
+      "sourceSha256": "f0b089879909166d392b47daf5186159da87350f0c84dd0cc352570b7bd1ac0c",
+      "files": 24,
+      "byteIdentical": true,
+      "requiredResiduals": 0,
+      "verdict": "pass"
+    }
+  ],
+  "verdict": "pass"
+}
