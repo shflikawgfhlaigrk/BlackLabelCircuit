@@ -64,7 +64,11 @@ else
 fi
 
 # The zero-dependency node payload + sidecar (same app/ that build-win.sh assembles).
-node "$REPO/build-vendor.mjs"
+# Validation proves package layout and identity only. It must remain dependency-free and
+# read-only, so a clean checker checkout never needs node_modules or rewrites public/vendor.
+if [ "$MODE" != "--validate" ]; then
+  node "$REPO/build-vendor.mjs"
+fi
 mkdir -p "$LAYOUT/app"
 cp "$REPO/server.js" "$REPO/package.json" "$LAYOUT/app/"
 cp -R "$REPO/lib" "$REPO/public" "$REPO/editor" "$LAYOUT/app/"

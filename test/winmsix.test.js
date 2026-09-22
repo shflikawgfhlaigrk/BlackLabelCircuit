@@ -185,6 +185,8 @@ test('build-msix.sh stages the Store artifact UNSIGNED (Store signs) and packs w
   assert.match(build, /PARTNER_CENTER_IDENTITY/);
   // A host-agnostic validate mode must exist so the layout+manifest are provable off-Windows.
   assert.match(build, /--validate/);
+  assert.match(build, /if \[ "\$MODE" != "--validate" \]; then\s+node "\$REPO\/build-vendor\.mjs"/,
+    '--validate must not require node_modules or rewrite vendor assets');
 });
 
 test('--pack-layout fails CLOSED when makeappx is absent: nonzero exit and NO .msix left behind', () => {
