@@ -1,0 +1,18 @@
+{
+  "name": "realestate-windows-electron",
+  "version": "1.0.1",
+  "private": true,
+  "description": "Electron shell for the Black Label Real Estate Windows UI — the A/B sibling of the Tauri/WebView2 shell in ../windows. Same payload, different shell.",
+  "main": "main.js",
+  "scripts": {
+    "stage": "node scripts/stage.mjs",
+    "smoke": "npm run stage && electron scripts/smoke.js",
+    "start": "npm run stage && electron .",
+    "package:win": "npm run smoke && electron-builder --win nsis --x64 --config electron-builder.config.js --publish never",
+    "package:store": "npm run smoke && electron-builder --win appx --x64 --config electron-builder.config.js --publish never"
+  },
+  "devDependencies": {
+    "electron": "^44.1.0",
+    "electron-builder": "^26.15.3"
+  }
+}

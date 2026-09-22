@@ -91,3 +91,26 @@ test('Trading source and its cross-platform runtime generate a ships-empty Windo
   assert.equal(result.featureMatrix.length, 10);
   for (const rel of ['BlackLabelTrading.csproj', 'acceptance.ps1', 'windows/supervise.py', 'windows/msix/launcher/Launcher.cs', 'backend/bltd_api.py']) assert.ok(fs.existsSync(path.join(out, 'windows-app', rel)), rel);
 });
+
+test('Real Estate source and its byte-pinned Electron lane generate an installable Windows workspace', () => {
+  const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-realestate-source-'));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-realestate-out-'));
+  const files = {
+    'windows-electron/main.js': 'require("electron")', 'windows-electron/serve.js': 'module.exports={}',
+    'windows-electron/package.json': '{}', 'windows-electron/package-lock.json': '{}',
+    'windows-electron/electron-builder.config.js': 'module.exports={}',
+    'windows-electron/scripts/stage.mjs': '', 'windows-electron/scripts/smoke.js': '',
+    'windows/src-tauri/icons/icon.ico': 'ico', 'windows/ui/index.html': '<div id="app"></div>',
+    'windows/ui/api.js': 'const BLRE_API={}', 'windows/ui/app.js': 'function PropertyIndex(){}',
+    'windows/ui/styles.css': 'body{}', 'windows/ui/vendor/leaflet/leaflet.js': 'window.L={}',
+  };
+  for (const [rel, body] of Object.entries(files)) {
+    const target = path.join(sourceRoot, rel); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, body);
+  }
+  const result = compileWindowsApplication({ files: [{ file: 'Sources/main.swift', source: 'struct BLRealEstateApp { let screen = PropertyIndexScreen() }' }], sourceRoot, outDir: out });
+  assert.equal(result.generated, true);
+  assert.equal(result.kind, 'real-estate');
+  assert.equal(result.requiredResiduals, 0);
+  assert.equal(result.featureMatrix.length, 8);
+  for (const rel of ['acceptance.ps1', 'windows-electron/main.js', 'windows-electron/package-lock.json', 'windows/ui/index.html']) assert.ok(fs.existsSync(path.join(out, 'windows-app', rel)), rel);
+});

@@ -1,0 +1,108 @@
+/* Black Label Real Estate — Windows web client · theme.
+   Mirrors the macOS app's BLTheme: near-black canvas, gold accent, restrained type.
+   Own-it: system font stack, no web-font fetch, no external CSS. */
+:root {
+  --bg: #0b0c0f; --bg2: #14161c; --panel: #171a21; --panel2: #1e222b;
+  --ink: #f4f5f7; --text: #d8dbe2; --sub: #8b90a0; --line: #262a34;
+  --gold: #d9b45b; --gold2: #f0d488; --ok: #4fbf7b; --warn: #e0a34a; --bad: #e06a5a;
+  --radius: 12px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg); color: var(--text);
+  font: 14px/1.5 -apple-system, "Segoe UI", Roboto, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; cursor: pointer; }
+a { color: var(--gold2); }
+.mono { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace; }
+
+/* Layout */
+#app { display: flex; flex-direction: column; height: 100vh; }
+header.topbar {
+  display: flex; align-items: center; gap: 18px;
+  padding: 12px 20px; border-bottom: 1px solid var(--line); background: var(--bg2);
+}
+.brand { font-weight: 700; color: var(--ink); letter-spacing: .2px; }
+.brand .gold { color: var(--gold); }
+.stat-pill { color: var(--sub); font-size: 12px; }
+.stat-pill b { color: var(--text); }
+nav.tabs { display: flex; gap: 4px; margin-left: auto; }
+nav.tabs button {
+  background: transparent; color: var(--sub); border: 1px solid transparent;
+  padding: 7px 14px; border-radius: 9px;
+}
+nav.tabs button.active { color: var(--ink); background: var(--panel2); border-color: var(--line); }
+main { flex: 1; overflow: auto; padding: 24px; }
+.view { max-width: 1200px; margin: 0 auto; }
+h1 { font-size: 20px; color: var(--ink); margin: 0 0 4px; }
+.sub { color: var(--sub); margin: 0 0 20px; }
+
+/* Panels & controls */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-bottom: 18px; }
+.panel h2 { font-size: 14px; color: var(--ink); margin: 0 0 12px; }
+label.field { display: block; font-size: 12px; color: var(--sub); margin: 10px 0 4px; }
+input, select {
+  width: 100%; background: var(--bg2); color: var(--text);
+  border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; outline: none;
+}
+input:focus, select:focus { border-color: var(--gold); }
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.row > * { flex: 1; min-width: 140px; }
+.btn { background: linear-gradient(180deg, var(--gold2), var(--gold)); color: #201a08; border: none; border-radius: 9px; padding: 10px 18px; font-weight: 600; }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+
+/* Step chrome (List Builder) */
+.steps { display: flex; gap: 8px; margin-bottom: 18px; }
+.steps .step { display: flex; align-items: center; gap: 8px; color: var(--sub); font-size: 12.5px; }
+.steps .dot { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--bg2); color: var(--sub); font-size: 11px; font-weight: 700; }
+.steps .step.on .dot, .steps .step.done .dot { background: linear-gradient(180deg, var(--gold2), var(--gold)); color: #201a08; }
+.steps .step.on { color: var(--ink); }
+
+/* Category grid */
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.cat {
+  text-align: left; background: var(--panel2); border: 1px solid var(--line); border-radius: 11px;
+  padding: 14px; color: var(--text); position: relative;
+}
+.cat:hover { border-color: var(--gold); }
+.cat .t { font-weight: 700; color: var(--ink); }
+.cat .b { font-size: 12px; color: var(--sub); margin-top: 4px; }
+.cat .badge { position: absolute; top: 12px; right: 12px; font-size: 8.5px; font-weight: 700; letter-spacing: .6px; color: var(--warn); border: 1px solid var(--warn); border-radius: 5px; padding: 1px 5px; }
+
+/* Results */
+.count-hero { font-size: 30px; font-weight: 800; color: var(--ink); }
+.count-hero small { font-size: 13px; font-weight: 500; color: var(--sub); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--sub); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .4px; }
+tr.clickable:hover { background: var(--panel2); cursor: pointer; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* State callouts (honest empty / indexing / error) */
+.callout { border-radius: 11px; padding: 16px 18px; margin: 14px 0; border: 1px solid var(--line); background: var(--panel2); }
+.callout.warn { border-color: var(--warn); }
+.callout.bad { border-color: var(--bad); }
+.callout .h { font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.callout .m { color: var(--sub); font-size: 13px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.chip { background: var(--bg2); border: 1px solid var(--line); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: var(--text); }
+.chip:hover { border-color: var(--gold); }
+
+/* Map */
+#map { height: 62vh; border-radius: var(--radius); border: 1px solid var(--line); }
+.map-note { color: var(--sub); font-size: 12px; margin-top: 8px; }
+.map-note.bad-inline { color: var(--bad); }
+
+/* Detail drawer */
+.drawer-back { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: none; }
+.drawer-back.open { display: block; }
+.drawer { position: fixed; top: 0; right: 0; height: 100%; width: min(460px, 92vw); background: var(--panel); border-left: 1px solid var(--line); padding: 22px; overflow: auto; transform: translateX(100%); transition: transform .18s ease; }
+.drawer-back.open .drawer { transform: none; }
+.kv { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.kv .k { color: var(--sub); } .kv .v { color: var(--text); text-align: right; }
+.spinner { color: var(--sub); font-size: 13px; }
+.src { font-size: 12px; color: var(--sub); margin-top: 14px; word-break: break-all; }
+.footer-note { color: var(--sub); font-size: 11.5px; text-align: center; padding: 16px; }
