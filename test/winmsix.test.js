@@ -192,14 +192,21 @@ test('--pack-layout fails CLOSED when makeappx is absent: nonzero exit and NO .m
   // host with no Windows SDK would let "the layout is green" be read as "the Store package exists".
   // On darwin makeappx cannot exist, so the only honest outcome is a hard failure with no artifact.
   if (spawnSync('command', ['-v', 'makeappx'], { shell: true }).status === 0) return; // real Windows rig: not this test's host
-  const out = path.join(ROOT, 'windows', 'dist', 'Circuit.msix');
-  const preExisting = fs.existsSync(out);
-  const r = spawnSync('bash', [BUILD, '--pack-layout'], { cwd: ROOT, encoding: 'utf8' });
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-pack-fail-'));
+  const out = path.join(tmp, 'dist', 'Circuit.msix');
+  const r = spawnSync('bash', [BUILD, '--pack-layout'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      CIRCUIT_MSIX_LAYOUT: path.join(tmp, 'layout'),
+      CIRCUIT_MSIX_DIST: path.join(tmp, 'dist'),
+    },
+  });
   assert.notEqual(r.status, 0, '--pack-layout exited 0 without makeappx — a vacuous pack "success"');
   assert.match(String(r.stderr), /makeappx/, 'the failure must name the missing makeappx, not fail silently');
-  if (!preExisting) {
-    assert.ok(!fs.existsSync(out), 'a failed pack left a Circuit.msix behind — that file would be a fake Store package');
-  }
+  assert.ok(!fs.existsSync(out), 'a failed pack left a Circuit.msix behind — that file would be a fake Store package');
+  fs.rmSync(tmp, { recursive: true, force: true });
 });
 
 const WORKFLOW = path.join(ROOT, '.github', 'workflows', 'windows-spike.yml');

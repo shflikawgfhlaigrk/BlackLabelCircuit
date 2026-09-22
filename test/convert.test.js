@@ -243,7 +243,10 @@ test('the python helper really runs: paths per OS and flock through the compat o
   const code = 'import sys; sys.path.insert(0, sys.argv[1]); import circuit_port as c, tempfile\n'
     + 'assert c.app_support("Demo").endswith("Demo")\n'
     + 'f = tempfile.TemporaryFile(); c.fcntl_compat.flock(f, c.fcntl_compat.LOCK_EX | c.fcntl_compat.LOCK_NB); c.fcntl_compat.flock(f, c.fcntl_compat.LOCK_UN); print("ok")\n';
-  const py = spawnSync('python3', ['-c', code, kit], { encoding: 'utf8' });
+  const py = spawnSync('python3', ['-c', code, kit], {
+    encoding: 'utf8',
+    env: { ...process.env, PYTHONDONTWRITEBYTECODE: '1' },
+  });
   if (py.error) return; // no python on this host: nothing to run
   assert.equal(py.status, 0, py.stderr);
   assert.equal(py.stdout.trim(), 'ok');
