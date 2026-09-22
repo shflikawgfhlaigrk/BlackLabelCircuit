@@ -114,3 +114,15 @@ test('Real Estate source and its byte-pinned Electron lane generate an installab
   assert.equal(result.featureMatrix.length, 8);
   for (const rel of ['acceptance.ps1', 'windows-electron/main.js', 'windows-electron/package-lock.json', 'windows/ui/index.html']) assert.ok(fs.existsSync(path.join(out, 'windows-app', rel)), rel);
 });
+
+test('Marketing source generates the complete offline-first Windows workspace', () => {
+  const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-marketing-source-'));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-marketing-out-'));
+  const result = compileWindowsApplication({ files: [{ file: 'Sources/main.swift', source: 'struct BlackLabelMarketing { let os = MarketingOSScreen(); let reel = ReelProject() }' }], sourceRoot, outDir: out });
+  assert.equal(result.generated, true);
+  assert.equal(result.kind, 'marketing');
+  assert.equal(result.requiredResiduals, 0);
+  assert.equal(result.featureMatrix.length, 16);
+  const html = fs.readFileSync(path.join(out, 'windows-app', 'Payload', 'index.html'), 'utf8');
+  for (const label of ['Marketing OS', 'Reel Studio', 'Email Builder', 'Design Studio', 'SEO Toolkit', 'Settings']) assert.match(html, new RegExp(label));
+});

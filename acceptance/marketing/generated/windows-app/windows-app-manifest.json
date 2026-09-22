@@ -1,0 +1,304 @@
+{
+  "schema": "circuit.windows-app.v1",
+  "generated": true,
+  "kind": "marketing",
+  "verification": {
+    "realWindows": false,
+    "status": "generated-awaiting-real-windows"
+  },
+  "sourceFiles": [
+    "Sources/AICaptionEngine.swift",
+    "Sources/AccountDeletion.swift",
+    "Sources/AccountDeletionRunner.swift",
+    "Sources/Ads.swift",
+    "Sources/AnalyticsConnect.swift",
+    "Sources/AppBrand.swift",
+    "Sources/Audience.swift",
+    "Sources/AudienceScreens.swift",
+    "Sources/Auth.swift",
+    "Sources/BackgroundPublish.swift",
+    "Sources/BrandKit.swift",
+    "Sources/BrandKitImportControl.swift",
+    "Sources/BrandKitLive.swift",
+    "Sources/BrandProfiler.swift",
+    "Sources/BundledGuides.swift",
+    "Sources/CRMConnector.swift",
+    "Sources/CRMStore.swift",
+    "Sources/CallsScreen.swift",
+    "Sources/CameraPolisher.swift",
+    "Sources/CameraRecording.swift",
+    "Sources/CampaignBuilder.swift",
+    "Sources/CampaignBuilderLive.swift",
+    "Sources/CloudflareAnalytics.swift",
+    "Sources/CloudflareEmail.swift",
+    "Sources/CommandBar.swift",
+    "Sources/Compat.swift",
+    "Sources/Connectors.swift",
+    "Sources/ConnectorsScreen.swift",
+    "Sources/ConsentedEgress.swift",
+    "Sources/DeliverabilityScore.swift",
+    "Sources/DeliverabilityScreen.swift",
+    "Sources/DeliverabilityTools.swift",
+    "Sources/DeliveryDashboard.swift",
+    "Sources/DeliveryMetrics.swift",
+    "Sources/DemoData.swift",
+    "Sources/DesignCanvas.swift",
+    "Sources/DesignCanvasScreen.swift",
+    "Sources/DesignExport.swift",
+    "Sources/DesignPhotoEdit.swift",
+    "Sources/EmailAPI.swift",
+    "Sources/EmailEngine.swift",
+    "Sources/EmailGuess.swift",
+    "Sources/EmailOAuth.swift",
+    "Sources/EmailSendSafety.swift",
+    "Sources/Enrichment.swift",
+    "Sources/EnrichmentProvider.swift",
+    "Sources/EnrichmentWaterfall.swift",
+    "Sources/Funnel.swift",
+    "Sources/GA4Analytics.swift",
+    "Sources/GA4OAuth.swift",
+    "Sources/GrowthEngine.swift",
+    "Sources/GrowthEngineScreens.swift",
+    "Sources/GrowthScreens.swift",
+    "Sources/GuideMarkdown.swift",
+    "Sources/GuideReaderScreen.swift",
+    "Sources/HTMLSafe.swift",
+    "Sources/Holographic.swift",
+    "Sources/IMAPClient.swift",
+    "Sources/ImageMagicEngine.swift",
+    "Sources/Inbox.swift",
+    "Sources/Intelligence.swift",
+    "Sources/IntelligenceStore.swift",
+    "Sources/Journey.swift",
+    "Sources/JourneyExecution.swift",
+    "Sources/LeadCatalog.swift",
+    "Sources/LeadDBCredential.swift",
+    "Sources/LeadDBPurchase.swift",
+    "Sources/LeadDatabase.swift",
+    "Sources/LeadDomain.swift",
+    "Sources/LeadEngineSettings.swift",
+    "Sources/LeadEngines.swift",
+    "Sources/LeadFinder.swift",
+    "Sources/LeadImportEngine.swift",
+    "Sources/LeadImportScreen.swift",
+    "Sources/LeadPipelineScreens.swift",
+    "Sources/LeadsMigration.swift",
+    "Sources/LeadsTokenMigration.swift",
+    "Sources/MarketingHubScreens.swift",
+    "Sources/MarketingKeychain.swift",
+    "Sources/MarketingOSScreen.swift",
+    "Sources/MarketingSecretFile.swift",
+    "Sources/MessagesScreen.swift",
+    "Sources/Messaging.swift",
+    "Sources/Metros.swift",
+    "Sources/MktFinder.swift",
+    "Sources/Model.swift",
+    "Sources/NewsletterAutoSend.swift",
+    "Sources/NewsletterMailbox.swift",
+    "Sources/OutboundMailer.swift",
+    "Sources/Outreach.swift",
+    "Sources/Pass5AI.swift",
+    "Sources/Pass5Engines.swift",
+    "Sources/Pass5Screens.swift",
+    "Sources/PostInsights.swift",
+    "Sources/PostInsightsScreen.swift",
+    "Sources/Prefs.swift",
+    "Sources/PremiumFX.swift",
+    "Sources/ProspectType.swift",
+    "Sources/ProviderConsent.swift",
+    "Sources/PublishEverywhere.swift",
+    "Sources/PublishRelay.swift",
+    "Sources/ReelAudio.swift",
+    "Sources/ReelCaptions.swift",
+    "Sources/ReelColorGrade.swift",
+    "Sources/ReelEngine.swift",
+    "Sources/ReelLayerTracks.swift",
+    "Sources/ReelPresenterOverlay.swift",
+    "Sources/ReelVideoClips.swift",
+    "Sources/ReferenceReelEngine.swift",
+    "Sources/ReferenceReelStudio.swift",
+    "Sources/RemoteMusicLoader.swift",
+    "Sources/SEOEngine.swift",
+    "Sources/SEOScreens.swift",
+    "Sources/Schedule.swift",
+    "Sources/ScreenRecording.swift",
+    "Sources/Screens.swift",
+    "Sources/SearchConsoleAnalytics.swift",
+    "Sources/Sendblue.swift",
+    "Sources/SequenceRunner.swift",
+    "Sources/SessionStore.swift",
+    "Sources/Shortlinks.swift",
+    "Sources/ShortlinksScreen.swift",
+    "Sources/SiteContent.swift",
+    "Sources/Social.swift",
+    "Sources/SocialAuth.swift",
+    "Sources/SocialPlatformIdentity.swift",
+    "Sources/SocialPublishClient.swift",
+    "Sources/SpeechCaptions.swift",
+    "Sources/SplitRecording.swift",
+    "Sources/Strategist.swift",
+    "Sources/StudioScreens.swift",
+    "Sources/SubscriptionManagement.swift",
+    "Sources/SupportDiagnostics.swift",
+    "Sources/Telephony.swift",
+    "Sources/Teleprompter.swift",
+    "Sources/Theme.swift",
+    "Sources/ThemeStudio.swift",
+    "Sources/Updater.swift",
+    "Sources/UpdaterUI.swift",
+    "Sources/ViralReelAI.swift",
+    "Sources/WebsiteBackgroundEngine.swift",
+    "Sources/WebsiteLiveSync.swift",
+    "Sources/WebsiteVirtualSet.swift",
+    "Sources/Workflows.swift",
+    "Sources/Workspace.swift",
+    "Sources/WorkspaceStore.swift",
+    "Sources/main.swift"
+  ],
+  "artifacts": [
+    {
+      "path": "BlackLabelMarketing.csproj",
+      "bytes": 488,
+      "sha256": "b57c4d6824cf87ccf2e5adb19e0a23be1908d51e74d1ca78edb9a8cfb43dfc2f"
+    },
+    {
+      "path": "App.xaml",
+      "bytes": 200,
+      "sha256": "406e5d4ece9c8435f7cbdf3879e8f16977514e45e1a348bada34705addef703f"
+    },
+    {
+      "path": "App.xaml.cs",
+      "bytes": 1257,
+      "sha256": "d586c77de81b8bd1a07493efbb72f0101ae16f7a01fa8a8fd1df6a9674947927"
+    },
+    {
+      "path": "MainWindow.xaml",
+      "bytes": 354,
+      "sha256": "c8e40542e67fdd91dcd158901b3b897e552c102d1e71ee0b8bce04abc2209b58"
+    },
+    {
+      "path": "MainWindow.xaml.cs",
+      "bytes": 564,
+      "sha256": "18730ffd120e95861ed2e30c88c29dd90526450898ac928b87d608d3ff90bfb7"
+    },
+    {
+      "path": "Payload/index.html",
+      "bytes": 3493,
+      "sha256": "0d2cbba369ad4e41f37cb092e327b42f1394505f5a261e202c38d913011dd234"
+    },
+    {
+      "path": "Payload/app.css",
+      "bytes": 1102,
+      "sha256": "764e03a1a6dd4ff1240a0dfa9844ffb3f257e75608a5413c2a678d3cd6f5a08e"
+    },
+    {
+      "path": "Payload/app.js",
+      "bytes": 771,
+      "sha256": "7b4ec8e2658d435c5c7c18fd41da6be5ca7bc09424bd22e9962a4cc2ef511edf"
+    },
+    {
+      "path": "acceptance.ps1",
+      "bytes": 1540,
+      "sha256": "2ce0e4b1ef05e27f3ffcd7d88e37eac2ca6e22b232a59d649d7a1abcaf1b075e"
+    }
+  ],
+  "featureMatrix": [
+    {
+      "feature": "campaign_command_center",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "reel_studio",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "site_studio",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "content_and_captions",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "email_and_newsletters",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "social_publisher",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "scheduler_and_ads",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "crm_and_outreach",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "audience_and_leads",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "analytics_and_attribution",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "design_studio",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "seo_and_brand",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "connectors",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "local_persistence",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "ship_no_data",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "offline_shell",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    }
+  ],
+  "requiredResiduals": 0
+}

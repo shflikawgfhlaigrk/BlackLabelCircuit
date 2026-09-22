@@ -1,0 +1,36 @@
+name: Marketing Windows acceptance
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/circuit-live-wallpaper-windows-acceptance]
+permissions: { contents: read }
+jobs:
+  acceptance:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    defaults: { run: { working-directory: acceptance/marketing/generated/windows-app } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: 8.0.x }
+      - name: Verify converter output hashes
+        shell: pwsh
+        run: |
+          foreach ($line in (Get-Content ../windows-app.sha256)) {
+            if ($line -notmatch '^([0-9a-f]{64})  \./(.+)$') { throw "invalid checksum row: $line" }
+            if ((Get-FileHash $Matches[2] -Algorithm SHA256).Hash.ToLowerInvariant() -ne $Matches[1]) { throw "hash mismatch: $($Matches[2])" }
+          }
+      - name: Compile install launch parity package uninstall
+        shell: pwsh
+        run: ./acceptance.ps1
+      - name: Validate receipt
+        shell: pwsh
+        run: |
+          $r=Get-Content artifacts/windows-acceptance.json -Raw|ConvertFrom-Json
+          if(-not $r.compiled -or -not $r.installed -or -not $r.launched -or -not $r.selfTestPassed -or -not $r.shipsEmpty -or -not $r.uninstalled -or $r.requiredResiduals -ne 0 -or $r.surfaceCount -ne 49){throw 'Marketing acceptance failed'}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: marketing-windows-acceptance-${{ github.run_id }}
+          path: acceptance/marketing/generated/windows-app/artifacts/*
+          if-no-files-found: error
+          retention-days: 14
