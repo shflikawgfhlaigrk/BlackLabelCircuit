@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "source": "BlackLabelLiveWallpaper-win-x64.zip",
+  "bytes": 91105329,
+  "sha256": "15484eb2fb8be8e8722acf85d61757c815b4e67982fa8e0d00b08548b6145866",
+  "parts": [
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-00", "bytes": 8000000, "sha256": "90932c8399d3ff908e3a43256a0041bbbcd42cd8ae58186e26a2e8dd1ac3ec08"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-01", "bytes": 8000000, "sha256": "f32866feb118cddcf48083cb1ba1ca66364ca8604fb752da0c871527f472fe5c"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-02", "bytes": 8000000, "sha256": "35566c06f22d2df05abe3474ec5a918f2f848a05412763d9242d629620eaa66f"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-03", "bytes": 8000000, "sha256": "f5e6af60b515bacc591f8cd4a07ae6a785342a328cd5b9595d254ab812a8fa57"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-04", "bytes": 8000000, "sha256": "0db6fefd991cf6b39c89a73c4f083e9938a2c6468b63455c8c717a62d828bf0e"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-05", "bytes": 8000000, "sha256": "049aa9ca34dbf0d453f7a6451ba42a7cf1c4764cb661f7ea39bed091bac8ba23"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-06", "bytes": 8000000, "sha256": "1c8271ee0a4ac605f98f6e1c10ccb92d9d6f676f044db485b21667c159d6e16b"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-07", "bytes": 8000000, "sha256": "51a5aabe8dcaa7191748abd45c7c7fee7f0b0f9b6f52e6b296ea924fec619157"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-08", "bytes": 8000000, "sha256": "85161db25ed1e1da6cb2c96573f8dda011d4ed3926e5fda0f6cbdb50434c004f"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-09", "bytes": 8000000, "sha256": "a43b64611c7f091ef0d3d0a21e2536bb018ffd9b84138a869e21f550c1fe33fd"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-10", "bytes": 8000000, "sha256": "bc7a2ebc6d2793de39e9fd22505b53fef6fbb46f9d4a7504b4de4b06cad2ce10"},
+    {"path": "BlackLabelLiveWallpaper-win-x64.zip.part-11", "bytes": 3105329, "sha256": "890ba87f8fdea273eefd934fe8138ac9697c616460110cdb9516cd154ce9258f"}
+  ]
+}
