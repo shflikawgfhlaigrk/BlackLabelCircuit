@@ -16,8 +16,8 @@
     "from": "every app Swift file outside iOS / widget / marketing folders",
     "paths": null
   },
-  "generatedAt": 1790037665180,
-  "tookMs": 191,
+  "generatedAt": 1790037828000,
+  "tookMs": 206,
   "before": {
     "readyPct": 0,
     "files": 1,
@@ -191,7 +191,7 @@
     "artifacts": [
       {
         "path": "BlackLabelLiveWallpaper.csproj",
-        "sha256": "bdcb42a838af69fe88a6ba1c9d61f2cb62dd99ba83c6ba87f3bcad0ba7beb788"
+        "sha256": "2486b91e455a21f405fa74af2646611b86e781dd26e61674c90d49a2e4e3f87d"
       },
       {
         "path": "app.manifest",
@@ -203,11 +203,11 @@
       },
       {
         "path": "App.xaml.cs",
-        "sha256": "7ad781422837b7d2f6b6b391e57690d5b5443261b0d6cb75ffce2e38ef2e980d"
+        "sha256": "8252c049f6fa0857470fed89f9c16d4c41da0a9d492d0f81c505a7e4fc3ec3d1"
       },
       {
         "path": "WallpaperWindow.cs",
-        "sha256": "60ea02c2a12c6339f20bd0f41e6cf441b84625f1d2a599d19f1dc5ab0a6e460b"
+        "sha256": "3ce47c9222af2c301828e4366818d87d159d454ce9dcdc04f97db332c931d6db"
       },
       {
         "path": "acceptance.ps1",

@@ -1,4 +1,7 @@
-using System.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Windows;
 using Microsoft.Win32;
@@ -16,14 +19,11 @@ public partial class App : System.Windows.Application
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "BlackLabel", "LiveWallpaper", "settings.json");
 
-    [STAThread]
-    public static int Main(string[] args)
+    protected override void OnStartup(StartupEventArgs e)
     {
-        if (args.Contains("--self-test")) return SelfTest.Run();
-        var app = new App();
-        app.InitializeComponent();
-        app.Startup += (_, _) => app.Start(args);
-        return app.Run();
+        base.OnStartup(e);
+        if (e.Args.Contains("--self-test")) { Shutdown(SelfTest.Run()); return; }
+        Start(e.Args);
     }
 
     private void Start(string[] args)

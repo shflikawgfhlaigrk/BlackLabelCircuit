@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Windows;
@@ -36,8 +37,8 @@ public sealed class WallpaperSurface : FrameworkElement
     private readonly DateTime started = DateTime.UtcNow;
     public bool ImageLoaded => image.PixelWidth == 5504 && image.PixelHeight == 3072;
     public bool IsPaused => paused;
-    public static bool AssetExists => Application.GetResourceStream(AssetUri) != null;
-    public static string AssetSha256 { get { using var stream = Application.GetResourceStream(AssetUri)!.Stream; return Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant(); } }
+    public static bool AssetExists => System.Windows.Application.GetResourceStream(AssetUri) != null;
+    public static string AssetSha256 { get { using var stream = System.Windows.Application.GetResourceStream(AssetUri)!.Stream; return Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant(); } }
 
     public WallpaperSurface(bool letterbox, bool paused)
     {
