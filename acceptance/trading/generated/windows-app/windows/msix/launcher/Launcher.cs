@@ -28,7 +28,7 @@ internal static class Launcher
 
     private static int Main(string[] args)
     {
-        string here = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+        string here = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
 
         // pythonw.exe first: it is the windowless host, so the packaged app does not flash a
         // console. python.exe is the fallback for a stage assembled without it.

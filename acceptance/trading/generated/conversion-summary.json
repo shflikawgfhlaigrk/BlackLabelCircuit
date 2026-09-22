@@ -74,8 +74,8 @@
       },
       {
         "path": "windows/msix/launcher/Launcher.cs",
-        "bytes": 4473,
-        "sha256": "5e644542ad73d3c71d9c34229ea5de811ad5f2c4a4f370c38b954ab9441eb5e0"
+        "bytes": 4452,
+        "sha256": "907366f3d04933500f978c18861072b838dd819f58ab24580e3b5387c524ff8f"
       },
       {
         "path": "backend/bltd_alerts.py",
@@ -166,8 +166,8 @@
       },
       {
         "path": "acceptance.ps1",
-        "bytes": 3479,
-        "sha256": "786d5bd523740f74ccc76e7021a89ebf3624dcf5f8851b28b3188bf77dfb23fa"
+        "bytes": 3678,
+        "sha256": "b6aad69cc29f28676df30a6f11a20c045ae742355da3d25f79b8edd0971af9ff"
       }
     ],
     "featureMatrix": [

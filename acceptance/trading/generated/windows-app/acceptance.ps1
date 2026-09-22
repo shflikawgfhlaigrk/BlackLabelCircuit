@@ -13,6 +13,9 @@ $runtimeZip = Join-Path $artifacts $zipName
 Invoke-WebRequest "https://www.python.org/ftp/python/3.12.8/$zipName" -OutFile $runtimeZip
 if ((Get-FileHash $runtimeZip -Algorithm SHA256).Hash.ToLowerInvariant() -ne $pin) { throw 'Python runtime hash mismatch' }
 Expand-Archive $runtimeZip (Join-Path $stage 'python') -Force
+$pth = Get-ChildItem (Join-Path $stage 'python') -Filter 'python*._pth' | Select-Object -First 1
+if (-not $pth) { throw 'embeddable Python path file missing' }
+Add-Content $pth.FullName '..\backend'
 Copy-Item (Join-Path $root 'backend\*.py') (Join-Path $stage 'backend')
 Copy-Item (Join-Path $root 'windows\supervise.py') $stage
 Copy-Item (Join-Path $root 'windows\launch-trading.cmd') $stage

@@ -1,5 +1,5 @@
 32f23ca4f6fcafae48c001010956d6e476f19537c41c3da98b73c8a37404e062  ./BlackLabelTrading.csproj
-786d5bd523740f74ccc76e7021a89ebf3624dcf5f8851b28b3188bf77dfb23fa  ./acceptance.ps1
+b6aad69cc29f28676df30a6f11a20c045ae742355da3d25f79b8edd0971af9ff  ./acceptance.ps1
 9769c9ce00cbf45c3ce1a27f76493d1debedc4534dacad65c7621ea3533a24e0  ./backend/bltd_alerts.py
 5fa5ecf60022e9d2ed6004d601c24e0d9f9897c23a0be2b8640bf97ba722e33d  ./backend/bltd_analytics.py
 8ec295247bcf153b0b46e2c3fef620faa1a60441372495d4b762b714a64c9304  ./backend/bltd_api.py
@@ -17,8 +17,8 @@ dc6f43955c8364c901209249d3709881d1e5871d1a93f5c87b99b6a0aa7d60d1  ./backend/bltd
 19c95b58ceda4aa50a17085a23f98c8b881f90737980b2f4376f39084f0467c7  ./backend/bltd_topstep_bridge.py
 cf8db722fd924032e1cbff2f7cd773282ad1c5a473380b74039f61a83df4bc15  ./backend/bltd_tradovate.py
 36a27477527cc1a794a60e5eae7ed5fe92d75e26e71ccba7e7ba53ba00fb076f  ./feature-matrix.json
-2ffc810baa92672533b1d2dc9ad04869baa08cc93528acfbfbd91471752b1765  ./windows-app-manifest.json
+1b5cc5795553f8c85a405a25cb847f974b460d998b88bbde6025aaf059b941bb  ./windows-app-manifest.json
 bd60442ca267da1522f8e58ebbf2e0ceebe0afc432f53fe1aa2dd677318eb852  ./windows/launch-trading.cmd
-5e644542ad73d3c71d9c34229ea5de811ad5f2c4a4f370c38b954ab9441eb5e0  ./windows/msix/launcher/Launcher.cs
+907366f3d04933500f978c18861072b838dd819f58ab24580e3b5387c524ff8f  ./windows/msix/launcher/Launcher.cs
 a83c7c9396dd4ddbd2971b45085bfb20c09c1c7b23e66575ce16e513f6e81c25  ./windows/python-embed.sha256
 edcff4ecdd1fe89d799c3bdfc1abac45806f6a69c79d6dcbd91de0b064d40299  ./windows/supervise.py
