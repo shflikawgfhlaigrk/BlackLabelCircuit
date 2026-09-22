@@ -16,7 +16,17 @@ assert.equal(manifest.generated, true);
 assert.equal(manifest.requiredResiduals, 0);
 assert.equal(manifest.featureMatrix.length, 10);
 assert.ok(manifest.featureMatrix.every((row) => row.required && row.macSource && row.windowsGenerated));
-const asset = fs.readFileSync(path.join(generated, 'windows-app', 'Assets', 'wallpaper.png'));
-assert.equal(crypto.createHash('sha256').update(asset).digest('hex'), receipt.assetSha256);
+const assetRoot = path.join(generated, 'windows-app', 'Assets');
+const assetParts = JSON.parse(fs.readFileSync(path.join(assetRoot, 'wallpaper-parts.json')));
+const assetHash = crypto.createHash('sha256');
+let assetBytes = 0;
+for (const part of assetParts.parts) {
+  const partBytes = fs.readFileSync(path.join(assetRoot, part.path));
+  assert.equal(partBytes.length, part.bytes, `${part.path} bytes`);
+  assert.equal(crypto.createHash('sha256').update(partBytes).digest('hex'), part.sha256, `${part.path} sha256`);
+  assetHash.update(partBytes);
+  assetBytes += partBytes.length;
+}
+assert.equal(assetBytes, assetParts.bytes);
+assert.equal(assetHash.digest('hex'), receipt.assetSha256);
 console.log('GENERATION_PASS');
-

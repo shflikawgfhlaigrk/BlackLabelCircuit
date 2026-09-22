@@ -50,6 +50,20 @@ jobs:
           $expected = '7b11214e713444d3dfa7b66f1afc3ce4351e2ebe9202d50befd571da17152c9b'
           if ($actual -ne $expected) { throw "exact-output canary mismatch: $actual" }
           [ordered]@{ expected=$expected; actual=$actual; passed=$true } | ConvertTo-Json | Set-Content artifacts/canary-exact.json -Encoding utf8
+      - name: Materialize exact locked wallpaper asset
+        shell: pwsh
+        run: |
+          $asset = Join-Path $PWD 'Assets/wallpaper.png'
+          $output = [IO.File]::Create($asset)
+          try {
+            Get-ChildItem 'Assets/wallpaper.png.part-*' | Sort-Object Name | ForEach-Object {
+              $input = [IO.File]::OpenRead($_.FullName)
+              try { $input.CopyTo($output) } finally { $input.Dispose() }
+            }
+          } finally { $output.Dispose() }
+          $actual = (Get-FileHash $asset -Algorithm SHA256).Hash.ToLowerInvariant()
+          $expected = '50a72694b84b348aa146b87a0d1a311a91b16725ade3f607197c00c100440acd'
+          if ($actual -ne $expected) { throw "wallpaper asset mismatch: $actual" }
       - name: Compile install launch parity package uninstall
         shell: pwsh
         run: ./acceptance.ps1

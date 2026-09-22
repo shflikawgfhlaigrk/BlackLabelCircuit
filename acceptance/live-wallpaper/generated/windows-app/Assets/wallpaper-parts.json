@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "source": "wallpaper.png",
+  "bytes": 23885300,
+  "sha256": "50a72694b84b348aa146b87a0d1a311a91b16725ade3f607197c00c100440acd",
+  "parts": [
+    {"path": "wallpaper.png.part-00", "bytes": 8000000, "sha256": "afce039ad822e95436374528bab34f07488dc1dc4111ebcb334cd4cf06bc5b8d"},
+    {"path": "wallpaper.png.part-01", "bytes": 8000000, "sha256": "c3b98783845b9ce09df5aaaf5294e523a3c67b72cb0df67f8b4ea69555590f9c"},
+    {"path": "wallpaper.png.part-02", "bytes": 7885300, "sha256": "3bd295513079188bb9ffa29766f5f68356ccc36a9298896dd85612a223f79b75"}
+  ]
+}
