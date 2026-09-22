@@ -1,0 +1,13 @@
+{
+  "schema": "circuit.reproducibility.v1",
+  "sourceSha256First": "c3ad978d0b11fda5ab9ef035552435cebe8e4c8d2e0c637bb8acb771008ecb63",
+  "sourceSha256Second": "c3ad978d0b11fda5ab9ef035552435cebe8e4c8d2e0c637bb8acb771008ecb63",
+  "workspaceSha256First": "27144eda2e5c4d48fcc943d6129c3e6e96b148dd575e1edffc73a4d7488968ef",
+  "workspaceSha256Second": "27144eda2e5c4d48fcc943d6129c3e6e96b148dd575e1edffc73a4d7488968ef",
+  "byteIdentical": true,
+  "requiredResidualsFirst": 0,
+  "requiredResidualsSecond": 0,
+  "secondOutputWasEmpty": true,
+  "secondWindowsRunRequired": true
+}
+
