@@ -1,0 +1,114 @@
+{
+  "schema": "circuit.windows-app.v1",
+  "generated": true,
+  "kind": "live-wallpaper",
+  "verification": {
+    "realWindows": false,
+    "status": "generated-awaiting-real-windows"
+  },
+  "sourceFiles": [
+    "Sources/main.swift"
+  ],
+  "asset": {
+    "path": "Assets/wallpaper.png",
+    "sha256": "50a72694b84b348aa146b87a0d1a311a91b16725ade3f607197c00c100440acd",
+    "bytes": 23885300
+  },
+  "artifacts": [
+    {
+      "path": "BlackLabelLiveWallpaper.csproj",
+      "sha256": "bdcb42a838af69fe88a6ba1c9d61f2cb62dd99ba83c6ba87f3bcad0ba7beb788"
+    },
+    {
+      "path": "app.manifest",
+      "sha256": "44228d73c2e8852157eee30464215125dc264d8998a9ca1e1b276700b078602b"
+    },
+    {
+      "path": "App.xaml",
+      "sha256": "06f54797621d51a4ce3416aee83d9a4ae6123f5390d4d961d16c434db4162404"
+    },
+    {
+      "path": "App.xaml.cs",
+      "sha256": "622e0dbc2280fe51ace3345ec23398df011864a485fff7a88c2b7ead29d06a8c"
+    },
+    {
+      "path": "WallpaperWindow.cs",
+      "sha256": "ff31dfe0cde8d977d103987a223d3e1f08d7161dfa8135f56058923bdd3653dc"
+    },
+    {
+      "path": "acceptance.ps1",
+      "sha256": "381248cf7317621d3cec72910feef24a92812d88052d183941869a06acc37dcc"
+    },
+    {
+      "path": "global.json",
+      "sha256": "84aa96f48aa20d14456121b5ac5f18967f29f7da504c6f886218c701687f47fa"
+    },
+    {
+      "path": "Assets/wallpaper.png",
+      "sha256": "50a72694b84b348aa146b87a0d1a311a91b16725ade3f607197c00c100440acd"
+    }
+  ],
+  "featureMatrix": [
+    {
+      "feature": "wallpaperAsset",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "animatedCanvas",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "fillAndLetterbox",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "pauseControl",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "multiMonitor",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "desktopWindows",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "trayControls",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "persistedMode",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "displayRebuild",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "quitControl",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    }
+  ],
+  "requiredResiduals": 0
+}

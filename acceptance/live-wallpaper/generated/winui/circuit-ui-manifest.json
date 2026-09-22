@@ -1,0 +1,141 @@
+{
+  "schema": "circuit.winui-source.v1",
+  "verification": {
+    "realWindows": false,
+    "status": "source-generated-not-windows-verified"
+  },
+  "views": [
+    {
+      "view": "WallpaperView",
+      "file": "Sources/main.swift",
+      "xamlPath": "Views/WallpaperViewPage.xaml",
+      "csharpPath": "ViewModels/WallpaperViewViewModel.cs",
+      "commands": []
+    }
+  ],
+  "coverage": {
+    "totalNodes": 11,
+    "supportedNodes": 1,
+    "percent": 9.1
+  },
+  "residuals": [
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "TimelineView",
+      "line": 152,
+      "source": "TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: gate.paused)) { tl in\n            let t = forcedTime ?? tl.date.timeIntervalSinceReferenceDate\n            let u = unlockState(t)\n         "
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "tl",
+      "line": 152,
+      "source": "tl in"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "let",
+      "line": 152,
+      "source": "let t = forcedTime ?? tl.date.timeIntervalSinceReferenceDate"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-modifier",
+      "modifier": "date",
+      "line": 152
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-modifier",
+      "modifier": "timeIntervalSinceReferenceDate",
+      "line": 152
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "let",
+      "line": 153,
+      "source": "let u = unlockState(t)"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-modifier",
+      "modifier": "offset",
+      "line": 154
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "Color",
+      "line": 155,
+      "source": "Color.black"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-modifier",
+      "modifier": "black",
+      "line": 155
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unparsed-expression",
+      "line": 156,
+      "source": "// The art is drawn inside the Canvas, never as a sibling Image view:"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unparsed-expression",
+      "line": 157,
+      "source": "// a scaledToFill sibling reports the covering size and inflates the"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unparsed-expression",
+      "line": 158,
+      "source": "// stack, which hands the Canvas an oversized coordinate space and"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unparsed-expression",
+      "line": 159,
+      "source": "// breaks the visible-band clamp on cropped edges."
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "Canvas",
+      "line": 160,
+      "source": "Canvas { ctx, size in\n                    let f = fitRect(size, fill)\n                    if let img = baseImage {\n                        ctx.draw(Image(nsImage: img), in: CGRect(x: f.x, y: f.y, widt"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "ctx",
+      "line": 160,
+      "source": "ctx, size in"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "let",
+      "line": 161,
+      "source": "let f = fitRect(size, fill)"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "if",
+      "line": 162,
+      "source": "if let img = baseImage {\n                        ctx.draw(Image(nsImage: img), in: CGRect(x: f.x, y: f.y, width: f.w, height: f.h))\n                    }"
+    },
+    {
+      "file": "Sources/main.swift",
+      "kind": "unsupported-control",
+      "control": "draw",
+      "line": 164,
+      "source": "draw(ctx, size, t, u)"
+    }
+  ]
+}

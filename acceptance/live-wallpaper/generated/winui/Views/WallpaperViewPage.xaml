@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page x:Class="CircuitGenerated.WallpaperViewPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:local="using:CircuitGenerated"
+  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+  <Grid>
+      <!-- CIRCUIT RESIDUAL: unsupported SwiftUI control TimelineView at line 152 -->
+  </Grid>
+</Page>

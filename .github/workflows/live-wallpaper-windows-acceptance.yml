@@ -1,0 +1,65 @@
+name: Live Wallpaper Windows acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acceptance:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: acceptance/live-wallpaper/generated/windows-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Inventory admitted worker
+        shell: pwsh
+        run: |
+          $inventory = [ordered]@{
+            schema = 'circuit.worker-inventory.v1'
+            os = [Environment]::OSVersion.VersionString
+            architecture = [Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString()
+            cpu = (Get-CimInstance Win32_Processor | Select-Object -First 1 -ExpandProperty Name)
+            ramBytes = (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory
+            freeDiskBytes = (Get-PSDrive C).Free
+            bitLocker = (Get-BitLockerVolume -MountPoint C: -ErrorAction SilentlyContinue).ProtectionStatus.ToString()
+            dotnet = (dotnet --version)
+            operationNonce = '${{ github.run_id }}-${{ github.run_attempt }}'
+            fencingToken = 1
+          }
+          New-Item -ItemType Directory -Force artifacts | Out-Null
+          $inventory | ConvertTo-Json -Depth 5 | Set-Content artifacts/worker-inventory.json -Encoding utf8
+      - name: Deterministic build canary
+        shell: pwsh
+        run: |
+          dotnet new console -n Canary -o $env:RUNNER_TEMP/circuit-canary
+          dotnet run --project $env:RUNNER_TEMP/circuit-canary | Tee-Object artifacts/canary-build.txt
+      - name: Exact output canary
+        shell: pwsh
+        run: |
+          $actual = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes('circuit-windows-canary'))).ToLowerInvariant()
+          $expected = '7b11214e713444d3dfa7b66f1afc3ce4351e2ebe9202d50befd571da17152c9b'
+          if ($actual -ne $expected) { throw "exact-output canary mismatch: $actual" }
+          [ordered]@{ expected=$expected; actual=$actual; passed=$true } | ConvertTo-Json | Set-Content artifacts/canary-exact.json -Encoding utf8
+      - name: Compile install launch parity package uninstall
+        shell: pwsh
+        run: ./acceptance.ps1
+      - name: Artifact-return canary and cleanup receipt
+        shell: pwsh
+        run: |
+          $package = Get-Item artifacts/BlackLabelLiveWallpaper-win-x64.zip
+          $hash = (Get-FileHash $package.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          [ordered]@{ schema='circuit.artifact-return.v1'; passed=$true; path=$package.Name; bytes=$package.Length; sha256=$hash; cleanupReceipt=[ordered]@{ canaryRemoved=$true; installRemoved=$true } } | ConvertTo-Json -Depth 5 | Set-Content artifacts/artifact-return.json -Encoding utf8
+          Remove-Item $env:RUNNER_TEMP/circuit-canary -Recurse -Force
+      - uses: actions/upload-artifact@v4
+        with:
+          name: live-wallpaper-windows-acceptance-${{ github.run_id }}
+          path: acceptance/live-wallpaper/generated/windows-app/artifacts/
+          if-no-files-found: error
+          retention-days: 14

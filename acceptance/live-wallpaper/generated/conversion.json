@@ -1,0 +1,352 @@
+{
+  "root": "/Users/michaelbarber/BlackLabelLiveWallpaper",
+  "name": "BlackLabelLiveWallpaper",
+  "target": "windows",
+  "out": "/Users/michaelbarber/BlackLabel-LocalWorktrees/Circuit-PortCheck-20260918/acceptance/live-wallpaper/generated",
+  "moduleName": "BlackLabelLiveWallpaperCore",
+  "source": {
+    "sha256": "c3ad978d0b11fda5ab9ef035552435cebe8e4c8d2e0c637bb8acb771008ecb63",
+    "files": 1,
+    "git": {
+      "head": "c3972f7eab704e5f9fa8d54f1542d94f1dfbdb93",
+      "uncommitted": 5
+    }
+  },
+  "moduleSources": {
+    "from": "every app Swift file outside iOS / widget / marketing folders",
+    "paths": null
+  },
+  "generatedAt": 1790037439996,
+  "tookMs": 160,
+  "before": {
+    "readyPct": 0,
+    "files": 1,
+    "loc": 561
+  },
+  "after": {
+    "readyPct": null,
+    "guardedLoc": 0,
+    "needsWindowsLoc": 0
+  },
+  "verification": {
+    "ran": false
+  },
+  "ui": {
+    "schema": "circuit.winui-source.v1",
+    "verification": {
+      "realWindows": false,
+      "status": "source-generated-not-windows-verified"
+    },
+    "views": [
+      {
+        "view": "WallpaperView",
+        "file": "Sources/main.swift",
+        "xamlPath": "Views/WallpaperViewPage.xaml",
+        "csharpPath": "ViewModels/WallpaperViewViewModel.cs",
+        "commands": []
+      }
+    ],
+    "coverage": {
+      "totalNodes": 11,
+      "supportedNodes": 1,
+      "percent": 9.1
+    },
+    "residuals": [
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "TimelineView",
+        "line": 152,
+        "source": "TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: gate.paused)) { tl in\n            let t = forcedTime ?? tl.date.timeIntervalSinceReferenceDate\n            let u = unlockState(t)\n         "
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "tl",
+        "line": 152,
+        "source": "tl in"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "let",
+        "line": 152,
+        "source": "let t = forcedTime ?? tl.date.timeIntervalSinceReferenceDate"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-modifier",
+        "modifier": "date",
+        "line": 152
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-modifier",
+        "modifier": "timeIntervalSinceReferenceDate",
+        "line": 152
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "let",
+        "line": 153,
+        "source": "let u = unlockState(t)"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-modifier",
+        "modifier": "offset",
+        "line": 154
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "Color",
+        "line": 155,
+        "source": "Color.black"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-modifier",
+        "modifier": "black",
+        "line": 155
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unparsed-expression",
+        "line": 156,
+        "source": "// The art is drawn inside the Canvas, never as a sibling Image view:"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unparsed-expression",
+        "line": 157,
+        "source": "// a scaledToFill sibling reports the covering size and inflates the"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unparsed-expression",
+        "line": 158,
+        "source": "// stack, which hands the Canvas an oversized coordinate space and"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unparsed-expression",
+        "line": 159,
+        "source": "// breaks the visible-band clamp on cropped edges."
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "Canvas",
+        "line": 160,
+        "source": "Canvas { ctx, size in\n                    let f = fitRect(size, fill)\n                    if let img = baseImage {\n                        ctx.draw(Image(nsImage: img), in: CGRect(x: f.x, y: f.y, widt"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "ctx",
+        "line": 160,
+        "source": "ctx, size in"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "let",
+        "line": 161,
+        "source": "let f = fitRect(size, fill)"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "if",
+        "line": 162,
+        "source": "if let img = baseImage {\n                        ctx.draw(Image(nsImage: img), in: CGRect(x: f.x, y: f.y, width: f.w, height: f.h))\n                    }"
+      },
+      {
+        "file": "Sources/main.swift",
+        "kind": "unsupported-control",
+        "control": "draw",
+        "line": 164,
+        "source": "draw(ctx, size, t, u)"
+      }
+    ]
+  },
+  "windowsApp": {
+    "schema": "circuit.windows-app.v1",
+    "generated": true,
+    "kind": "live-wallpaper",
+    "verification": {
+      "realWindows": false,
+      "status": "generated-awaiting-real-windows"
+    },
+    "sourceFiles": [
+      "Sources/main.swift"
+    ],
+    "asset": {
+      "path": "Assets/wallpaper.png",
+      "sha256": "50a72694b84b348aa146b87a0d1a311a91b16725ade3f607197c00c100440acd",
+      "bytes": 23885300
+    },
+    "artifacts": [
+      {
+        "path": "BlackLabelLiveWallpaper.csproj",
+        "sha256": "bdcb42a838af69fe88a6ba1c9d61f2cb62dd99ba83c6ba87f3bcad0ba7beb788"
+      },
+      {
+        "path": "app.manifest",
+        "sha256": "44228d73c2e8852157eee30464215125dc264d8998a9ca1e1b276700b078602b"
+      },
+      {
+        "path": "App.xaml",
+        "sha256": "06f54797621d51a4ce3416aee83d9a4ae6123f5390d4d961d16c434db4162404"
+      },
+      {
+        "path": "App.xaml.cs",
+        "sha256": "622e0dbc2280fe51ace3345ec23398df011864a485fff7a88c2b7ead29d06a8c"
+      },
+      {
+        "path": "WallpaperWindow.cs",
+        "sha256": "ff31dfe0cde8d977d103987a223d3e1f08d7161dfa8135f56058923bdd3653dc"
+      },
+      {
+        "path": "acceptance.ps1",
+        "sha256": "381248cf7317621d3cec72910feef24a92812d88052d183941869a06acc37dcc"
+      },
+      {
+        "path": "global.json",
+        "sha256": "84aa96f48aa20d14456121b5ac5f18967f29f7da504c6f886218c701687f47fa"
+      },
+      {
+        "path": "Assets/wallpaper.png",
+        "sha256": "50a72694b84b348aa146b87a0d1a311a91b16725ade3f607197c00c100440acd"
+      }
+    ],
+    "featureMatrix": [
+      {
+        "feature": "wallpaperAsset",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "animatedCanvas",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "fillAndLetterbox",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "pauseControl",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "multiMonitor",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "desktopWindows",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "trayControls",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "persistedMode",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "displayRebuild",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "quitControl",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      }
+    ],
+    "requiredResiduals": 0
+  },
+  "totals": {
+    "all": {
+      "files": 1,
+      "loc": 561
+    },
+    "portable": {
+      "files": 0,
+      "loc": 0
+    },
+    "converted": {
+      "files": 0,
+      "loc": 0
+    },
+    "partial": {
+      "files": 0,
+      "loc": 0,
+      "isolatedLoc": 0,
+      "buildsLoc": 0
+    },
+    "needsWindowsPart": {
+      "files": 0,
+      "loc": 0
+    },
+    "macOnlySkipped": {
+      "files": 0,
+      "loc": 0
+    },
+    "unverified": {
+      "files": 1,
+      "loc": 561
+    },
+    "buildsLoc": 0,
+    "isolatedLoc": 0,
+    "buildsForWindowsPct": 0
+  },
+  "packages": [],
+  "kit": false,
+  "windowsPartsNeeded": [],
+  "skipped": [
+    {
+      "id": "Sources/main.swift",
+      "why": "Mac entry point supplied to the Windows application compiler"
+    }
+  ],
+  "files": [
+    {
+      "id": "Sources/main.swift",
+      "lang": "swift",
+      "loc": 561,
+      "before": "needs-windows",
+      "rewritten": true,
+      "changes": [
+        {
+          "kind": "windows-application-compiler",
+          "to": "live-wallpaper"
+        }
+      ],
+      "guardedModules": [],
+      "windowsApplication": true,
+      "isolatedLoc": 0,
+      "status": "rewritten-unverified"
+    }
+  ]
+}
