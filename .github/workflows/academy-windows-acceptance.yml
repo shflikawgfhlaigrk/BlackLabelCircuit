@@ -1,0 +1,36 @@
+name: Academy Windows acceptance
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/circuit-live-wallpaper-windows-acceptance]
+
+permissions:
+  contents: read
+
+jobs:
+  acceptance:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: acceptance/academy/generated/windows-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Compile install launch parity package uninstall
+        shell: pwsh
+        run: ./acceptance.ps1
+      - name: Validate receipt
+        shell: pwsh
+        run: |
+          $r = Get-Content artifacts/windows-acceptance.json -Raw | ConvertFrom-Json
+          if (-not $r.compiled -or -not $r.installed -or -not $r.launched -or -not $r.selfTestPassed -or -not $r.uninstalled -or $r.requiredResiduals -ne 0) { throw 'Academy acceptance receipt failed' }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: academy-windows-acceptance-${{ github.run_id }}
+          path: acceptance/academy/generated/windows-app/artifacts/*
+          if-no-files-found: error
+          retention-days: 14

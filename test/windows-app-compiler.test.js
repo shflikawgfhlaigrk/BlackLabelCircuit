@@ -50,3 +50,21 @@ test('unrecognized app fails closed with explicit required residuals', () => {
   assert.equal(result.generated, false);
   assert.ok(result.residuals.length > 0);
 });
+
+test('Academy source and provenance-gated reader generate a complete offline Windows project', () => {
+  const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-academy-source-'));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-academy-out-'));
+  const payload = path.join(sourceRoot, 'windows', 'dist', 'reader');
+  fs.mkdirSync(payload, { recursive: true });
+  fs.writeFileSync(path.join(payload, 'index.html'), '<html>Academy</html>');
+  fs.writeFileSync(path.join(payload, 'BlackLabelAcademy.sqlite'), 'SQLite format 3');
+  fs.writeFileSync(path.join(payload, 'academy-reader.json'), JSON.stringify({
+    pillars: ['niches'], offer: { trial_days: 7 }, entries: [{ title: 'Lesson', body_html: '<h1>Lesson</h1>', checkpoints: [{ prompt: 'p', answer: 'a' }], metrics: [{ key: 'tam', provenance: 'source' }] }],
+  }));
+  const result = compileWindowsApplication({ files: [{ file: 'Sources/AcademyApp.swift', source: 'struct BlackLabelAcademy {}' }], sourceRoot, outDir: out });
+  assert.equal(result.generated, true);
+  assert.equal(result.kind, 'academy');
+  assert.equal(result.requiredResiduals, 0);
+  assert.equal(result.featureMatrix.length, 9);
+  for (const rel of ['BlackLabelAcademy.csproj', 'MainWindow.xaml', 'App.xaml.cs', 'acceptance.ps1', 'Payload/academy-reader.json']) assert.ok(fs.existsSync(path.join(out, 'windows-app', rel)), rel);
+});
