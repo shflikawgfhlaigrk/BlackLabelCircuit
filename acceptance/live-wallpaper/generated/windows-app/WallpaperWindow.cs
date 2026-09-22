@@ -67,7 +67,7 @@ public sealed class WallpaperSurface : FrameworkElement
         if (frame.Burst >= 0) { var radius = Math.Sqrt(ActualWidth * ActualWidth + ActualHeight * ActualHeight) * .62 * frame.Burst; dc.DrawEllipse(null, new Pen(new SolidColorBrush(Color.FromArgb((byte)(180 * (1 - frame.Burst)), gold.R, gold.G, gold.B)), Math.Max(1, 12 * (1 - frame.Burst))), center, radius, radius); }
     }
 
-    private static Rect Fit(Size screen, double aspect, bool fill)
+    private static Rect Fit(System.Windows.Size screen, double aspect, bool fill)
     {
         var screenAspect = screen.Width / Math.Max(screen.Height, 1); var matchWidth = fill ? screenAspect >= aspect : screenAspect <= aspect;
         if (matchWidth) { var h = screen.Width / aspect; return new Rect(0, (screen.Height - h) / 2, screen.Width, h); }

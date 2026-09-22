@@ -29,15 +29,15 @@
     },
     {
       "path": "App.xaml.cs",
-      "sha256": "622e0dbc2280fe51ace3345ec23398df011864a485fff7a88c2b7ead29d06a8c"
+      "sha256": "7ad781422837b7d2f6b6b391e57690d5b5443261b0d6cb75ffce2e38ef2e980d"
     },
     {
       "path": "WallpaperWindow.cs",
-      "sha256": "ff31dfe0cde8d977d103987a223d3e1f08d7161dfa8135f56058923bdd3653dc"
+      "sha256": "60ea02c2a12c6339f20bd0f41e6cf441b84625f1d2a599d19f1dc5ab0a6e460b"
     },
     {
       "path": "acceptance.ps1",
-      "sha256": "381248cf7317621d3cec72910feef24a92812d88052d183941869a06acc37dcc"
+      "sha256": "be4dc15c059b97e10882bd37550302747f5de8a9512f56a7352eb0c6f4606975"
     },
     {
       "path": "global.json",

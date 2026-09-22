@@ -6,7 +6,7 @@ using Forms = System.Windows.Forms;
 
 namespace BlackLabel.LiveWallpaper;
 
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
     private readonly List<WallpaperWindow> windows = new();
     private Forms.NotifyIcon? tray;

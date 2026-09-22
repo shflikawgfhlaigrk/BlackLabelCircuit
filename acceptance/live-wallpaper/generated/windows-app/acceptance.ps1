@@ -6,8 +6,8 @@ $install = Join-Path $env:LOCALAPPDATA 'BlackLabel\LiveWallpaper\AcceptanceInsta
 $evidence = Join-Path $root 'artifacts\windows-acceptance.json'
 if (Test-Path $publish) { Remove-Item $publish -Recurse -Force }
 if (Test-Path $install) { Remove-Item $install -Recurse -Force }
-dotnet restore $project
-dotnet build $project -c Release --no-restore
+dotnet restore $project -r win-x64
+dotnet build $project -c Release -r win-x64 --no-restore
 dotnet publish $project -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o $publish --no-restore
 New-Item -ItemType Directory -Force $install | Out-Null
 Copy-Item (Join-Path $publish '*') $install -Recurse -Force
