@@ -126,3 +126,22 @@ test('Marketing source generates the complete offline-first Windows workspace', 
   const html = fs.readFileSync(path.join(out, 'windows-app', 'Payload', 'index.html'), 'utf8');
   for (const label of ['Marketing OS', 'Reel Studio', 'Email Builder', 'Design Studio', 'SEO Toolkit', 'Settings']) assert.match(html, new RegExp(label));
 });
+
+test('Operator source and Python Engine generate a native ships-empty Windows workspace', () => {
+  const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-operator-source-'));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-operator-out-'));
+  const engine = path.join(sourceRoot, 'Engine', 'blacklabel_operator');
+  fs.mkdirSync(engine, { recursive: true });
+  fs.writeFileSync(path.join(sourceRoot, 'Engine', 'pyproject.toml'), '[project]\nname="blacklabel-operator"\n');
+  fs.writeFileSync(path.join(engine, '__init__.py'), '__version__="test"\n');
+  fs.writeFileSync(path.join(engine, 'store.py'), 'class Store: pass\n');
+  fs.writeFileSync(path.join(engine, 'upgrade_lock.py'), 'import fcntl\n');
+  const result = compileWindowsApplication({ files: [{ file: 'Sources/main.swift', source: 'let title = "Black Label Operator"; enum OperatorDestination {}' }], sourceRoot, outDir: out });
+  assert.equal(result.generated, true);
+  assert.equal(result.kind, 'operator');
+  assert.equal(result.requiredResiduals, 0);
+  assert.equal(result.featureMatrix.length, 18);
+  assert.equal(result.identity.canonical, 'operator');
+  for (const rel of ['BlackLabelOperator.csproj', 'MainWindow.xaml', 'acceptance.ps1', 'Engine/blacklabel_operator/store.py', 'Engine/blacklabel_operator/upgrade_lock.py']) assert.ok(fs.existsSync(path.join(out, 'windows-app', rel)), rel);
+  assert.match(fs.readFileSync(path.join(out, 'windows-app', 'Engine/blacklabel_operator/upgrade_lock.py'), 'utf8'), /msvcrt/);
+});

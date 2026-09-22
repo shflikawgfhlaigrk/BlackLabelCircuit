@@ -1,5 +1,6 @@
 acceptance/academy/generated/windows-app/** -text
 acceptance/academy/reconverted/windows-app/** -text
 acceptance/marketing/generated/windows-app/** -text
+acceptance/operator/generated/windows-app/** -text
 acceptance/realestate/generated/windows-app/** -text
 acceptance/trading/generated/windows-app/** -text
