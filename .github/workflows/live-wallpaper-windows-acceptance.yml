@@ -2,6 +2,9 @@ name: Live Wallpaper Windows acceptance
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - codex/circuit-live-wallpaper-windows-acceptance
 
 permissions:
   contents: read
