@@ -1,9 +1,12 @@
 {
   "schema": "circuit.mac-first-windows-converter-plan.v1",
-  "planVersion": "2026-09-21.1",
+  "planVersion": "2026-09-21.2",
   "product": "Circuit",
   "primaryPlatform": "macos",
   "conversionTarget": "windows",
+  "conversionTargets": ["windows", "macos"],
+  "directions": ["macos-to-windows", "windows-to-macos"],
+  "executionModel": "mac-control-plane-online-target-workers",
   "inputScope": "source-available-mac-apps",
   "sourceMutation": "forbidden",
   "completionAuthority": "real-windows",
@@ -16,7 +19,9 @@
     "COMPILER-TRUTH-001",
     "WINDOWS-PROOF-001",
     "PACKAGING-001",
-    "REPRODUCTION-001"
+    "REPRODUCTION-001",
+    "ONLINE-BROKER-001",
+    "BIDIRECTIONAL-001"
   ],
   "targetProfiles": [
     "winui3",
@@ -24,8 +29,18 @@
     "electron",
     "flutter-windows",
     "qt6-windows",
-    "native-cli"
+    "native-cli",
+    "swiftui",
+    "appkit",
+    "tauri2-wkwebview",
+    "electron-macos",
+    "native-cli-macos"
   ],
+  "workerAdmission": {
+    "inventory": ["os", "cpu", "ram", "free-disk", "encryption", "toolchains"],
+    "canaries": ["deterministic-build", "exact-output", "artifact-return-and-cleanup"],
+    "requiredBinding": ["operation-nonce", "lease", "fencing-token", "worker-admission-identity"]
+  },
   "compatibilityPacks": [
     "ui",
     "foundation",

@@ -766,6 +766,12 @@ function selectedConversionProfile() {
   return document.querySelector('input[name="conversion_profile"]:checked')?.value ?? null;
 }
 
+function selectedConversionDirection() {
+  const value = document.querySelector('input[name="conversion_direction"]:checked')?.value ?? 'macos:windows';
+  const [sourcePlatform, targetPlatform] = value.split(':');
+  return { sourcePlatform, targetPlatform };
+}
+
 function setConvertStep(step, announce = true) {
   state.convert.step = step;
   for (let i = 1; i <= 3; i++) {
@@ -781,10 +787,14 @@ function setConvertStep(step, announce = true) {
 
 function renderProfileChoices(target, selectedId = null) {
   const box = $('convertProfileChoices');
-  const profiles = target?.profiles ?? [];
+  const { targetPlatform } = selectedConversionDirection();
+  const profiles = targetPlatform === 'windows'
+    ? (target?.profiles ?? [])
+    : Object.values(state.convert.intake?.profiles ?? {}).filter((profile) => profile.targetPlatform === 'macos').map((profile) => profile.id);
+  $('convertProfileLegend').textContent = `${targetPlatform === 'windows' ? 'Windows' : 'Mac'} application profile`;
   box.innerHTML = profiles.map((id, index) => {
     const profile = state.convert.intake.profiles[id];
-    const checked = id === (selectedId ?? target.recommendedProfile);
+    const checked = id === (selectedId ?? (targetPlatform === 'windows' ? target.recommendedProfile : profiles[0]));
     return `<label class="convert-choice" for="convertProfile-${esc(id)}"><input id="convertProfile-${esc(id)}" name="conversion_profile" type="radio" value="${esc(id)}" ${checked ? 'checked' : ''} ${index === 0 ? 'required' : ''}><span><b>${esc(profile.label)}</b><small>${esc(profile.description)}</small></span></label>`;
   }).join('');
   updateConversionReview();
@@ -796,6 +806,7 @@ function updateConversionReview() {
   const profile = state.convert.intake?.profiles?.[profileId];
   $('convertReviewTarget').textContent = target?.name ?? 'Choose a target';
   $('convertReviewProfile').textContent = profile?.label ?? 'Choose a profile';
+  $('convertReviewWorker').textContent = `Admitted online ${selectedConversionDirection().targetPlatform === 'windows' ? 'Windows' : 'Mac'} worker required`;
   $('convertOutputPreview').textContent = target && profileId
     ? state.convert.outputPreviews?.[target.id]?.[profileId] ?? 'Generated after session creation'
     : 'Choose a target and profile';
@@ -811,6 +822,17 @@ function renderConversionSetup(payload) {
   $('convertSourceDirty').textContent = intake.source.dirty.length
     ? `${intake.source.dirty.length} changed file${intake.source.dirty.length === 1 ? '' : 's'} included in this identity`
     : 'Clean source revision';
+  const direction = payload.session?.direction ?? { sourcePlatform: 'macos', targetPlatform: 'windows' };
+  const directionInput = document.querySelector(`input[name="conversion_direction"][value="${direction.sourcePlatform}:${direction.targetPlatform}"]`);
+  if (directionInput) directionInput.checked = true;
+  const broker = payload.broker ?? { configured: false };
+  $('convertBrokerStatus').textContent = broker.configured
+    ? `Online broker connected at ${broker.endpoint}. Target-native admission and proof are enforced.`
+    : 'Online broker is not connected. Configure CIRCUIT_BROKER_URL to dispatch conversion jobs.';
+  $('convertBrokerStatus').classList.toggle('ready', broker.configured);
+  const chip = $('offlineChip');
+  chip.textContent = broker.configured ? '⇄ online conversion broker connected' : '⏚ local analysis — online converter disconnected';
+  chip.title = broker.configured ? 'Only an explicitly started conversion uploads the minimized source bundle.' : 'Analysis stays local. Conversion requires an admitted online target worker.';
   const selectedTargetId = payload.session?.target?.id ?? intake.targets[0]?.id;
   $('convertTargetChoices').innerHTML = intake.targets.map((target, index) => {
     const checked = target.id === selectedTargetId;
@@ -843,13 +865,24 @@ function showConvertResult(r) {
   state.convert.result = r;
   state.convert.byId = new Map((r?.files ?? []).map((f) => [f.id, f]));
   const side = $('convertStatus');
-  const has = Boolean(r && r.totals.all.files);
+  const has = Boolean(r?.totals?.all?.files);
   for (const id of ['convertOpenOut', 'convertReport']) $(id).disabled = !r;
   $('convertShow').disabled = !has;
   $('tglConverted').classList.toggle('hidden', !has);
   $('convertResult').classList.toggle('hidden', !r);
   side.classList.toggle('hidden', !r);
   if (!r) return;
+  if (!r.totals) {
+    $('convertPct').textContent = r.status === 'complete' ? 'Verified' : 'Pending proof';
+    $('convertPctLabel').textContent = r.status === 'complete'
+      ? 'The target worker returned compile, install, launch, parity, artifact-hash, and cleanup receipts.'
+      : 'The online worker has not yet returned the complete target-native evidence bundle.';
+    $('convertTable').innerHTML = '';
+    $('convertParts').textContent = r.error ?? '';
+    $('convertOutPath').textContent = r.artifacts?.map((artifact) => artifact.name).join(', ') ?? '';
+    side.textContent = r.status === 'complete' ? 'Target-native conversion verified.' : 'Waiting for target-native proof.';
+    return;
+  }
   const t = r.totals;
   $('convertOutPath').textContent = r.out;
   const verified = r.verification.ran && r.verification.ok;
@@ -884,8 +917,9 @@ function showConvertResult(r) {
 
 function setConvertRunning(on) {
   state.convert.running = on;
-  $('convertRun').textContent = on ? 'Converting…' : (state.convert.result ? 'Convert again' : 'Convert for Windows');
+  $('convertRun').textContent = on ? 'Converting online…' : (state.convert.result ? 'Convert again' : 'Start online conversion');
   $('convertRun').disabled = on || !state.convert.session;
+  $('convertCancel').disabled = !on;
   $('convertOpenBtn').textContent = on ? 'Converting…' : 'Convert';
 }
 
@@ -911,18 +945,22 @@ $('convertNext2').onclick = () => {
 $('convertBack3').onclick = () => setConvertStep(2);
 $('convertTargetChoices').addEventListener('change', () => renderProfileChoices(selectedConversionTarget()));
 $('convertProfileChoices').addEventListener('change', updateConversionReview);
+$('convertSetup').addEventListener('change', (event) => {
+  if (event.target.name === 'conversion_direction') renderProfileChoices(selectedConversionTarget());
+});
 $('convertSetup').addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!$('convertSetup').reportValidity()) return;
   const target = selectedConversionTarget();
   const profileId = selectedConversionProfile();
+  const direction = selectedConversionDirection();
   if (!target || !profileId) return;
   $('convertPrepare').disabled = true;
   $('convertAnnouncement').textContent = 'Creating conversion session';
   try {
     const res = await fetch('/api/conversion/session', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ targetId: target.id, profileId }),
+      body: JSON.stringify({ targetId: target.id, profileId, ...direction }),
     });
     const payload = await res.json();
     if (!res.ok) throw new Error(payload.error ?? `HTTP ${res.status}`);
@@ -947,6 +985,18 @@ $('convertRun').onclick = async () => {
   } catch (err) {
     setConvertRunning(false);
     toast(`Convert could not start: ${err.message}`);
+  }
+};
+
+$('convertCancel').onclick = async () => {
+  try {
+    const res = await fetch('/api/convert/cancel', { method: 'POST' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+    setConvertRunning(false);
+    toast('Online conversion cancelled and fenced.');
+  } catch (err) {
+    toast(`Conversion cancellation failed: ${err.message}`);
   }
 };
 

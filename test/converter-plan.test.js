@@ -16,6 +16,15 @@ test('the product is Mac-first and Windows is the conversion target', () => {
   assert.match(plan, /Windows is the conversion target/i);
 });
 
+test('the Mac app brokers bidirectional online target-native conversion', () => {
+  assert.deepEqual(contract.conversionTargets, ['windows', 'macos']);
+  assert.deepEqual(contract.directions, ['macos-to-windows', 'windows-to-macos']);
+  assert.equal(contract.executionModel, 'mac-control-plane-online-target-workers');
+  assert.match(plan, /admitted online workers/i);
+  assert.match(plan, /chunked minimized-source upload/i);
+  assert.deepEqual(contract.workerAdmission.canaries, ['deterministic-build', 'exact-output', 'artifact-return-and-cleanup']);
+});
+
 test('source is immutable and binary-only apps are not falsely promised', () => {
   assert.equal(contract.sourceMutation, 'forbidden');
   assert.equal(contract.inputScope, 'source-available-mac-apps');

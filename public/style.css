@@ -429,6 +429,8 @@ body {
 .convert-hint { margin: 10px 0 14px; color: var(--ink-2); font-size: 11.5px; line-height: 1.55; }
 .convert-fieldset { margin: 0 0 14px; padding: 0; border: 0; }
 .convert-fieldset legend { margin: 0 0 8px; padding: 0; color: var(--ink); font-size: 12px; font-weight: 600; }
+.convert-worker-status { margin: 0 0 14px; padding: 10px 12px; border: 1px solid rgba(251,191,36,.35); border-radius: 10px; color: #fbbf24; background: rgba(251,191,36,.07); font-size: 12px; }
+.convert-worker-status.ready { border-color: rgba(134,239,172,.35); color: #86efac; background: rgba(134,239,172,.07); }
 .convert-choice-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .convert-choice {
   position: relative; min-height: 58px; display: flex; align-items: stretch; cursor: pointer;

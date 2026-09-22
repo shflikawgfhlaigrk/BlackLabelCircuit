@@ -1,14 +1,15 @@
-# ⏚ Circuit — Air-Gapped / Offline Deployment
+# ⏚ Circuit — Air-Gapped Analysis and Explicit Online Conversion
 
-Circuit is built to run in the most locked-down environments there are: no internet,
-no telemetry, no code ever leaving the machine. This document is the install guide for
-air-gapped hosts **and** the attestable no-network statement your security team can
-verify for themselves.
+Circuit's analysis, grading, graph, intake, and local compatibility stages run without
+internet or telemetry. Cross-platform conversion is a separate, explicit action: it
+uploads a minimized hashed source bundle to a configured online broker so an admitted
+Windows or Mac worker can compile, install, launch, and prove the target artifact.
 
 ## Attestable no-network statement
 
-> **Circuit makes zero outbound network connections. Your source code is analyzed
-> entirely on the local machine and is never transmitted anywhere.**
+> **Circuit local analysis makes zero outbound network connections. Source leaves the
+> machine only when the user starts an online conversion with `CIRCUIT_BROKER_URL`
+> configured.**
 
 This is not a marketing promise — it is a property you can prove from the source, in
 under a minute, before you trust the tool with a single file:
@@ -18,7 +19,7 @@ under a minute, before you trust the tool with a single file:
 
    ```sh
    grep -rnE 'https?\.request|fetch\(|net\.connect|dns\.|XMLHttpRequest|WebSocket' \
-     server.js lib/ | grep -v createServer || echo "NONE — no outbound network"
+     server.js lib/ | grep -vE 'createServer|conversion-broker' || echo "NONE — analysis path has no outbound network"
    ```
 
    The only networking call in the codebase is `http.createServer(...)` — an inbound
@@ -31,9 +32,8 @@ under a minute, before you trust the tool with a single file:
    npm test            # includes test/airgap.test.js
    ```
 
-   `test/airgap.test.js` fails the build if any egress API (`fetch`, `http.request`,
-   `net.connect`, `dns.*`, `WebSocket`, `XMLHttpRequest`, …) ever appears in the
-   backend source.
+   `test/airgap.test.js` fails the build if an egress API appears outside the isolated
+   online conversion adapter.
 
 3. **Loopback-only binding.** The server binds `127.0.0.1` only (`server.js`), so the
    UI is reachable from the host and nowhere else. Confirm at runtime:
@@ -106,10 +106,9 @@ node build-vendor.mjs
 
 ## In-app confirmation
 
-When Circuit is running, the top bar shows a persistent
-**`⏚ offline — no code leaves this machine`** chip. Hover it for the full posture
-statement. It is always on because the offline guarantee is unconditional — there is
-no online mode to switch out of.
+When Circuit is running, the top bar distinguishes **local analysis — online converter
+disconnected** from **online conversion broker connected**. Connecting a broker does
+not upload anything by itself; only starting a conversion creates and uploads a bundle.
 
 ## Summary for auditors
 
@@ -129,4 +128,3 @@ downloads the same-API packages a conversion depends on (OpenCombine, swift-cryp
 swift-toolchain-sqlite) the first time it builds them. In an air-gapped install, run Convert
 without `--verify` (nothing is then counted as converted), or point SwiftPM at an internal
 mirror of those three packages.
-

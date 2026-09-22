@@ -32,8 +32,9 @@ import { portCheck, formatPortReport } from './lib/port.js';
 import { convertRepo, reverifyConverted, recountConverted, formatConvertReport } from './lib/convert.js';
 import {
   createConversionSession, defaultConversionBase, discoverMacProject,
-  loadCurrentConversionSession, previewConversionOutput, updateConversionSession,
+  loadCurrentConversionSession, previewConversionOutput, profilesForPlatform, updateConversionSession,
 } from './lib/conversion-session.js';
+import { createMinimizedBundleManifest, OnlineBrokerClient } from './lib/conversion-broker.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, 'public');
@@ -255,6 +256,8 @@ let portReport = null;
 // output lines are streamed to the page and the result is read back from its JSON.
 const convertJob = { running: false, log: [], result: null, error: null, errorId: null, out: null, startedAt: null };
 const conversionBase = defaultConversionBase();
+const onlineBrokerEndpoint = process.env.CIRCUIT_BROKER_URL || null;
+const onlineBroker = onlineBrokerEndpoint ? new OnlineBrokerClient({ endpoint: onlineBrokerEndpoint }) : null;
 let conversionIntake = null;
 let conversionSession = loadCurrentConversionSession(conversionBase);
 if (conversionSession?.source?.root !== realRoot) conversionSession = null;
@@ -269,11 +272,14 @@ function conversionSetupPayload() {
   const outputPreviews = {};
   for (const target of intake.targets) {
     outputPreviews[target.id] = {};
-    for (const profileId of target.profiles) {
-      outputPreviews[target.id][profileId] = previewConversionOutput({ appName: intake.app.name, targetName: target.name, profileId, base: conversionBase });
+    for (const profile of [...profilesForPlatform('windows'), ...profilesForPlatform('macos')]) {
+      outputPreviews[target.id][profile.id] = previewConversionOutput({ appName: intake.app.name, targetName: target.name, profileId: profile.id, targetPlatform: profile.targetPlatform, base: conversionBase });
     }
   }
-  return { intake, session: conversionSession, outputPreviews };
+  return {
+    intake, session: conversionSession, outputPreviews,
+    broker: { mode: 'online-workers', configured: Boolean(onlineBroker), endpoint: onlineBrokerEndpoint ? new URL(onlineBrokerEndpoint).host : null },
+  };
 }
 
 function createDefaultConversionSession() {
@@ -284,6 +290,7 @@ function createDefaultConversionSession() {
     base: conversionBase,
     targetId: target.id,
     profileId: target.recommendedProfile,
+    sourcePlatform: 'macos', targetPlatform: 'windows',
   });
   return conversionSession;
 }
@@ -307,7 +314,7 @@ function startConvert({ verify }) {
   const out = convertOutDir();
   fs.mkdirSync(out, { recursive: true });
   const resultPath = path.join(out, 'conversion.json');
-  Object.assign(convertJob, { running: true, log: [], result: null, error: null, errorId: null, out, startedAt: Date.now() });
+  Object.assign(convertJob, { running: true, log: [], result: null, error: null, errorId: null, out, startedAt: Date.now(), mode: 'local-compatibility', remoteId: null, remote: null });
   const childArgs = [fileURLToPath(import.meta.url), '--convert', root, '--out', out];
   if (conversionSession?.target?.sources?.length) childArgs.push('--sources', conversionSession.target.sources.join(','));
   if (verify) childArgs.push('--verify');
@@ -360,6 +367,96 @@ function startConvert({ verify }) {
       progress: { stage: convertJob.error ? 'failed' : 'complete', completed: convertJob.error ? 0 : 1, total: 1, message: convertJob.error ? 'Conversion failed' : 'Conversion complete' },
     });
     broadcast('convert-done', { ok: !convertJob.error, error: convertJob.error, errorId: convertJob.errorId });
+  });
+}
+
+function conversionLog(line) {
+  const text = String(line).slice(0, 500);
+  convertJob.log.push(text);
+  if (convertJob.log.length > 400) convertJob.log.shift();
+  broadcast('convert', { line: text });
+}
+
+async function monitorOnlineConversion(remoteId) {
+  while (convertJob.running && convertJob.remoteId === remoteId) {
+    const remote = await onlineBroker.status(remoteId);
+    convertJob.remote = remote;
+    if (remote.progress?.message) conversionLog(remote.progress.message);
+    if (conversionSession) {
+      conversionSession = updateConversionSession(conversionBase, conversionSession.id, {
+        status: remote.status === 'complete' ? 'complete' : remote.status === 'failed' ? 'failed' : remote.status === 'cancelled' ? 'cancelled' : 'running',
+        progress: remote.progress ?? conversionSession.progress,
+        result: remote.result ?? null,
+        error: remote.error ?? null,
+        finishedAt: ['complete', 'failed', 'cancelled'].includes(remote.status) ? new Date().toISOString() : null,
+      });
+    }
+    if (['complete', 'failed', 'cancelled'].includes(remote.status)) {
+      convertJob.running = false;
+      convertJob.result = remote.result ?? null;
+      convertJob.error = remote.error ?? (remote.status === 'complete' ? null : `online conversion ${remote.status}`);
+      broadcast('convert-done', { ok: remote.status === 'complete', error: convertJob.error, remoteId });
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+  }
+}
+
+async function startOnlineConvert() {
+  if (!onlineBroker) throw new Error('online conversion broker is not configured');
+  if (!conversionSession) createDefaultConversionSession();
+  const bundle = createMinimizedBundleManifest(root);
+  Object.assign(convertJob, {
+    running: true, log: [], result: null, error: null, errorId: null,
+    out: conversionSession.output.path, startedAt: Date.now(), remoteId: null, remote: null, mode: 'online-workers',
+  });
+  conversionSession = updateConversionSession(conversionBase, conversionSession.id, {
+    status: 'running', startedAt: new Date().toISOString(), finishedAt: null, error: null,
+    progress: { stage: 'submit', completed: 0, total: bundle.files.length + 1, message: `Submitting to an admitted ${conversionSession.direction.targetPlatform} worker` },
+  });
+  try {
+    const remote = await onlineBroker.submit({
+      schema: 'circuit.online-conversion-request.v1', conversionId: conversionSession.id,
+      inputManifestSha256: conversionSession.source.sha256,
+      sourcePlatform: conversionSession.direction?.sourcePlatform ?? 'macos',
+      targetPlatform: conversionSession.direction?.targetPlatform ?? 'windows',
+      targetProfile: conversionSession.profile.id,
+      bundle: { schema: bundle.schema, sha256: bundle.sha256, size: bundle.size, chunks: bundle.chunks, files: bundle.publicFiles },
+    });
+    if (!remote.id || !remote.operationNonce) throw new Error('online broker returned an incomplete job identity');
+    convertJob.remoteId = remote.id;
+    convertJob.remote = remote;
+    conversionSession = updateConversionSession(conversionBase, conversionSession.id, {
+      remoteJob: { id: remote.id, operationNonce: remote.operationNonce, broker: new URL(onlineBrokerEndpoint).host },
+      progress: { stage: 'upload', completed: 0, total: bundle.files.length, message: 'Uploading minimized source bundle' },
+    });
+    conversionLog(`Online job ${remote.id} accepted; uploading ${bundle.files.length} minimized source chunks`);
+    for (const file of bundle.files) {
+      if (!convertJob.running) return;
+      await onlineBroker.uploadChunk(remote.id, remote.operationNonce, file);
+      conversionLog(`Uploaded ${file.path}`);
+    }
+    await monitorOnlineConversion(remote.id);
+  } catch (error) {
+    const failure = failed('online conversion', error);
+    Object.assign(convertJob, { running: false, error: failure.message, errorId: failure.errorId });
+    if (conversionSession) conversionSession = updateConversionSession(conversionBase, conversionSession.id, {
+      status: 'failed', error: failure.message, errorId: failure.errorId, finishedAt: new Date().toISOString(),
+      progress: { stage: 'failed', completed: 0, total: 1, message: 'Online conversion failed' },
+    });
+    broadcast('convert-done', { ok: false, error: failure.message, errorId: failure.errorId });
+  }
+}
+
+if (onlineBroker && conversionSession?.status === 'running' && conversionSession.remoteJob?.id) {
+  Object.assign(convertJob, {
+    running: true, log: ['Resuming online conversion after Circuit restart'], result: null,
+    error: null, errorId: null, out: conversionSession.output.path, startedAt: Date.parse(conversionSession.startedAt) || Date.now(),
+    remoteId: conversionSession.remoteJob.id, remote: conversionSession.remoteJob, mode: 'online-workers',
+  });
+  void monitorOnlineConversion(conversionSession.remoteJob.id).catch((error) => {
+    const failure = failed('resuming online conversion', error);
+    Object.assign(convertJob, { running: false, error: failure.message, errorId: failure.errorId });
   });
 }
 
@@ -498,6 +595,8 @@ function handle(req, res) {
           base: conversionBase,
           targetId: body.targetId,
           profileId: body.profileId,
+          sourcePlatform: body.sourcePlatform,
+          targetPlatform: body.targetPlatform,
         });
         Object.assign(convertJob, { running: false, log: [], result: null, error: null, errorId: null, out: conversionSession.output.path, startedAt: null });
         return send(res, 201, conversionSetupPayload());
@@ -521,11 +620,17 @@ function handle(req, res) {
       if (conversionSession && liveIntake.source.sha256 !== conversionSession.source.sha256) {
         return send(res, 409, { error: 'the source project changed — review it and create a new conversion session' });
       }
-      const verify = url.searchParams.get('verify') !== '0';
-      startConvert({ verify });
-      return send(res, 202, { started: true, out: convertJob.out, verify });
+      const explicitLocalCompatibility = url.searchParams.get('verify') === '0' || url.searchParams.get('mode') === 'local';
+      if (explicitLocalCompatibility) {
+        const verify = url.searchParams.get('verify') !== '0';
+        startConvert({ verify });
+        return send(res, 202, { started: true, out: convertJob.out, verify, mode: 'local-compatibility' });
+      }
+      if (!onlineBroker) return send(res, 503, { error: 'connect an online Circuit broker with an admitted target-platform worker before converting' });
+      void startOnlineConvert();
+      return send(res, 202, { started: true, out: convertOutDir(), verify: true, mode: 'online-workers' });
     }
-    if (!convertJob.running && !convertJob.result) {
+    if (!convertJob.running && !convertJob.result && convertJob.mode !== 'online-workers') {
       // a conversion finished in an earlier launch is still on disk: show it
       try { convertJob.result = JSON.parse(fs.readFileSync(path.join(convertOutDir(), 'conversion.json'), 'utf8')); convertJob.out = convertOutDir(); } catch { /* none yet */ }
     }
@@ -533,7 +638,25 @@ function handle(req, res) {
       running: convertJob.running, out: convertJob.out ?? convertOutDir(), startedAt: convertJob.startedAt,
       log: convertJob.log.slice(-60), error: convertJob.error, errorId: convertJob.errorId, result: convertJob.result,
       session: conversionSession,
+      mode: convertJob.mode ?? 'local-compatibility', remoteId: convertJob.remoteId ?? null,
+      remote: convertJob.remote ?? null,
     });
+  }
+
+  if (url.pathname === '/api/convert/cancel' && req.method === 'POST') {
+    if (!convertJob.running) return send(res, 409, { error: 'no conversion is running' });
+    if (convertJob.mode !== 'online-workers' || !convertJob.remoteId || !onlineBroker) return send(res, 409, { error: 'the current local compatibility run cannot be cancelled through the online broker' });
+    const nonce = convertJob.remote?.operationNonce;
+    if (!nonce) return send(res, 409, { error: 'the online job identity is not ready yet' });
+    onlineBroker.cancel(convertJob.remoteId, nonce).then((remote) => {
+      convertJob.remote = remote;
+      convertJob.running = false;
+      send(res, 200, { cancelled: true, remote });
+    }).catch((e) => {
+      const failure = failed('cancelling online conversion', e);
+      if (!res.headersSent) send(res, 502, { error: failure.message, errorId: failure.errorId });
+    });
+    return;
   }
 
   // Reveal the converted copy in the file manager. Only ever opens Convert's own

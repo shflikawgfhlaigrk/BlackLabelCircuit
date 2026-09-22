@@ -176,42 +176,50 @@
   </div>
 </div>
 
-<!-- Convert for Windows: run it, watch the compiler, get the output. -->
+<!-- Online cross-platform conversion: Mac control plane, target-native workers. -->
 <div id="convertModal" class="modal hidden">
   <div class="modal-box convert-box">
     <div class="modal-head">
-      <span><b>Convert for Windows</b> <span class="muted" id="convertRepo"></span></span>
+      <span><b>Convert between Mac and Windows</b> <span class="muted" id="convertRepo"></span></span>
       <button class="btn ghost" id="convertClose" aria-label="Close">✕</button>
     </div>
     <div class="convert-body">
-      <p class="convert-intro">Circuit runs on your Mac first. Review the Mac app, select its desktop target and Windows profile, then create an immutable conversion session. The generated workspace is separate; <b>your source project is never changed</b>.</p>
+      <p class="convert-intro">Circuit runs on your Mac and sends a minimized, immutable source bundle to an admitted online worker for the target platform. The worker must compile, install, launch, and prove parity before Circuit marks the conversion complete. <b>Your source project is never changed.</b></p>
+      <p id="convertBrokerStatus" class="convert-worker-status" role="status">Checking online worker broker…</p>
       <nav class="convert-steps" aria-label="Conversion setup progress">
         <ol>
-          <li id="convertStepMarker1" aria-current="step"><span>1</span>Mac app</li>
-          <li id="convertStepMarker2"><span>2</span>Windows target</li>
+          <li id="convertStepMarker1" aria-current="step"><span>1</span>Direction</li>
+          <li id="convertStepMarker2"><span>2</span>App target</li>
           <li id="convertStepMarker3"><span>3</span>Review &amp; convert</li>
         </ol>
       </nav>
       <form id="convertSetup" action="/api/conversion/session" method="post" novalidate>
         <div id="convertAnnouncement" class="visually-hidden" aria-live="polite"></div>
         <section id="convertStep1" class="convert-step" aria-labelledby="convertStep1Title">
-          <h4 id="convertStep1Title">Selected Mac app</h4>
+          <h4 id="convertStep1Title">Choose conversion direction</h4>
+          <fieldset class="convert-fieldset">
+            <legend>Source and target platforms</legend>
+            <div class="convert-choice-list">
+              <label class="convert-choice" for="convertDirectionWindows"><input id="convertDirectionWindows" name="conversion_direction" type="radio" value="macos:windows" checked required><span><b>Mac → Windows</b><small>Build and prove the result on an admitted online Windows worker.</small></span></label>
+              <label class="convert-choice" for="convertDirectionMac"><input id="convertDirectionMac" name="conversion_direction" type="radio" value="windows:macos"><span><b>Windows → Mac</b><small>Build and prove the result on an admitted online Mac worker.</small></span></label>
+            </div>
+          </fieldset>
           <dl class="convert-source-summary">
             <div><dt>Project</dt><dd id="convertSourceName">Loading…</dd></div>
             <div><dt>Source identity</dt><dd id="convertSourceIdentity" class="mono">—</dd></div>
             <div><dt>Working changes</dt><dd id="convertSourceDirty">—</dd></div>
           </dl>
-          <p class="convert-hint">This is the folder selected in Circuit’s native Mac window. Conversion reads it and writes somewhere else.</p>
-          <div class="convert-step-actions"><button class="btn primary" id="convertNext1" type="button">Choose Windows target</button></div>
+          <p class="convert-hint">Circuit converts source-available projects. A signed binary-only app is not represented as reconstructable source.</p>
+          <div class="convert-step-actions"><button class="btn primary" id="convertNext1" type="button">Choose app target</button></div>
         </section>
         <section id="convertStep2" class="convert-step hidden" aria-labelledby="convertStep2Title">
           <h4 id="convertStep2Title">Choose what Circuit will build</h4>
           <fieldset class="convert-fieldset">
-            <legend>Mac application target</legend>
+            <legend>Application target</legend>
             <div id="convertTargetChoices" class="convert-choice-list"></div>
           </fieldset>
           <fieldset class="convert-fieldset">
-            <legend>Windows application profile</legend>
+            <legend id="convertProfileLegend">Windows application profile</legend>
             <div id="convertProfileChoices" class="convert-choice-list"></div>
           </fieldset>
           <div class="convert-step-actions">
@@ -223,10 +231,11 @@
           <h4 id="convertStep3Title">Review conversion workspace</h4>
           <dl class="convert-source-summary">
             <div><dt>Target</dt><dd id="convertReviewTarget">—</dd></div>
-            <div><dt>Windows profile</dt><dd id="convertReviewProfile">—</dd></div>
+            <div><dt>Target profile</dt><dd id="convertReviewProfile">—</dd></div>
+            <div><dt>Proof worker</dt><dd id="convertReviewWorker">Admitted online worker required</dd></div>
             <div><dt>Output</dt><dd id="convertOutputPreview" class="mono">—</dd></div>
           </dl>
-          <p class="convert-hint">Creating the session locks this source identity, target, profile, and output together. If the source changes, Circuit requires a new session.</p>
+          <p class="convert-hint">Creating the session locks the source identity, direction, target, profile, output, operation nonce, and target-worker evidence together. If the source changes, Circuit requires a new session.</p>
           <div class="convert-step-actions">
             <button class="btn" id="convertBack3" type="button">Back</button>
             <button class="btn primary" id="convertPrepare" type="submit">Create conversion session</button>
@@ -242,7 +251,8 @@
       <pre id="convertLog" class="convert-log hidden"></pre>
     </div>
     <div class="convert-actions">
-      <button class="btn primary" id="convertRun" disabled>Convert for Windows</button>
+      <button class="btn primary" id="convertRun" disabled>Start online conversion</button>
+      <button class="btn" id="convertCancel" disabled>Cancel conversion</button>
       <button class="btn" id="convertOpenOut" disabled title="Open the converted code in your file manager">Open output folder</button>
       <button class="btn" id="convertReport" disabled title="Read the full conversion report">View report</button>
       <button class="btn" id="convertShow" disabled title="Color every file in the 3D view by what the conversion did with it">Show on graph</button>

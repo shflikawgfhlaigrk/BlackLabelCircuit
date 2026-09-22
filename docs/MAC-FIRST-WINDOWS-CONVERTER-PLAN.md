@@ -1,12 +1,14 @@
-# Circuit Mac-first Windows Converter
+# Circuit Mac-first Cross-platform Converter
 
 Status: implementation plan of record  
 Product: Circuit for macOS  
-Target: source-available macOS applications converted into independently verified Windows applications
+Target: source-available applications converted between Mac and Windows with target-native proof
 
 ## Product promise
 
-Circuit is a Mac-first desktop application; Windows is the conversion target. A developer opens Circuit on a Mac, selects a macOS app project, reviews the discovered targets and conversion policy, and starts one conversion. Circuit writes to a separate workspace; it never edits the source project in place.
+Circuit is a Mac-first desktop application and conversion control plane. It automatically converts source-available applications in both directions: Mac to Windows and Windows to Mac. Windows is the conversion target for the initial corpus acceptance lane; Mac is also a target through admitted online Mac workers. A developer opens Circuit on a Mac, selects a source project, chooses the direction and policy, and starts one conversion. Circuit writes to a separate workspace; it never edits the source project in place.
+
+The converter lives inside Circuit, while target-native execution lives on admitted online workers. Circuit creates the immutable input manifest, minimizes and uploads the source bundle, dispatches the job, resumes checkpoints, fences lost workers, verifies returned hashes and receipts, and exposes the converted artifacts. A local compiler or generated source is an intermediate stage, never the completed product.
 
 The output is not merely translated source. A successful conversion contains:
 
@@ -25,11 +27,11 @@ The output is not merely translated source. A successful conversion contains:
 - Mac-first: intake, policy, progress, comparison, and handoff live in the Circuit macOS app.
 - Source-preserving: the original project is read-only; generated work goes to a new conversion workspace.
 - Compiler-owned truth: generated code counts only after its target compiler accepts it.
-- Windows-owned completion: a complete verdict requires build and launch evidence from an admitted Windows host.
+- Target-owned completion: a complete verdict requires compile, install, launch, parity, artifact-hash, and cleanup evidence from an admitted Windows or Mac host matching the selected target.
 - No silent isolation: code compiled out, stubbed, or omitted is residual work, not converted work.
 - Deterministic first: known framework, path, process, filesystem, crypto, database, and networking mappings run locally without a model.
 - Bounded synthesis second: novel UI and platform code may use a configured builder, but every patch is scoped, diffed, compiled, tested, and reversible.
-- No source exfiltration by default: local conversion is the default; remote builders receive only an explicitly approved, minimized package.
+- Explicit online conversion: local analysis stays air-gapped, while a started conversion uploads only a minimized, hashed source bundle to the configured broker and admitted target worker.
 - One conversion identity: every attempt, artifact, check, retry, and approval binds to one immutable conversion ID and input manifest.
 - Honest packaging: unsigned artifacts are labeled staging-only; Store or Authenticode signing is a separate release gate.
 
@@ -49,6 +51,12 @@ Circuit accepts a folder, `.xcodeproj`, `.xcworkspace`, or Swift package contain
 The intake result is a signed-by-hash `conversion-input.json`. A changed input invalidates downstream proof and creates a new attempt.
 
 ## Conversion architecture
+
+### Online broker and worker fleet
+
+The Mac app owns a durable conversion job with an input-manifest hash, source and target platforms, target profile, fresh operation nonce, lease, fencing token, admitted worker identity, progress checkpoints, returned artifact hashes, compiler/install/launch/parity receipts, and cleanup receipt. Workers have zero capacity until their OS/CPU/RAM/disk/encryption/toolchain inventory and all three admission canaries pass. A lost worker is fenced, its unverified artifacts are invalidated, and the same job is safely requeued under a fresh nonce.
+
+The broker protocol supports immutable job submission, chunked minimized-source upload, target-worker claim, progress, artifact return, cancellation, restart recovery, and lost-host recovery. Production transport is HTTPS. Loopback transport exists only for deterministic protocol tests and does not count as target proof.
 
 ### 1. Mac intake and capability graph
 

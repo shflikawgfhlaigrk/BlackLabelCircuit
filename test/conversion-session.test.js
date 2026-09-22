@@ -92,8 +92,24 @@ test('creates, loads, resumes, and mutates only runtime session state', (t) => {
   });
   assert.equal(running.status, 'running');
   assert.equal(running.source.sha256, session.source.sha256);
+  const remote = updateConversionSession(base, session.id, { remoteJob: { id: 'remote-1', operationNonce: 'nonce', broker: 'broker.example' } });
+  assert.equal(remote.remoteJob.id, 'remote-1');
   assert.throws(() => updateConversionSession(base, session.id, { output: { path: '/tmp/replaced' } }), /immutable/);
   assert.equal(loadConversionSession(base, session.id).output.path, session.output.path);
+});
+
+test('creates an immutable Windows-to-Mac session with a Mac target profile', (t) => {
+  const root = xcodegenProject(t);
+  initGit(root);
+  const base = tempDir(t, 'circuit-win-to-mac-');
+  const target = discoverMacProject(root).targets[0];
+  const session = createConversionSession({
+    root, base, targetId: target.id, profileId: 'swiftui',
+    sourcePlatform: 'windows', targetPlatform: 'macos',
+  });
+  assert.deepEqual(session.direction, { sourcePlatform: 'windows', targetPlatform: 'macos' });
+  assert.equal(session.profile.targetPlatform, 'macos');
+  assert.match(session.output.path, /-macos$/);
 });
 
 test('rejects output inside source and safely ignores corrupt current state', (t) => {
@@ -175,6 +191,7 @@ test('session API creates server-derived state and resumes it after a restart', 
   const setup = await requestJson(`${first.url}/api/conversion/session`);
   assert.equal(setup.status, 200);
   assert.equal(setup.body.session, null);
+  assert.deepEqual(setup.body.broker, { mode: 'online-workers', configured: false, endpoint: null });
   const target = setup.body.intake.targets[0];
   assert.equal(setup.body.outputPreviews[target.id].winui3, previewConversionOutput({
     appName: setup.body.intake.app.name, targetName: target.name, profileId: 'winui3', base,
@@ -193,6 +210,21 @@ test('session API creates server-derived state and resumes it after a restart', 
   assert.equal(resumed.status, 200);
   assert.equal(resumed.body.session.id, id);
   assert.equal(resumed.body.session.status, 'ready');
+});
+
+test('session API accepts the bidirectional Windows-to-Mac contract', async (t) => {
+  const source = xcodegenProject(t);
+  initGit(source);
+  const base = tempDir(t, 'circuit-api-mac-target-');
+  const app = await startServer(t, source, base);
+  const setup = await requestJson(`${app.url}/api/conversion/session`);
+  const target = setup.body.intake.targets[0];
+  const created = await requestJson(`${app.url}/api/conversion/session`, {
+    method: 'POST', body: { targetId: target.id, profileId: 'swiftui', sourcePlatform: 'windows', targetPlatform: 'macos' },
+  });
+  assert.equal(created.status, 201);
+  assert.deepEqual(created.body.session.direction, { sourcePlatform: 'windows', targetPlatform: 'macos' });
+  assert.match(created.body.session.output.path, /-macos$/);
 });
 
 test('conversion intake markup is semantic, announced, and keyboard styled', () => {
