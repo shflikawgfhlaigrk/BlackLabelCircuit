@@ -1,0 +1,139 @@
+{
+  "schema": "circuit.windows-app.v1",
+  "generated": true,
+  "kind": "academy",
+  "verification": {
+    "realWindows": false,
+    "status": "generated-awaiting-real-windows"
+  },
+  "sourceFiles": [
+    "Sources/App.swift",
+    "Sources/Calculators.swift",
+    "Sources/Certificates.swift",
+    "Sources/Cohort.swift",
+    "Sources/ContentDB.swift",
+    "Sources/Holographic.swift",
+    "Sources/Markdown.swift",
+    "Sources/Model.swift",
+    "Sources/Recall.swift",
+    "Sources/Spotlight.swift",
+    "Sources/StatClaim.swift",
+    "Sources/Store.swift",
+    "Sources/StudyHabit.swift",
+    "Sources/StudyWidgetData.swift",
+    "Sources/Theme.swift",
+    "Sources/Trial.swift",
+    "Sources/Tutor.swift",
+    "Sources/Updater.swift",
+    "Sources/UpdaterUI.swift",
+    "Sources/Views.swift",
+    "Sources/VoiceNarrator.swift",
+    "Sources/iOSLayout.swift",
+    "marketing/appstore-screenshots-20260720/Shots.swift",
+    "widget/AcademyStudyWidget.swift"
+  ],
+  "payload": [
+    {
+      "path": "Payload/index.html",
+      "bytes": 9494,
+      "sha256": "1c9ca5188d940f773a9d62fa71c446fff4fe30cbe2ee1e8f51038f109b9d6663"
+    },
+    {
+      "path": "Payload/academy-reader.json",
+      "bytes": 2517649,
+      "sha256": "80851bb9459a28d1c4e933f2c173cea8d01979f9aa85c325ebbf3495ce80b2e6"
+    },
+    {
+      "path": "Payload/BlackLabelAcademy.sqlite",
+      "bytes": 2908160,
+      "sha256": "900e7d98232fbc9a45b646b7c302accb40363fd92a9d5b721ea26e707397051c"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "BlackLabelAcademy.csproj",
+      "sha256": "eab6e5a15ea3f65722256bd4c177cf74495455ff5b4be58525f7ac597dd63383"
+    },
+    {
+      "path": "App.xaml",
+      "sha256": "40f531bc383fbcbd04341c47aeb46e46b194d53b743b9afd6d2d329aa906690c"
+    },
+    {
+      "path": "App.xaml.cs",
+      "sha256": "9a237bdb711af8ca36d42cfd816c124ffb9b145bec8cd738136ecdc2d618f272"
+    },
+    {
+      "path": "MainWindow.xaml",
+      "sha256": "f602f04808602301b946917fd8c162164463aed17db908758dd73e4eff8fc2b2"
+    },
+    {
+      "path": "MainWindow.xaml.cs",
+      "sha256": "96f149a268c23779b37e9fe3b36a2cda42f38b22a13808b5bf61478d7cdf6512"
+    },
+    {
+      "path": "app.manifest",
+      "sha256": "6aa76772e40b08c153a9c0d527c3ab33582da1cd03624ff8b939490006c068d7"
+    },
+    {
+      "path": "acceptance.ps1",
+      "sha256": "92293c96fecb3ea8abae6af60ff286e7285967fd8bab0921177a7025435c8403"
+    }
+  ],
+  "featureMatrix": [
+    {
+      "feature": "payload",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "curriculum",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "search",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "pillars",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "lesson_body",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "checkpoints",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "sourced_metrics",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "offer",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "offline",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    }
+  ],
+  "requiredResiduals": 0
+}
