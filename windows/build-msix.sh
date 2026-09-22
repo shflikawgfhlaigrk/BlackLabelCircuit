@@ -66,7 +66,7 @@ fi
 # The zero-dependency node payload + sidecar (same app/ that build-win.sh assembles).
 # Validation proves package layout and identity only. It must remain dependency-free and
 # read-only, so a clean checker checkout never needs node_modules or rewrites public/vendor.
-if [ "$MODE" != "--validate" ]; then
+if [ "$MODE" != "--validate" ] && [ "$MODE" != "--pack-layout" ]; then
   node "$REPO/build-vendor.mjs"
 fi
 mkdir -p "$LAYOUT/app"
