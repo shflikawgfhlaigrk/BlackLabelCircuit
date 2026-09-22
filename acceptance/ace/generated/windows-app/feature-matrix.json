@@ -1,0 +1,78 @@
+{
+  "schema": "circuit.feature-parity.v1",
+  "requiredResiduals": 0,
+  "features": [
+    {
+      "feature": "conversation",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "reviewed_app_tasks",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "meeting_notes",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "private_mode",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "inspectable_receipts",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "partner",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "scheduled_answers",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "chart_analysis_signals_only",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "customer_owned_providers",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "local_persistence",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "privacy_boundary",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    },
+    {
+      "feature": "ships_empty",
+      "macSource": true,
+      "windowsGenerated": true,
+      "required": true
+    }
+  ]
+}

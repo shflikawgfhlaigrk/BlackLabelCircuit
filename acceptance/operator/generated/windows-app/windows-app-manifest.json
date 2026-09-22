@@ -495,8 +495,8 @@
     },
     {
       "path": "acceptance.ps1",
-      "bytes": 3089,
-      "sha256": "f6bded43ceaf9b0822fc9e1f1c45ba07a2dc8a8b0c08294aa9e073bf06a69a6e"
+      "bytes": 3084,
+      "sha256": "612b03155ae0f27cb9dde9948f343d4d4fa24ef7be2e3977adc9f5e6b74a6094"
     }
   ],
   "featureMatrix": [

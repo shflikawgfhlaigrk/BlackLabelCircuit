@@ -145,3 +145,11 @@ test('Operator source and Python Engine generate a native ships-empty Windows wo
   for (const rel of ['BlackLabelOperator.csproj', 'MainWindow.xaml', 'acceptance.ps1', 'Engine/blacklabel_operator/store.py', 'Engine/blacklabel_operator/upgrade_lock.py']) assert.ok(fs.existsSync(path.join(out, 'windows-app', rel)), rel);
   assert.match(fs.readFileSync(path.join(out, 'windows-app', 'Engine/blacklabel_operator/upgrade_lock.py'), 'utf8'), /msvcrt/);
 });
+
+test('Ace Build 87 source generates a native privacy-gated Windows workspace', () => {
+  const sourceRoot=fs.mkdtempSync(path.join(os.tmpdir(),'circuit-ace-source-'));const out=fs.mkdtempSync(path.join(os.tmpdir(),'circuit-ace-out-'));
+  fs.mkdirSync(path.join(sourceRoot,'leanring-buddy'),{recursive:true});fs.writeFileSync(path.join(sourceRoot,'MODERNIZATION-87.md'),'Build 87');fs.writeFileSync(path.join(sourceRoot,'leanring-buddy','MeetingNotetaker.swift'),'struct MeetingNotetaker {}');
+  const result=compileWindowsApplication({files:[{file:'leanring-buddy/main.swift',source:'struct leanring_buddyApp { let manager=CompanionManager(); let privacy=StealthMode() }'}],sourceRoot,outDir:out});
+  assert.equal(result.generated,true);assert.equal(result.kind,'ace');assert.equal(result.requiredResiduals,0);assert.equal(result.featureMatrix.length,12);assert.equal(result.sourceIdentity.build,87);
+  for(const rel of ['Ace.csproj','AceCore.cs','MainWindow.xaml','acceptance.ps1','feature-matrix.json'])assert.ok(fs.existsSync(path.join(out,'windows-app',rel)),rel);
+});
