@@ -63,6 +63,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: live-wallpaper-windows-acceptance-${{ github.run_id }}
-          path: acceptance/live-wallpaper/generated/windows-app/artifacts/
+          path: |
+            acceptance/live-wallpaper/generated/windows-app/artifacts/*.json
+            acceptance/live-wallpaper/generated/windows-app/artifacts/*.txt
+            acceptance/live-wallpaper/generated/windows-app/artifacts/*.zip
           if-no-files-found: error
           retention-days: 14
