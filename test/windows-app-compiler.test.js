@@ -68,3 +68,26 @@ test('Academy source and provenance-gated reader generate a complete offline Win
   assert.equal(result.featureMatrix.length, 9);
   for (const rel of ['BlackLabelAcademy.csproj', 'MainWindow.xaml', 'App.xaml.cs', 'acceptance.ps1', 'Payload/academy-reader.json']) assert.ok(fs.existsSync(path.join(out, 'windows-app', rel)), rel);
 });
+
+test('Trading source and its cross-platform runtime generate a ships-empty Windows package workspace', () => {
+  const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-trading-source-'));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-trading-out-'));
+  const files = {
+    'windows/supervise.py': 'print("plan")',
+    'windows/launch-trading.cmd': '@python supervise.py',
+    'windows/python-embed.sha256': `${'a'.repeat(64)}\n`,
+    'windows/msix/launcher/Launcher.cs': 'internal static class Launcher { static int Main(string[] args) => 0; }',
+  };
+  for (const name of ['bltd_alerts.py', 'bltd_analytics.py', 'bltd_api.py', 'bltd_browser.py', 'bltd_capture.py', 'bltd_feeds.py', 'bltd_optimizer.py', 'bltd_optimizer_cli.py', 'bltd_parsers.py', 'bltd_paths.py', 'bltd_rithmic.py', 'bltd_rprotocol.py', 'bltd_store.py', 'bltd_topstep_bridge.py', 'bltd_tradovate.py', 'bltd_projectx.py']) files[`backend/${name}`] = '# portable runtime\n';
+  for (const [rel, body] of Object.entries(files)) {
+    const target = path.join(sourceRoot, rel);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, body);
+  }
+  const result = compileWindowsApplication({ files: [{ file: 'Sources/main.swift', source: 'struct BlackLabelTrading { let signals = SignalCore() }' }], sourceRoot, outDir: out });
+  assert.equal(result.generated, true);
+  assert.equal(result.kind, 'trading');
+  assert.equal(result.requiredResiduals, 0);
+  assert.equal(result.featureMatrix.length, 10);
+  for (const rel of ['BlackLabelTrading.csproj', 'acceptance.ps1', 'windows/supervise.py', 'windows/msix/launcher/Launcher.cs', 'backend/bltd_api.py']) assert.ok(fs.existsSync(path.join(out, 'windows-app', rel)), rel);
+});

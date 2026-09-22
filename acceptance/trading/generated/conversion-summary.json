@@ -1,0 +1,237 @@
+{
+  "source": {
+    "sha256": "f0b089879909166d392b47daf5186159da87350f0c84dd0cc352570b7bd1ac0c",
+    "files": 66,
+    "git": {
+      "head": "9f5ccf54990f43db64033a022a8539a9fb11c8e8",
+      "uncommitted": 30
+    }
+  },
+  "windowsApp": {
+    "schema": "circuit.windows-app.v1",
+    "generated": true,
+    "kind": "trading",
+    "verification": {
+      "realWindows": false,
+      "status": "generated-awaiting-real-windows"
+    },
+    "sourceFiles": [
+      "Sources/AlertsEngine.swift",
+      "Sources/Analytics.swift",
+      "Sources/Auth.swift",
+      "Sources/Backtest.swift",
+      "Sources/BacktestDepth.swift",
+      "Sources/ChartRender.swift",
+      "Sources/ChartScreen.swift",
+      "Sources/Charting.swift",
+      "Sources/EngineFireMarkers.swift",
+      "Sources/FeedClient.swift",
+      "Sources/FeedTypes.swift",
+      "Sources/Feeds.swift",
+      "Sources/HoloTheme.swift",
+      "Sources/Holographic.swift",
+      "Sources/JournalImport.swift",
+      "Sources/LiveChart.swift",
+      "Sources/Model.swift",
+      "Sources/PaperTrade.swift",
+      "Sources/Patterns.swift",
+      "Sources/Replay.swift",
+      "Sources/RuleProfile.swift",
+      "Sources/Screener.swift",
+      "Sources/Screens.swift",
+      "Sources/Screens2.swift",
+      "Sources/Screens3.swift",
+      "Sources/SignalCore.swift",
+      "Sources/StoreDisk.swift",
+      "Sources/StrategyBuilder.swift",
+      "Sources/Theme.swift",
+      "Sources/ThemeStudio.swift",
+      "Sources/TradeMath.swift",
+      "Sources/TradingKeychain.swift",
+      "Sources/TradingSessionStore.swift",
+      "Sources/Updater.swift",
+      "Sources/UpdaterUI.swift",
+      "Sources/WatchlistModel.swift",
+      "Sources/main.swift",
+      "archive/execution/Execution.swift",
+      "render-proof/main.swift"
+    ],
+    "payload": [
+      {
+        "path": "windows/supervise.py",
+        "bytes": 20918,
+        "sha256": "edcff4ecdd1fe89d799c3bdfc1abac45806f6a69c79d6dcbd91de0b064d40299"
+      },
+      {
+        "path": "windows/launch-trading.cmd",
+        "bytes": 667,
+        "sha256": "bd60442ca267da1522f8e58ebbf2e0ceebe0afc432f53fe1aa2dd677318eb852"
+      },
+      {
+        "path": "windows/python-embed.sha256",
+        "bytes": 894,
+        "sha256": "a83c7c9396dd4ddbd2971b45085bfb20c09c1c7b23e66575ce16e513f6e81c25"
+      },
+      {
+        "path": "windows/msix/launcher/Launcher.cs",
+        "bytes": 4473,
+        "sha256": "5e644542ad73d3c71d9c34229ea5de811ad5f2c4a4f370c38b954ab9441eb5e0"
+      },
+      {
+        "path": "backend/bltd_alerts.py",
+        "bytes": 18809,
+        "sha256": "9769c9ce00cbf45c3ce1a27f76493d1debedc4534dacad65c7621ea3533a24e0"
+      },
+      {
+        "path": "backend/bltd_analytics.py",
+        "bytes": 52115,
+        "sha256": "5fa5ecf60022e9d2ed6004d601c24e0d9f9897c23a0be2b8640bf97ba722e33d"
+      },
+      {
+        "path": "backend/bltd_api.py",
+        "bytes": 44175,
+        "sha256": "8ec295247bcf153b0b46e2c3fef620faa1a60441372495d4b762b714a64c9304"
+      },
+      {
+        "path": "backend/bltd_browser.py",
+        "bytes": 6459,
+        "sha256": "971f3aaa2e7311cf55619c79dcad74cd52104bcc81c0854f1d3fff9b62fac5fc"
+      },
+      {
+        "path": "backend/bltd_capture.py",
+        "bytes": 58575,
+        "sha256": "fb4e0089b4e119957a0e46930a435745453769bcb9f54da4d1008d5608b24a6d"
+      },
+      {
+        "path": "backend/bltd_feeds.py",
+        "bytes": 27023,
+        "sha256": "1192ec8434dbc62d970a3236ee4f5467cdf17260777b77695f5e65a55dabafc2"
+      },
+      {
+        "path": "backend/bltd_optimizer.py",
+        "bytes": 24755,
+        "sha256": "8c3f84a52d329c31b4d02166ef77a0c27cacd94127f351d1bb86bdeaa1d093dd"
+      },
+      {
+        "path": "backend/bltd_optimizer_cli.py",
+        "bytes": 33842,
+        "sha256": "eb1addc85b469dcf68f5bcf1af356e56ec8d3fcf207d5054ad8bc68e6ffca884"
+      },
+      {
+        "path": "backend/bltd_parsers.py",
+        "bytes": 14677,
+        "sha256": "b6ae305e22ce25345b2cbe4b07bc91a24bbffe8da2f679489889e878b7ac6813"
+      },
+      {
+        "path": "backend/bltd_paths.py",
+        "bytes": 2987,
+        "sha256": "dc6f43955c8364c901209249d3709881d1e5871d1a93f5c87b99b6a0aa7d60d1"
+      },
+      {
+        "path": "backend/bltd_rithmic.py",
+        "bytes": 9461,
+        "sha256": "51534a507faa0178c3afab2d5c4fb6ae45260d4c5f86930a3ede65effc965c56"
+      },
+      {
+        "path": "backend/bltd_rprotocol.py",
+        "bytes": 10967,
+        "sha256": "18b7666c6a610ec7f6ad1e4e394b1c7317aa4f00971febfdbda25eb1babc6517"
+      },
+      {
+        "path": "backend/bltd_store.py",
+        "bytes": 117175,
+        "sha256": "9c09f0a96c9e0e5e41e227ec57be14f0563d76ff65342bd4942b5423c4df1178"
+      },
+      {
+        "path": "backend/bltd_topstep_bridge.py",
+        "bytes": 4863,
+        "sha256": "19c95b58ceda4aa50a17085a23f98c8b881f90737980b2f4376f39084f0467c7"
+      },
+      {
+        "path": "backend/bltd_tradovate.py",
+        "bytes": 16021,
+        "sha256": "cf8db722fd924032e1cbff2f7cd773282ad1c5a473380b74039f61a83df4bc15"
+      },
+      {
+        "path": "backend/bltd_projectx.py",
+        "bytes": 14223,
+        "sha256": "929c3ad9ab794a3c5dd57d591fd493f4fd6cdf18dbfe3eb437e8fd621dc0fa5e"
+      }
+    ],
+    "artifacts": [
+      {
+        "path": "BlackLabelTrading.csproj",
+        "bytes": 587,
+        "sha256": "32f23ca4f6fcafae48c001010956d6e476f19537c41c3da98b73c8a37404e062"
+      },
+      {
+        "path": "acceptance.ps1",
+        "bytes": 3479,
+        "sha256": "786d5bd523740f74ccc76e7021a89ebf3624dcf5f8851b28b3188bf77dfb23fa"
+      }
+    ],
+    "featureMatrix": [
+      {
+        "feature": "signals_only",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "ships_empty",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "es_scope",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "buyer_feed_connect",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "signal_capture",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "edge_gate",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "backtest_optimizer",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "alerts",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "local_persistence",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      },
+      {
+        "feature": "supervised_lifecycle",
+        "macSource": true,
+        "windowsGenerated": true,
+        "required": true
+      }
+    ],
+    "requiredResiduals": 0
+  }
+}
