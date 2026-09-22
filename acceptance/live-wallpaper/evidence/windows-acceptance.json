@@ -1,8 +1,8 @@
 {
   "schema": "circuit.windows-acceptance.v1",
-  "runId": 35673249430,
-  "runUrl": "https://github.com/shflikawgfhlaigrk/BlackLabelCircuit/actions/runs/35673249430",
-  "headSha": "eebd28d",
+  "runId": 35673927266,
+  "runUrl": "https://github.com/shflikawgfhlaigrk/BlackLabelCircuit/actions/runs/35673927266",
+  "headSha": "971fff1d283882faea78f44e9e398535de5f980e",
   "os": "Microsoft Windows NT 10.0.20348.0",
   "architecture": "X64",
   "dotnet": "8.0.425",
@@ -23,12 +23,11 @@
   },
   "package": {
     "path": "evidence/BlackLabelLiveWallpaper-win-x64.zip",
-    "bytes": 91115259,
-    "sha256": "eba21811b7b3ddeef12e2146fca8a28ccb378a3fd851b455ad3162e195407ae3"
+    "bytes": 91105329,
+    "sha256": "15484eb2fb8be8e8722acf85d61757c815b4e67982fa8e0d00b08548b6145866"
   },
   "uninstalled": true,
   "requiredResiduals": 0,
   "workerCanaries": 3,
   "workerCleanup": true
 }
-

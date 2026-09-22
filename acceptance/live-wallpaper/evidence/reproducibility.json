@@ -2,12 +2,22 @@
   "schema": "circuit.reproducibility.v1",
   "sourceSha256First": "c3ad978d0b11fda5ab9ef035552435cebe8e4c8d2e0c637bb8acb771008ecb63",
   "sourceSha256Second": "c3ad978d0b11fda5ab9ef035552435cebe8e4c8d2e0c637bb8acb771008ecb63",
-  "workspaceSha256First": "27144eda2e5c4d48fcc943d6129c3e6e96b148dd575e1edffc73a4d7488968ef",
-  "workspaceSha256Second": "27144eda2e5c4d48fcc943d6129c3e6e96b148dd575e1edffc73a4d7488968ef",
+  "workspaceSha256First": "67956496b3d770f1dbceb4698d2637e1be65072b19e591a27c14fdad6915b368",
+  "workspaceSha256Second": "67956496b3d770f1dbceb4698d2637e1be65072b19e591a27c14fdad6915b368",
   "byteIdentical": true,
   "requiredResidualsFirst": 0,
   "requiredResidualsSecond": 0,
   "secondOutputWasEmpty": true,
-  "secondWindowsRunRequired": true
+  "windowsRunFirst": 35673784517,
+  "windowsRunSecond": 35673927266,
+  "windowsAcceptanceFirst": true,
+  "windowsAcceptanceSecond": true,
+  "executableBytesFirst": 177318791,
+  "executableBytesSecond": 177318791,
+  "runtimeDependencyHashesIdentical": true,
+  "functionalReceiptsIdentical": true,
+  "packageByteIdentical": false,
+  "packageByteDifference": "self-contained .NET bundle and ZIP metadata; source workspace, dependency payloads, size, and acceptance behavior are equivalent",
+  "semanticEquivalent": true,
+  "secondWindowsRunRequired": false
 }
-
