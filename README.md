@@ -161,6 +161,10 @@ your source code never leaves the machine:
   `public/vendor/`; licensing fails *closed* to demo mode with no network required.
 - **In-app indicator.** The top bar shows an always-on `⏚ offline — no code leaves
   this machine` chip so an auditor can confirm the posture at a glance.
+- **One scoped exception: the macOS app's update check.** The desktop wrapper (not
+  the server) checks `blacklabelbots.com` for app updates on launch/daily — version
+  metadata only, never source. Turn it off via **Circuit → Automatically Check for
+  Updates**; running `node server.js` directly involves no updater at all.
 
 See **[AIRGAP.md](AIRGAP.md)** for offline install steps and the full attestable
 no-network statement.
@@ -170,3 +174,11 @@ no-network statement.
 ```sh
 npm test   # unit + integration tests over a fixture repo with known defects
 ```
+
+### Local access and sign-in
+
+Private repository APIs require an authenticated per-launch session. Circuit prints a one-use sign-in URL (valid for 60 seconds); the macOS and Windows launchers open that exact URL. The browser clears its fragment immediately and exchanges it for an HttpOnly, SameSite=Strict cookie that expires after one hour. Sign out revokes the session and closes its live event stream. To sign in again, open Circuit and select the repository again (command-line users restart their server), then open or paste the fresh link. Previously opened plain localhost URLs do not grant access.
+
+Native API integrations may supply a fresh unpredictable `CIRCUIT_OWNER_KEY` (32–256 URL-safe characters) in the server environment and send it as a Bearer header. Never put that key in a URL. JSON mutations also require `X-Circuit-Request: 1`. Only exact localhost/127.0.0.1 authority and port are accepted; browser mutations require the same Origin. Headless `--check`, SARIF and stdio `--lsp` remain local command-line operations without HTTP authentication.
+
+The startup capability is short-lived and should be kept private. The native macOS launcher redacts it from its persistent log; the legacy shell launcher uses a private temporary log. The HTTP shell never supplies a capability. The server binds only loopback and adds no outbound calls.

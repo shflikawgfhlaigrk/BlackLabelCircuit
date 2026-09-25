@@ -14,6 +14,7 @@ import { LANG_BY_EXT } from './lib/walk.js';
 import { resolveLicense } from './lib/license.js';
 import { runCheck } from './lib/report.js';
 import { buildHistory, headSha } from './lib/history.js';
+import { createAccess, requestBoundary, readMutation } from './lib/access.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, 'public');
@@ -80,6 +81,7 @@ if (checkMode) {
 }
 
 const realRoot = fs.realpathSync(root);
+const access = createAccess({ ownerKey: process.env.CIRCUIT_OWNER_KEY });
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -90,7 +92,7 @@ const MIME = {
 
 let graph = null;
 let lastError = null;
-const sseClients = new Set();
+const sseClients = new Map();
 // Grade-over-history "refactor movie" (CI-20). Building it materializes N commits
 // into throwaway worktrees and grades each — expensive, so compute lazily on the
 // first /api/history hit and cache it keyed on HEAD (invalidated when new commits
@@ -118,14 +120,20 @@ function analyze(reason = 'startup') {
 
 function broadcast(event, data) {
   const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
-  for (const res of sseClients) res.write(payload);
+  for (const [res, principal] of sseClients) {
+    if (!access.valid(principal)) { res.end(); sseClients.delete(res); }
+    else res.write(payload);
+  }
 }
+const sessionTimer = setInterval(() => broadcast('heartbeat', {}), 5000);
+sessionTimer.unref();
 
 // Watch for changes (macOS/Windows support recursive fs.watch), debounce, re-analyze.
 const WATCH_IGNORE = /(^|\/)(\.[^/]+|node_modules|dist|build|DerivedData|__pycache__|venv|coverage|Pods)(\/|$)/;
 let watchTimer = null;
+let watcher;
 try {
-  fs.watch(root, { recursive: true }, (_evt, filename) => {
+  watcher = fs.watch(root, { recursive: true }, (_evt, filename) => {
     if (!filename || WATCH_IGNORE.test(filename)) return;
     if (!(path.extname(filename).toLowerCase() in LANG_BY_EXT)) return;
     clearTimeout(watchTimer);
@@ -137,22 +145,57 @@ try {
 
 function send(res, status, body, type = 'application/json') {
   const buf = typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body);
-  res.writeHead(status, { 'Content-Type': type, 'Cache-Control': 'no-cache' });
+  res.writeHead(status, { 'Content-Type': type, 'Cache-Control': 'no-store' });
   res.end(buf);
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'none'");
   try {
-    handle(req, res);
+    await handle(req, res);
   } catch (e) {
-    console.error('[circuit] request error:', e.message);
-    if (!res.headersSent) send(res, 400, { error: 'bad request' });
+    // Never echo/log submitted credentials or private request data.
+    if (!res.headersSent) send(res, e.status ?? 400, { error: 'bad request' });
     else res.end();
   }
 });
 
-function handle(req, res) {
-  const url = new URL(req.url, `http://localhost:${port}`);
+async function handle(req, res) {
+  if (!requestBoundary(req, port)) return send(res, 403, { error: 'untrusted request origin' });
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  if (url.origin !== `http://${req.headers.host}`) return send(res, 403, { error: 'untrusted authority' });
+
+  if (url.pathname.startsWith('/api/')) {
+    if (url.pathname === '/api/session' && req.method === 'POST') {
+      if (req.headers.origin !== `http://${req.headers.host}`) return send(res, 403, { error: 'same-origin sign-in required' });
+      const body = await readMutation(req);
+      const cookie = access.exchange(body.handoff);
+      if (!cookie) return send(res, 401, { error: 'Open Circuit again for a fresh sign-in link' });
+      res.setHeader('Set-Cookie', cookie);
+      return send(res, 200, { ok: true });
+    }
+    const principal = access.principal(req);
+    if (!principal) return send(res, 401, { error: 'Sign in to Circuit' });
+    req.circuitPrincipal = principal;
+    if (req.method !== 'GET') {
+      if (req.method !== 'POST' || !['/api/rescan', '/api/logout'].includes(url.pathname)) return send(res, 405, { error: 'method not allowed' });
+      if (principal.kind === 'session' && req.headers.origin !== `http://${req.headers.host}`) return send(res, 403, { error: 'same-origin request required' });
+      await readMutation(req);
+      // Recheck after reading the body: logout/expiry may have happened while waiting.
+      if (!access.valid(principal)) return send(res, 401, { error: 'Sign in to Circuit' });
+    }
+    if (url.pathname === '/api/session') return send(res, 200, { authenticated: true });
+    if (url.pathname === '/api/logout' && req.method === 'POST') {
+      access.logout(principal);
+      res.setHeader('Set-Cookie', access.clearCookie);
+      broadcast('heartbeat', {});
+      return send(res, 200, { ok: true });
+    }
+    if (url.pathname === '/api/rescan' && req.method !== 'POST') return send(res, 405, { error: 'use POST' });
+  } else if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, { error: 'method not allowed' });
 
   if (url.pathname === '/api/license') {
     // Fail-closed: resolves to demo mode unless a valid license key is set.
@@ -205,7 +248,7 @@ function handle(req, res) {
       'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive',
     });
     res.write('event: hello\ndata: {}\n\n');
-    sseClients.add(res);
+    sseClients.set(res, req.circuitPrincipal);
     req.on('close', () => sseClients.delete(res));
     return;
   }
@@ -230,12 +273,23 @@ server.on('error', (e) => {
     process.exit(1);
   }
 });
+// Private parent IPC supports graceful lifecycle management of isolated children;
+// there is deliberately no HTTP shutdown endpoint.
+if (process.send) process.on('message', (message) => {
+  if (message?.type !== 'circuit:shutdown') return;
+  watcher?.close();
+  clearTimeout(watchTimer);
+  clearInterval(sessionTimer);
+  for (const res of sseClients.keys()) res.end();
+  server.closeAllConnections();
+  server.close(() => process.exit(0));
+});
 // Air-gap / offline-mode posture (CI-18): bind to loopback only. Circuit makes no
 // outbound network calls (attestable via the CI-15 source scan / test/airgap.test.js)
 // — source code never leaves the machine. Safe for regulated, air-gapped installs.
 server.listen(port, '127.0.0.1', () => {
   console.log(`[circuit] grading ${root}`);
-  console.log(`[circuit] http://localhost:${port}`);
+  console.log(`[circuit] ${access.launchURL(port)}`);
   console.log(`[circuit] offline: loopback-only, no outbound network (air-gap ready — see AIRGAP.md)`);
   // Defer the first scan to the next tick so the HTTP server can serve the UI
   // shell (and the first /api/graph poll → "analyzing…") immediately. On a large

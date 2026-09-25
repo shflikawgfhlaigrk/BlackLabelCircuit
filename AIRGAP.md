@@ -7,11 +7,16 @@ verify for themselves.
 
 ## Attestable no-network statement
 
-> **Circuit makes zero outbound network connections. Your source code is analyzed
-> entirely on the local machine and is never transmitted anywhere.**
+> **The Circuit analyzer makes zero outbound network connections. Your source code is
+> analyzed entirely on the local machine and is never transmitted anywhere.**
 
 This is not a marketing promise — it is a property you can prove from the source, in
-under a minute, before you trust the tool with a single file:
+under a minute, before you trust the tool with a single file. It is scoped to the
+analyzer/server (`server.js` + `lib/` — everything that ever touches your source);
+the one component outside that scope is the macOS app wrapper's update check, which
+never touches source and has an off switch — see
+[the macOS app's update check](#the-macos-apps-update-check-and-how-to-turn-it-off)
+below.
 
 1. **Source scan (the CI-15 proof).** Grep the entire backend for any network-egress
    API. The result is empty:
@@ -55,6 +60,27 @@ under a minute, before you trust the tool with a single file:
 5. **Fail-closed licensing.** License resolution never phones home; with no valid key
    it fails *closed* to a local demo mode. Nothing about running Circuit requires a
    network.
+
+## The macOS app's update check (and how to turn it off)
+
+The proofs above cover the analyzer/server. The Developer-ID **macOS app wrapper**
+additionally ships an auto-updater (`macos/CircuitUpdater.swift`) that GETs
+`https://blacklabelbots.com/api/version/circuit` on launch and then daily — public
+version metadata only. The request carries the app's build number in its User-Agent
+and never any source code, file path, or identity.
+
+For a genuinely zero-egress install:
+
+- **In the app:** uncheck **Circuit → Automatically Check for Updates**. The manual
+  "Check for Updates…" menu item never fires on its own. Or pre-seed the preference
+  before first launch:
+
+  ```sh
+  defaults write com.blacklabel.circuit circuit.updateAutoCheckDisabled -bool YES
+  ```
+
+- **Or skip the app wrapper entirely:** the air-gapped install below runs
+  `server.js` under your own Node runtime and contains no updater code at all.
 
 ## Offline install
 
@@ -115,8 +141,9 @@ no online mode to switch out of.
 
 | Property | How to verify | Result |
 |---|---|---|
-| No outbound network calls | source grep (step 1) / `npm test` (step 2) | none |
+| No outbound network calls (analyzer/server) | source grep (step 1) / `npm test` (step 2) | none |
 | Bound to localhost only | `lsof` (step 3) | `127.0.0.1` |
 | No third-party runtime deps | import grep (step 4) | zero |
 | No license phone-home | fail-closed demo mode | offline |
 | No install-time downloads | vendored `public/vendor/` bundle | committed |
+| macOS app update check (metadata only) | Circuit menu / `defaults` (section above) | off switch |

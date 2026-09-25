@@ -130,6 +130,14 @@ enum Updater {
     /// UserDefaults override for the manifest URL (QA / local testing). Empty → the live default.
     static let manifestOverrideKey = "circuit.updateManifestURL"
     static let lastCheckKey = "circuit.updateLastCheckEpoch"
+    /// Off switch for the silent launch/daily check — air-gapped installs set this so the
+    /// app is genuinely zero-egress ("Check for Updates…" stays available, manual-only).
+    /// Stored inverted so the default (key absent) is enabled.
+    static let autoCheckDisabledKey = "circuit.updateAutoCheckDisabled"
+    static var autoCheckEnabled: Bool {
+        get { !UserDefaults.standard.bool(forKey: autoCheckDisabledKey) }
+        set { UserDefaults.standard.set(!newValue, forKey: autoCheckDisabledKey) }
+    }
 
     static var manifestURL: URL {
         let raw = (UserDefaults.standard.string(forKey: manifestOverrideKey) ?? "")
@@ -247,6 +255,7 @@ enum Updater {
     /// Downloads the update zip, verifies sha256 + signature, unzips, and returns the staged .app URL.
     /// Throws (installing nothing) on any integrity/signature failure.
     static func stage(_ m: UpdateManifest, using transport: UpdaterTransport = defaultTransport) async throws -> URL {
+        guard m.product == "circuit" else { throw UpdaterError.install("update product mismatch") }
         guard let raw = m.downloadURL?.trimmingCharacters(in: .whitespacesAndNewlines),
               let url = URL(string: raw), url.scheme != nil else { throw UpdaterError.badURL }
         let (data, status) = try await transport.get(url)
@@ -257,7 +266,7 @@ enum Updater {
         // Write + unzip into a private temp dir.
         let work = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
             .appendingPathComponent("circuit-update-\(UUID().uuidString)", isDirectory: true)
-        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
         let zipURL = work.appendingPathComponent("update.zip")
         try data.write(to: zipURL)
         let unzipDir = work.appendingPathComponent("unzipped", isDirectory: true)
@@ -265,9 +274,26 @@ enum Updater {
         try runDitto(extract: zipURL, to: unzipDir)
         // Find the .app.
         let contents = (try? FileManager.default.contentsOfDirectory(at: unzipDir, includingPropertiesForKeys: nil)) ?? []
-        guard let appURL = contents.first(where: { $0.pathExtension == "app" }) else { throw UpdaterError.noAppInZip }
+        let applications = contents.filter { $0.pathExtension == "app" }
+        guard applications.count == 1, let appURL = applications.first else { throw UpdaterError.noAppInZip }
         try verifySignature(appURL: appURL)
-        return appURL
+        return try prepareVerifiedBundle(at: appURL, manifest: m, work: work)
+    }
+
+    // Called only after signature verification; injectable identity enables
+    // isolated positive and negative staging tests without an installed app.
+    static func prepareVerifiedBundle(at appURL: URL, manifest m: UpdateManifest, work: URL,
+                                      expectedBundleIdentifier: String? = Bundle.main.bundleIdentifier) throws -> URL {
+        guard let expectedID = expectedBundleIdentifier,
+              let candidate = Bundle(url: appURL), candidate.bundleIdentifier == expectedID,
+              let candidateBuild = candidate.object(forInfoDictionaryKey: "CFBundleVersion") as? String,
+              Int(candidateBuild) == m.latestBuild else {
+            throw UpdaterError.install("update bundle identity or build mismatch")
+        }
+        // Remove the archive-controlled filename from all subsequent handoff paths.
+        let verifiedApp = work.appendingPathComponent("VerifiedUpdate.app", isDirectory: true)
+        try FileManager.default.moveItem(at: appURL, to: verifiedApp)
+        return verifiedApp
     }
 
     private static func runDitto(extract zip: URL, to dest: URL) throws {
@@ -313,9 +339,11 @@ enum UpdaterUI {
         }
     }
 
-    /// Silent background check (on launch + daily). Only surfaces UI if an update is actually available.
+    /// Silent background check (on launch + daily). Only surfaces UI if an update is actually
+    /// available, and only runs at all while the auto-check preference is on — the off state
+    /// is the zero-egress posture air-gapped installs rely on (see AIRGAP.md).
     static func checkInBackgroundIfDue() {
-        guard Updater.dueForBackgroundCheck() else { return }
+        guard Updater.autoCheckEnabled, Updater.dueForBackgroundCheck() else { return }
         Task {
             if let m = try? await Updater.checkForUpdate() { presentPrompt(m) }
         }
@@ -344,25 +372,69 @@ enum UpdaterUI {
 
     // MARK: Install flow
 
-    private static func runInstall(_ m: UpdateManifest) {
-        // Lightweight progress alert (modeless) while we download + verify.
-        let progress = NSAlert()
-        progress.messageText = "Updating…"
-        progress.informativeText = "Downloading and verifying the new version. The app will relaunch."
-        let win = progress.window
-        win.makeKeyAndOrderFront(nil)
+    /// Progress window for an in-flight install: live indeterminate bar plus a Cancel
+    /// button wired to the download Task. (A modeless NSAlert would ship an implicit
+    /// OK that does nothing and leave a slow download unstoppable.)
+    /// Explicitly @MainActor — nested types do not inherit the enclosing isolation.
+    @MainActor private final class InstallProgress: NSObject {
+        let window: NSWindow
+        var task: Task<Void, Never>?
 
-        Task {
+        init(displayName: String) {
+            let content = NSView(frame: NSRect(x: 0, y: 0, width: 420, height: 118))
+            let text = NSTextField(labelWithString: "Downloading and verifying the new version.\nThe app will relaunch when it finishes.")
+            text.font = .systemFont(ofSize: 12)
+            text.frame = NSRect(x: 20, y: 66, width: 380, height: 36)
+            content.addSubview(text)
+            let bar = NSProgressIndicator(frame: NSRect(x: 20, y: 44, width: 380, height: 16))
+            bar.style = .bar
+            bar.isIndeterminate = true
+            content.addSubview(bar)
+            window = NSWindow(contentRect: content.frame, styleMask: [.titled], backing: .buffered, defer: false)
+            window.title = "Updating \(displayName)"
+            window.isReleasedWhenClosed = false
+            window.contentView = content
+            super.init()
+            let cancel = NSButton(title: "Cancel", target: self, action: #selector(cancelInstall))
+            cancel.bezelStyle = .rounded
+            cancel.frame = NSRect(x: 316, y: 8, width: 88, height: 30)
+            content.addSubview(cancel)
+            bar.startAnimation(nil)
+            window.center()
+        }
+
+        @objc private func cancelInstall() { task?.cancel() }
+
+        func show() { window.makeKeyAndOrderFront(nil) }
+        func close() { window.orderOut(nil); task = nil }
+    }
+
+    /// Retains the progress controller for the life of the install so Cancel stays wired.
+    private static var installProgress: InstallProgress?
+
+    private static func runInstall(_ m: UpdateManifest) {
+        let progress = InstallProgress(displayName: displayName)
+        installProgress = progress
+        progress.task = Task {
+            defer {
+                progress.close()
+                installProgress = nil
+            }
             do {
                 let stagedApp = try await Updater.stage(m)
-                win.orderOut(nil)
                 try performSwapAndRelaunch(stagedApp: stagedApp)
                 // performSwapAndRelaunch terminates the app; control should not return.
             } catch {
-                win.orderOut(nil)
-                info(title: "Update not installed", body: "Nothing on your Mac was changed.\n\n\(error.localizedDescription)")
+                // A cancelled URLSession surfaces as a transport error — report it as
+                // the user's own cancel, not a failure.
+                if Task.isCancelled {
+                    info(title: "Update canceled", body: "Nothing on your Mac was changed.")
+                } else {
+                    info(title: "Update not installed", body: "Nothing on your Mac was changed.\n\n\(error.localizedDescription)")
+                }
             }
         }
+        progress.show()
     }
 
     /// Writes a detached helper that waits for THIS process to exit, atomically swaps the installed
@@ -373,37 +445,44 @@ enum UpdaterUI {
                                        installedApp: URL = Bundle.main.bundleURL) throws {
         let installed = installedApp.path
         let staged = stagedApp.path
-        let backup = installed + ".old"
+        let backup = installed + ".old-" + UUID().uuidString
         let pid = ProcessInfo.processInfo.processIdentifier
 
         // The helper is intentionally tiny + dependency-free. Double-quote every path (bundle names
         // may contain spaces). On any failure it restores the backup so the user is never left with no app.
         let script = """
         #!/bin/sh
-        while kill -0 \(pid) 2>/dev/null; do sleep 0.2; done
-        rm -rf "\(backup)"
-        mv "\(installed)" "\(backup)" || exit 1
-        if ! mv "\(staged)" "\(installed)"; then
-          mv "\(backup)" "\(installed)"
+        set -u
+        pid="$1"
+        installed="$2"
+        staged="$3"
+        backup="$4"
+        case "$pid" in ''|*[!0-9]*) exit 1;; esac
+        trap 'rm -f -- "$0"' EXIT
+        while kill -0 "$pid" 2>/dev/null; do sleep 0.2; done
+        [ ! -e "$backup" ] && [ ! -L "$backup" ] || exit 1
+        mv "$installed" "$backup" || exit 1
+        if ! mv "$staged" "$installed"; then
+          mv "$backup" "$installed"
           exit 1
         fi
-        rm -rf "\(backup)"
-        xattr -dr com.apple.quarantine "\(installed)" 2>/dev/null
-        open "\(installed)"
+        rm -rf "$backup"
+        xattr -dr com.apple.quarantine "$installed" 2>/dev/null
+        open "$installed"
         """
 
         let helper = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
             .appendingPathComponent("circuit-update-helper-\(UUID().uuidString).sh")
         do {
             try script.write(to: helper, atomically: true, encoding: .utf8)
-            try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: helper.path)
+            try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: helper.path)
         } catch {
             throw UpdaterError.install("couldn't write installer helper: \(error.localizedDescription)")
         }
 
         let p = Process()
         p.executableURL = URL(fileURLWithPath: "/bin/sh")
-        p.arguments = [helper.path]
+        p.arguments = [helper.path, String(pid), installed, staged, backup]
         do { try p.run() } catch { throw UpdaterError.install("couldn't launch installer helper: \(error.localizedDescription)") }
 
         // Hand off to the helper and quit so it can replace us.

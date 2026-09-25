@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { Worker } from 'node:worker_threads';
 import { analyzeRepo } from '../lib/analyze.js';
-import { globToRegExp, loadRules, findViolations } from '../lib/rules.js';
+import { globToRegExp, loadRules, findViolations, RULE_LIMITS } from '../lib/rules.js';
 
 // Build a throwaway repo on disk and return its path.
 function mkRepo(files) {
@@ -163,3 +164,83 @@ test('findViolations: first matching rule owns the edge, no rules → []', () =>
 function loadRulesFromObject(forbidden) {
   return { forbidden: forbidden.map((e) => ({ ...e, fromRe: globToRegExp(e.from), toRe: globToRegExp(e.to), severity: 'critical', points: 20, name: e.name ?? null })) };
 }
+
+test('bounded matcher preserves mixed glob and literal path semantics', () => {
+  const cases = [
+    ['a?b', 'a/b', false], ['a?b', 'acb', true],
+    ['a[1].(js)', 'a[1].(js)', true], ['a[1].(js)', 'a1xjs', false],
+    ['**/x', '/x', false], ['**/x', 'a//x', false],
+    ['**/x', 'a/b/x', true], ['**/**/x', 'x', true],
+    ['a**/x', 'ab/c/x', true], ['a**/x', 'ax', true],
+    ['a**/x', 'a/x', false], ['*a*b', 'aaab', true],
+    ['**', 'a\n/b', true], ['a', 'a\n', false],
+    ['', '', true], ['', 'a', false], ['**/*?', '', false],
+  ];
+  for (const [pattern, value, expected] of cases) {
+    assert.equal(globToRegExp(pattern).test(value), expected, `${pattern}: ${JSON.stringify(value)}`);
+  }
+});
+
+test('rules reject oversized files, rule lists and patterns with an explicit analysis error', () => {
+  const dir = mkRepo(SRC);
+  try {
+    for (const raw of [
+      ' '.repeat(RULE_LIMITS.bytes + 1),
+      JSON.stringify({ forbidden: Array.from({ length: RULE_LIMITS.count + 1 }, () => ({ from: '*', to: '*' })) }),
+      JSON.stringify({ forbidden: [{ from: 'x'.repeat(RULE_LIMITS.pattern + 1), to: '*' }] }),
+      JSON.stringify({ forbidden: Array.from({ length: 20 }, () => ({ from: 'x'.repeat(512), to: '*' })) }),
+    ]) {
+      fs.writeFileSync(path.join(dir, '.circuit-rules.json'), raw);
+      const result = analyzeRepo(dir);
+      assert.ok(result.stats.rulesError, 'rejected configuration is visible in analysis');
+      assert.equal(result.stats.rules, undefined, 'never partially enforce an oversized configuration');
+      assert.equal(result.stats.files, 2, 'ordinary source analysis still works');
+    }
+    assert.throws(() => globToRegExp('*'.repeat(RULE_LIMITS.pattern + 1)), /at most/);
+  } finally { rm(dir); }
+});
+
+test('largest permitted file and rule count are accepted; non-files are rejected', () => {
+  const dir = mkRepo(SRC);
+  const file = path.join(dir, '.circuit-rules.json');
+  try {
+    const json = JSON.stringify({ forbidden: Array.from({ length: RULE_LIMITS.count }, () => ({ from: '**', to: '?' })) });
+    fs.writeFileSync(file, json.padEnd(RULE_LIMITS.bytes));
+    assert.equal(loadRules(dir).rules.forbidden.length, RULE_LIMITS.count);
+    fs.unlinkSync(file);
+    fs.mkdirSync(file);
+    assert.match(loadRules(dir).error, /regular file/);
+  } finally { rm(dir); }
+});
+
+test('repeated wildcard near misses finish without exponential backtracking', async () => {
+  const worker = new Worker(`
+    const { parentPort, workerData } = require('node:worker_threads');
+    import(workerData).then(({ globToRegExp }) => {
+      const result = [
+        globToRegExp('*a'.repeat(64) + 'b').test('a'.repeat(200)),
+        globToRegExp('**/'.repeat(64) + 'x').test('a/'.repeat(200) + 'y'),
+      ];
+      parentPort.postMessage(result);
+    });
+  `, { eval: true, workerData: new URL('../lib/rules.js', import.meta.url).href });
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('hostile globs did not complete within two seconds')), 2000);
+      worker.once('message', (value) => { clearTimeout(timer); resolve(value); });
+      worker.once('error', (error) => { clearTimeout(timer); reject(error); });
+    });
+    assert.deepEqual(result, [false, false]);
+  } finally { await worker.terminate(); }
+});
+
+test('repeated graph paths are evaluated once and first-match ordering is retained', () => {
+  let evaluations = 0;
+  const matcher = { test() { evaluations++; return true; } };
+  const first = { fromRe: matcher, toRe: matcher, name: 'first' };
+  const edges = Array.from({ length: 1000 }, () => ({ source: 'a', target: 'b' }));
+  const result = findViolations(edges, { forbidden: [first, { ...first, name: 'second' }] });
+  assert.equal(evaluations, 2);
+  assert.equal(result.length, 1000);
+  assert.ok(result.every((entry) => entry.rule === first));
+});
