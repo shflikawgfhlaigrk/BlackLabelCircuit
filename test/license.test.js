@@ -1,3 +1,4 @@
+import { OWNER_KEY, ownerHeaders, stopServer } from './server-harness.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -61,7 +62,7 @@ test('NO PRICE is minted anywhere in license copy (demo or licensed)', () => {
 
 function getJson(url) {
   return new Promise((resolve, reject) => {
-    http.get(url, (res) => {
+    http.get(url, { headers: ownerHeaders }, (res) => {
       let body = '';
       res.setEncoding('utf8');
       res.on('data', (c) => { body += c; });
@@ -89,13 +90,13 @@ function waitForUrl(child) {
 
 test('GET /api/license serves demo state (live :8923 untouched — server picks a free port)', async (t) => {
   // No CIRCUIT_LICENSE in env => the server must report demo, fail-closed.
-  const env = { ...process.env };
+  const env = { ...process.env, CIRCUIT_OWNER_KEY: OWNER_KEY };
   delete env.CIRCUIT_LICENSE;
   // Pin a far, explicit port so this never contends with server.test.js's
   // 8923→8924 auto-increment assertion when node runs the files in parallel.
   // (Never :8923 — that is the hands-off live instance.)
-  const child = spawn(process.execPath, ['server.js', FIXTURE, '--port', '8951'], { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], env });
-  t.after(() => child.kill('SIGTERM'));
+  const child = spawn(process.execPath, ['server.js', FIXTURE, '--port', '8951'], { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe', 'ipc'], env });
+  t.after(() => stopServer(child));
   const url = await waitForUrl(child);
   const lic = await getJson(`${url}/api/license`);
   assert.equal(lic.status, 200);

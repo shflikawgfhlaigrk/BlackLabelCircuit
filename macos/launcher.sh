@@ -88,11 +88,11 @@ LOG="$(mktemp -t circuit)"
 (
   URL=""
   for _ in $(seq 1 60); do
-    URL=$(grep -Eo 'http://localhost:[0-9]+' "$LOG" 2>/dev/null | head -1)
+    URL=$(sed -nE 's@^.*(http://localhost:[0-9]+/#handoff=[A-Za-z0-9_-]{43})$@\1@p' "$LOG" 2>/dev/null | head -1)
     [ -n "$URL" ] && break
     sleep 0.2
   done
-  [ -z "$URL" ] && URL="http://localhost:8923"
+  [ -z "$URL" ] && exit 1
   if [ -d "/Applications/Google Chrome.app" ]; then
     open -na "Google Chrome" --args --app="$URL" --new-window
   else

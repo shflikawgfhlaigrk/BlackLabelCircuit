@@ -45,11 +45,15 @@ body {
 .repo { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
 #repoName { font-weight: 600; font-size: 13px; }
 #repoPath { font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
-.topstats { display: flex; align-items: center; gap: 14px; }
+/* min-width:0 + internal scroll lets the nowrap stats give up width on narrow
+   windows instead of shoving the right-side controls (help / Re-scan) off-screen. */
+.topstats { display: flex; align-items: center; gap: 14px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.topstats::-webkit-scrollbar { display: none; }
+#topbar > .btn, #topbar > .chip { flex-shrink: 0; white-space: nowrap; }
 .stat { color: var(--ink-2); font-size: 12px; white-space: nowrap; }
 .stat b { color: var(--ink); font-weight: 600; }
 .spacer { flex: 1; }
-.live { font-size: 11px; color: var(--ink-3); transition: color 0.3s; white-space: nowrap; }
+.live { font-size: 11px; color: var(--ink-3); transition: color 0.3s; white-space: nowrap; flex-shrink: 0; }
 .live.on { color: var(--grade-a); }
 .live.pulse { color: var(--accent); }
 
@@ -354,6 +358,8 @@ body {
 }
 .go-mark { font-size: 40px; line-height: 1; margin-bottom: 14px; color: var(--accent); }
 .graph-overlay.analyzing .go-mark { animation: go-pulse 1.4s ease-in-out infinite; }
+.graph-overlay.failed .go-mark { color: var(--broken); }
+.go-actions .btn { margin-bottom: 8px; }
 @keyframes go-pulse { 0%,100% { opacity: 0.35; transform: scale(0.94); } 50% { opacity: 1; transform: scale(1.06); } }
 .go-title { font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
 .go-body { font-size: 12.5px; line-height: 1.6; color: var(--ink-2); }
@@ -394,3 +400,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .graph-overlay.analyzing .go-mark { animation: none; }
 }
+
+/* Per-launch owner sign-in. The app initializes only after authentication. */
+.access-screen { position: fixed; inset: 0; z-index: 10000; background: #05070d; display: grid; place-items: center; padding: 24px; }
+.access-form { max-width: 480px; color: #e2e8f0; font: 16px/1.5 system-ui; }
+.access-form input { display: block; width: 100%; box-sizing: border-box; padding: 12px; margin: 12px 0; }
+.access-form button, .access-logout { padding: 8px 16px; cursor: pointer; }
+.access-logout { position: fixed; right: 16px; bottom: 16px; z-index: 200; }

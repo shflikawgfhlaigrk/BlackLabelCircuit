@@ -163,7 +163,7 @@ fn start_server(
     server_js: PathBuf,
     repo: PathBuf,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let sidecar = app.shell().sidecar("node")?.args([
+    let sidecar = app.shell().sidecar("node")?.set_raw_out(true).args([
         server_js.to_string_lossy().to_string(),
         repo.to_string_lossy().to_string(),
     ]);
@@ -202,24 +202,20 @@ fn start_server(
     Ok(())
 }
 
-/// Find the first COMPLETE `http://localhost:<port>` in the accumulated server
-/// output.  "Complete" = the digit run is terminated by a non-digit, so we never
-/// navigate to a port truncated mid-write across two stdout chunks.  Exact JS mirror
-/// (and the failure cases) live in test/winshell.test.js.
+/// Preserve the complete one-use capability, waiting for its newline boundary.
 fn parse_localhost_url(buf: &str) -> Option<String> {
     const NEEDLE: &str = "http://localhost:";
-    let start = buf.find(NEEDLE)?;
-    let after = &buf[start + NEEDLE.len()..];
-    let digits: String = after.chars().take_while(|c| c.is_ascii_digit()).collect();
-    if digits.is_empty() {
-        return None;
+    for line in buf.split_inclusive('\n') {
+        if !line.ends_with('\n') { continue; }
+        let Some(start) = line.find(NEEDLE) else { continue; };
+        let value = line[start..].trim_end_matches(['\r', '\n']);
+        let Some((authority, capability)) = value.split_once("/#handoff=") else { continue; };
+        let digits = &authority[NEEDLE.len()..];
+        if digits.is_empty() || !digits.chars().all(|c| c.is_ascii_digit()) { continue; }
+        if capability.len() != 43 || !capability.chars().all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-') { continue; }
+        return Some(value.to_string());
     }
-    // No boundary yet (the chunk ended exactly on a digit) — wait for more output
-    // rather than opening a possibly-truncated port.
-    if digits.len() == after.len() {
-        return None;
-    }
-    Some(format!("{NEEDLE}{digits}"))
+    None
 }
 
 fn navigate_main_window(app: &tauri::AppHandle, url: String) {

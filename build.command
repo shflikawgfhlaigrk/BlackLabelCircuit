@@ -2,6 +2,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=macos/production-install-guard.sh
+source "$ROOT/macos/production-install-guard.sh"
 BUILD_DIR="$ROOT/build"
 APP="$BUILD_DIR/Circuit.app"
 CONTENTS="$APP/Contents"
@@ -112,10 +114,29 @@ lipo -archs "$MACOS/Circuit"
 lipo -archs "$RESOURCES/node/node"
 
 if [[ "$INSTALL" -eq 1 ]]; then
-  rm -rf "/Applications/Circuit.app"
-  ditto "$APP" "/Applications/Circuit.app"
-  codesign --verify --deep --strict --verbose=2 "/Applications/Circuit.app"
-  echo "installed: /Applications/Circuit.app"
+  DEST="/Applications/Circuit.app"
+  STAGE="/Applications/.Circuit.app.staging.$$"
+  OLD="/Applications/.Circuit.app.old.$$"
+  FAILED="/Applications/.Circuit.app.failed.$$"
+  production_install_guard "$APP" "$DEST" "${BLB_ALLOW_NONMONOTONIC_INSTALL:-0}"
+  rm -rf "$STAGE" "$OLD" "$FAILED"
+  ditto "$APP" "$STAGE"
+  [[ -f "$STAGE/Contents/Info.plist" ]] || { echo "ABORT: staged Circuit is incomplete" >&2; rm -rf "$STAGE"; exit 1; }
+  codesign --verify --deep --strict --verbose=2 "$STAGE" || { echo "ABORT: staged Circuit signature is invalid" >&2; rm -rf "$STAGE"; exit 1; }
+  [[ ! -d "$DEST" ]] || mv "$DEST" "$OLD"
+  if ! mv "$STAGE" "$DEST"; then
+    [[ ! -d "$OLD" ]] || mv "$OLD" "$DEST"
+    echo "ABORT: Circuit install swap failed; previous app was restored" >&2
+    exit 1
+  fi
+  if ! codesign --verify --deep --strict --verbose=2 "$DEST"; then
+    mv "$DEST" "$FAILED" || true
+    [[ ! -d "$OLD" ]] || mv "$OLD" "$DEST"
+    echo "ABORT: installed Circuit verification failed; previous app was restored" >&2
+    exit 1
+  fi
+  rm -rf "$OLD" "$FAILED"
+  echo "installed: $DEST"
 else
   echo "built: $APP"
 fi

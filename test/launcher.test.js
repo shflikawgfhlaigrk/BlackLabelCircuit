@@ -124,6 +124,7 @@ test('drag-a-folder onboarding is wired end to end (CI-19)', () => {
 
 test('release build signs inside-out and ships no system-node fallback', () => {
   const build = read('build.command');
+  const installGuard = read('macos/production-install-guard.sh');
   assert.match(build, /DEVELOPER_DIR="\/Applications\/Xcode\.app\/Contents\/Developer"/, 'ship builds must avoid mismatched CommandLineTools SDKs');
   assert.match(build, /xcrun --kill-cache/, 'build must clear stale xcrun SDK cache after selecting Xcode');
   assert.match(build, /SDKROOT="\$\(xcrun --sdk macosx --show-sdk-path\)"/, 'build must pass an explicit macOS SDK to swiftc');
@@ -139,4 +140,10 @@ test('release build signs inside-out and ships no system-node fallback', () => {
   assert.ok(appSign > nodeSign, 'Node runtime must be signed before the app');
   assert.doesNotMatch(build, /command -v node/, 'release app must not fall back to system Node');
   assert.doesNotMatch(build, /\/opt\/homebrew\/bin\/node/, 'release app must not depend on Homebrew Node at runtime');
+  assert.match(build, /production_install_guard "\$APP" "\$DEST"/, 'canonical install must pass the production signature/build guard');
+  assert.match(build, /ditto "\$APP" "\$STAGE"/, 'canonical install must copy into a sibling stage first');
+  assert.match(build, /mv "\$OLD" "\$DEST"/, 'failed install must restore the previous app');
+  assert.doesNotMatch(build, /rm -rf "\/Applications\/Circuit\.app"/, 'canonical app must never be deleted before replacement verifies');
+  assert.match(installGuard, /candidate_build <= installed_build/, 'install guard must reject same-build replacement and downgrade');
+  assert.match(installGuard, /must be exactly 0 or 1/, 'rollback override must be explicit and fail closed');
 });

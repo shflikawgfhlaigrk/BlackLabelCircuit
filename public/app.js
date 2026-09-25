@@ -1,3 +1,4 @@
+import { apiFetch } from '/access.js';
 // Circuit UI — 3D force graph of the codebase, graded and wired.
 import { ForceGraph3D, SpriteText, THREE, UnrealBloomPass } from '/vendor/circuit-3d.bundle.mjs';
 
@@ -210,12 +211,14 @@ function refreshStyles() {
   Graph.linkDirectionalParticles(Graph.linkDirectionalParticles());
 }
 
-// ---------- graph state overlay (analyzing / no-code-found) ----------
+// ---------- graph state overlay (analyzing / no-code-found / scan-failed) ----------
 function showOverlay(mode, opts = {}) {
   const el = $('graphOverlay');
-  el.classList.remove('hidden', 'analyzing', 'empty');
+  el.classList.remove('hidden', 'analyzing', 'empty', 'failed');
   el.classList.add(mode);
   const actions = $('goActions');
+  $('goRetry').classList.toggle('hidden', mode !== 'failed');
+  $('goHint').classList.toggle('hidden', mode !== 'empty');
   if (mode === 'analyzing') {
     $('goTitle').textContent = opts.name ? `Analyzing ${opts.name}…` : 'Analyzing your codebase…';
     $('goBody').innerHTML = 'Reading and grading every source file. A large repository can take a few seconds — this view updates the moment it’s ready.';
@@ -224,6 +227,10 @@ function showOverlay(mode, opts = {}) {
     $('goTitle').textContent = 'No source code found here';
     $('goBody').innerHTML = `Circuit didn’t find any files it can grade in <b>${esc(opts.name ?? 'this folder')}</b>. It reads source code — JavaScript/TypeScript, Python, Swift, Go, Rust, Java, Kotlin, Ruby, C/C++ and more — so point it at the root of a code repository.`;
     actions.classList.remove('hidden');
+  } else if (mode === 'failed') {
+    $('goTitle').textContent = 'Analysis failed';
+    $('goBody').innerHTML = `Circuit could not analyze this folder:<br><code>${esc(opts.message ?? 'unknown error')}</code>`;
+    actions.classList.remove('hidden');
   }
 }
 function hideOverlay() { $('graphOverlay').classList.add('hidden'); }
@@ -231,9 +238,20 @@ function hideOverlay() { $('graphOverlay').classList.add('hidden'); }
 // ---------- data ----------
 async function loadGraph(preservePositions = false) {
   let res;
-  try { res = await fetch('/api/graph'); }
+  try { res = await apiFetch('/api/graph'); }
   catch { if (!state.data) showOverlay('analyzing'); setTimeout(() => loadGraph(preservePositions), 800); return; }
   if (!res.ok) {
+    if (res.status === 401 || res.status === 403) return;
+    // 500 carries the analyzer's real failure (server.js sends { error }) — surface
+    // it with a retry path instead of spinning on "analyzing" forever. 503 means the
+    // first scan is genuinely still running.
+    if (res.status === 500) {
+      let message = 'unknown error';
+      try { message = (await res.json()).error ?? message; } catch { /* body unreadable */ }
+      if (!state.data) showOverlay('failed', { message });
+      else toast(`Analysis failed: ${message}`);
+      return; // no auto-poll — Retry (or an SSE re-grade broadcast) resumes loading
+    }
     if (!state.data) showOverlay('analyzing'); // first scan still running — show feedback, don't leave it blank
     setTimeout(() => loadGraph(preservePositions), 800);
     return;
@@ -558,7 +576,7 @@ function renderPanel(n) {
 
 // ---------- code modal ----------
 async function openCode(n, focusLine) {
-  const res = await fetch(`/api/file?path=${encodeURIComponent(n.id)}`);
+  const res = await apiFetch(`/api/file?path=${encodeURIComponent(n.id)}`);
   if (!res.ok) { toast('Could not load file'); return; }
   const text = await res.text();
   const hits = new Map(); // line → severity class
@@ -656,8 +674,15 @@ $('rescanBtn').onclick = async () => {
   $('rescanBtn').textContent = 'Scanning…';
   clearTimeout(rescanRestore);
   rescanRestore = setTimeout(() => { $('rescanBtn').textContent = 'Re-scan'; }, 15000);
-  try { await fetch('/api/rescan', { method: 'POST' }); }
+  try { await apiFetch('/api/rescan', { method: 'POST' }); }
   catch { $('rescanBtn').textContent = 'Re-scan'; toast('Re-scan failed — is the server up?'); }
+};
+// First-scan failure recovery: kick a fresh scan, then resume the normal poll.
+$('goRetry').onclick = async () => {
+  showOverlay('analyzing');
+  try { await apiFetch('/api/rescan', { method: 'POST' }); }
+  catch { /* server unreachable — the poll below keeps showing progress/failure honestly */ }
+  loadGraph();
 };
 $('panelClose').onclick = () => { state.selected = null; hidePanel(); refreshStyles(); };
 $('codeClose').onclick = () => $('codeModal').classList.add('hidden');
@@ -699,7 +724,7 @@ async function enterReplay() {
   $('tglReplay').textContent = 'Loading…';
   let data;
   try {
-    const res = await fetch('/api/history');
+    const res = await apiFetch('/api/history');
     data = await res.json();
   } catch {
     state.replay.loading = false;
@@ -715,6 +740,10 @@ async function enterReplay() {
     return;
   }
   state.replay.data = data;
+  // The replay and the tour share the bottom-center transport slot (and the arrow
+  // keys) — the modes are mutually exclusive. Checked after the await so a tour
+  // started while history was loading is closed too, never overlapped.
+  if (tour.on) exitTour();
   state.replay.on = true;
   $('tglReplay').classList.add('on');
   const scrub = $('replayScrub');
@@ -844,6 +873,7 @@ function enterTour() {
   if (!state.data || state.data.stats.empty) { toast('Nothing to tour — no gradeable files.'); return; }
   const stops = buildTourStops();
   if (!stops.length) { toast('Nothing to tour — no gradeable files.'); return; }
+  if (state.replay.on) exitReplay(); // mutually exclusive with the replay — see enterReplay
   tour.on = true;
   tour.stops = stops;
   $('tglTour').classList.add('on');
@@ -907,8 +937,10 @@ const events = new EventSource('/api/events');
 let hadHello = false;
 events.addEventListener('hello', () => {
   $('liveDot').classList.add('on');
-  // On reconnect, re-fetch — a re-grade may have been broadcast while we were away.
-  if (hadHello) loadGraph(true);
+  // On reconnect, re-fetch — a re-grade may have been broadcast while we were away,
+  // and the launcher restarts the server when a license key is saved, so the
+  // license state can have changed too.
+  if (hadHello) { loadGraph(true); loadLicense(); }
   hadHello = true;
 });
 events.addEventListener('graph', async (e) => {
@@ -926,18 +958,21 @@ events.addEventListener('error', (e) => {
   clearTimeout(rescanRestore);
   try { toast(`Analysis failed: ${JSON.parse(e.data).message}`); } catch { /* connection-level error */ }
 });
-events.onerror = () => $('liveDot').classList.remove('on');
+events.onerror = async () => {
+  $('liveDot').classList.remove('on');
+  try { const r = await apiFetch('/api/session'); if (r.status === 401) events.close(); } catch { /* reconnect after temporary outage */ }
+};
 
 // ---------- licensing (honest demo/trial CTA — fail-closed, price-free) ----------
 async function loadLicense() {
   let lic;
   try {
-    const res = await fetch('/api/license');
+    const res = await apiFetch('/api/license');
     if (!res.ok) throw new Error(res.status);
     lic = await res.json();
   } catch {
     // Fail-closed on the client too: if we can't confirm a license, show demo.
-    lic = { mode: 'demo', notice: 'Demo build — Circuit needs a paid license for continued use.',
+    lic = { mode: 'demo', notice: 'Demo build — the full analyzer, free to evaluate. Ongoing use requires a paid license.',
             cta: 'Get a license', productUrl: 'https://blacklabelbots.com/circuit' };
   }
   const banner = $('demoBanner');
@@ -954,13 +989,15 @@ async function loadLicense() {
 // Circuit's backend makes zero outbound network calls (provable via the CI-15
 // source scan) and binds loopback-only. Surface that as an always-on, honest chip
 // so regulated / air-gapped buyers can see at a glance that their source never
-// leaves the machine. This is a standing fact, not a runtime measurement — see
-// AIRGAP.md for the attestable no-network statement.
+// leaves the machine. The claim is scoped to what the scan proves: the macOS app
+// WRAPPER separately checks for app updates (metadata only, never source, and it
+// has an off switch) — the chip's tooltip discloses that rather than overclaiming.
+// See AIRGAP.md for the attestable statement and the zero-egress setup.
 function showOfflineChip() {
   const chip = $('offlineChip');
   if (!chip) return;
   chip.textContent = '⏚ offline — no code leaves this machine';
-  chip.title = 'Air-gap ready: Circuit runs fully on this machine. Your source is never uploaded — the backend makes zero outbound network calls and binds to localhost only. See AIRGAP.md for the attestable no-network statement (verified by the CI-15 source scan).';
+  chip.title = 'Air-gap ready: your source is never uploaded. The analyzer runs entirely on this machine, makes zero outbound network calls (attestable via the CI-15 source scan) and binds to localhost only. The macOS app separately checks blacklabelbots.com for app updates — version metadata only, never code; disable it via Circuit → Automatically Check for Updates. See AIRGAP.md.';
 }
 
 // ---------- go ----------

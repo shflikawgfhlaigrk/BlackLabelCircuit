@@ -103,7 +103,8 @@ test('LSP server: didSave re-grades via analyzeRepo and publishes line-anchored 
     await done;
   } finally {
     proc.stdin.write(frame({ method: 'exit' }));
-    proc.kill();
+    proc.stdin.end();
+    await new Promise(resolve => { if (proc.exitCode !== null) resolve(); else proc.once('exit', resolve); });
   }
 
   assert.ok(seen.diags.length > 0, 'published diagnostics for the saved file');

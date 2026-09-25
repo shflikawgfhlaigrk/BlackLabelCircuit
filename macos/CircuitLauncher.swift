@@ -75,6 +75,7 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
     private var didFinishLaunching = false
     private var started = false
     private var pendingRepo: URL?
+    private var currentRepo: URL?
     private var nodeURL: URL?
     private var serverURL: URL?
     private var dropWindow: NSWindow?
@@ -130,23 +131,57 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
         return .terminateNow
     }
 
+    // The drop window is closable, so a Dock-icon click with no windows left must
+    // bring it back — otherwise the app is running with no surface and no way in.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if !started && !flag {
+            if let dropWindow { dropWindow.makeKeyAndOrderFront(nil) } else { showDropWindow() }
+        }
+        return true
+    }
+
     // The launcher builds its menu bar in code (there is no nib). The app menu carries
-    // "Check for Updates…" — the on-demand trigger for the updater — plus the standard
-    // Quit so Cmd-Q works.
+    // "Check for Updates…" — the on-demand trigger for the updater — the toggle for the
+    // silent auto-check (air-gapped installs need real zero-egress), the license-key
+    // entry (the only activation path — GUI launches never inherit shell env vars),
+    // plus the standard Quit so Cmd-Q works.
     private func installMainMenu() {
         let appMenu = NSMenu()
         let check = NSMenuItem(title: "Check for Updates…", action: #selector(checkForUpdates), keyEquivalent: "")
         check.target = self
         appMenu.addItem(check)
+        let auto = NSMenuItem(title: "Automatically Check for Updates", action: #selector(toggleAutoUpdateCheck(_:)), keyEquivalent: "")
+        auto.target = self
+        auto.state = Updater.autoCheckEnabled ? .on : .off
+        appMenu.addItem(auto)
+        appMenu.addItem(.separator())
+        let license = NSMenuItem(title: "Enter License Key…", action: #selector(enterLicenseKey), keyEquivalent: "")
+        license.target = self
+        appMenu.addItem(license)
         appMenu.addItem(.separator())
         appMenu.addItem(NSMenuItem(title: "Quit Circuit",
                                    action: #selector(NSApplication.terminate(_:)),
                                    keyEquivalent: "q"))
 
+        let fileMenu = NSMenu(title: "File")
+        let open = NSMenuItem(title: "Open Repository…", action: #selector(openRepository), keyEquivalent: "o")
+        open.target = self
+        fileMenu.addItem(open)
+
+        // Standard first-responder Edit menu — without it Cmd-C/V/A are dead
+        // everywhere, including paste into NSOpenPanel's Go-to-Folder sheet.
+        let editMenu = NSMenu(title: "Edit")
+        editMenu.addItem(NSMenuItem(title: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: "x"))
+        editMenu.addItem(NSMenuItem(title: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c"))
+        editMenu.addItem(NSMenuItem(title: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: "v"))
+        editMenu.addItem(NSMenuItem(title: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a"))
+
         let mainMenu = NSMenu()
-        let appMenuItem = NSMenuItem()
-        appMenuItem.submenu = appMenu
-        mainMenu.addItem(appMenuItem)
+        for submenu in [appMenu, fileMenu, editMenu] {
+            let item = NSMenuItem()
+            item.submenu = submenu
+            mainMenu.addItem(item)
+        }
         NSApp.mainMenu = mainMenu
     }
 
@@ -154,6 +189,54 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
     // lets this nonisolated delegate class call into the @MainActor UpdaterUI.
     @MainActor @objc private func checkForUpdates() {
         UpdaterUI.checkInteractively()
+    }
+
+    @MainActor @objc private func toggleAutoUpdateCheck(_ sender: NSMenuItem) {
+        Updater.autoCheckEnabled.toggle()
+        sender.state = Updater.autoCheckEnabled ? .on : .off
+    }
+
+    // Repo choice, any time: before grading it starts the first scan; after, it swaps
+    // the running server onto the newly chosen repository (no quit-and-relaunch).
+    @objc private func openRepository() {
+        guard let repo = chooseRepository() else { return }
+        if started { restartServer(grading: repo) } else { beginGrading(repo) }
+    }
+
+    // MARK: License activation
+    // lib/license.js reads CIRCUIT_LICENSE from the server process environment.
+    // The key is persisted here and injected in startServer; validation stays
+    // server-side (fail-closed), so this UI claims storage, never validity.
+    private static let licenseDefaultsKey = "circuit.licenseKey"
+
+    private func storedLicenseKey() -> String? {
+        let raw = (UserDefaults.standard.string(forKey: Self.licenseDefaultsKey) ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return raw.isEmpty ? nil : raw
+    }
+
+    @objc private func enterLicenseKey() {
+        let alert = NSAlert()
+        alert.alertStyle = .informational
+        alert.messageText = "Enter your Circuit license key"
+        alert.informativeText = "The key from your purchase. Circuit stores it on this Mac and passes it to the grading engine at startup. Leave the field empty to remove a saved key."
+        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 360, height: 24))
+        field.stringValue = storedLicenseKey() ?? ""
+        field.placeholderString = "CIRC-XXXX-XXXX-XXXX"
+        alert.accessoryView = field
+        alert.window.initialFirstResponder = field
+        alert.addButton(withTitle: "Save")
+        alert.addButton(withTitle: "Cancel")
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        let key = field.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        if key.isEmpty {
+            UserDefaults.standard.removeObject(forKey: Self.licenseDefaultsKey)
+        } else {
+            UserDefaults.standard.set(key, forKey: Self.licenseDefaultsKey)
+        }
+        // The env only reaches the node process at spawn — restart so the saved
+        // key takes effect now instead of on the next launch.
+        if started, let repo = currentRepo { restartServer(grading: repo) }
     }
 
     // Validate the runtime once, up front, so both the drop path and the picker
@@ -190,11 +273,32 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
     }
 
     // Start grading a chosen repository. Idempotent — the first folder wins for
-    // this launch (a second drop is ignored rather than spawning a rival server).
+    // this launch (a second drop is ignored rather than spawning a rival server);
+    // switching later goes through restartServer via File → Open Repository….
     private func beginGrading(_ repoURL: URL) {
         guard !started, let nodeURL, let serverURL else { return }
         started = true
+        currentRepo = repoURL
         dropWindow?.orderOut(nil)
+        remember(repoURL)
+        startServer(nodeURL: nodeURL, serverURL: serverURL, repoURL: repoURL)
+    }
+
+    // Replace the running server with one grading `repoURL` (repo switch, or a
+    // just-saved license key that must reach the child env). The old process is
+    // detached from `server` first so its termination reads as an intentional
+    // swap, not a crash.
+    private func restartServer(grading repoURL: URL) {
+        guard started, let nodeURL, let serverURL else { return }
+        if let old = server {
+            server = nil
+            terminate(old)
+        }
+        logHandle?.closeFile()
+        logHandle = nil
+        openedBrowser = false
+        outputBuffer = ""
+        currentRepo = repoURL
         remember(repoURL)
         startServer(nodeURL: nodeURL, serverURL: serverURL, repoURL: repoURL)
     }
@@ -304,6 +408,11 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
             process.executableURL = nodeURL
             process.arguments = [serverURL.path, repoURL.path]
             process.currentDirectoryURL = serverURL.deletingLastPathComponent()
+            // GUI-launched apps never inherit shell env vars — inject the saved
+            // license key so a purchased CIRCUIT_LICENSE reaches lib/license.js.
+            var env = ProcessInfo.processInfo.environment
+            if let key = storedLicenseKey() { env["CIRCUIT_LICENSE"] = key }
+            process.environment = env
 
             let pipe = Pipe()
             process.standardOutput = pipe
@@ -314,9 +423,11 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
                 self?.recordOutput(data)
             }
 
-            process.terminationHandler = { [weak self] _ in
+            // Only the CURRENT server's exit is fatal — a process detached by
+            // restartServer terminates by design and must not raise this alert.
+            process.terminationHandler = { [weak self] proc in
                 DispatchQueue.main.async {
-                    guard let self, !self.isQuitting else { return }
+                    guard let self, !self.isQuitting, self.server === proc else { return }
                     self.showAlert(title: "Circuit stopped", message: "The local grading server exited. See last-run.log in Application Support/Circuit.")
                     NSApp.terminate(nil)
                 }
@@ -331,30 +442,37 @@ final class CircuitApp: NSObject, NSApplicationDelegate {
     }
 
     private func recordOutput(_ data: Data) {
-        logHandle?.write(data)
-        guard !openedBrowser, let text = String(data: data, encoding: .utf8) else { return }
+        guard let text = String(data: data, encoding: .utf8) else { return }
         outputBuffer += text
-        if let range = outputBuffer.range(of: #"http://localhost:[0-9]+"#, options: .regularExpression) {
+        // Wait for a whole line; the capability and port may span stdout chunks.
+        while let newline = outputBuffer.firstIndex(of: "\n") {
+            let line = String(outputBuffer[..<newline])
+            outputBuffer.removeSubrange(...newline)
+            let redacted = line.replacingOccurrences(of: #"#handoff=[A-Za-z0-9_-]+"#, with: "#handoff=[redacted]", options: .regularExpression)
+            if let bytes = (redacted + "\n").data(using: .utf8) { logHandle?.write(bytes) }
+            guard !openedBrowser,
+                  let range = line.range(of: #"http://localhost:[0-9]+/#handoff=[A-Za-z0-9_-]{43}$"#, options: .regularExpression) else { continue }
             openedBrowser = true
-            let urlText = String(outputBuffer[range])
+            let urlText = String(line[range])
             DispatchQueue.main.async {
-                if let url = URL(string: urlText) {
-                    NSWorkspace.shared.open(url)
-                }
+                if let url = URL(string: urlText) { NSWorkspace.shared.open(url) }
+            }
+        }
+    }
+
+    private func terminate(_ process: Process) {
+        guard process.isRunning else { return }
+        process.terminate()
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+            if process.isRunning {
+                Process.launchedProcess(launchPath: "/bin/kill", arguments: ["-KILL", "\(process.processIdentifier)"]).waitUntilExit()
             }
         }
     }
 
     private func terminateServer() {
         guard let server else { return }
-        if server.isRunning {
-            server.terminate()
-            DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
-                if server.isRunning {
-                    Process.launchedProcess(launchPath: "/bin/kill", arguments: ["-KILL", "\(server.processIdentifier)"]).waitUntilExit()
-                }
-            }
-        }
+        terminate(server)
         logHandle?.closeFile()
     }
 

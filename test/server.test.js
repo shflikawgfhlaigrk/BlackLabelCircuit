@@ -1,3 +1,4 @@
+import { OWNER_KEY, ownerHeaders, stopServer } from './server-harness.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -11,7 +12,7 @@ const FIXTURE = path.join(ROOT, 'test', 'fixtures', 'demo');
 
 function getJson(url) {
   return new Promise((resolve, reject) => {
-    http.get(url, (res) => {
+    http.get(url, { headers: ownerHeaders }, (res) => {
       let body = '';
       res.setEncoding('utf8');
       res.on('data', (chunk) => { body += chunk; });
@@ -72,10 +73,10 @@ test('auto-increment fires ONLY on EADDRINUSE: an occupied port steps to the nex
   t.after(() => blocker.close());
 
   const child = spawn(process.execPath, ['server.js', FIXTURE, '--port', String(BUSY_PORT)], {
-    cwd: ROOT,
-    stdio: ['ignore', 'pipe', 'pipe'],
+    cwd: ROOT, env: { ...process.env, CIRCUIT_OWNER_KEY: OWNER_KEY },
+    stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
   });
-  t.after(() => child.kill('SIGTERM'));
+  t.after(() => stopServer(child));
 
   const { url } = await waitForUrl(child);
   assert.equal(url, `http://localhost:${BUSY_PORT + 1}`);
@@ -105,10 +106,10 @@ test('a FREE port is bound as-is — auto-increment is not a safety net (the emp
   await new Promise((r) => probe.close(r));
 
   const child = spawn(process.execPath, ['server.js', FIXTURE, '--port', String(FREE_PORT)], {
-    cwd: ROOT,
-    stdio: ['ignore', 'pipe', 'pipe'],
+    cwd: ROOT, env: { ...process.env, CIRCUIT_OWNER_KEY: OWNER_KEY },
+    stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
   });
-  t.after(() => child.kill('SIGTERM'));
+  t.after(() => stopServer(child));
 
   const { url } = await waitForUrl(child);
   assert.equal(url, `http://localhost:${FREE_PORT}`);
