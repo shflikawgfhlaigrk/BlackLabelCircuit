@@ -3,8 +3,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { analyzeRepo, stronglyConnected } from '../lib/analyze.js';
+import { analyzeRepo, readDiscoveredFile, stronglyConnected } from '../lib/analyze.js';
+import { MAX_FILE_BYTES } from '../lib/walk.js';
 import { gradeFile, letterFor, applyGraphFindings } from '../lib/grade.js';
 import { resolveJsImport } from '../lib/lang/javascript.js';
 import { scanSecrets } from '../lib/lang/common.js';
@@ -107,6 +109,133 @@ test('stats roll up parse errors and skipped files honestly (CI-17)', () => {
   fs.rmSync(dir, { recursive: true, force: true });
 });
 
+test('tracked symlinks are excluded from parsing and counted as skipped', () => {
+  // Git enumeration is required: before the fix, discoverFiles() used stat()
+  // and followed the tracked file symlink.
+  const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-symlink-'));
+  const dir = path.join(workspace, 'project');
+  const external = path.join(workspace, 'external');
+  fs.mkdirSync(path.join(dir, 'nested'), { recursive: true });
+  fs.mkdirSync(external);
+  fs.writeFileSync(path.join(dir, 'real.js'), 'export const real = 1;\n');
+  fs.writeFileSync(path.join(dir, 'nested', 'keep.js'), 'export const keep = 1;\n');
+  fs.writeFileSync(path.join(external, 'linked.js'), 'export const external = 1;\n');
+  fs.symlinkSync('../external/linked.js', path.join(dir, 'linked.js'));
+  fs.symlinkSync('nested', path.join(dir, 'linked-tree'));
+  const git = (...args) => execFileSync('git', [
+    '-c', 'user.email=test@example.com', '-c', 'user.name=Circuit Test',
+    '-c', 'commit.gpgsign=false', ...args,
+  ], { cwd: dir, stdio: 'ignore' });
+  git('init', '-q');
+  git('add', '-A');
+  git('commit', '-qm', 'generated symlink fixture');
+
+  try {
+    const graph = analyzeRepo(dir);
+    const ids = graph.nodes.filter((n) => !n.missing).map((n) => n.id).sort();
+    assert.deepEqual(ids, ['nested/keep.js', 'real.js']);
+    assert.equal(graph.stats.skipped, 2, 'file and directory symlinks are visible as skipped');
+    assert.equal(graph.nodes.some((n) => n.id === 'linked.js'), false, 'external target is not parsed');
+  } finally {
+    fs.rmSync(workspace, { recursive: true, force: true });
+  }
+});
+
+test('ancestor symlinks cannot escape the project root in Git or filesystem discovery', () => {
+  const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-ancestor-symlink-'));
+  const external = path.join(workspace, 'external');
+  const gitProject = path.join(workspace, 'git-project');
+  const fsProject = path.join(workspace, 'fs-project');
+  fs.mkdirSync(external);
+  fs.mkdirSync(path.join(gitProject, 'src'), { recursive: true });
+  fs.mkdirSync(path.join(fsProject, 'src'), { recursive: true });
+  fs.writeFileSync(path.join(external, 'file.js'), 'export const escaped = 1;\n');
+  fs.writeFileSync(path.join(gitProject, 'src', 'file.js'), 'export const project = 1;\n');
+  fs.writeFileSync(path.join(fsProject, 'src', 'file.js'), 'export const project = 1;\n');
+
+  const git = (...args) => execFileSync('git', [
+    '-c', 'user.email=test@example.com', '-c', 'user.name=Circuit Test',
+    '-c', 'commit.gpgsign=false', ...args,
+  ], { cwd: gitProject, stdio: 'ignore' });
+  git('init', '-q');
+  git('add', '-A');
+  git('commit', '-qm', 'generated ancestor fixture');
+  fs.rmSync(path.join(gitProject, 'src'), { recursive: true, force: true });
+  fs.symlinkSync(external, path.join(gitProject, 'src'));
+
+  fs.rmSync(path.join(fsProject, 'src'), { recursive: true, force: true });
+  fs.symlinkSync(external, path.join(fsProject, 'src'));
+
+  try {
+    const gitGraph = analyzeRepo(gitProject);
+    assert.deepEqual(gitGraph.nodes.filter((n) => !n.missing), []);
+    assert.equal(gitGraph.stats.skipped, 2, 'Git index entry and replaced ancestor are both counted');
+
+    const fsGraph = analyzeRepo(fsProject);
+    assert.deepEqual(fsGraph.nodes.filter((n) => !n.missing), []);
+    assert.equal(fsGraph.stats.skipped, 1, 'filesystem walker counts the escaped ancestor symlink');
+  } finally {
+    fs.rmSync(workspace, { recursive: true, force: true });
+  }
+});
+
+test('descriptor reads reject overlimit metadata and same-inode size drift', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-read-guard-'));
+  const filePath = path.join(dir, 'source.js');
+  fs.writeFileSync(filePath, 'export const stable = 1;\n');
+  const originalStat = fs.lstatSync(filePath);
+  const descriptor = {
+    abs: filePath,
+    realPath: fs.realpathSync(filePath),
+    dev: originalStat.dev,
+    ino: originalStat.ino,
+  };
+
+  const originalOpen = fs.openSync;
+  const originalFstat = fs.fstatSync;
+  let openedFd;
+  fs.openSync = (...args) => {
+    openedFd = originalOpen(...args);
+    return openedFd;
+  };
+  fs.fstatSync = (fd, ...args) => {
+    const stat = originalFstat(fd, ...args);
+    if (fd === openedFd) {
+      return { dev: stat.dev, ino: stat.ino, size: MAX_FILE_BYTES + 1, isFile: () => true };
+    }
+    return stat;
+  };
+  try {
+    assert.equal(readDiscoveredFile(descriptor), null, 'overlimit descriptor metadata is rejected');
+  } finally {
+    fs.openSync = originalOpen;
+    fs.fstatSync = originalFstat;
+  }
+
+  const originalRead = fs.readSync;
+  openedFd = undefined;
+  let injected = false;
+  fs.openSync = (...args) => {
+    openedFd = originalOpen(...args);
+    return openedFd;
+  };
+  fs.readSync = (fd, ...args) => {
+    if (fd === openedFd && !injected) {
+      injected = true;
+      fs.appendFileSync(filePath, '// same inode grows during read\n');
+    }
+    return originalRead(fd, ...args);
+  };
+  try {
+    assert.equal(readDiscoveredFile(descriptor), null, 'same-inode growth is rejected after bounded read');
+    assert.equal(injected, true, 'the deterministic growth race ran');
+  } finally {
+    fs.openSync = originalOpen;
+    fs.readSync = originalRead;
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('a folder with no gradeable source is reported empty — never a fake A+', () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-empty-'));
   fs.writeFileSync(path.join(dir, 'README.md'), '# docs only, no source\n');
@@ -118,6 +247,90 @@ test('a folder with no gradeable source is reported empty — never a fake A+', 
   assert.equal(g.stats.score, null, 'no score minted for an empty repo');
   assert.equal(g.nodes.length, 0);
   fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('analyzeRepo reports normal input and ten root, containment, and resource boundaries', () => {
+  const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-entry-boundaries-'));
+  const result = (root) => {
+    const graph = analyzeRepo(root);
+    return {
+      files: graph.stats.files,
+      skipped: graph.stats.skipped,
+      parseErrors: graph.stats.parseErrors,
+      empty: graph.stats.empty,
+      truncated: graph.truncated,
+    };
+  };
+  const cases = [];
+  const add = (name, setup, expected) => {
+    const root = path.join(workspace, name);
+    fs.mkdirSync(root, { recursive: true });
+    setup(root);
+    cases.push([name, result(root), expected]);
+  };
+
+  add('01-normal', (root) => {
+    fs.writeFileSync(path.join(root, 'main.js'), 'const value = 1;\n');
+  }, { files: 1, skipped: 0, parseErrors: 0, empty: false, truncated: false });
+
+  cases.push(['02-missing-root', result(path.join(workspace, 'missing')), {
+    files: 0, skipped: 1, parseErrors: 0, empty: true, truncated: false,
+  }]);
+
+  const fileRoot = path.join(workspace, '03-file-root');
+  fs.writeFileSync(fileRoot, 'not a directory\n');
+  cases.push(['03-file-root', result(fileRoot), {
+    files: 0, skipped: 1, parseErrors: 0, empty: true, truncated: false,
+  }]);
+
+  add('04-empty-root', () => {}, {
+    files: 0, skipped: 0, parseErrors: 0, empty: true, truncated: false,
+  });
+
+  add('05-external-leaf-link', (root) => {
+    const external = path.join(workspace, 'external-leaf');
+    fs.mkdirSync(external);
+    fs.writeFileSync(path.join(external, 'outside.js'), 'const outside = 1;\n');
+    fs.symlinkSync(path.join(external, 'outside.js'), path.join(root, 'linked.js'));
+  }, { files: 0, skipped: 1, parseErrors: 0, empty: true, truncated: false });
+
+  add('06-external-ancestor-link', (root) => {
+    const external = path.join(workspace, 'external-ancestor');
+    fs.mkdirSync(external);
+    fs.writeFileSync(path.join(external, 'outside.js'), 'const outside = 1;\n');
+    fs.symlinkSync(external, path.join(root, 'src'));
+  }, { files: 0, skipped: 1, parseErrors: 0, empty: true, truncated: false });
+
+  add('07-ignored-directory', (root) => {
+    fs.mkdirSync(path.join(root, 'node_modules'));
+    fs.writeFileSync(path.join(root, 'node_modules', 'ignored.js'), 'const ignored = 1;\n');
+    fs.writeFileSync(path.join(root, 'kept.js'), 'const kept = 1;\n');
+  }, { files: 1, skipped: 0, parseErrors: 0, empty: false, truncated: false });
+
+  add('08-over-limit-file', (root) => {
+    const fd = fs.openSync(path.join(root, 'large.js'), 'w');
+    try { fs.ftruncateSync(fd, MAX_FILE_BYTES + 1); } finally { fs.closeSync(fd); }
+  }, { files: 0, skipped: 1, parseErrors: 0, empty: true, truncated: false });
+
+  add('09-binary-source', (root) => {
+    fs.writeFileSync(path.join(root, 'binary.js'), Buffer.from('const value = 1;\0const other = 2;'));
+  }, { files: 0, skipped: 1, parseErrors: 0, empty: true, truncated: false });
+
+  add('10-invalid-json', (root) => {
+    fs.writeFileSync(path.join(root, 'broken.json'), '{ invalid json');
+  }, { files: 1, skipped: 0, parseErrors: 1, empty: false, truncated: false });
+
+  add('11-max-files-boundary', (root) => {
+    for (let i = 0; i < 4001; i++) {
+      fs.writeFileSync(path.join(root, `f${String(i).padStart(4, '0')}.js`), 'const value = 1;\n');
+    }
+  }, { files: 4000, skipped: 0, parseErrors: 0, empty: false, truncated: true });
+
+  try {
+    for (const [name, actual, expected] of cases) assert.deepEqual(actual, expected, name);
+  } finally {
+    fs.rmSync(workspace, { recursive: true, force: true });
+  }
 });
 
 test('letterFor boundaries', () => {
