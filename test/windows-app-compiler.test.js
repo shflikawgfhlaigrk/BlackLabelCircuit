@@ -48,7 +48,29 @@ test('unrecognized app fails closed with explicit required residuals', () => {
   const out = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-other-out-'));
   const result = compileWindowsApplication({ files: [{ file: 'A.swift', source: 'struct A {}' }], sourceRoot, outDir: out });
   assert.equal(result.generated, false);
+  assert.equal(result.kind, 'unclassified');
+  assert.equal(result.residuals[0].feature, 'windowsApplication');
   assert.ok(result.residuals.length > 0);
+});
+
+test('audio app with canvas and saved settings is not mislabeled as a Live Wallpaper', () => {
+  const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-audio-source-'));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-audio-out-'));
+  const source = 'struct SunsetApp { let waveform = Canvas { _, _ in }; let settings = UserDefaults.standard; let output = "master.wav" }';
+  const result = compileWindowsApplication({ files: [{ file: 'UI/SunsetApp.swift', source }], sourceRoot, outDir: out });
+  assert.equal(result.generated, false);
+  assert.equal(result.kind, 'unclassified');
+  assert.deepEqual(result.residuals.map((row) => row.feature), ['windowsApplication']);
+  assert.equal(fs.existsSync(path.join(out, 'windows-app')), false);
+});
+
+test('partial Live Wallpaper reports the missing asset as a residual', () => {
+  const sourceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-partial-wallpaper-source-'));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-partial-wallpaper-out-'));
+  const result = compileWindowsApplication({ files: [{ file: 'Sources/main.swift', source: LIVE_SOURCE }], sourceRoot, outDir: out });
+  assert.equal(result.generated, false);
+  assert.equal(result.kind, 'live-wallpaper');
+  assert.ok(result.residuals.some((row) => row.feature === 'wallpaperAsset'));
 });
 
 test('Academy source and provenance-gated reader generate a complete offline Windows project', () => {
