@@ -58,7 +58,7 @@ const state = {
   // Windows port overlay: when `on`, nodes recolor by whether the file runs on Windows as-is.
   port: { on: false, loading: false, data: null, byId: new Map() },
   // Convert: the last conversion result; when `on`, nodes recolor by its per-file verdict.
-  convert: { on: false, running: false, result: null, byId: new Map(), intake: null, session: null, outputPreviews: {}, step: 1 },
+  convert: { on: false, running: false, brokerConfigured: false, result: null, byId: new Map(), intake: null, session: null, outputPreviews: {}, step: 1 },
 };
 
 // ---------- graph setup ----------
@@ -826,6 +826,7 @@ function renderConversionSetup(payload) {
   const directionInput = document.querySelector(`input[name="conversion_direction"][value="${direction.sourcePlatform}:${direction.targetPlatform}"]`);
   if (directionInput) directionInput.checked = true;
   const broker = payload.broker ?? { configured: false };
+  state.convert.brokerConfigured = Boolean(broker.configured);
   $('convertBrokerStatus').textContent = broker.configured
     ? `Online broker connected at ${broker.endpoint}. Target-native admission and proof are enforced.`
     : 'Online broker is not connected. Configure CIRCUIT_BROKER_URL to dispatch conversion jobs.';
@@ -851,7 +852,7 @@ function renderConversionSetup(payload) {
     $('convertPrepare').textContent = 'Create conversion session';
     setConvertStep(1, false);
   }
-  $('convertRun').disabled = state.convert.running || !payload.session;
+  $('convertRun').disabled = state.convert.running || !payload.session || !state.convert.brokerConfigured;
 }
 
 async function loadConversionSetup() {
@@ -918,7 +919,7 @@ function showConvertResult(r) {
 function setConvertRunning(on) {
   state.convert.running = on;
   $('convertRun').textContent = on ? 'Converting online…' : (state.convert.result ? 'Convert again' : 'Start online conversion');
-  $('convertRun').disabled = on || !state.convert.session;
+  $('convertRun').disabled = on || !state.convert.session || !state.convert.brokerConfigured;
   $('convertCancel').disabled = !on;
   $('convertOpenBtn').textContent = on ? 'Converting…' : 'Convert';
 }
@@ -965,7 +966,9 @@ $('convertSetup').addEventListener('submit', async (event) => {
     const payload = await res.json();
     if (!res.ok) throw new Error(payload.error ?? `HTTP ${res.status}`);
     renderConversionSetup(payload);
-    $('convertAnnouncement').textContent = 'Conversion session created. Ready to convert.';
+    $('convertAnnouncement').textContent = state.convert.brokerConfigured
+      ? 'Conversion session created. Ready to convert.'
+      : 'Conversion session saved. Connect an online broker to convert.';
     toast('Conversion session created.');
   } catch (err) {
     $('convertAnnouncement').textContent = 'Conversion session could not be created.';
