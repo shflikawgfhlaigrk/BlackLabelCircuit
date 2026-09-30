@@ -74,6 +74,26 @@ test('source identity binds the revision, dirty bytes, deletion state, and non-G
   assert.ok(deleted.dirty.some((item) => item.path === 'Sources/Main/App.swift' && item.kind === 'deleted'));
 });
 
+test('source identity ignores generated directories excluded from conversion input', (t) => {
+  const root = xcodegenProject(t);
+  write(root, 'build/generated.txt', 'before build');
+  initGit(root);
+  const clean = sourceIdentity(root);
+
+  write(root, 'build/generated.txt', 'after build');
+  write(root, 'build/cache/result.bin', 'generated output');
+  write(root, 'Sources/Main/build/cache.bin', 'nested generated output');
+  write(root, 'node_modules/example/index.js', 'installed dependency');
+  const afterBuild = sourceIdentity(root);
+  assert.equal(afterBuild.sha256, clean.sha256);
+  assert.deepEqual(afterBuild.dirty, []);
+
+  write(root, 'build.sh', 'echo source file');
+  const afterSourceEdit = sourceIdentity(root);
+  assert.notEqual(afterSourceEdit.sha256, clean.sha256);
+  assert.deepEqual(afterSourceEdit.dirty.map((item) => item.path), ['build.sh']);
+});
+
 test('creates, loads, resumes, and mutates only runtime session state', (t) => {
   const root = xcodegenProject(t);
   const base = tempDir(t, 'circuit-output-');
