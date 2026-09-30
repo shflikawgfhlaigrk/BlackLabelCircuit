@@ -22,8 +22,9 @@ under a minute, before you trust the tool with a single file:
      server.js lib/ | grep -vE 'createServer|conversion-broker' || echo "NONE — analysis path has no outbound network"
    ```
 
-   The only networking call in the codebase is `http.createServer(...)` — an inbound
-   local server, never an outbound client.
+   Local analysis uses `http.createServer(...)` for the inbound loopback UI. The
+   isolated `conversion-broker` adapter makes outbound calls only for an explicitly
+   started online conversion.
 
 2. **Automated attestation.** The same scan runs as a test, so the guarantee cannot
    silently regress:

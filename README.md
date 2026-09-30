@@ -196,21 +196,18 @@ CSS, HTML, JSON (validity-checked), YAML, TOML.
 
 ## Air-gapped / offline use
 
-Circuit is **offline by default** and safe for regulated, air-gapped environments —
-your source code never leaves the machine:
+Circuit's analysis and grading run locally. Starting an online conversion with a
+configured broker sends a minimized source bundle to an admitted target worker:
 
-- **Zero outbound network calls.** The backend is Node stdlib only; it opens no HTTP
-  client, no socket, no DNS. This is an *attestable* claim, not a promise: the CI-15
-  source scan and `npm test` (`test/airgap.test.js`) fail the build if any
-  network-egress API appears in the backend source.
-- **Loopback-only.** The server binds `127.0.0.1` — nothing is exposed off-box.
+- **Local analysis has no outbound network calls.** The CI-15 source scan and
+  `test/airgap.test.js` keep egress inside the explicit conversion-broker adapter.
+- **Loopback-only local UI.** The server binds `127.0.0.1`.
 - **No CDN, no telemetry, no license phone-home.** The 3D stack is vendored into
   `public/vendor/`; licensing fails *closed* to demo mode with no network required.
-- **In-app indicator.** The top bar shows an always-on `⏚ offline — no code leaves
-  this machine` chip so an auditor can confirm the posture at a glance.
+- **In-app indicator.** The top bar shows local-analysis status and reports whether
+  an online conversion broker is connected in the Convert panel.
 
-See **[AIRGAP.md](AIRGAP.md)** for offline install steps and the full attestable
-no-network statement.
+See **[AIRGAP.md](AIRGAP.md)** for offline install steps and the exact network boundary.
 
 ## Test
 

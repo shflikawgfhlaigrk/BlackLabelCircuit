@@ -162,11 +162,14 @@ function convertLine(n) {
   if (!state.convert.on || !state.convert.result) return '';
   const c = state.convert.byId.get(n.id);
   if (!c) return `<div class="tt-line">Convert: not part of the converted app code</div>`;
-  const text = c.status === 'portable' ? 'Convert: builds for Windows unchanged'
-    : c.status === 'converted' ? `Convert: converted, builds for Windows (${esc([...new Set(c.changes.map((x) => x.module ?? x.hit).filter(Boolean))].slice(0, 4).join(', '))})`
-      : c.status === 'partial' ? `Convert: builds for Windows; ${c.isolatedLoc} of ${c.loc} lines kept for the Mac`
+  const check = state.convert.result.verification;
+  const context = check?.native === true && check?.platform === 'win32' && check?.ok
+    ? 'native Windows check' : check?.ran && check?.ok ? 'checked package' : 'unverified converted copy';
+  const text = c.status === 'portable' ? `Convert: unchanged in ${context}`
+    : c.status === 'converted' ? `Convert: converted in ${context} (${esc([...new Set(c.changes.map((x) => x.module ?? x.hit).filter(Boolean))].slice(0, 4).join(', '))})`
+      : c.status === 'partial' ? `Convert: partial in ${context}; ${c.isolatedLoc} of ${c.loc} lines kept for the Mac`
         : c.status === 'needs-windows-part' ? `Convert: needs a Windows part — ${esc((c.guardedModules ?? []).slice(0, 4).join(', ') || 'uses isolated code')}`
-          : c.status === 'mac-only-skipped' ? 'Convert: Mac-only parts skipped on Windows'
+          : c.status === 'mac-only-skipped' ? 'Convert: Mac-only parts excluded from checked package'
             : 'Convert: rewritten, not verified by a compiler';
   const why = c.errors?.[0] ? `<div class="tt-line muted">${esc(c.errors[0].slice(0, 120))}</div>` : '';
   return `<div class="tt-line" style="color:${CONVERT_COLORS[c.status] ?? '#94a3b8'}">${text}</div>${why}`;
@@ -751,9 +754,9 @@ $('tglWindows').onclick = async (e) => {
 // the two things a person needs: a button that converts, and a button that opens what
 // came out.
 const CONVERT_ROWS = [
-  ['portable', 'Builds for Windows unchanged'],
-  ['converted', 'Converted — builds for Windows'],
-  ['partial', 'Builds, with some declarations kept for the Mac'],
+  ['portable', 'Unchanged in checked package'],
+  ['converted', 'Converted in checked package'],
+  ['partial', 'Partial, with declarations kept for the Mac'],
   ['needs-windows-part', 'Needs a Windows part (kept for the Mac build)'],
 ];
 
@@ -896,8 +899,13 @@ function showConvertResult(r) {
   pct.classList.toggle('warn', !verified);
   if (verified) {
     pct.textContent = `${t.buildsForWindowsPct}%`;
-    $('convertPctLabel').innerHTML = `of the app code builds for Windows — ${t.buildsLoc.toLocaleString()} of ${t.all.loc.toLocaleString()} lines.<br>Measured by your Swift compiler (${esc(r.verification.configuration)}).`;
-    side.innerHTML = `<b>${t.buildsForWindowsPct}%</b> of the app code builds for Windows.`;
+    const nativeWindows = r.verification.native === true && r.verification.platform === 'win32';
+    $('convertPctLabel').innerHTML = nativeWindows
+      ? `${t.buildsLoc.toLocaleString()} of ${t.all.loc.toLocaleString()} source lines compiled in a native Windows package check.<br>The application and installer need separate proof.`
+      : `${t.buildsLoc.toLocaleString()} of ${t.all.loc.toLocaleString()} source lines compiled in ${esc(r.verification.configuration)}.<br>Native Windows application and installer unverified.`;
+    side.innerHTML = nativeWindows
+      ? `<b>${t.buildsForWindowsPct}%</b> compiled in a native Windows package check; app acceptance pending.`
+      : `<b>${t.buildsForWindowsPct}%</b> passed a package compiler check; Windows app unverified.`;
   } else {
     pct.textContent = 'Not verified';
     $('convertPctLabel').textContent = r.verification.ran
@@ -908,12 +916,19 @@ function showConvertResult(r) {
   $('convertTable').innerHTML = CONVERT_ROWS.map(([key, label]) => {
     const b = key === 'needs-windows-part' ? t.needsWindowsPart : t[key];
     const lines = key === 'partial' ? `${t.partial.buildsLoc.toLocaleString()} build · ${t.partial.isolatedLoc.toLocaleString()} kept for Mac` : `${b.loc.toLocaleString()} lines`;
-    return `<tr><td><span class="dot" style="background:${CONVERT_COLORS[key]}"></span>${label}</td><td class="num">${b.files} file${b.files === 1 ? '' : 's'}</td><td class="num">${lines}</td></tr>`;
+    const shownLabel = verified ? label : label.replace('checked package', 'unverified converted copy');
+    return `<tr><td><span class="dot" style="background:${CONVERT_COLORS[key]}"></span>${shownLabel}</td><td class="num">${b.files} file${b.files === 1 ? '' : 's'}</td><td class="num">${lines}</td></tr>`;
   }).join('');
   const parts = r.windowsPartsNeeded.filter((p) => p.windows).slice(0, 6);
-  $('convertParts').innerHTML = parts.length
+  const partsHtml = parts.length
     ? `<b>Windows parts the rest is waiting for:</b><br>${parts.map((p) => `${esc(p.id)} → ${esc(p.windows)} <span class="muted">(${p.loc.toLocaleString()} lines)</span>`).join('<br>')}`
     : '';
+  const appHtml = r.windowsApp?.generated
+    ? '<b>Windows application source generated.</b> Native compile, install and launch proof pending.'
+    : r.windowsApp
+      ? `<b>No Windows application generated.</b> ${r.windowsApp.residuals?.length ?? 0} required residuals.`
+      : '';
+  $('convertParts').innerHTML = [appHtml, partsHtml].filter(Boolean).join('<br><br>');
 }
 
 function setConvertRunning(on) {
@@ -1369,17 +1384,14 @@ async function loadLicense() {
   banner.classList.remove('hidden');
 }
 
-// ---------- air-gap / offline-mode posture (CI-18) ----------
-// Circuit's backend makes zero outbound network calls (provable via the CI-15
-// source scan) and binds loopback-only. Surface that as an always-on, honest chip
-// so regulated / air-gapped buyers can see at a glance that their source never
-// leaves the machine. This is a standing fact, not a runtime measurement — see
-// AIRGAP.md for the attestable no-network statement.
+// ---------- local analysis / explicit online-conversion posture ----------
+// Grading stays local. The buyer can separately start an online conversion,
+// which sends a minimized source bundle to the configured broker.
 function showOfflineChip() {
   const chip = $('offlineChip');
   if (!chip) return;
-  chip.textContent = '⏚ offline — no code leaves this machine';
-  chip.title = 'Air-gap ready: Circuit runs fully on this machine. Your source is never uploaded — the backend makes zero outbound network calls and binds to localhost only. See AIRGAP.md for the attestable no-network statement (verified by the CI-15 source scan).';
+  chip.textContent = '⏚ local analysis';
+  chip.title = 'Local analysis runs on this machine. Starting an online conversion sends a minimized source bundle to the configured broker and target worker.';
 }
 
 // ---------- go ----------
