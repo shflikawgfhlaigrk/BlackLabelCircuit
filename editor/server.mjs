@@ -12,8 +12,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { analyzeRepo } from '../lib/analyze.js';
 import { nodeToDiagnostics, repoStatus, nodeForRel } from './diagnostics.mjs';
+const bundledAnalyzer = new URL('./lib/analyze.js', import.meta.url);
+const { analyzeRepo } = await import(fs.existsSync(bundledAnalyzer) ? bundledAnalyzer : new URL('../lib/analyze.js', import.meta.url));
 
 // ---- JSON-RPC framing over a byte stream ----
 function writeMessage(output, msg) {
@@ -145,7 +146,7 @@ export function startLsp({ root, input = process.stdin, output = process.stdout 
 }
 
 // Run directly: `node editor/server.mjs [repoRoot]`.
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url))) {
   const root = process.argv[2] ? path.resolve(process.argv[2]) : process.cwd();
   startLsp({ root }).then(() => process.exit(0));
 }

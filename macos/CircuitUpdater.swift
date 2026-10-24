@@ -228,9 +228,8 @@ enum Updater {
             throw UpdaterError.signature("unreadable signature")
         }
         // anchor apple generic = chains to Apple; OU = our Developer Team ID. Together: a genuine
-        // Developer-ID build signed by us. (Notarization is additionally enforced by Gatekeeper at
-        // launch of the swapped bundle; this requirement blocks any non-ours binary up front.)
-        let reqStr = "anchor apple generic and certificate leaf[subject.OU] = \"\(requiredTeamID)\"" as CFString
+        // Both the team signature and notarization are required before the installed app moves.
+        let reqStr = "anchor apple generic and certificate leaf[subject.OU] = \"\(requiredTeamID)\" and notarized" as CFString
         var requirement: SecRequirement?
         guard SecRequirementCreateWithString(reqStr, SecCSFlags(rawValue: 0), &requirement) == errSecSuccess,
               let req = requirement else {
@@ -243,6 +242,26 @@ enum Updater {
     }
 
     // MARK: Download + stage (returns the verified, unzipped .app ready to swap in)
+
+    static func validateStagedInfo(_ info: [String: Any], manifest: UpdateManifest,
+                                   current: Int = currentBuild()) throws {
+        guard manifest.product.lowercased() == "circuit",
+              info["CFBundleIdentifier"] as? String == "com.blacklabel.circuit",
+              let raw = info["CFBundleVersion"] as? String, let build = Int(raw),
+              build == manifest.latestBuild, build > current else {
+            throw UpdaterError.install("The downloaded app does not match this Circuit update.")
+        }
+    }
+
+    static func validateInstallLocation(_ app: URL) throws {
+        let parent = app.deletingLastPathComponent()
+        let readOnly = (try? parent.resourceValues(forKeys: [.volumeIsReadOnlyKey]).volumeIsReadOnly) == true
+        guard !app.path.contains("/AppTranslocation/"), !readOnly,
+              FileManager.default.isWritableFile(atPath: parent.path),
+              FileManager.default.isWritableFile(atPath: app.path) else {
+            throw UpdaterError.install("Move Circuit to a writable Applications folder, then try again. Your current app is still running.")
+        }
+    }
 
     /// Downloads the update zip, verifies sha256 + signature, unzips, and returns the staged .app URL.
     /// Throws (installing nothing) on any integrity/signature failure.
@@ -266,6 +285,8 @@ enum Updater {
         // Find the .app.
         let contents = (try? FileManager.default.contentsOfDirectory(at: unzipDir, includingPropertiesForKeys: nil)) ?? []
         guard let appURL = contents.first(where: { $0.pathExtension == "app" }) else { throw UpdaterError.noAppInZip }
+        guard let info = Bundle(url: appURL)?.infoDictionary else { throw UpdaterError.noAppInZip }
+        try validateStagedInfo(info, manifest: m)
         try verifySignature(appURL: appURL)
         return appURL
     }
@@ -354,9 +375,10 @@ enum UpdaterUI {
 
         Task {
             do {
+                try Updater.validateInstallLocation(Bundle.main.bundleURL)
                 let stagedApp = try await Updater.stage(m)
                 win.orderOut(nil)
-                try performSwapAndRelaunch(stagedApp: stagedApp)
+                try performSwapAndRelaunch(stagedApp: stagedApp, manifest: m)
                 // performSwapAndRelaunch terminates the app; control should not return.
             } catch {
                 win.orderOut(nil)
@@ -365,32 +387,67 @@ enum UpdaterUI {
         }
     }
 
+    static func swapScript(waitForPID pid: Int32) -> String {
+        // Both candidate and installed bundle are on the same volume. Paths and
+        // the opener are arguments, never interpolated into shell source.
+        return """
+        #!/bin/sh
+        while kill -0 \(pid) 2>/dev/null; do sleep 0.2; done
+        installed="$1"
+        staged="$2"
+        backup="$3"
+        opener="$4"
+        if ! mv "$installed" "$backup"; then
+          "$opener" "$installed"
+          exit 1
+        fi
+        if ! mv "$staged" "$installed"; then
+          if mv "$backup" "$installed"; then
+            "$opener" "$installed"
+          else
+            "$opener" "$backup"
+          fi
+          exit 1
+        fi
+        if ! "$opener" "$installed"; then
+          if mv "$installed" "$staged" && mv "$backup" "$installed"; then
+            "$opener" "$installed"
+          else
+            "$opener" "$backup"
+          fi
+          exit 1
+        fi
+        rm -rf "$backup"
+        """
+    }
+
     /// Writes a detached helper that waits for THIS process to exit, atomically swaps the installed
     /// bundle with the verified staged build, and relaunches it. Then quits the app.
     /// Works because Circuit is the non-sandboxed Dev-ID build (a sandbox would block the helper
     /// and the write to the install path).
-    static func performSwapAndRelaunch(stagedApp: URL,
+    static func performSwapAndRelaunch(stagedApp: URL, manifest: UpdateManifest,
                                        installedApp: URL = Bundle.main.bundleURL) throws {
+        try Updater.validateInstallLocation(installedApp)
         let installed = installedApp.path
-        let staged = stagedApp.path
-        let backup = installed + ".old"
+        // Copy and verify beside the installed app BEFORE quitting. A /tmp
+        // download can live on another volume; a cross-volume mv can leave a
+        // partial destination and break rollback.
+        let candidate = installedApp.deletingLastPathComponent()
+            .appendingPathComponent(".Circuit-update-\(UUID().uuidString).app")
+        do {
+            try FileManager.default.copyItem(at: stagedApp, to: candidate)
+            guard let info = Bundle(url: candidate)?.infoDictionary else { throw UpdaterError.noAppInZip }
+            try Updater.validateStagedInfo(info, manifest: manifest)
+            try Updater.verifySignature(appURL: candidate)
+        } catch {
+            try? FileManager.default.removeItem(at: candidate)
+            throw UpdaterError.install("Couldn't prepare the update. Your current app is still running. \(error.localizedDescription)")
+        }
+        let staged = candidate.path
+        let backup = installed + ".old-" + UUID().uuidString
         let pid = ProcessInfo.processInfo.processIdentifier
 
-        // The helper is intentionally tiny + dependency-free. Double-quote every path (bundle names
-        // may contain spaces). On any failure it restores the backup so the user is never left with no app.
-        let script = """
-        #!/bin/sh
-        while kill -0 \(pid) 2>/dev/null; do sleep 0.2; done
-        rm -rf "\(backup)"
-        mv "\(installed)" "\(backup)" || exit 1
-        if ! mv "\(staged)" "\(installed)"; then
-          mv "\(backup)" "\(installed)"
-          exit 1
-        fi
-        rm -rf "\(backup)"
-        xattr -dr com.apple.quarantine "\(installed)" 2>/dev/null
-        open "\(installed)"
-        """
+        let script = swapScript(waitForPID: pid)
 
         let helper = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
             .appendingPathComponent("circuit-update-helper-\(UUID().uuidString).sh")
@@ -398,13 +455,17 @@ enum UpdaterUI {
             try script.write(to: helper, atomically: true, encoding: .utf8)
             try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: helper.path)
         } catch {
+            try? FileManager.default.removeItem(at: candidate)
             throw UpdaterError.install("couldn't write installer helper: \(error.localizedDescription)")
         }
 
         let p = Process()
         p.executableURL = URL(fileURLWithPath: "/bin/sh")
-        p.arguments = [helper.path]
-        do { try p.run() } catch { throw UpdaterError.install("couldn't launch installer helper: \(error.localizedDescription)") }
+        p.arguments = [helper.path, installed, staged, backup, "/usr/bin/open"]
+        do { try p.run() } catch {
+            try? FileManager.default.removeItem(at: candidate)
+            throw UpdaterError.install("couldn't launch installer helper: \(error.localizedDescription)")
+        }
 
         // Hand off to the helper and quit so it can replace us.
         NSApp.terminate(nil)

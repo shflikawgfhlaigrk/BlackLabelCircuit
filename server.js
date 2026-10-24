@@ -21,7 +21,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { analyzeRepo } from './lib/analyze.js';
 import { LANG_BY_EXT } from './lib/walk.js';
@@ -254,13 +254,22 @@ const convertJob = { running: false, log: [], result: null, error: null, errorId
 function convertOutDir() {
   // CIRCUIT_CONVERT_DIR moves the output root (tests, shared build machines).
   const base = process.env.CIRCUIT_CONVERT_DIR || path.join(os.homedir(), 'Circuit Converted');
-  return path.join(base, `${path.basename(root)}-windows`);
+  const identity = createHash('sha256').update(realRoot).digest('hex').slice(0, 12);
+  return path.join(base, `${path.basename(root)}-${identity}-windows`);
+}
+
+function readConversion(out, modifiedSince = null) {
+  try {
+    const file = path.join(out, 'conversion.json');
+    if (modifiedSince !== null && fs.statSync(file).mtimeMs < modifiedSince) return null;
+    const result = JSON.parse(fs.readFileSync(file, 'utf8'));
+    return typeof result.root === 'string' && fs.realpathSync(result.root) === realRoot ? result : null;
+  } catch { return null; }
 }
 
 function startConvert({ verify }) {
   const out = convertOutDir();
   fs.mkdirSync(out, { recursive: true });
-  const resultPath = path.join(out, 'conversion.json');
   Object.assign(convertJob, { running: true, log: [], result: null, error: null, errorId: null, out, startedAt: Date.now() });
   const childArgs = [fileURLToPath(import.meta.url), '--convert', root, '--out', out];
   if (verify) childArgs.push('--verify');
@@ -286,7 +295,7 @@ function startConvert({ verify }) {
   });
   child.on('close', (code) => {
     convertJob.running = false;
-    try { convertJob.result = JSON.parse(fs.readFileSync(resultPath, 'utf8')); } catch { convertJob.result = null; }
+    convertJob.result = readConversion(out, convertJob.startedAt);
     if (code === 2 || !convertJob.result) {
       const f = failed('conversion', stderr.trim() || `the convert process exited with code ${code}`);
       Object.assign(convertJob, { error: f.message, errorId: f.errorId });
@@ -370,7 +379,20 @@ const server = http.createServer((req, res) => {
 });
 
 function handle(req, res) {
+  const allowed = new Set([`http://localhost:${port}`, `http://127.0.0.1:${port}`, `http://[::1]:${port}`]);
+  const requestOrigin = `http://${req.headers.host ?? ''}`;
+  if (!allowed.has(requestOrigin) || (req.headers.origin && req.headers.origin !== requestOrigin)
+      || req.headers['sec-fetch-site'] === 'cross-site') {
+    return send(res, 403, { error: 'use the local Circuit window' });
+  }
   const url = new URL(req.url, `http://localhost:${port}`);
+  // The custom header forces a browser preflight for mutation and history work.
+  // Circuit does not grant cross-origin preflight access. Headerless read-only
+  // CLI probes and same-origin EventSource keep working.
+  if (url.pathname.startsWith('/api/') && (req.method !== 'GET' || url.pathname === '/api/history')
+      && req.headers['x-circuit-request'] !== '1') {
+    return send(res, 403, { error: 'use the local Circuit window' });
+  }
 
   if (url.pathname === '/api/license') {
     // Fail-closed: resolves to demo mode unless a valid license key is set.
@@ -411,7 +433,8 @@ function handle(req, res) {
     }
     if (!convertJob.running && !convertJob.result) {
       // a conversion finished in an earlier launch is still on disk: show it
-      try { convertJob.result = JSON.parse(fs.readFileSync(path.join(convertOutDir(), 'conversion.json'), 'utf8')); convertJob.out = convertOutDir(); } catch { /* none yet */ }
+      convertJob.result = readConversion(convertOutDir());
+      if (convertJob.result) convertJob.out = convertOutDir();
     }
     return send(res, 200, {
       running: convertJob.running, out: convertJob.out ?? convertOutDir(), startedAt: convertJob.startedAt,

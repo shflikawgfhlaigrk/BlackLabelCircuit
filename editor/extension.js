@@ -30,7 +30,15 @@ function activate(context) {
   status.text = 'Circuit: —';
   status.tooltip = 'Circuit repo grade — re-graded on every save';
   status.show();
-  context.subscriptions.push(diagnostics, status);
+  const output = vscode.window.createOutputChannel('Circuit');
+  context.subscriptions.push(diagnostics, status, output,
+    vscode.commands.registerCommand('circuit.showOutput', () => output.show()));
+  const unavailable = (message) => {
+    status.text = 'Circuit: unavailable';
+    status.tooltip = `${message} Click to see the Circuit log.`;
+    status.command = 'circuit.showOutput';
+    output.appendLine(message);
+  };
 
   const serverPath = path.join(__dirname, 'server.mjs');
   // Spawn the Code binary as Node (the standard extension-host trick), so the
@@ -55,7 +63,12 @@ function activate(context) {
       if (msg) onMessage(msg, diagnostics, status);
     }
   });
-  child.on('exit', () => { child = null; });
+  child.stderr.on('data', (chunk) => output.append(String(chunk)));
+  child.on('error', (error) => unavailable(`Could not start the Circuit analyzer: ${error.message}`));
+  child.on('exit', (code, signal) => {
+    child = null;
+    unavailable(`Circuit analyzer stopped (${signal || code}). Reopen the workspace to restart it.`);
+  });
   context.subscriptions.push({ dispose: () => child?.kill() });
 
   send({ id: nextId++, method: 'initialize', params: { rootUri: folder.uri.toString(), workspaceFolders: [{ uri: folder.uri.toString(), name: folder.name }] } });

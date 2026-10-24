@@ -379,7 +379,7 @@ test('api: POST /api/convert runs the conversion out of process and GET reports 
   const idle = await (await fetch(`${url}/api/convert`)).json();
   assert.equal(idle.running, false);
   assert.equal(idle.result, null);
-  const started = await fetch(`${url}/api/convert?verify=0`, { method: 'POST' });
+  const started = await fetch(`${url}/api/convert?verify=0`, { method: 'POST', headers: { 'X-Circuit-Request': '1' } });
   assert.equal(started.status, 202);
   const body = await started.json();
   assert.ok(body.out.startsWith(base), 'the converted copy goes under the output root, not into the repo');
@@ -424,7 +424,7 @@ test('api: a failed conversion reaches the page as a fixed message and an id, ne
       if (m) { clearTimeout(timer); resolve(`http://localhost:${m[1]}`); }
     });
   });
-  assert.equal((await fetch(`${url}/api/convert?verify=0`, { method: 'POST' })).status, 202);
+  assert.equal((await fetch(`${url}/api/convert?verify=0`, { method: 'POST', headers: { 'X-Circuit-Request': '1' } })).status, 202);
   let state;
   for (let i = 0; i < 200; i++) {
     state = await (await fetch(`${url}/api/convert`)).json();
@@ -447,7 +447,7 @@ test('ui: the Convert button and the output button are in the page and wired', (
     assert.ok(html.includes(`id="${id}"`), `${id} is in index.html`);
     assert.ok(js.includes(`$('${id}')`), `${id} is wired in app.js`);
   }
-  assert.ok(js.includes("fetch('/api/convert/open', { method: 'POST' })"), 'the output button asks the server to open the folder');
+  assert.ok(js.includes("circuitFetch('/api/convert/open', { method: 'POST' })"), 'the output button asks the server to open the folder');
   const server = fs.readFileSync(path.join(ROOT, 'server.js'), 'utf8');
   assert.ok(/convert\/open' && req\.method === 'POST'/.test(server), 'opening is POST-only');
   assert.ok(!/convert\/open[\s\S]{0,400}searchParams/.test(server), 'the folder to open never comes from the request');

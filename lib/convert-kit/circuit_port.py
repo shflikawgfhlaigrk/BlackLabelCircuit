@@ -4,8 +4,10 @@ Converted Python calls these instead of hard-coding macOS paths and commands.
 Each helper does the native thing on macOS, Windows and Linux. Standard library only.
 """
 import os
+import errno
 import subprocess
 import sys
+import time
 
 _WIN = sys.platform == "win32"
 _MAC = sys.platform == "darwin"
@@ -74,9 +76,12 @@ def play_sound(path):
             winsound.PlaySound(path, winsound.SND_FILENAME)
             return None
         script = ("Add-Type -AssemblyName presentationCore; $p = New-Object System.Windows.Media.MediaPlayer; "
-                  "$p.Open([Uri]$args[0]); $p.Play(); Start-Sleep -Milliseconds 300; "
+                  "$p.Open([Uri][Console]::In.ReadToEnd()); "
+                  "$until = [DateTime]::UtcNow.AddSeconds(15); "
+                  "while (!$p.NaturalDuration.HasTimeSpan -and [DateTime]::UtcNow -lt $until) { Start-Sleep -Milliseconds 100 }; "
+                  "if (!$p.NaturalDuration.HasTimeSpan) { exit 1 }; $p.Play(); "
                   "while ($p.NaturalDuration.HasTimeSpan -and $p.Position -lt $p.NaturalDuration.TimeSpan) { Start-Sleep -Milliseconds 100 }")
-        return subprocess.run(["powershell", "-NoProfile", "-Command", script, path], check=False)
+        return subprocess.run(["powershell", "-NoProfile", "-STA", "-Command", script], input=path, text=True, check=False)
     return subprocess.run(["paplay", path], check=False)
 
 
@@ -110,11 +115,18 @@ class _FcntlCompat:
                     pass  # unlocking an unlocked byte is not an error for flock
             else:
                 # msvcrt has no shared lock: LOCK_SH is taken as exclusive (stricter, never weaker).
-                mode = msvcrt.LK_NBLCK if operation & self.LOCK_NB else msvcrt.LK_LOCK
-                try:
-                    msvcrt.locking(handle, mode, 1)
-                except OSError as exc:
-                    raise BlockingIOError(exc.errno, "lock held by another process") from exc
+                # LK_LOCK gives up after ten seconds. flock without LOCK_NB must
+                # instead wait until the lock becomes available.
+                while True:
+                    try:
+                        msvcrt.locking(handle, msvcrt.LK_NBLCK, 1)
+                        break
+                    except OSError as exc:
+                        if exc.errno not in (errno.EACCES, errno.EAGAIN, errno.EDEADLK):
+                            raise
+                        if operation & self.LOCK_NB:
+                            raise BlockingIOError(exc.errno, "lock held by another process") from exc
+                        time.sleep(0.05)
         finally:
             os.lseek(handle, here, os.SEEK_SET)
         return None

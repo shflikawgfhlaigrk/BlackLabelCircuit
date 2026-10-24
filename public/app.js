@@ -1,6 +1,10 @@
 // Circuit UI — 3D force graph of the codebase, graded and wired.
 import { ForceGraph3D, SpriteText, THREE, UnrealBloomPass } from '/vendor/circuit-3d.bundle.mjs';
 
+const circuitFetch = (input, options = {}) => fetch(input, {
+  ...options, headers: { ...options.headers, 'X-Circuit-Request': '1' },
+});
+
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -291,7 +295,7 @@ function hideOverlay() { $('graphOverlay').classList.add('hidden'); }
 // ---------- data ----------
 async function loadGraph(preservePositions = false) {
   let res;
-  try { res = await fetch('/api/graph'); }
+  try { res = await circuitFetch('/api/graph'); }
   catch { if (!state.data) showOverlay('analyzing'); setTimeout(() => loadGraph(preservePositions), 800); return; }
   if (!res.ok) {
     if (!state.data) showOverlay('analyzing'); // first scan still running — show feedback, don't leave it blank
@@ -618,7 +622,7 @@ function renderPanel(n) {
 
 // ---------- code modal ----------
 async function openCode(n, focusLine) {
-  const res = await fetch(`/api/file?path=${encodeURIComponent(n.id)}`);
+  const res = await circuitFetch(`/api/file?path=${encodeURIComponent(n.id)}`);
   if (!res.ok) { toast('Could not load file'); return; }
   const text = await res.text();
   const hits = new Map(); // line → severity class
@@ -723,7 +727,7 @@ $('tglWindows').onclick = async (e) => {
   state.port.loading = true;
   btn.textContent = 'Checking…';
   try {
-    const res = await fetch('/api/port');
+    const res = await circuitFetch('/api/port');
     const data = await res.json();
     if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
     state.port.data = data;
@@ -822,7 +826,7 @@ $('convertRun').onclick = async () => {
   $('convertLog').textContent = '';
   $('convertLog').classList.remove('hidden');
   try {
-    const res = await fetch('/api/convert', { method: 'POST' });
+    const res = await circuitFetch('/api/convert', { method: 'POST' });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
   } catch (err) {
@@ -833,7 +837,7 @@ $('convertRun').onclick = async () => {
 
 $('convertOpenOut').onclick = async () => {
   try {
-    const res = await fetch('/api/convert/open', { method: 'POST' });
+    const res = await circuitFetch('/api/convert/open', { method: 'POST' });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
     toast('Opened the converted code in your file manager.');
@@ -844,7 +848,7 @@ $('convertOpenOut').onclick = async () => {
 
 $('convertReport').onclick = async () => {
   try {
-    const res = await fetch('/api/convert/report');
+    const res = await circuitFetch('/api/convert/report');
     if (!res.ok) throw new Error((await res.json()).error ?? `HTTP ${res.status}`);
     const text = await res.text();
     $('codeTitle').textContent = 'CONVERSION.md';
@@ -868,7 +872,7 @@ $('convertShow').onclick = () => { setConvertOverlay(!state.convert.on); if (sta
 
 async function loadConvertState() {
   try {
-    const data = await (await fetch('/api/convert')).json();
+    const data = await (await circuitFetch('/api/convert')).json();
     if (data.running) { setConvertRunning(true); $('convertLog').classList.remove('hidden'); $('convertLog').textContent = data.log.join('\n'); }
     showConvertResult(data.result ?? null);
     if (!data.running) setConvertRunning(false);
@@ -880,7 +884,7 @@ $('rescanBtn').onclick = async () => {
   $('rescanBtn').textContent = 'Scanning…';
   clearTimeout(rescanRestore);
   rescanRestore = setTimeout(() => { $('rescanBtn').textContent = 'Re-scan'; }, 15000);
-  try { await fetch('/api/rescan', { method: 'POST' }); }
+  try { await circuitFetch('/api/rescan', { method: 'POST' }); }
   catch { $('rescanBtn').textContent = 'Re-scan'; toast('Re-scan failed — is the server up?'); }
 };
 $('panelClose').onclick = () => { state.selected = null; hidePanel(); refreshStyles(); };
@@ -924,7 +928,7 @@ async function enterReplay() {
   $('tglReplay').textContent = 'Loading…';
   let data;
   try {
-    const res = await fetch('/api/history');
+    const res = await circuitFetch('/api/history');
     data = await res.json();
   } catch {
     state.replay.loading = false;
@@ -1178,7 +1182,7 @@ events.onerror = () => $('liveDot').classList.remove('on');
 async function loadLicense() {
   let lic;
   try {
-    const res = await fetch('/api/license');
+    const res = await circuitFetch('/api/license');
     if (!res.ok) throw new Error(res.status);
     lic = await res.json();
   } catch {

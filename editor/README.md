@@ -33,7 +33,7 @@ node ../server.js --lsp /path/to/repo
 
 ## Use in VS Code
 
-1. Copy (or symlink) this `editor/` folder into `~/.vscode/extensions/circuit-editor/`.
+1. From the Circuit checkout run `node editor/install.mjs ~/.vscode/extensions/circuit-editor/` with an empty destination. This copies the extension and its analyzer dependencies together. If an older copy is installed, preserve or move it before choosing the destination; the installer never overwrites existing files.
 2. Reload VS Code. The extension activates on startup, spawns the server for your
    workspace, and starts grading on save. The status bar shows e.g. `Circuit: B (84)`.
 
