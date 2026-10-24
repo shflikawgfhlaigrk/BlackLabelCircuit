@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+  Circuit-Win splash. Shown while the bundled node server boots; the Rust shell
+  (src-tauri/src/main.rs) navigates this window to the real http://localhost:PORT
+  the moment the server announces it. Fully offline (air-gap posture, no CDN, no
+  network) — matches Circuit's loopback-only server.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Circuit</title>
+    <style>
+      html, body {
+        margin: 0; height: 100%;
+        background: #05070a; color: rgba(255, 255, 255, 0.86);
+        font: 15px/1.5 -apple-system, "Segoe UI", system-ui, sans-serif;
+      }
+      .wrap {
+        height: 100%; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 14px;
+      }
+      .title { font-size: 22px; font-weight: 700; letter-spacing: 0.2px; }
+      .sub { color: rgba(255, 255, 255, 0.5); font-size: 13px; }
+      .bar {
+        width: 220px; height: 3px; border-radius: 3px; overflow: hidden;
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .bar > i {
+        display: block; height: 100%; width: 40%; border-radius: 3px;
+        background: #7dd3fc; animation: slide 1.1s ease-in-out infinite;
+      }
+      @keyframes slide { 0% { margin-left: -40%; } 100% { margin-left: 100%; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="title">Circuit</div>
+      <div class="sub">Starting the grading engine…</div>
+      <div class="bar"><i></i></div>
+    </div>
+  </body>
+</html>

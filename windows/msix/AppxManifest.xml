@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Circuit MSIX package manifest — STORE-FIRST distribution.
+  Contract windows-w1-circuit-20260720 (founder amendment ~09:05Z: STORE-FIRST via MSIX,
+  Store signs the package, NO Authenticode cert purchased).
+
+  ===========================================================================================
+  ALL THREE IDENTITY VALUES BELOW ARE PLACEHOLDERS ON PURPOSE. They do not exist yet.
+  Microsoft Partner Center ASSIGNS them once the app name is reserved. Do NOT invent them.
+
+    1. Identity/Name          currently  PARTNER-CENTER-PLACEHOLDER.Circuit
+    2. Identity/Publisher     currently  CN=PARTNER-CENTER-PLACEHOLDER
+    3. PublisherDisplayName   currently  __PUBLISHER_DISPLAY_NAME__
+                              NOTE: the Partner Center account is registered as an INDIVIDUAL,
+                              so this is the owner's verified LEGAL NAME, not a company name.
+
+  DO NOT hand-edit this file to fill them in. Paste all three into the ONE place:
+        windows/msix/partner-center.env      (copy from partner-center.env.example)
+  build-msix.sh reads that file and substitutes the tokens into the packed layout's manifest.
+  Full instructions: windows/STORE-SUBMISSION.md
+  ===========================================================================================
+
+  The Store re-signs the uploaded package under the account's identity, so this package is
+  staged UNSIGNED for Store submission — a self-signed cert is only needed for the local
+  sideload test mode of build-msix.sh, never for the Store path. An UNSIGNED msix CANNOT be
+  sideload-installed; it is a Store-submission artifact only.
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap10 rescap">
+
+  <!-- PLACEHOLDERS 1 and 2 of 3. Assigned by Partner Center. See partner-center.env.example. -->
+  <Identity
+    Name="PARTNER-CENTER-PLACEHOLDER.Circuit"
+    Publisher="CN=PARTNER-CENTER-PLACEHOLDER"
+    Version="1.0.2.0"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>Circuit</DisplayName>
+    <!-- PLACEHOLDER 3 of 3: owner's verified LEGAL NAME (individual account), from Partner Center. -->
+    <PublisherDisplayName>__PUBLISHER_DISPLAY_NAME__</PublisherDisplayName>
+    <Description>Grade your codebase like a senior engineer, then fly through the wiring in 3D.</Description>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <uap10:PackageIntegrity>
+      <uap10:Content Enforcement="on" />
+    </uap10:PackageIntegrity>
+  </Properties>
+
+  <Dependencies>
+    <!--
+      MinVersion 10.0.17763.0 (Win10 1809): the floor at which the WebView2 Evergreen Runtime
+      is supported. WebView2 is in-box on Win11 and provisioned via Evergreen on Win10; it is a
+      SYSTEM runtime, not a Store framework package, so it is intentionally NOT declared as a
+      <PackageDependency> here (that element would fail makeappx validation). WebView2
+      provisioning on clean Win10 images is the one tracked MSIX residual — see build-msix.sh.
+    -->
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22621.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="Circuit" Executable="Circuit.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="Circuit"
+        Description="Grade your codebase like a senior engineer, then fly through the wiring in 3D."
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <!--
+      runFullTrust: Circuit is a packaged Win32 (Tauri) app that spawns the bundled node.exe
+      sidecar as a full-trust child process to run server.js. A desktop-bridge app that hosts a
+      Win32 child REQUIRES this restricted capability. It is the ONLY capability requested — the
+      app makes no network calls of its own (air-gap posture; it analyses the repo the user picks
+      on localhost) and touches no user data broker, so no networking/broadFileSystem caps.
+    -->
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

@@ -1,10 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyzeRepo, stronglyConnected } from '../lib/analyze.js';
-import { gradeFile, letterFor } from '../lib/grade.js';
+import { gradeFile, letterFor, applyGraphFindings } from '../lib/grade.js';
 import { resolveJsImport } from '../lib/lang/javascript.js';
+import { scanSecrets } from '../lib/lang/common.js';
 
 const FIXTURE = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures', 'demo');
 const graph = analyzeRepo(FIXTURE);
@@ -87,6 +90,36 @@ test('repo stats aggregate correctly', () => {
   assert.equal(buckets, 9);
 });
 
+test('stats roll up parse errors and skipped files honestly (CI-17)', () => {
+  // The demo fixture ships one unparseable file (broken.json) and no binaries.
+  assert.equal(graph.stats.parseErrors, 1, 'broken.json rolls into parseErrors');
+  assert.equal(graph.stats.skipped, 0, 'nothing skipped in the clean fixture');
+
+  // A file that is binary masquerading as .js is skipped, not graded — and the
+  // roll-up counts it without inflating the file count or the grade.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-skip-'));
+  fs.writeFileSync(path.join(dir, 'ok.js'), 'export const a = 1;\n');
+  fs.writeFileSync(path.join(dir, 'blob.js'), Buffer.from([0x00, 0x01, 0x02, 0x00, 0xff]));
+  const g = analyzeRepo(dir);
+  assert.equal(g.stats.files, 1, 'only the real source file is graded');
+  assert.equal(g.stats.skipped, 1, 'the binary blob is counted as skipped');
+  assert.equal(g.stats.parseErrors, 0, 'a skipped binary is not a parse error');
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('a folder with no gradeable source is reported empty — never a fake A+', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-empty-'));
+  fs.writeFileSync(path.join(dir, 'README.md'), '# docs only, no source\n');
+  fs.writeFileSync(path.join(dir, 'notes.txt'), 'not code\n');
+  const g = analyzeRepo(dir);
+  assert.equal(g.stats.files, 0, 'no source files discovered');
+  assert.equal(g.stats.empty, true, 'flagged empty');
+  assert.equal(g.stats.grade, null, 'no letter grade minted for an empty repo');
+  assert.equal(g.stats.score, null, 'no score minted for an empty repo');
+  assert.equal(g.nodes.length, 0);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
 test('letterFor boundaries', () => {
   assert.equal(letterFor(100), 'A+');
   assert.equal(letterFor(93), 'A');
@@ -131,4 +164,295 @@ test('watch: fs.watch path exclusions do not hide fixture paths', () => {
   assert.ok(WATCH_IGNORE.test('node_modules/x/y.js'));
   assert.ok(WATCH_IGNORE.test('.git/HEAD'));
   assert.ok(WATCH_IGNORE.test('.cursor/debug-xyz.log'));
+});
+
+// ---- Hardcoded-secret detection (safety) ----
+
+test('scanSecrets flags high-signal vendor key formats', () => {
+  const hits = scanSecrets([
+    'const a = 1;',
+    'const awsKey = "AKIAIOSFODNN7EXAMPLE";',
+    'slack = "xoxb-123456789012-abcdefghijkl";',
+    'const gh = "ghp_abcdefghijklmnopqrstuvwxyz0123456789";',
+  ].join('\n'));
+  const kinds = hits.map((h) => h.kind);
+  assert.ok(kinds.includes('AWS access key id'));
+  assert.ok(kinds.includes('Slack token'));
+  assert.ok(kinds.includes('GitHub token'));
+  assert.equal(hits.find((h) => h.kind === 'AWS access key id').line, 2);
+});
+
+test('scanSecrets flags a credential assigned a literal, any language', () => {
+  assert.equal(scanSecrets('password = "s3cr3t-live-value"').length, 1);
+  assert.equal(scanSecrets('let apiKey: String = "8f3ac0b1d9e7"').length, 1);
+  assert.equal(scanSecrets('client_secret: "9a8b7c6d5e4f3021"').length, 1);
+});
+
+test('scanSecrets does NOT flag env references, placeholders, or short values', () => {
+  assert.equal(scanSecrets('password = process.env.DB_PASSWORD').length, 0);
+  assert.equal(scanSecrets('password = os.environ["PW"]').length, 0);
+  assert.equal(scanSecrets('const apiKey = `${API_KEY}`').length, 0);
+  assert.equal(scanSecrets('password = "changeme"').length, 0);
+  assert.equal(scanSecrets('password: "your-password-here"').length, 0);
+  assert.equal(scanSecrets('api_key = "xxxx"').length, 0);       // placeholder
+  assert.equal(scanSecrets('secret = "1234"').length, 0);         // too short
+  assert.equal(scanSecrets('const password = "";').length, 0);    // empty
+});
+
+test('scanSecrets flags a connection string carrying an inline password', () => {
+  const hits = scanSecrets([
+    'const db = "postgres://admin:Pr0d-P4ssw0rd@10.2.3.4:5432/app";',
+    'MONGO = "mongodb+srv://svc:8f3ac0b1d9e7@cluster0.abcd.mongodb.net"',
+    'url = "mysql://root:hunter2secret@db.internal:3306/main"',
+    'REDIS = "redis://:s3cr3tCacheKey@10.0.0.5:6379"',
+    'broker = "amqp://rabbit:R4bb1tPass@broker:5672"',
+  ].join('\n'));
+  assert.equal(hits.length, 5);
+  assert.match(hits[0].kind, /^postgres connection string/);
+  assert.match(hits[1].kind, /^mongodb\+srv connection string/);
+  assert.match(hits[3].kind, /^redis connection string/);  // empty user half
+  assert.equal(hits[4].line, 5);
+});
+
+test('scanSecrets does NOT flag credential-free, placeholder, or env-ref connection strings', () => {
+  assert.equal(scanSecrets('const db = "postgres://localhost:5432/app";').length, 0);      // no credentials
+  assert.equal(scanSecrets('DSN = "postgres://user:<password>@host:5432/db"').length, 0);  // angle placeholder
+  assert.equal(scanSecrets('uri = "mongodb+srv://user:password@cluster0.net"').length, 0); // placeholder word
+  assert.equal(scanSecrets('const u = `postgres://${USER}:${PASS}@${HOST}/db`').length, 0); // env ref
+  assert.equal(scanSecrets('DB = os.environ["postgres://u:p@h/db"]').length, 0);            // env ref
+  assert.equal(scanSecrets('url = "mysql://root:test@localhost:3306/testdb"').length, 0);   // test fixture value
+});
+
+test('scanSecrets flags a JWT only when its header really decodes to a token', () => {
+  const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+    + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+    + '.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  const hits = scanSecrets(`const token = "${jwt}";`);
+  assert.equal(hits.length, 1);
+  assert.equal(hits[0].kind, 'JWT');
+  assert.equal(hits[0].line, 1);
+});
+
+test('scanSecrets does NOT flag env-ref JWTs or base64-shaped strings that are not tokens', () => {
+  const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+    + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+    + '.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  assert.equal(scanSecrets('const token = process.env.JWT_TOKEN').length, 0);
+  assert.equal(scanSecrets(`const auth = \`Bearer \${${'token'}}\`; // ${jwt.slice(0, 0)}`).length, 0);
+  // header decodes to JSON but carries no `alg` — not a JWT
+  const notAlg = Buffer.from('{"hi":"there","x":1}').toString('base64url');
+  assert.equal(scanSecrets(`const s = "${notAlg}.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abcdefghijkl";`).length, 0);
+  // three dot-separated base64url-ish segments that are not a token at all
+  assert.equal(scanSecrets('const id = "eyJhbGciOiJ.notrealjson.xxxxxxxxxxxx";').length, 0);
+});
+
+test('analyzeRepo grades a connection string and a JWT as critical safety findings', () => {
+  const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+    + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+    + '.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-conn-'));
+  fs.writeFileSync(path.join(dir, 'db.js'),
+    `export const DSN = "postgres://admin:Pr0d-P4ssw0rd@10.2.3.4:5432/app";\nexport const TOKEN = "${jwt}";\n`);
+  try {
+    const g = analyzeRepo(dir);
+    const n = g.nodes.find((x) => x.id === 'db.js');
+    const conn = n.findings.find((f) => /connection string/.test(f.msg));
+    const tok = n.findings.find((f) => /Hardcoded JWT/.test(f.msg));
+    assert.ok(conn, 'connection-string finding is attached');
+    assert.equal(conn.dim, 'safety');
+    assert.equal(conn.severity, 'critical');
+    assert.equal(conn.line, 1);
+    assert.ok(tok, 'JWT finding is attached');
+    assert.equal(tok.severity, 'critical');
+    assert.equal(tok.line, 2);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('analyzeRepo reports NO secret findings for a clean, env-driven config', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-clean-'));
+  fs.writeFileSync(path.join(dir, 'cfg.js'),
+    'export const DSN = process.env.DATABASE_URL;\n'
+    + 'export const FALLBACK = "postgres://localhost:5432/app";\n'
+    + 'export const SAMPLE = "mongodb+srv://user:<password>@cluster0.net";\n');
+  try {
+    const g = analyzeRepo(dir);
+    const n = g.nodes.find((x) => x.id === 'cfg.js');
+    const secretFindings = n.findings.filter((f) => /Hardcoded/.test(f.msg));
+    assert.equal(secretFindings.length, 0, 'clean config produces zero secret findings');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('analyzeRepo grades a hardcoded secret as a critical safety finding', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-secret-'));
+  fs.writeFileSync(path.join(dir, 'config.js'),
+    'export const cfg = {\n  password: "prod-live-2f8e91ac",\n};\n');
+  try {
+    const g = analyzeRepo(dir);
+    const n = g.nodes.find((x) => x.id === 'config.js');
+    assert.ok(n, 'config.js node exists');
+    const finding = n.findings.find((f) => /Hardcoded/.test(f.msg));
+    assert.ok(finding, 'a hardcoded-credential finding is attached');
+    assert.equal(finding.dim, 'safety');
+    assert.equal(finding.severity, 'critical');
+    assert.equal(finding.line, 2);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+// ---- Cycle severity scales with cycle size (CI-23) ----
+// A 2-file mutual import and a 30-file knot are not the same defect. These lock
+// the ordering and the escalation, not the specific point values, so retuning the
+// curve stays possible but flattening it back out cannot pass.
+
+const CLEAN_DIMS = { complexity: 100, safety: 100, structure: 100, hygiene: 100, coupling: 100, docs: 100 };
+const cleanNode = () => ({ findings: [], dimensions: { ...CLEAN_DIMS }, score: 100, grade: 'A+', parseFailed: false });
+const gradeCycleOf = (size) => applyGraphFindings(cleanNode(), {
+  cyclePeers: Array.from({ length: size - 1 }, (_, i) => `src/f${i}.js`),
+  churn: 0,
+});
+
+test('cycle penalty is strictly monotonic in cycle size', () => {
+  const sizes = [2, 3, 4, 5, 6, 10, 20];
+  const scores = sizes.map((s) => gradeCycleOf(s).score);
+  for (let i = 1; i < sizes.length; i++) {
+    assert.ok(
+      scores[i] < scores[i - 1],
+      `a ${sizes[i]}-file cycle must grade strictly worse than a ${sizes[i - 1]}-file cycle (got ${scores[i]} vs ${scores[i - 1]})`
+    );
+  }
+});
+
+test('a cycle past 5 files escalates to critical; a small one stays major', () => {
+  assert.equal(gradeCycleOf(2).findings[0].severity, 'major');
+  assert.equal(gradeCycleOf(5).findings[0].severity, 'major');
+  assert.equal(gradeCycleOf(6).findings[0].severity, 'critical');
+  assert.equal(gradeCycleOf(12).findings[0].severity, 'critical');
+});
+
+test('the cycle finding names the real cycle size and stays capped', () => {
+  assert.match(gradeCycleOf(7).findings[0].msg, /7-file import cycle/);
+  assert.ok(gradeCycleOf(200).findings[0].points <= 30, 'penalty is capped, never unbounded');
+  assert.ok(gradeCycleOf(200).dimensions.coupling >= 0, 'coupling never goes negative');
+});
+
+// ---- Blast radius: fan-in only counts against a file that already grades badly ----
+// fanIn is a real graph fact the analyzer already measured. These lock the honesty
+// property first — a clean hub must never be penalised for being depended upon —
+// then the escalation, so the gate can be retuned but not inverted.
+
+const WEAK_DIMS = { complexity: 70, safety: 70, structure: 70, hygiene: 70, coupling: 70, docs: 70 };
+const weakNode = () => ({ findings: [], dimensions: { ...WEAK_DIMS }, score: 70, grade: letterFor(70), parseFailed: false });
+const gradeFanIn = (fanIn, base = weakNode()) => applyGraphFindings(base, { cyclePeers: [], churn: 0, fanIn });
+
+test('a clean hub is never penalised for being widely imported', () => {
+  const hub = gradeFanIn(80, cleanNode());
+  assert.equal(hub.findings.length, 0, 'being depended upon is not a defect — a clean hub must stay clean');
+  assert.equal(hub.score, 100);
+});
+
+test('fan-in below the hub threshold raises nothing, even on a weak file', () => {
+  assert.equal(gradeFanIn(9).findings.length, 0);
+  assert.equal(gradeFanIn(10).findings.length, 1, 'a weak file with 10 dependents is a blast-radius hotspot');
+});
+
+test('blast radius is monotonic in fan-in and stays capped', () => {
+  const fanIns = [10, 15, 20, 25, 26, 40, 100];
+  const scores = fanIns.map((f) => gradeFanIn(f).score);
+  for (let i = 1; i < fanIns.length; i++) {
+    assert.ok(
+      scores[i] < scores[i - 1],
+      `${fanIns[i]} dependents must grade worse than ${fanIns[i - 1]} (got ${scores[i]} vs ${scores[i - 1]})`
+    );
+  }
+  assert.ok(gradeFanIn(5000).findings[0].points <= 12, 'penalty is capped, never unbounded');
+  assert.ok(gradeFanIn(5000).dimensions.coupling >= 0, 'coupling never goes negative');
+});
+
+test('a blast radius past 25 dependents escalates to major; a smaller one stays info', () => {
+  assert.equal(gradeFanIn(10).findings[0].severity, 'info');
+  assert.equal(gradeFanIn(25).findings[0].severity, 'info');
+  assert.equal(gradeFanIn(26).findings[0].severity, 'major');
+  assert.equal(gradeFanIn(60).findings[0].severity, 'major');
+});
+
+test('the blast-radius finding names the real dependent count and deducts from coupling', () => {
+  const f = gradeFanIn(12).findings[0];
+  assert.match(f.msg, /12 files import this/);
+  assert.equal(f.dim, 'coupling');
+});
+
+test('analyzeRepo: a real weak hub is flagged with its real dependent count', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-fanin-'));
+  try {
+    // A genuinely bad hub — real defects the rubric already knows how to see
+    // (swallowed errors, eval, a committed secret, deep nesting) drag it under
+    // the gate, and 10 real importers give it a real fan-in of 10. Every number
+    // asserted below is the analyzer's own output over this code.
+    fs.writeFileSync(path.join(dir, 'hub.js'), [
+      'export function go(cfg) {',
+      '  const key = "sk_live_ABCDEF0123456789ABCDEF0123456789";',
+      '  try { risky(); } catch (e) {}',
+      '  try { more(); } catch (e) {}',
+      '  try { again(); } catch (e) {}',
+      '  eval(cfg.code);',
+      '  if (cfg.a) { if (cfg.b) { if (cfg.c) { if (cfg.d) { if (cfg.e) { if (cfg.f) { if (cfg.g) { return key; } } } } } } }',
+      '  return null;',
+      '}',
+      '',
+    ].join('\n'));
+    for (let i = 0; i < 10; i++) {
+      fs.writeFileSync(path.join(dir, `leaf${i}.js`), `import { go } from './hub.js';\nexport const run${i} = () => go();\n`);
+    }
+    const g = analyzeRepo(dir);
+    const hub = g.nodes.find((n) => n.id === 'hub.js');
+    assert.equal(hub.fanIn, 10, 'fan-in is the real measured edge count');
+    assert.ok(hub.score < 85, `the fixture must genuinely grade badly, not be asserted so (got ${hub.score})`);
+    const blast = hub.findings.find((f) => /files import this/.test(f.msg));
+    assert.ok(blast, `the weak hub must carry a blast-radius finding (grade ${hub.grade})`);
+    assert.match(blast.msg, /10 files import this/);
+
+    const leaf = g.nodes.find((n) => n.id === 'leaf0.js');
+    assert.equal(leaf.findings.filter((f) => /files import this/.test(f.msg)).length, 0, 'a leaf has no dependents to endanger');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('analyzeRepo: a real 8-file knot grades worse than a real 2-file cycle', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'circuit-cycle-'));
+  try {
+    // Genuine on-disk repo: a↔b mutual import, plus an 8-file ring c0→c1→…→c7→c0.
+    fs.writeFileSync(path.join(dir, 'a.js'), `import './b.js';\nexport const a = 1;\n`);
+    fs.writeFileSync(path.join(dir, 'b.js'), `import './a.js';\nexport const b = 2;\n`);
+    const RING = 8;
+    for (let i = 0; i < RING; i++) {
+      fs.writeFileSync(
+        path.join(dir, `c${i}.js`),
+        `import './c${(i + 1) % RING}.js';\nexport const c${i} = ${i};\n`
+      );
+    }
+    const g = analyzeRepo(dir);
+    const pick = (id) => g.nodes.find((n) => n.id === id);
+    const small = pick('a.js');
+    const knot = pick('c0.js');
+    assert.ok(small.inCycle && knot.inCycle, 'both are detected as cyclic');
+    assert.equal(g.stats.cycles, 2, 'two distinct strongly-connected components');
+
+    const cycleFinding = (n) => n.findings.find((f) => /import cycle/.test(f.msg));
+    assert.match(cycleFinding(small).msg, /2-file import cycle/);
+    assert.match(cycleFinding(knot).msg, /8-file import cycle/);
+    assert.equal(cycleFinding(small).severity, 'major');
+    assert.equal(cycleFinding(knot).severity, 'critical');
+    assert.ok(
+      knot.score < small.score,
+      `the 8-file knot must grade worse than the 2-file cycle (got ${knot.score} vs ${small.score})`
+    );
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });

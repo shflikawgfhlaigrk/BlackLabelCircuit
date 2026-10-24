@@ -1,0 +1,10 @@
+# Partner Center account identity — never committed. Template: msix/partner-center.env.example
+msix/partner-center.env
+
+# Build artifacts — produced in the W0 VM, never committed.
+msix-layout/
+dist/
+src-tauri/target/
+src-tauri/binaries/
+src-tauri/app/
+src-tauri/gen/

@@ -9,6 +9,12 @@
 </head>
 <body>
 
+<div id="demoBanner" class="demo-banner hidden">
+  <span class="demo-tag">DEMO</span>
+  <span id="demoNotice" class="demo-text"></span>
+  <a id="demoCta" class="demo-cta" href="#" target="_blank" rel="noopener"></a>
+</div>
+
 <header id="topbar">
   <div class="brand">⏚ <span>CIRCUIT</span></div>
   <div class="repo">
@@ -21,9 +27,14 @@
     <span class="stat"><b id="statEdges">–</b> wires</span>
     <button class="chip danger hidden" id="statBroken" title="Show broken wiring">– broken</button>
     <button class="chip warn hidden" id="statCycles" title="Files caught in import cycles">– cycles</button>
+    <span class="chip warn hidden" id="statParse" title="Files the analyzer could not parse — excluded from grading">– unparsed</span>
+    <span class="chip warn hidden" id="statTruncated" title="Repo exceeds the file limit — only the first files were graded">truncated</span>
   </div>
   <div class="spacer"></div>
+  <div id="offlineChip" class="chip offline" title=""></div>
   <div id="liveDot" class="live" title="Watching for file changes">● live</div>
+  <button id="convertOpenBtn" class="btn primary" title="Convert this Mac codebase so it builds for Windows — your compiler checks every file">Convert</button>
+  <button id="helpBtn" class="btn ghost" title="How to read Circuit" aria-label="How to read Circuit">?</button>
   <button id="rescanBtn" class="btn">Re-scan</button>
 </header>
 
@@ -63,11 +74,47 @@
       <button class="chip toggle on" id="tglParticles">Flow</button>
       <button class="chip toggle" id="tgl2d">2D</button>
       <button class="chip toggle" id="tglBroken">Broken only</button>
+      <button class="chip toggle" id="tglWindows" title="Color every file by whether it runs on Windows as-is, and list the Windows parts needed">Windows port</button>
+    </div>
+    <div id="portSummary" class="muted small hidden"></div>
+  </section>
+
+  <section id="convertSection">
+    <h3>Convert <span class="muted small">Mac → Windows</span></h3>
+    <div class="chips">
+      <button class="chip" id="convertBtn" title="Convert this Mac codebase so it builds for Windows">Convert…</button>
+      <button class="chip toggle hidden" id="tglConverted" title="Color every file by what the conversion did with it">Show result</button>
+    </div>
+    <div id="convertStatus" class="muted small hidden"></div>
+  </section>
+
+  <section>
+    <h3>Tour <span class="muted small">guided walkthrough</span></h3>
+    <div class="chips">
+      <button class="chip toggle" id="tglTour" title="Fly through the codebase's entry points and hotspots, opening each file's review">▶ Guided tour</button>
+    </div>
+  </section>
+
+  <section>
+    <h3>History <span class="muted small">grade over time</span></h3>
+    <div class="chips">
+      <button class="chip toggle" id="tglReplay" title="Replay the codebase's grade through its git history">▶ Refactor movie</button>
     </div>
   </section>
 </aside>
 
 <main id="graph"></main>
+
+<div id="graphOverlay" class="graph-overlay hidden">
+  <div class="graph-overlay-card">
+    <div class="go-mark">⏚</div>
+    <div class="go-title" id="goTitle">Analyzing…</div>
+    <div class="go-body" id="goBody"></div>
+    <div class="go-actions hidden" id="goActions">
+      <span class="go-hint">Quit Circuit and re-open it to grade a different folder.</span>
+    </div>
+  </div>
+</div>
 
 <aside id="panel" class="hidden">
   <div class="panel-head">
@@ -129,7 +176,72 @@
   </div>
 </div>
 
+<!-- Convert for Windows: run it, watch the compiler, get the output. -->
+<div id="convertModal" class="modal hidden">
+  <div class="modal-box convert-box">
+    <div class="modal-head">
+      <span><b>Convert for Windows</b> <span class="muted" id="convertRepo"></span></span>
+      <button class="btn ghost" id="convertClose" aria-label="Close">✕</button>
+    </div>
+    <div class="convert-body">
+      <p class="convert-intro">Writes a converted copy of this codebase that builds for Windows. Apple-only imports are swapped for the same-API Windows packages, then <b>your Swift compiler checks every file</b>: what it rejects is kept for the Mac build and listed with the Windows part it needs. Your repo is never changed.</p>
+      <div id="convertResult" class="hidden">
+        <div class="convert-hero"><span id="convertPct" class="convert-pct">–</span><span id="convertPctLabel" class="convert-pct-label"></span></div>
+        <table class="convert-table" id="convertTable"></table>
+        <div id="convertParts" class="convert-parts"></div>
+        <div class="convert-out-row"><span class="muted small">Output</span> <span id="convertOutPath" class="mono small"></span></div>
+      </div>
+      <pre id="convertLog" class="convert-log hidden"></pre>
+    </div>
+    <div class="convert-actions">
+      <button class="btn primary" id="convertRun">Convert for Windows</button>
+      <button class="btn" id="convertOpenOut" disabled title="Open the converted code in your file manager">Open output folder</button>
+      <button class="btn" id="convertReport" disabled title="Read the full conversion report">View report</button>
+      <button class="btn" id="convertShow" disabled title="Color every file in the 3D view by what the conversion did with it">Show on graph</button>
+    </div>
+  </div>
+</div>
+
+<!-- Grade-over-history replay scrubber (CI-20). Hidden until the movie loads. -->
+<div id="replayBar" class="replay-bar hidden">
+  <button id="replayPlay" class="btn replay-play" title="Play / pause (space)">▶</button>
+  <input id="replayScrub" class="replay-scrub" type="range" min="0" max="0" value="0" step="1" />
+  <div class="replay-info">
+    <span id="replayGrade" class="replay-grade">–</span>
+    <span id="replayMeta" class="replay-meta mono muted"></span>
+  </div>
+  <button id="replayExport" class="btn ghost" title="Download the grade timeline as JSON">Export</button>
+  <button id="replayClose" class="btn ghost" title="Exit replay">✕</button>
+</div>
+
+<!-- Guided-tour narration bar (CI-23). Hidden until a tour starts. -->
+<div id="tourBar" class="tour-bar hidden">
+  <span id="tourProgress" class="tour-progress mono muted">0 / 0</span>
+  <span id="tourNarration" class="tour-narration"></span>
+  <button id="tourPrev" class="btn ghost" title="Previous stop (←)">← Prev</button>
+  <button id="tourNext" class="btn" title="Next stop (→)">Next →</button>
+  <button id="tourClose" class="btn ghost" title="Exit tour (Esc)">✕</button>
+</div>
+
 <div id="toast" class="toast hidden"></div>
+
+<div id="welcome" class="modal hidden">
+  <div class="welcome-box">
+    <div class="welcome-head">
+      <div class="brand">⏚ <span>CIRCUIT</span></div>
+      <button class="btn ghost" id="welcomeClose" title="Close">✕</button>
+    </div>
+    <p class="welcome-lead">Your codebase, graded like a senior reviewer and wired in 3D. Here's how to read it:</p>
+    <ul class="welcome-legend">
+      <li><span class="wl-key" style="background:#86efac"></span><b>Each dot is a file.</b> Bigger = more lines of code. Its color is that file's grade — <span style="color:#86efac">green&nbsp;A</span> through <span style="color:#f87171">red&nbsp;F</span>.</li>
+      <li><span class="wl-key wl-wire"></span><b>Lines are dependencies.</b> One file importing another. Particles flow in the direction the code depends.</li>
+      <li><span class="wl-key wl-broken">◈</span><b>Red crystals are broken wires.</b> Something is imported that doesn't exist — a dead or missing file.</li>
+      <li><span class="wl-key wl-click">➤</span><b>Click any file</b> for its report card: grade, six review dimensions, and every finding written like a code-review comment with line numbers.</li>
+    </ul>
+    <p class="welcome-foot">The sidebar has your overall grade, a grade breakdown you can filter, and the worst offenders. Press <kbd>/</kbd> to search files, <kbd>Esc</kbd> to close. Drag to orbit, scroll to zoom.</p>
+    <button class="btn wide welcome-go" id="welcomeGo">Explore my codebase</button>
+  </div>
+</div>
 
 <script type="module" src="/app.js"></script>
 </body>
